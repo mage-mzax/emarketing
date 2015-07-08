@@ -1,0 +1,14 @@
+<?php 
+/* @include license-php.txt */
+?>
+<script type="text/javascript">
+function saveAndContinueEdit(urlTemplate, msg) {
+
+    if(msg && !confirm(msg)) {
+        return false;
+    }
+    var template = new Template(urlTemplate, /(^|.|\r|\n)({{(\w+)}})/);
+    var url = template.evaluate({tab_id:mzax_emarketing_info_tabsJsTabs.activeTab.id});
+    editForm.submit(url);
+}
+</script>

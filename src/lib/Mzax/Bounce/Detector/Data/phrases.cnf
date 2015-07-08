@@ -1,0 +1,429 @@
+# The first match will get used so make sure generic test are further down while specific one are further up.
+
+
+
+
+
+###################################################################
+#
+# 4.X.X Soft Bounces
+#
+###################################################################
+
+
+
+#     4  Persistent Transient Failure
+#   4.2  Mailbox Status
+# 4.2.0  Other or undefined mailbox status
+
+[4.2.0] +100
+Connection frequency limited.
+
+[4.2.0] -100
+not yet been delivered
+Message will be retried for
+message still undelivered after
+message could not be delivered
+retried until
+
+
+
+
+
+
+#     4  Persistent Transient Failure
+#   4.2  Mailbox Status
+# 4.2.2  Mailbox Full
+
+[4.2.2] +100
+exceeded storage allocation
+Mailbox full
+mailbox is full
+Mailbox quota usage exceeded
+Mailbox size limit exceeded
+over quota
+overquota
+quota exceeded
+Quota violation
+User has exhausted allowed storage space
+User has too many messages on the server
+User mailbox exceeds allowed size
+mailfolder is full
+user has Exceeded
+not enough storage space
+
+# DE
+Benutzer hat zuviele Mails auf dem Server
+
+
+
+
+
+
+
+#     4  Persistent Transient Failure
+#   4.3  Mail System Status
+# 4.3.2  System not accepting network messages
+
+[4.3.2] +100
+Delivery attempts will continue to be made for
+delivery temporarily suspended
+Greylisted for 5 minutes
+Greylisting in action
+Server busy
+server too busy
+system load is too high
+temporarily deferred
+temporarily unavailable
+Throttling
+too busy to accept mail
+too many connections
+too many sessions
+Too much load
+try again later
+Try later
+
+
+
+
+
+
+#     4  Persistent Transient Failure
+#   4.4  Network and Routing Status
+# 4.4.7  Delivery time expired
+[4.4.7] +100
+retry timeout exceeded
+queue too long
+
+
+
+
+
+
+
+
+
+
+###################################################################
+#
+# 5.X.X Hard Bounces
+#
+###################################################################
+#     5  Permanent Failure
+#   5.1  Mail Delivery Protocol Status
+# 5.1.1  Bad destination mailbox address
+
+[5.1.1] +50
+554 delivery error:
+Account has been disabled
+Account is unavailable
+
+
+
+
+
+#     5  Permanent Failure
+#   5.1  Mail Delivery Protocol Status
+# 5.1.1  Bad destination mailbox address
+
+[5.1.1] +50
+554 delivery error:
+Account has been disabled
+Account is unavailable
+Account not found
+Address invalid
+Address is unknown
+Address unknown
+Addressee unknown
+ADDRESS_NOT_FOUND
+Bad address
+Bad destination mailbox address
+does not exist
+Email Address was not found
+Excessive userid unknowns
+Invalid account
+Invalid address
+Invalid or unknown virtual user
+Invalid mailbox
+Invalid recipient
+Mailbox not found
+Mailbox unavailable
+Mailbox currently suspended
+No mail box available for this user
+No mailbox here
+No one with that email address here
+No such address
+No such email address
+No such mail drop defined
+No such mailbox
+No such person at this address
+No such recipient
+No such user
+not a known user
+not a valid mailbox
+not a valid user
+Recipient address rejected
+Recipient not allowed
+Recipient not found
+Recipient rejected
+Recipient unknown
+server doesn't handle mail for that user
+This account is disabled
+This address no longer accepts mail
+This email address is not known to this system
+Unknown account
+Unknown address or alias
+Unknown email address
+Unknown local part
+Unknown or illegal alias
+Unknown or illegal user
+Unknown recipient
+Unknown user
+User disabled
+User doesn't exist in this server
+user invalid
+User is suspended
+User is unknown
+User not found
+User not known
+User unknown
+valid RCPT command must precede DATA
+was not found in LDAP server
+We are sorry but the address is invalid
+Unable to find alias user
+
+# IT
+Indirizzo inesistente
+destin. Sconosciuto
+Destinatario errato
+Destinatario sconosciuto o mailbox disatttivata
+
+#PL
+nie istnieje
+Nie ma takiego konta
+
+[5.1.1] +0
+not available
+not exists
+
+
+
+
+
+
+#     5  Permanent Failure
+#   5.1  Mail Delivery Protocol Status
+# 5.1.2  Bad destination system address 
+
+[5.1.2] +100
+domain isn't in my list of allowed rcpthosts
+hostname is unknown
+host name is unknown
+no relaying allowed
+no such domain
+not our customer
+relay not permitted
+Relay access denied
+relaying denied
+Relaying not allowed
+This system is not configured to relay mail
+Unable to relay
+unrouteable mail domain
+we do not relay
+
+# ES
+Esta casilla ha expirado por falta de uso
+
+
+
+
+
+
+
+
+
+    
+#     5  Permanent Failure
+#   5.1  Mail Delivery Protocol Status
+# 5.1.6  Destination mailbox has moved, No forwarding address  
+
+[5.1.6] +100
+Old address no longer valid
+recipient no longer on server
+
+
+
+
+
+
+
+#     5  Permanent Failure
+#   5.1  Mail Delivery Protocol Status
+# 5.1.8  Bad sender's system address
+
+[5.1.8] +100
+Sender address rejected
+
+
+
+
+#     5  Permanent Failure
+#   5.2  Mailbox Status
+# 5.2.0  Other or undefined mailbox status
+
+[5.2.0] +100
+exceeded the rate limit
+Local Policy Violation
+
+
+
+[5.2.0] +0
+mail can not be delivered
+Delivery failed
+mail couldn't be delivered
+could not be delivered
+The account or domain may not exist
+
+
+
+  
+  
+#     5  Permanent Failure
+#   5.2  Mailbox Status
+# 5.2.1  Mailbox disabled, not accepting messages
+
+[5.2.1] +50
+Account disabled
+account has been disabled
+Account Inactive
+mail is not currently being accepted for this mailbox
+email account that you tried to reach is disabled
+inactive user
+Mailbox disabled for this recipient
+mailbox has been blocked due to inactivity
+mailbox is currently unavailable
+Mailbox is disabled
+Mailbox is inactive
+Mailbox Locked or Suspended
+mailbox temporarily disabled
+Recipient mailbox was disabled
+Domain name not found
+
+# DE
+Adressat unbekannt oder Mailbox deaktiviert
+
+# FR
+Destinataire inconnu ou boite aux lettres desactivee
+
+# IT
+El usuario esta en estado: inactivo
+Questo indirizzo e' bloccato per inutilizzo
+# PL
+Podane konto jest zablokowane administracyjnie lub nieaktywne
+
+
+
+
+     
+#     5  Permanent Failure
+#   5.4  Network and Routing Status
+# 5.4.0  Other or undefined network or routing status
+
+[5.4.0] +100
+couldn't find any host named
+couldn't find any host by that name
+PERM_FAILURE: DNS Error
+Temporary lookup failure
+unrouteable address
+can't connect to
+
+
+#     5  Permanent Failure
+#   5.4  Mail Delivery Protocol Status
+# 5.4.4  Other or undefined protocol status
+
+[5.4.4] +10
+Requested action aborted
+
+
+
+
+
+
+#     5  Permanent Failure
+#   5.4  Network and Routing Status
+# 5.4.6  Routing loop detected
+
+[5.4.6] +100
+Too many hops
+
+
+          
+
+#     5  Permanent Failure
+#   5.6  Message Content or Media Status
+# 5.6.2  Conversion required and prohibited
+
+[5.6.2] +100
+rejecting password protected file attachment
+
+
+
+
+
+
+
+#     5  Permanent Failure
+#   5.7  Security or Policy Status
+# 5.7.1  Delivery not authorized, message refused
+
+[5.7.1] +100
+# HOTMAIL
+# you're on their blocklist
+550 OU-00 
+550 SC-00
+# you're a dynamic IP
+550 DY-00 
+
+554 denied
+
+[5.7.1] +80
+You have been blocked by the recipient
+Access denied
+Administrative prohibition - unable to validate recipient
+Blacklisted
+blocked for spam
+block for spam
+conection refused
+Connection refused due to abuse
+dial-up or dynamic-ip denied
+Domain has received too many bounces
+failed several antispam checks
+found in a DNS blacklist
+IPs blocked
+is blocked by
+REJECT Known SPAM source
+Message does not pass DomainKeys
+Message looks like spam
+not allowed access from your location
+permanently deferred
+Rejected by policy
+rejected by Windows Live Hotmail for policy reasons
+Rejected for policy reasons
+Rejecting banned content
+Sorry, looks like spam
+spam message discarded
+Too many spams from your IP
+
+[5.7.1] +50
+requires that you verify
+Message refused by
+Mail Refused
+TRANSACTION FAILED
+Transaction rejected
+Wiadomosc zostala odrzucona przez system antyspamowy
+Your message was declared Spam
+
+
+
+

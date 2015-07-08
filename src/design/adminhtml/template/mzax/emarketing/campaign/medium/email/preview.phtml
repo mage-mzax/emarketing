@@ -1,0 +1,150 @@
+<?php 
+/* @include license-php.txt */
+
+/* @var $this Mzax_Emarketing_Block_Campaign_Preview */
+/* @var $reference Mzax_Emarketing_Model_Link_Reference */
+?>
+
+<?php echo $this->getBlockHtml('mzax_ace_editor') ?>
+
+<div id="mzax-preview-email">
+    
+    <div id="preview-head">
+        <label class="subject"><?php echo $this->htmlEscape($this->getSubject()) ?></label>
+
+        <ul id="email_preview_tabs">
+            <li class="tab" id="tab_html">HTML</li>
+            <li class="tab" id="tab_text">Text</li>
+            <li class="tab" id="tab_code">Code</li>
+            <li class="tab" id="tab_links">Links</li>
+        </ul>
+        
+    </div>
+    
+    <div id="tab-container">
+        <div id="tab_html_content">
+            <div id="preview-frame"></div>
+        </div>
+        <div id="tab_text_content">
+            <div id="body-text-editor" class="ace-editor"><?php echo $this->getBodyText() ?></div>
+        </div>
+        <div id="tab_code_content">
+            <div id="body-html-editor" class="ace-editor"><?php echo $this->htmlEscape($this->getBodyHtml()) ?></div>
+        </div>
+        <div id="tab_links_content">
+            <p><?php echo $this->__("Detected %s link(s)", count($this->getLinkReferences())) ?></p>
+            <div class="mzax-info-element"><?php echo $this->__('Important, you should not add any unique variables to your links. Try to keep them as generic as possible to get the most out of data tracking without flooding your database.') ?></div>
+            <div id="link-grid" class="grid np">
+                <form action="<?php echo $this->getUrl('*/*/updateLinks', array('_current' => 1)) ?>" method="post">
+                    <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+                    
+                    <table id="mzax-content-link-table" class="data order-tables" cellspacing="0">
+                        <thead>
+                            <tr class="headings">
+                                <th><?php echo $this->__('Link ID') ?></th>
+                                <th><?php echo $this->__('Target URL') ?></th>
+                                <th><?php echo $this->__('Anchor Text') ?></th>
+                                <th><?php echo $this->__('Is OptOut Link') ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($this->getLinkReferences() as $reference): ?>
+                                <tr id="<?php echo $reference->getPublicId() ?>">
+                                    <td class="pid"><?php echo $reference->getPublicId() ?></td>
+                                    <td class="url"><?php echo $reference->getLink()->getUrl() ?></td>
+                                    <td class="anchor"><?php echo $reference->getLink()->getAnchor() ?></td>
+                                    <td class="optout" align="center">
+                                        <input type="hidden" name="optout[<?php echo $reference->getLink()->getId() ?>]" value="0" />
+                                        <input onclick="$('form-buttons').show();" type="checkbox" name="optout[<?php echo $reference->getLink()->getId() ?>]" value="1" <?php echo $reference->getLink()->getOptout() ? 'checked="checked"' : '' ?> />
+                                    </td>
+                               </tr>
+                            <?php endforeach ?>
+                        </tbody>
+                        <tfoot id="form-buttons" style="display: none;">
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th align="center">
+                                <button type="submit" name="update_links" value="1" >Update</button>
+                            </th>
+                        </tfoot>
+                    </table>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="preview-foot">
+        <div class="render-time" onclick="reload();"><?php echo $this->__('Email rendering took <b>%.4f sec</b>', $this->getRenderTime() ) ?></div>
+        <button id="toggle-images">Toggle images</button>
+        <label class="auto-refresh"><input type="checkbox" id="reload-on-save" checked="checked" /> <?php echo $this->__('auto-reload') ?></label>
+    </div>
+</div>
+
+<script type="text/javascript">
+tabBar = new mzax.ui.TabBar($('email_preview_tabs'), 'tab_html');
+divStack = new mzax.ui.FrameStack(tabBar, $('tab-container'));
+
+
+function reload() {
+    mzax.disable();
+    window.location.reload();
+}
+
+
+function initAceEditor(id, mode) {
+    return new  mzax.ui.TextEditor($(id), {
+        mode: "ace/mode/"+mode,
+        theme: "ace/theme/eclipse",
+        readonly: true,
+        useWrapMode: true,
+        aceEnable: <?php echo $this->aceEnabled() ?>
+    });
+}
+
+textEditor = initAceEditor('body-text-editor', 'text');
+htmlEditor = initAceEditor('body-html-editor', 'html');
+
+
+
+var preview = new mzax.ui.PreviewFrame($('preview-frame'), {
+    html: <?php echo Zend_Json::encode($this->getBodyHtml()) ?>,
+    aceEnable: <?php echo $this->aceEnabled() ?>
+});
+
+preview.disableLinks(function(link) {
+    var matches = a.href.match(/\/([a-z0-9]{40})$/i);
+    if(matches) {
+        var url = $(matches[1]).down('.url').innerHTML;
+        alert("Link ("+url+") Tracked");
+    }
+    else {
+        alert("Link Not Tracked");
+    }
+});
+
+
+$('toggle-images').on('click', function(event) {
+    event.stop();
+    preview.toggleImages();
+});
+
+
+
+<?php if($editor = $this->getEditorId()):?>
+var owner = window.opener, contentId = '<?php echo $editor ?>';
+if(owner) {
+    if(!owner.previewWindows) {
+        owner.previewWindows = [];
+    }
+    owner.previewWindows.push(function(event) {
+        //if(event.id == contentId) {
+            if($('reload-on-save').checked) {
+                reload();
+            }
+       // }
+    });
+}
+<?php endif ?>
+
+</script>

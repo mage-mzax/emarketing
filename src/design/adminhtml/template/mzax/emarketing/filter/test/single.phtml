@@ -1,0 +1,72 @@
+<?php 
+/* @include license-php.txt */
+
+/* @var $this Mzax_Emarketing_Block_Filter_Test_Single */
+
+$filter = $this->getFilter();
+?>
+
+<h3><?php echo $this->escapeHtml($filter->asString('text')) ?></h3>
+
+<div class="mzax-filter-date-range">
+    <p><?php echo $this->__('Campaigns normaly check any date-time relative filters by using the current time. However durring testing your filters sometimes will not match any recipients, this is why you can emulate a time period as the current time.') ?></p>
+    <form id="test-date-range" action="<?php echo $this->getUrl('*/*/*', array('_current' => true, '_query' => array('from' => null, 'to' => null)))?>" method="get">
+        <label>
+            <input type="checkbox" name="emulate_time" value="1" <?php echo $this->getRequest()->getParam('emulate_time') ? 'checked="checked"' : '' ?> />
+            <?php echo $this->__('Emulate current time to be anything between') ?>
+        </label>
+        <?php echo $this->getDateElement('from')->toHtml() ?>
+        <?php echo $this->__('and') ?>
+        <?php echo $this->getDateElement('to')->toHtml() ?>
+        <button id="update-test" type="submit">Update</button>
+        
+    </form>
+    <script type="text/javascript">
+
+    new VarienRulesForm('test-date-range', false);
+    $('update-test').on('click', function(event) {
+        Element.show('loading-mask').setStyle({top:0, bottom:0, left:0, right:0, background:'rgba(255,255,255,0.9)'});      
+    });
+    </script>
+</div>
+
+
+
+
+
+
+<div>
+    <?php echo $this->getGridHtml() ?>
+</div>
+
+<?php if($this->isDebugMode()): ?>
+<div>
+    <p><small>
+        <?php echo $this->__("SQL Query took <b>%.4f sec</b>", $this->getQueryTime()) ?>
+        <a href="#" id="filter-btn-sql"><?php echo $this->__('show query') ?></a>
+    </small></p>
+    <div id="filter-test-sql" style="position:relative; padding:10px; border:1px #CBD3D4 solid; background:#F6F6F6;">
+        <img id="filter-btn-sql-hide" src="<?php echo$this->getSkinUrl('images/button-close.png') ?>" style="position:absolute; right:0; top:0;" />
+        <h6><?php echo $this->__('Filter sql select') ?></h6>
+        <?php echo $this->getSqlFormatter()->format($this->getSelect()) ?>
+        
+        <?php if($girdSelect = $this->getGridSelect()): ?>
+            <hr class="mzax-sql-seperator" />
+            <h6><?php echo $this->__('Grid sql select') ?></h6>
+            <?php echo $this->getSqlFormatter()->format($girdSelect) ?>
+        <?php endif ?>
+    </div>
+    
+    <script type="text/javascript">
+        $('filter-test-sql').hide();
+        $('filter-btn-sql').observe('click', function(event) {
+            $('filter-test-sql').show();
+        });
+        $('filter-btn-sql-hide').observe('click', function(event) {
+            $('filter-test-sql').hide();
+        });   
+    </script>     
+</div>  
+<?php endif ?>
+
+ <p><small><?php echo $this->__("Test page load time: <b>%.4f sec</b>", $this->getTime()) ?></small></p>

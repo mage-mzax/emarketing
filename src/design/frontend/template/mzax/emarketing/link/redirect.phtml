@@ -1,0 +1,50 @@
+<?php
+/* @var $ref Mzax_Emarketing_Model_Link_Reference */
+$ref = $this->getLinkReference();
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Email Tracking Redirect</title>
+        <style type="text/css">
+    
+            body {
+                background:#F0F0F0;
+            }
+            #content {
+                position:absolute;
+                left:0;
+                right:0;
+                top:20%;
+                margin:auto;
+                width:100%;
+                max-width:400px;
+                background:#fff;
+                border:1px solid #DDD;
+                padding:10px;
+            }
+            
+            textarea {
+                width:100%;
+                height:50px;
+            }
+            a.follow {
+                display:block;
+                padding:5px;
+                text-align:center;
+            }
+        
+        </style>
+    </head>
+    <body>
+        <div id="content">
+            <?php echo $this->__('This link is tracked and you will be redirected to:') ?>
+            <textarea><?php echo $ref->getTargetUrl() ?></textarea>
+            <div class="warn">
+                <?php echo $this->__('By clicking bellow you can follow the link as the recipient would, it is recommended to do this using a browser not having any cookies set (e.g. Private Modus) as the session of the recipient may get altered.') ?>
+                <a class="follow" href="<?php echo $ref->getRedirectUrl(array('follow' => 1, 'testmail' => 1)) ?>"><?php echo $this->__('Follow redirect...') ?></a>
+            </div>
+        </div>
+    </body>
+</html> 

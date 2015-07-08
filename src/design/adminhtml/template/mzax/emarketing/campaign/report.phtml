@@ -1,0 +1,253 @@
+<?php
+/* @include license-php.txt */
+
+
+/* @var $this Mzax_Emarketing_Block_Campaign_Edit_Tab_Report */
+
+?>
+
+<script type="text/javascript">
+
+function getColorById(id) {
+    switch(id) {
+        case 'sendings': return '<?php Mzax_Emarketing_Block_Campaign_Edit_Tab_Report::COLOR_SENDINGS ?>';
+        case 'views':    return '<?php Mzax_Emarketing_Block_Campaign_Edit_Tab_Report::COLOR_VIEWS ?>';
+        case 'clicks':   return '<?php Mzax_Emarketing_Block_Campaign_Edit_Tab_Report::COLOR_CLICKS ?>';
+        case 'orders':   return '<?php Mzax_Emarketing_Block_Campaign_Edit_Tab_Report::COLOR_ORDERS ?>';
+        case 'optouts':  return '<?php Mzax_Emarketing_Block_Campaign_Edit_Tab_Report::COLOR_OPTOUT ?>';
+        case 'bounds':   return '<?php Mzax_Emarketing_Block_Campaign_Edit_Tab_Report::COLOR_BOUNDS ?>';
+        case 'blank':    return '<?php Mzax_Emarketing_Block_Campaign_Edit_Tab_Report::COLOR_BLANK ?>';
+        default:         return '#CCC';
+    }
+}
+
+</script>
+
+
+
+
+<div id="mzax-emarketing-report" class="entry-edit">
+    
+    
+    <div id="mzax-report-date-range" class="mzax-filter-date-range">
+        <form id="mzax-report-date-range" action="<?php echo $this->getUrl('*/*/*', array('_current' => true, '_query' => array('from' => null, 'to' => null)))?>" method="get">
+            <?php echo $this->__('Only show data between') ?>
+            <?php echo $this->getDateElement('from')->toHtml() ?>
+            <?php echo $this->__('and') ?>
+            <?php echo $this->getDateElement('to')->toHtml() ?>
+            &nbsp;&nbsp;&nbsp;
+            <button id="update-report" type="submit">Update Report</button>
+            
+        </form>
+    </div>
+    <script type="text/javascript">
+
+    new VarienRulesForm('mzax-report-date-range', false);
+    
+    $('update-report').on('click', function(event) {
+        if($(this).descendantOf('edit_form')) {
+            event.stop();
+
+            mzax.report.clearCache();
+            
+            var tab = $('mzax_emarketing_info_tabs_report_content'),
+                url = '<?php echo $this->getUrl('*/*/*', array('_current' => true, '_query' => array('from' => null, 'to' => null)))?>';
+            new Ajax.Request(url, {
+                parameters: {
+                    from: $('report_from').value,
+                    to:   $('report_to').value
+                },
+                onSuccess: function(transport) {
+                    try {
+                        if (transport.responseText.isJSON()) {
+                            var response = transport.responseText.evalJSON()
+                            if (response.error) {
+                                alert(response.message);
+                            }
+                        } else {
+                            tab.update(transport.responseText);
+                        }
+                    }
+                    catch (e) {
+                        tab.update(transport.responseText);
+                    }
+                }
+            });
+            return false;
+        }
+    });
+    </script>
+    
+
+    <ul class="summary-report">
+        <li class="item funnel total">
+            <div class="count">
+                <span class="value"><?php echo $this->getTotal() ?></span>
+                <span class="label"><?php echo $this->__("recipients") ?></span>
+            </div>
+        </li>
+        <li class="item pie funnel">
+            <?php echo $this->getViewsCircle()->toHtml() ?>
+            <div class="count">
+                <span class="value"><?php echo $this->getViewsCircle()->getValue() ?></span>
+                <span class="label"><?php echo $this->getViewsCircle()->getLabel() ?></span>
+            </div>
+        </li>
+        <li class="item pie funnel">
+            <?php echo $this->getClicksCircle()->toHtml() ?>
+            <div class="count">
+                <span class="value"><?php echo $this->getClicksCircle()->getValue() ?></span>
+                <span class="label"><?php echo $this->getClicksCircle()->getLabel() ?></span>
+            </div>
+        </li>
+        <?php if($this->hasTracker()): ?>
+            <li class="item pie orders">
+                <?php echo $this->getOrdersCircle()->toHtml() ?>
+                <div class="count">
+                    <span class="value"><?php echo $this->getOrdersCircle()->getValue() ?></span>
+                    <span class="label"><?php echo $this->getOrdersCircle()->getLabel() ?></span>
+                </div>
+            </li>
+        <?php endif ?>
+        <li class="item pie optout">
+            <?php echo $this->getOptoutCircle()->toHtml() ?>
+            <div class="count">
+                <span class="value"><?php echo $this->getOptoutCircle()->getValue() ?></span>
+                <span class="label"><?php echo $this->getOptoutCircle()->getLabel() ?></span>
+            </div>
+        </li>
+    </ul>
+    
+    
+    
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__("Activity") ?></h4>
+    </div>
+    <div class="fieldset">
+        <p><?php echo $this->__("Shows a historical view of what happened when. It shows insides how frequently the campaign is beeing send out, viewed, etc...") ?></p>
+        <p><?php echo $this->__("Please keep in mind that 'Views' are not 100% accurate as email clients may prevent tracking. It still can provide a rough idea though." ) ?></p>
+        
+        <div class="row activity">
+            <div class="column strech">
+                <?php echo $this->getActivityBlock()->toHtml() ?>
+            </div>
+        </div>
+        
+        
+    </div>
+    
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend">Preformance Rates</h4>
+    </div>
+    <div class="fieldset">
+        <h3><?php echo $this->__('View/Click/Conversion Rates') ?></h3>
+        <p><?php echo $this->__('Shows the different rate metrics over time.') ?></p>
+        <div class="row conversion-rate">
+            <div class="column strech">
+                <?php echo $this->getConversionBlock()->toHtml() ?>
+            </div>
+        </div>
+        <?php if($this->hasTracker()): ?>
+            <hr />
+            <h3><?php echo $this->__('Revenue') ?></h3>
+            <p><?php echo $this->__('Shows the revenue made at given time period') ?></p>
+            <div class="row conversion-rate">
+                <div class="column strech">
+                    <?php echo $this->getRevenueChart()->toHtml() ?>
+                </div>
+            </div>
+            
+            <hr />
+            <h3><?php echo $this->__('Revenue sum') ?></h3>
+            <p><?php echo $this->__('Shows the total amount of revenue made at a certain point in time.') ?></p>
+            <div class="row conversion-rate">
+                <div class="column strech">
+                    <?php echo $this->getRevenueChart('sum')->toHtml() ?>
+                </div>
+            </div>
+            
+            <hr />
+            <h3><?php echo $this->__('Revenue per recipient') ?></h3>
+            <p><?php echo $this->__('The total amount divided by the number of recipients (sendouts)') ?></p>
+            <div class="row conversion-rate">
+                <div class="column strech">
+                    <?php echo $this->getRevenueChart('rate', 'line')->toHtml() ?>
+                </div>
+            </div>
+        <?php endif ?>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__("Dimensions") ?></h4>
+    </div>
+    <div class="fieldset">
+        <div class="row segments">
+            <div class="column small">
+                <h3>Useragent</h3>
+                <?php echo $this->getDimensionPie('ua')->toHtml() ?>
+            </div>
+            <div class="column small">
+                <h3>Device Type</h3>
+                <?php echo $this->getDimensionPie('device_type')->toHtml() ?>
+            </div>
+            <div class="column small">
+                <h3>Device Brand</h3>
+                <?php echo $this->getDimensionPie('device_brand')->toHtml() ?>
+            </div>
+            <div class="column small">
+                <h3>Operation System</h3>
+                <?php echo $this->getDimensionPie('os')->toHtml() ?>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend">Stats by day of time</h4>
+    </div>
+    <div class="fieldset">
+        <p><?php echo $this->__('Views and clicks use the users local timezone if it was available, while ther rest will use the store timezone settings') ?></p>
+        <div class="row segments">
+            <div class="column small">
+                <?php echo $this->getDimensionChart('hour', 'column')->toHtml() ?>
+            </div>
+            <div class="column small">
+                <?php echo $this->getDimensionChart('dayofweek', 'column')->toHtml() ?>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend">Stats by Country and Region</h4>
+    </div>
+    <div class="fieldset">
+        <p><?php echo $this->__('If geoIP is enabled you can see the origin of view and click events.') ?></p>
+        <div class="row conversion-rate">
+            <div class="column strech">
+                <?php echo $this->getGeoChart()->toHtml() ?>
+                
+                <dl class="mzax-geoip-credits">
+                    <dt><?php echo $this->__('Powered by:') ?></dt>
+                    <?php foreach($this->getGeoIpCredits() as $credit): ?>
+                        <dd><?php echo $credit ?></dd>
+                    <?php endforeach ?>
+                </dl>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+
+</div>
+
+

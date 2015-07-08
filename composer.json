@@ -1,0 +1,26 @@
+{
+    "name": "mzax/emarketing",
+    "description": "Magento extension to xreate automated marketing campaigns that run for a set period of time and target customers determined by multiple filters.",
+    "type": "magento-module",
+    "homepage": "http://www.mzax.de",
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Jacob Siefer",
+            "email": "jacob@mzax.de"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.firegento.com"
+        }
+    ],
+    "require-dev" : {
+    	"magento/core": "~1.9",
+    	"symfony/css-selector": "~2.7",
+    	"soundasleep/html2text": "*",
+    	"ua-parser/uap-php": "~3.4",
+    	"tijsverkoyen/css-to-inline-styles": "~1.5"
+    }
+}

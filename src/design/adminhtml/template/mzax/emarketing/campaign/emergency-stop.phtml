@@ -1,0 +1,11 @@
+<?php 
+/* @var $campaign Mzax_Emarketing_Model_Campaign */
+$campaign = Mage::registry('current_campaign');
+
+$stopUrl = $this->getUrl('*/*/stopNow', array('_current' => true));
+?>
+<?php if($campaign->isRunning()): ?>
+    <div class="mzax-info-element">
+        <p><?php echo $this->__('This campaign is running! Be careful when making any changes!') ?></p>
+    </div>
+<?php endif ?>

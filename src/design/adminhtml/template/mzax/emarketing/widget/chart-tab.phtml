@@ -1,0 +1,66 @@
+<?php
+/* @include license-php.txt */
+
+/* @var $this Mzax_Emarketing_Block_Chart_Widget_Tab */
+
+$table = $this->getTable();
+$chart = $this->getChart();
+?>
+<div id="<?php echo $this->getHtmlId() ?>" class="chart-tab-container">
+    <ul class="option-tabs">
+        <?php foreach($this->getTabs() as $id => $tab): ?>
+            <li class="tab <?php echo $id ?> <?php echo $this->getTabClass($tab) ?>" data-tabId="<?php echo $id ?>" data-metric="<?php echo $this->getTabMetric($tab) ?>">
+                <span class="title"><?php echo $this->getTabLabel($tab) ?></span>
+                <?php if(is_array($tab['metric'])) :?>
+                    <div class="drop-arrow"></div>
+                    <ul class="metric-options" style="display:none;">
+                    <?php foreach($tab['metric'] as $metric => $label) :?>
+                        <li class="option" data-metric="<?php echo $metric ?>"><?php echo $label ?></li>
+                    <?php endforeach ?>
+                    </ul>
+                <?php endif ?>
+            </li>
+        <?php endforeach ?>
+    </ul>
+    <div class="options">
+        <div class="loading"><?php echo $this->__('Loading...') ?></div>
+        <?php if($this->getQuery()->getParam('dimension') === 'date'): ?>
+            <label><input class="cb variation-checkbox" type="checkbox" /> <?php echo $this->__("Split by AB-test variations") ?></label>
+        <?php endif ?>
+        <?php if($this->getQuery()->getParam('dimension') === 'date'): ?>
+            <label>
+                <select class="time_unit">
+                    <option value="auto"></option>
+                    <option value="days"><?php echo $this->__('by days') ?></option>
+                    <option value="weeks"><?php echo $this->__('by weeks') ?></option>
+                    <option value="months"><?php echo $this->__('by months') ?></option>
+                </select>
+            </label>
+        <?php endif ?>
+        <?php if($this->getCampaign()): ?>
+            <label>
+                <select class="variations">
+                    <option value="-1"><?php echo $this->__('All') ?></option>
+                    <option value="0"><?php echo $this->__('Orignal') ?></option>
+                    <?php foreach($this->getCampaign()->getVariations() as $variation): ?>
+                        <option value="<?php echo $variation->getId() ?>"><?php echo $variation->getName() ?></option>
+                    <?php endforeach ?>
+                </select>
+            </label>
+        <?php endif ?>
+        
+        
+    </div>
+    <div class="chart"></div>
+    <div class="no-data"><?php echo $this->__("There is not enough data available yet to show any chart.") ?></div>
+</div>
+<script type="text/javascript">
+var chartBlock_<?php echo $this->getHtmlId() ?> = (function() {
+    var chartBlock = new mzax.report.ChartBlock('<?php echo $this->getQueryUrl() ?>', <?php echo $this->getQueryParams() ?>);
+    chartBlock.setOptions(<?php echo $chart->getOptionJs() ?>);
+    chartBlock.setData(<?php echo $table->asJson() ?>);
+    chartBlock.chartClass = <?php echo $chart->getChartClass() ?>;
+    chartBlock.init($('<?php echo $this->getHtmlId() ?>'));
+    return chartBlock;
+}());
+</script>

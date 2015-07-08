@@ -1,0 +1,587 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mzax Emarketing (www.mzax.de)
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this Extension in the file LICENSE.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * 
+ * @version     {{version}}
+ * @category    Mzax
+ * @package     Mzax_Emarketing
+ * @author      Jacob Siefer (jacob@mzax.de)
+ * @copyright   Copyright (c) 2015 Jacob Siefer
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <sections>
+        <mzax_emarketing module="mzax_emarketing">
+            <label>eMarketing</label>
+            <tab>customer</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable eMarketing</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <tooltip><![CDATA[Disabling will only prevent any crontab from running. You can still send out campaigns manually.]]></tooltip>
+                        </enable>
+                        <use_temp_tables translate="label comment">
+                            <label>Use Temporary Tables</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Testing complex filters can be faster with this option enabled. DB user requires temporary table privileges though.]]></comment>
+                        </use_temp_tables>
+                        <can_create_indexes translate="label comment tooltip">
+                            <label>Allow filters to create indexes</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Allow to create missing indexes on existing tables to increase performance.]]></comment>
+                            <tooltip><![CDATA[Some filters may not perform well if they miss an index on important columns. A filter can check for known issues and create those indexes. Those indexes are only created if the filters are used.]]></tooltip>
+                        </can_create_indexes>
+                    </fields>
+                </general>
+                
+                <content_management translate="label">
+                    <label>Content Management</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>15</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enable_ckeditor translate="label comment tooltip">
+                            <label>Enable WYSIWYG Editor</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Enable the <a href="http://ckeditor.com/" target="_blank">CKEditor</a> for WYSIWYG]]></comment>
+                            <tooltip><![CDATA[Remember, the CKEditor can also be disabled by each campaign if you disable design mode. This is usefull if the editor keeps messing with your code.]]></tooltip>
+                        </enable_ckeditor>
+                        <enable_ace translate="label comment">
+                            <label>Enable Syntax Highlighting</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Enable the <a href="http://ace.c9.io/" target="_blank">ACE Editor</a> for syntax highlighting]]></comment>
+                        </enable_ace>
+                    </fields>
+                </content_management>
+                
+                
+                
+                
+                
+				<google_analytics translate="label">
+                    <label>Google Analytics</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label comment tooltip">
+                            <label>Enable UTM Parameters</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>When enabled, the ?utm_* parameters will automatically be filled in.</comment>
+                            <tooltip><![CDATA[campaign, content parameters will be automatically set by each campaign.]]></tooltip>
+                        </enable>
+                        <utm_source translate="label comment">
+                            <label>UTM Source</label>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>What to use for the `utm_source` parameter</comment>
+                        </utm_source>
+                        <utm_medium translate="label comment">
+                            <label>UTM Medium</label>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>What to use for the `utm_medium` parameter</comment>
+                        </utm_medium>
+                    </fields>
+                </google_analytics>
+                
+                
+                <domain_throttling translate="label">
+                    <label>Domain Throttling</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enable translate="label comment">
+                            <label>Enable Domain Throttling</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Will prevent sending to many emails to one domain in a short timeframe.</comment>
+                        </enable>
+                        <time_threshold translate="label comment">
+                            <label><![CDATA[Time Threshold <sub><strong>[T]</strong></sub>]]></label>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <validate>validate-not-negative-number</validate>
+                            <comment>The treshold time (in seconds), works together with send threshold.</comment>
+                        </time_threshold>
+                        <send_threshold translate="label comment">
+                            <label><![CDATA[Send Threshold <sub><strong>[S]</strong></sub>]]></label>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <validate>validate-not-negative-number</validate>
+                            <comment>The number of emails that can be send to one domain within the threshold time before we rest the domain.</comment>
+                        </send_threshold>
+                        <rest_time translate="label comment">
+                            <label><![CDATA[Rest Time <sub><strong>[R]</strong></sub>]]></label>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <validate>validate-not-negative-number</validate>
+                            <comment>The number of seconds to wait before sending an email to this domain again after the send threshold exceeded.</comment>
+                        </rest_time>
+                        <domain_specific translate="label comment">
+                            <label>Domain specific</label>
+                            <frontend_model>mzax_emarketing/system_config_form_field_domainThreshold</frontend_model>
+                            <backend_model>mzax_emarketing/system_config_backend_domainThreshold</backend_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>You can define custom settings for each domains (e.g. gmail.com, hotmail.com)</comment>
+                        </domain_specific>
+                    </fields>
+                </domain_throttling>
+                
+                <tracking translate="label">
+                    <label>Tracking</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>40</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <inject_timeoffset_js translate="label comment">
+                            <label>Inject Timeoffset JS</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Use JavaScript to retrieve the users time-offset (most accurate)</comment>
+                            <tooltip><![CDATA[The extension will place mini js snippet at the bottom <abbr title="Append add the bottom using the 'before_body_end' layout block name">(before_body_end)</em> which will set a cookie <abbr title="The script will use the Mage.Cookie api for that">(Mage.Cookies)</em>]]></tooltip>
+                        </inject_timeoffset_js>
+                        <use_geo_ip translate="label comment">
+                            <label>Use GeoIP</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Use any of the GeoIP adapters bellow to retrieve the recipient location by IP (Country, Region)</comment>
+                        </use_geo_ip>
+                        <geo_ip_adapters translate="label comment">
+                            <label>GeoIP Adapters</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>mzax_emarketing/system_config_source_geoIp</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Depending on the number of emails, a paid solution may be requried (1000+ per day)</comment>
+                        </geo_ip_adapters>
+                    </fields>
+                </tracking>
+                
+                <autologin translate="label">
+                    <label>Autologin</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>40</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label comment">
+                            <label>Enable Autologin</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Customers can get logged in if possible automatically when clicking on a link</comment>
+                            <tooltip><![CDATA[This is a global setting which will overwrite the campaign based setting.]]></tooltip>
+                        </enable>
+                        <expire translate="label comment">
+                            <label>Expire</label>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-not-negative-number</validate>
+                            <comment>The number of hours after the email was send till the autologin expires. (0 = never)</comment>
+                        </expire>
+                    </fields>
+                </autologin>
+                
+				<inbox translate="label">
+                    <label>Inbox / Bounce Messages</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>80</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                    	<test translate="label">
+                            <label>Connection Test</label>
+                            <frontend_model>mzax_emarketing/system_config_form_field_mailStorage</frontend_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                        </test>
+                        <enable translate="label comment tooltip">
+                            <label>Enable Inbox</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <tooltip><![CDATA[<strong>Warning:</strong> All emails will be deleted once pulled from the specified account bellow!]]></tooltip>
+                            <comment><![CDATA[You need to configure an email inbox to check for bounce messages.]]></comment>
+                        </enable>
+                        <storage_type translate="label comment">
+                            <label>Storage Type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>mzax_emarketing/system_config_source_mailStorage</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[]]></comment>
+                            <depends><enable>1</enable></depends>
+                        </storage_type>
+                        <hostname translate="label comment">
+                            <label>Hostname</label>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[]]></comment>
+                            <depends><enable>1</enable></depends>
+                        </hostname>
+                        <username translate="label comment">
+                            <label>Username</label>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[]]></comment>
+                            <depends><enable>1</enable></depends>
+                        </username>
+                        <password translate="label comment">
+                            <label>Password</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[]]></comment>
+                            <depends><enable>1</enable></depends>
+                        </password>
+                        <port translate="label comment">
+                            <label>Port</label>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <validate>validate-not-negative-number</validate>
+                            <comment><![CDATA[Default POP3 SSL port is 995]]></comment>
+                            <depends><enable>1</enable></depends>
+                        </port>
+                        <ssl translate="label">
+                            <label>SSL</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><enable>1</enable></depends>
+                        </ssl>
+                        <enable_forward_email translate="label comment">
+                            <label>Forward non-bonce messages</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1000</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[Any message that was not parsed as bounce or auto reply  will get forwarded.]]></comment>
+                        </enable_forward_email>
+                        <forward_identity translate="label comment">
+                            <label>Forward Sender</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_identity</source_model>
+                            <sort_order>1005</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </forward_identity>
+                        <forward_emails translate="label comment">
+                            <label>Forward to emails:</label>
+                            <sort_order>1010</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[A comma separated list of all emails to forward non-bounce messages. This can also be set per campaign.]]></comment>
+                        </forward_emails>
+                        <unsubscribe_hard_bounce translate="label comment">
+                            <label>Unsubscribe Bounces</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1020</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[Automatically unsubscribe any emails that bounce off. (hard bounce only)]]></comment>
+                        </unsubscribe_hard_bounce>
+                        <max_download_size translate="label comment">
+                            <label>Max Inbound Email Size</label>
+                            <sort_order>1030</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[The maximum size in megabytes to download from the inbox.]]></comment>
+                        	<tooltip><![CDATA[If email exceeds this limit, the email will still be downloaded but the content will be discarded. The max size should not exceed any PHP memory limit.]]></tooltip>
+                        </max_download_size>
+                    </fields>
+                </inbox>
+                
+                <email translate="label">
+                    <label>Email</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <css_inliner translate="label comment">
+                            <label>Enable CSS Inliner</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>CSS will be parsed and then inject directly in the HTML code. Some email clients (e.g. Google) don’t allow CSS in the header.</comment>
+                        </css_inliner>
+                        <remove_comments translate="label comment">
+                            <label>Remove HTML/CSS comments</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </remove_comments>
+                        <test_mode translate="label comment">
+                            <label>Test Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-not-negative-number</validate>
+                            <comment>Emails will not get send to the recipients, but instead send to the address defined bellow.</comment>
+                        </test_mode>
+                        <test_mode_address translate="label comment">
+                            <label>Test Mode Address</label>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-email</validate>
+                            <comment>Email Address for test mode..</comment>
+                        </test_mode_address>
+                        <list_unsubscibe translate="label comment">
+                            <label>Enable List Unsubscribe</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-not-negative-number</validate>
+                            <comment>Add list-unsubscribe header field. (recommended).</comment>
+                        </list_unsubscibe>
+                        <list_unsubscibe_address translate="label comment">
+                            <label>List Unsubscribe (mailto:)</label>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-email</validate>
+                            <comment>Http list unsubscribe is handled automatically, if you use the bounce/inbox, enter the reply-to email address to automatically handle mailto: unsubscribes.</comment>
+                        </list_unsubscibe_address>
+                        
+                        <transporter translate="label comment">
+                            <label>Email Transporter</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>mzax_emarketing/outbox_transporter</source_model>
+                            <sort_order>1000</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>How would you like to sendout your emails</comment>
+                        </transporter>
+                        <smtp_auth translate="label comment">
+                            <label>Authentication</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>mzax_emarketing/system_config_source_smtpAuthentication</source_model>
+                            <sort_order>1005</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><transporter>smtp</transporter></depends>
+                        </smtp_auth>
+ 						<smtp_hostname translate="label comment">
+                            <label>Hostname</label>
+                            <sort_order>1010</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><transporter>smtp</transporter></depends>
+                        </smtp_hostname>
+                        <smtp_username translate="label comment">
+                            <label>Username</label>
+                            <sort_order>1020</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><transporter>smtp</transporter></depends>
+                        </smtp_username>
+                        <smtp_password translate="label comment">
+                            <label>Password</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>1030</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><transporter>smtp</transporter></depends>
+                        </smtp_password>
+                        <smtp_port translate="label comment">
+                            <label>Port</label>
+                            <sort_order>1040</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-not-negative-number</validate>
+                            <depends><transporter>smtp</transporter></depends>
+                        </smtp_port>
+                        <smtp_ssl translate="label">
+                            <label>TLS</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1050</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><transporter>smtp</transporter></depends>
+                        </smtp_ssl>
+                        
+                    </fields>
+                </email>
+                
+                
+            </groups>
+        </mzax_emarketing>
+		<trans_email>
+ 			<groups>
+                <ident_emarketing module="mzax_emarketing" translate="label">
+                    <label>eMarketing</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <email translate="label">
+                            <label>Sender email</label>
+                            <frontend_type>text</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_email_address</backend_model>
+                            <validate>validate-email</validate>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </email>
+                        <name translate="label">
+                            <label>Sender name</label>
+                            <frontend_type>text</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_email_sender</backend_model>
+                            <validate>validate-emailSender</validate>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </name>
+                    </fields>
+                </ident_emarketing>
+			</groups>
+		</trans_email>
+    </sections>
+</config>

@@ -1,0 +1,46 @@
+<?php
+/* @include license-php.txt */
+
+/* @var $this Mzax_Emarketing_Block_Chart_Widget_Geo */
+
+$table = $this->getTable();
+$chart = $this->getChart();
+?>
+<div id="<?php echo $this->getHtmlId() ?>" class="chart-tab-container">
+    <ul class="option-tabs">
+        <?php foreach($this->getTabs() as $id => $tab): ?>
+            <li class="tab <?php echo $id ?> <?php echo $this->getTabClass($tab) ?>" data-tabId="<?php echo $id ?>" data-metric="<?php echo $this->getTabMetric($tab) ?>">
+                <span class="title"><?php echo $this->getTabLabel($tab) ?></span>
+                <?php if(is_array($tab['metric'])) :?>
+                    <div class="drop-arrow"></div>
+                    <ul class="metric-options" style="display:none;">
+                    <?php foreach($tab['metric'] as $metric => $label) :?>
+                        <li class="option" data-metric="<?php echo $metric ?>"><?php echo $label ?></li>
+                    <?php endforeach ?>
+                    </ul>
+                <?php endif ?>
+            </li>
+        <?php endforeach ?>
+    </ul>
+    <div class="options">
+        <div class="loading"><?php echo $this->__('Loading...') ?></div>
+        <ul class="breadcrumbs">
+            <li class="world">World</li>
+            <li class="region"></li>
+        </ul>
+        <label><input class="cb" type="checkbox" /> <?php echo $this->__("Split by AB-test variations") ?></label>
+    </div>
+    <div class="chart"></div>
+    <div class="no-data"><?php echo $this->__("There is not enough data available yet to show any chart.") ?></div>
+</div>
+<script type="text/javascript">
+(function() {
+
+    var geoBlock = new mzax.report.GeoChartBlock('<?php echo $this->getQueryUrl() ?>', <?php echo $this->getQueryParams() ?>);
+    geoBlock.setOptions(<?php echo $chart->getOptionJs() ?>);
+    geoBlock.setData(<?php echo $table->asJson() ?>);
+    geoBlock.chartClass = <?php echo $chart->getChartClass() ?>;
+    geoBlock.init($('<?php echo $this->getHtmlId() ?>'));
+    
+}());
+</script>

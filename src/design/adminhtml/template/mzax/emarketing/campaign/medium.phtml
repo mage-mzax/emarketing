@@ -1,0 +1,48 @@
+<?php $_element = $this->getElement() ?>
+<?php if ($_element->getFieldsetContainerId()): ?>
+<div id="<?php echo $_element->getFieldsetContainerId(); ?>">
+<?php endif; ?>
+<?php if ($_element->getLegend()): ?>
+<div class="entry-edit-head">
+    <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $_element->getLegend() ?></h4>
+    <div class="form-buttons"><?php echo $_element->getHeaderBar() ?></div>
+</div>
+<?php endif; ?>
+<?php if (!$_element->getNoContainer()): ?>
+    <div class="fieldset <?php echo $_element->getClass() ?>" id="<?php echo $_element->getHtmlId() ?>">
+<?php endif; ?>
+    <div class="hor-scroll">
+        <?php if ($_element->getComment()): ?>
+            <p class="comment"><?php echo $this->escapeHtml($_element->getComment()) ?></p>
+        <?php endif; ?>
+        <?php if ($_element->hasHtmlContent()): ?>
+            <?php echo $_element->getHtmlContent(); ?>
+        <?php else: ?>
+        <table cellspacing="0" class="<?php echo $_element->hasTableClass() ? $_element->getTableClass() : 'form-list'?>">
+            <tbody>
+                <?php echo $_element->getChildrenHtml(); ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div class="mzax-fieldset-continue">
+                            <button onclick="editForm.submit();" class="scalable save"><span><?php echo $this->__('Continue') ?></span></button>
+                        </div>
+                        <div class="mzax-offer">
+                            <?php echo $this->__('Would you like to send out campaigns using different mediums? <a href="%s" target="_blank">Contact me</a>!', 'http://www.mzax.de/emarketing/mediums.html?utm_source=extension&utm_medium=link&utm_content=choose-medium-footer&utm_campaign=needmore') ?>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <?php endif; ?>
+    </div>
+    <?php echo $_element->getSubFieldsetHtml() ?>
+<?php if (!$_element->getNoContainer()): ?>
+    </div>
+<?php endif; ?>
+<?php if ($_element->getFieldsetContainerId()): ?>
+</div>
+<?php endif; ?>

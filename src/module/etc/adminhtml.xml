@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mzax Emarketing (www.mzax.de)
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this Extension in the file LICENSE.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * 
+ * @version     {{version}}
+ * @category    Mzax
+ * @package     Mzax_Emarketing
+ * @author      Jacob Siefer (jacob@mzax.de)
+ * @copyright   Copyright (c) 2015 Jacob Siefer
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <menu>
+         <promo>
+            <children>
+                <emarketing translate="title" module="mzax_emarketing">
+                    <title>eMarketing Campaigns</title>
+	                <sort_order>100</sort_order>
+					<action>admin_mzax_emarketing/admin_campaign/index</action>
+                    <depends><module>Mage_Sales</module></depends>
+                    <children>
+                    	<campaigns translate="title" module="mzax_emarketing">
+		                    <title>Manage Campaigns</title>
+			                <sort_order>10</sort_order>
+							<action>admin_mzax_emarketing/admin_campaign/index</action>
+                    	</campaigns>
+                    	<templates translate="title" module="mzax_emarketing">
+		                    <title>Manage Email Templates</title>
+			                <sort_order>20</sort_order>
+							<action>admin_mzax_emarketing/admin_template/index</action>
+                    	</templates>
+                    	<trackers translate="title" module="mzax_emarketing">
+		                    <title>Manage Conversion Trackers</title>
+			                <sort_order>25</sort_order>
+							<action>admin_mzax_emarketing/admin_tracker/index</action>
+                    	</trackers>
+                    	<email translate="title" module="mzax_emarketing">
+		                    <title>Manage Emails</title>
+			                <sort_order>30</sort_order>
+		                    <children>
+		                    	<inbox translate="title" module="mzax_emarketing">
+				                    <title>Inbox</title>
+					                <sort_order>10</sort_order>
+									<action>admin_mzax_emarketing/admin_inbox/index</action>
+		                    	</inbox>
+		                    	<outbox translate="title" module="mzax_emarketing">
+				                    <title>Outbox</title>
+					                <sort_order>10</sort_order>
+									<action>admin_mzax_emarketing/admin_outbox/index</action>
+		                    	</outbox>
+		                    </children>
+	                    </email>
+                    </children>
+                </emarketing>
+            </children>
+         </promo>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <promo>
+                        <children>
+                            <emarketing translate="title" module="mzax_emarketing">
+                                <title>eMarketing Campaigns</title>
+                                <children>
+                                	<campaigns translate="title" module="mzax_emarketing">
+		                                <title>Email Marketing</title>
+		                                <sort_order>10</sort_order>
+		                            </campaigns>
+		                            <templates translate="title" module="mzax_emarketing">
+		                                <title>Email Templates</title>
+		                                <sort_order>20</sort_order>
+		                            </templates>
+		                            <trackers translate="title" module="mzax_emarketing">
+		                                <title>Email Templates</title>
+		                                <sort_order>25</sort_order>
+		                            </trackers>
+		                            <email translate="title" module="mzax_emarketing">
+		                                <title>Manage Emails</title>
+		                                <sort_order>30</sort_order>
+		                            </email>
+                                </children>
+                            </emarketing>
+                        </children>
+                    </promo>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <mzax_emarketing translate="title" module="mzax_emarketing">
+                                        <title>eMarketing Section</title>
+                                    </mzax_emarketing>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+     </acl>
+</config>

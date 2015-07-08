@@ -1,0 +1,75 @@
+<?php
+/* @include license-php.txt */
+
+/* @var $this Mzax_Emarketing_Block_Campaign_Edit_Tab_Content */
+?>
+
+<ul id="<?php echo $this->getId() ?>" class="mzax-variation-tabs">
+    <?php foreach ($tabs as $_tab): ?>
+        <li>
+            <a href="<?php echo $this->getTabUrl($_tab)?>" id="<?php echo $this->getTabId($_tab) ?>" title="<?php echo $this->getTabTitle($_tab) ?>" class="variation-tab tab-item-link <?php echo $this->getTabClass($_tab) ?>">
+                <span>
+                    <span class="changed" title="<?php echo $this->__('The information in this tab has been changed.') ?>"></span>
+                    <span class="error" title="<?php echo $this->__('This tab contains invalid data. Please solve the problem before saving.') ?>"></span>
+                    <?php echo $this->helper('core/string')->truncate($this->getTabLabel($_tab), 25) ?>
+                    <?php if($removeUrl = $_tab->getRemoveUrl()): ?>
+                        <img src="<?php echo $this->getSkinUrl('mzax/images/delete.png') ?>" onclick="deleteConfirmVariation('<?php echo $this->__('Are you sure you want to delete this variation?') ?>', '<?php echo $removeUrl ?>')"  alt="<?php $this->__('Remove Variation') ?>" class="v-middle delete-variation" />
+                    <?php endif ?>
+                </span>
+            </a>
+            <div id="<?php echo $this->getTabId($_tab) ?>_content" style="display:none"><?php echo $this->getTabContent($_tab) ?></div>
+        </li>
+    <?php endforeach; ?>
+    <?php if(!$this->getDisabled()): ?>
+        <li class="add-variation">
+            <a href="#" onclick="navigateTo('<?php echo $this->getAddUrl() ?>')" class="variation-tab new-variation" >
+                <span>
+                    <?php if(count($tabs) > 1):?>
+                        <img src="<?php echo $this->getSkinUrl('mzax/images/add.png') ?>" class="v-middle" alt="" title="<?php echo $this->__('Add Variation') ?>"/>
+                    <?php else: ?>
+                        <?php echo $this->__('Add Variation') ?>
+                    <?php endif ?>
+                </span>
+            </a>
+        </li>
+        
+        <?php if(count($tabs) > 2): ?>
+        <li class="delete-all-variations">
+            <a href="#" onclick="deleteConfirmVariation('<?php echo $this->__('Are you sure you want to delete ALL variations?') ?>', '<?php echo $this->getRemoveUrl() ?>')" class="variation-tab delete-all-variations" >
+                <span>
+                    <?php echo $this->__('delete all variations') ?>
+                </span>
+            </a>
+        </li>
+        <?php endif ?>
+    <?php endif ?>
+</ul>
+<div id="content-status-bar"></div>
+<script type="text/javascript">
+
+/* allows us to check for form changes */
+$('page:main-container').statusBar = $('content-status-bar');
+var unsavedChangesMsg = '<?php echo $this->__('You have unsaved form changes which will get lost, are you sure you want to continue?') ?>';
+
+/* show loading mask */
+function showLoadingMask() {
+    Element.show('loading-mask').setStyle({top:0, bottom:0, left:0, right:0, background:'rgba(255,255,255,0.9)'});
+}
+
+function navigateTo(url) {
+    if(!$('content-status-bar').hasClassName('changed') || confirm(unsavedChangesMsg)) {
+        showLoadingMask();
+        setLocation(url);
+    }
+}
+
+function deleteConfirmVariation(message, url) {
+    if( confirm(message) ) {
+        navigateTo(url);
+    }
+    return false;
+}
+
+<?php echo $this->getId() ?>JsTabs = new varienTabs('<?php echo $this->getId() ?>', '<?php echo $this->getDestElementId() ?>', '<?php echo $this->getActiveTabId() ?>', <?php echo $this->getAllShadowTabs()?>);
+<?php echo $this->getId() ?>JsTabs.tabs.each(function(tab) {tab.removeClassName('tab-item-link')});
+</script>

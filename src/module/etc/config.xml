@@ -1,0 +1,419 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mzax Emarketing (www.mzax.de)
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this Extension in the file LICENSE.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * 
+ * @version     {{version}}
+ * @category    Mzax
+ * @package     Mzax_Emarketing
+ * @author      Jacob Siefer (jacob@mzax.de)
+ * @copyright   Copyright (c) 2015 Jacob Siefer
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <modules>
+        <Mzax_Emarketing>
+        	<version>0.2.6</version>
+		</Mzax_Emarketing>
+	</modules>
+    <global>
+        <models>
+            <mzax_emarketing>
+                <class>Mzax_Emarketing_Model</class>
+                <resourceModel>mzax_emarketing_resource</resourceModel>
+            </mzax_emarketing>
+            <mzax_emarketing_resource>
+                <class>Mzax_Emarketing_Model_Resource</class>
+                <entities>
+                    <campaign><table>mzax_emarketing_campaign</table></campaign>
+                    <campaign_variation><table>mzax_emarketing_campaign_variation</table></campaign_variation>
+                    
+                    <template><table>mzax_emarketing_template</table></template>
+                    
+					<recipient><table>mzax_emarketing_recipient</table></recipient>
+					<recipient_event><table>mzax_emarketing_recipient_event</table></recipient_event>
+					<recipient_address><table>mzax_emarketing_email_address</table></recipient_address>
+					<recipient_error><table>mzax_emarketing_recipient_error</table></recipient_error>
+					
+					<useragent><table>mzax_emarketing_useragent</table></useragent>
+					
+					<link><table>mzax_emarketing_link</table></link>
+					<link_group><table>mzax_emarketing_link_group</table></link_group>
+					<link_reference><table>mzax_emarketing_link_reference</table></link_reference>
+					<link_reference_click><table>mzax_emarketing_link_click</table></link_reference_click>
+					
+					
+					<inbox_email><table>mzax_emarketing_email_inbox</table></inbox_email>
+					<outbox_email><table>mzax_emarketing_email_outbox</table></outbox_email>
+					
+					
+					<goal><table>mzax_emarketing_goal</table></goal>
+					
+					
+					<conversion_tracker><table>mzax_emarketing_conversion_tracker</table></conversion_tracker>
+					<conversion_tracker_goal><table>mzax_emarketing_conversion_tracker_goal</table></conversion_tracker_goal>
+					
+					<report><table>mzax_emarketing_report</table></report>
+					<report_conversion><table>mzax_emarketing_report_conversion</table></report_conversion>
+					<report_dimension><table>mzax_emarketing_report_dimension</table></report_dimension>
+					<report_dimension_conversion><table>mzax_emarketing_report_dimension_conversion</table></report_dimension_conversion>
+					<report_enum><table>mzax_emarketing_report_enum</table></report_enum>
+					
+					<customer_website><table>customer_website</table></customer_website>
+                </entities>
+            </mzax_emarketing_resource>
+        </models>
+        
+        <rewrite>
+            <mzax_emarketing_goto>
+                <from><![CDATA[#^/link-goto/#]]></from>
+                <to><![CDATA[/mzax_emarketing/link/goto/hash/]]></to>
+            </mzax_emarketing_goto>
+            <mzax_emarketing_beacon>
+                <from><![CDATA[#^/emarketing\-media/([0-9a-zA-Z]+)/logo\.gif$#]]></from>
+                <to><![CDATA[/mzax_emarketing/beacon/image/hash/$1]]></to>
+            </mzax_emarketing_beacon>
+        </rewrite>
+
+		
+        <resources>
+            <mzax_emarketing_setup>
+                <setup>
+                    <module>Mzax_Emarketing</module>
+                    <class>Mzax_Emarketing_Model_Resource_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </mzax_emarketing_setup>
+            <mzax_emarketing_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </mzax_emarketing_write>
+            <mzax_emarketing_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </mzax_emarketing_read>
+        </resources>
+        
+        <blocks><mzax_emarketing><class>Mzax_Emarketing_Block</class></mzax_emarketing></blocks>
+        <helpers><mzax_emarketing><class>Mzax_Emarketing_Helper</class></mzax_emarketing></helpers>  
+        
+        
+        <mzax_emarketing>
+        	<providers>
+        		<customers><class>mzax_emarketing/recipient_provider_customer</class></customers>
+        		<orders><class>mzax_emarketing/recipient_provider_order</class></orders>
+        		<quote><class>mzax_emarketing/recipient_provider_quote</class></quote>
+        		<newsletter><class>mzax_emarketing/recipient_provider_newsletter</class></newsletter>
+			</providers>
+			<mediums>
+        		<email>
+        			<title>Email</title>
+        			<class>mzax_emarketing/medium_email</class>
+        			<transporters>
+        				<sendmail>
+        					<title>Sendmail (php internal)</title>
+        					<class>mzax_emarketing/outbox_transporter_sendmail</class>
+        				</sendmail>
+        				<smtp>
+        					<title>SMTP</title>
+        					<class>mzax_emarketing/outbox_transporter_smtp</class>
+        				</smtp>
+        				<file>
+        					<title>File System (no emails, for debug only)</title>
+        					<class>mzax_emarketing/outbox_transporter_file</class>
+        				</file>
+    				</transporters>
+        		</email>
+			</mediums>
+        	<filters>
+        		<combine><model>mzax_emarketing/object_filter_combine</model></combine>
+        		<newsletter><model>mzax_emarketing/object_filter_newsletter</model></newsletter>
+        		
+        		<customer_name><model>mzax_emarketing/object_filter_customer_name</model></customer_name>
+        		<customer_order><model>mzax_emarketing/object_filter_customer_order</model></customer_order>
+        		<customer_lastlogin><model>mzax_emarketing/object_filter_customer_lastlogin</model></customer_lastlogin>
+        		<customer_attribute>
+        			<model>mzax_emarketing/object_filter_customer_attribute</model>
+        			<attributes>
+    					<created_at><label>Signup</label></created_at>
+    					<dob><uses_local_time>1</uses_local_time></dob>
+        			</attributes>
+        		</customer_attribute>
+        		<customer_address><model>mzax_emarketing/object_filter_customer_address</model></customer_address>
+        		<customer_address_attribute><model>mzax_emarketing/object_filter_customer_address_attribute</model></customer_address_attribute>
+        		
+        		<order_table><model>mzax_emarketing/object_filter_order_table</model></order_table>
+        		<order_addrass><model>mzax_emarketing/object_filter_order_address</model></order_addrass>
+        		<order_previous><model>mzax_emarketing/object_filter_order_previous</model></order_previous>
+        		<order_campaign><model>mzax_emarketing/object_filter_order_campaign</model></order_campaign>
+        		<order_items><model>mzax_emarketing/object_filter_order_items</model></order_items>
+        		<order_item_table><model>mzax_emarketing/object_filter_order_item_table</model></order_item_table>
+        		
+        		<quote_table><model>mzax_emarketing/object_filter_quote_table</model></quote_table>
+        		<quote_addrass><model>mzax_emarketing/object_filter_quote_address</model></quote_addrass>
+        		<quote_items><model>mzax_emarketing/object_filter_order_items</model></quote_items>
+        		<quote_item_table><model>mzax_emarketing/object_filter_order_item_table</model></quote_item_table>
+        		
+        		<addrass_street><model>mzax_emarketing/object_filter_address_street</model></addrass_street>
+        		<addrass_city><model>mzax_emarketing/object_filter_address_city</model></addrass_city>
+        		<addrass_postcode><model>mzax_emarketing/object_filter_address_postcode</model></addrass_postcode>
+        		<addrass_region><model>mzax_emarketing/object_filter_address_region</model></addrass_region>
+        		<addrass_country><model>mzax_emarketing/object_filter_address_country</model></addrass_country>
+        		
+        		
+        		<product_category><model>mzax_emarketing/object_filter_product_category</model></product_category>
+        		<product_attribute><model>mzax_emarketing/object_filter_product_attribute</model></product_attribute>
+        		<campaign_goal><model>mzax_emarketing/object_filter_campaign_goal</model></campaign_goal>
+			</filters>
+			<goal_types>
+				<orders><model>mzax_emarketing/conversion_goal_orders</model></orders>
+			</goal_types>
+			
+			<conversion_aggregator>
+				<orders><model>mzax_emarketing/conversion_aggregator_orders</model></orders>
+			</conversion_aggregator>
+			
+			<geoip_adapters>
+				<freegeoip><class>Mzax_GeoIp_Adapter_FreeGeoIp</class></freegeoip>
+				<ipinfo><class>Mzax_GeoIp_Adapter_Ipinfo</class></ipinfo>
+				<geoplugin><class>Mzax_GeoIp_Adapter_GeoPlugin</class></geoplugin>
+			</geoip_adapters>
+			
+			
+        </mzax_emarketing>        
+		<events>
+			<mzax_emarketing_bind_recipients>
+                <observers>
+                    <mzax_emarketing_direct_goals>
+                        <type>singleton</type>
+                        <class>mzax_emarketing/observer_goal</class>
+                        <method>bindRecipients</method>
+                    </mzax_emarketing_direct_goals>
+                </observers>
+            </mzax_emarketing_bind_recipients>
+
+		</events>
+    </global>
+    <admin>
+        <routers>
+            <admin_mzax_emarketing>
+                <use>admin</use>
+                <args>
+                    <module>Mzax_Emarketing</module>
+                    <frontName>mzaxemarketing</frontName>
+                </args>
+            </admin_mzax_emarketing>
+        </routers>
+    </admin> 
+    <adminhtml>
+        <layout>
+            <updates>
+                <Mzax_Emarketing>
+                    <file>mzax/emarketing.xml</file>
+                </Mzax_Emarketing>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Mzax_Emarketing>
+                    <files>
+                        <default>Mzax_Emarketing.csv</default>
+                    </files>
+                </Mzax_Emarketing>
+            </modules>
+        </translate>
+    </adminhtml>
+    <frontend>
+    	<layout>
+            <updates>
+                <Mzax_Emarketing>
+                    <file>mzax/emarketing.xml</file>
+                </Mzax_Emarketing>
+            </updates>
+        </layout>
+        <routers>
+            <mzax_emarketing>
+                <use>standard</use>
+                <args>
+                    <module>Mzax_Emarketing</module>
+                    <frontName>mzax_emarketing</frontName>
+                </args>
+            </mzax_emarketing>
+        </routers>
+        <events>
+            <customer_login>
+                <observers>
+                    <log_customer_website>
+                        <type>singleton</type>
+                        <class>mzax_emarketing/observer</class>
+                        <method>logCustomerWebsite</method>
+                    </log_customer_website>
+                </observers>
+            </customer_login>
+            
+            
+            <controller_action_layout_generate_blocks_after>
+            	<observers>
+                    <mzax_inject_timeoffset>
+                        <type>singleton</type>
+                        <class>mzax_emarketing/observer</class>
+                        <method>injectTimeOffsetJs</method>
+                    </mzax_inject_timeoffset>
+                </observers>
+        	</controller_action_layout_generate_blocks_after>
+        	
+        	
+        	
+        	<!-- Sales Customer Events -->
+            <customer_save_before>
+                <observers>
+                    <mzax_emarketing>
+                        <type>singleton</type>
+                        <class>mzax_emarketing/observer_customer</class>
+                        <method>beforeSave</method>
+                    </mzax_emarketing>
+                </observers>
+            </customer_save_before> 
+            <customer_save_after>
+                <observers>
+                    <mzax_emarketing>
+                        <type>singleton</type>
+                        <class>mzax_emarketing/observer_customer</class>
+                        <method>afterSave</method>
+                    </mzax_emarketing>
+                </observers>
+            </customer_save_after>
+            
+            
+            
+        	<!-- Sales Order Events -->
+            <sales_order_save_before>
+                <observers>
+                    <mzax_emarketing>
+                        <type>singleton</type>
+                        <class>mzax_emarketing/observer_order</class>
+                        <method>beforeSave</method>
+                    </mzax_emarketing>
+                </observers>
+            </sales_order_save_before> 
+            <sales_order_save_after>
+                <observers>
+                    <mzax_emarketing>
+                        <type>singleton</type>
+                        <class>mzax_emarketing/observer_order</class>
+                        <method>afterSave</method>
+                    </mzax_emarketing>
+                </observers>
+            </sales_order_save_after>
+        	
+        	
+        </events>
+	</frontend>
+    <default>
+        <mzax_emarketing>
+        	<general>
+        		<can_create_indexes>1</can_create_indexes>
+    		</general>
+        	<domain_throttling>
+        		<enable>1</enable>
+        		<time_threshold>300</time_threshold>
+        		<send_threshold>50</send_threshold>
+        		<rest_time>600</rest_time>
+        	</domain_throttling>
+        	<google_analytics>
+        		<enable>1</enable>
+        		<utm_source>emarketing</utm_source>
+        		<utm_medium>email</utm_medium>
+        	</google_analytics>
+        	<tracking>
+        		<inject_timeoffset_js>1</inject_timeoffset_js>
+        		<use_geo_ip>1</use_geo_ip>
+        		<geo_ip_adapters>freegeoip,ipinfo,geoplugin</geo_ip_adapters>
+    		</tracking>
+    		<autologin>
+    			<enable>1</enable>
+        		<expire>72</expire>
+			</autologin>
+    		<content_management>
+        		<enable_ckeditor>1</enable_ckeditor>
+        		<enable_ace>1</enable_ace>
+    		</content_management>
+    		<inbox>
+    			<storage_type>Zend_Mail_Storage_Pop3</storage_type>
+    			<port>995</port>
+    			<ssl>1</ssl>
+    			<unsubscribe_hard_bounce>0</unsubscribe_hard_bounce>
+    			<max_download_size>2.5</max_download_size>
+    			<forward_identity>general</forward_identity>
+			</inbox>
+			<email>
+				<css_inliner>1</css_inliner>
+				<remove_comments>1</remove_comments>
+				<test_mode>1</test_mode>
+				<list_unsubscibe>1</list_unsubscibe>
+				<transporter>sendmail</transporter>
+			</email>
+        </mzax_emarketing>
+        <trans_email>
+        	<ident_emarketing>
+    			<name>News Team</name>
+    			<email>news@example.com</email>
+			</ident_emarketing>
+		</trans_email>
+    </default>
+    <crontab>
+        <jobs>
+            <mzax_emarketing_fetch_recipients>
+                <schedule><cron_expr>*/5 * * * *</cron_expr></schedule>
+                <run><model>mzax_emarketing/observer_cron::fetchRecipients</model></run>
+            </mzax_emarketing_fetch_recipients>
+			
+            <mzax_emarketing_send_recipients>
+                <schedule><cron_expr>*/5 * * * *</cron_expr></schedule>
+                <run><model>mzax_emarketing/observer_cron::sendRecipients</model></run>
+            </mzax_emarketing_send_recipients>
+            
+            <mzax_emarketing_send_emails>
+                <schedule><cron_expr>*/5 * * * *</cron_expr></schedule>
+                <run><model>mzax_emarketing/observer_cron::outboxSend</model></run>
+            </mzax_emarketing_send_emails>
+            
+            <mzax_emarketing_inbox_load>
+                <schedule><cron_expr>*/15 * * * *</cron_expr></schedule>
+                <run><model>mzax_emarketing/observer_cron::inboxLoad</model></run>
+            </mzax_emarketing_inbox_load>
+            
+            <mzax_emarketing_run_report_tasks>
+                <schedule><cron_expr>*/5 * * * *</cron_expr></schedule>
+                <run><model>mzax_emarketing/observer_cron::runReportTasks</model></run>
+            </mzax_emarketing_run_report_tasks>
+            
+            <mzax_emarketing_aggregate_hourly>
+                <schedule><cron_expr>0 */2 * * *</cron_expr></schedule>
+                <run><model>mzax_emarketing/observer_cron::aggregateHourly</model></run>
+            </mzax_emarketing_aggregate_hourly>
+            
+            <mzax_emarketing_aggregate_daily>
+                <schedule><cron_expr>0 4 * * *</cron_expr></schedule>
+                <run><model>mzax_emarketing/observer_cron::aggregateDaily</model></run>
+            </mzax_emarketing_aggregate_daily>
+            
+            <mzax_emarketing_aggregate_weeekly>
+                <schedule><cron_expr>0 5 * * 0</cron_expr></schedule>
+                <run><model>mzax_emarketing/observer_cron::aggregateWeekly</model></run>
+            </mzax_emarketing_aggregate_weeekly>
+        </jobs>
+    </crontab>
+</config>

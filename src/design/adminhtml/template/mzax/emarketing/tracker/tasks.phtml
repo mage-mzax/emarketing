@@ -1,0 +1,59 @@
+<?php 
+/* @include license-php.txt */
+/* @var $this Mzax_Emarketing_Block_Tracker_Edit_Tab_Tasks */
+
+$tracker = $this->getTracker();
+?>
+<table id="tasks" class="form-list">
+    <?php if($tracker->isActive()): ?>
+    <tr>
+        <td class="scope-label">
+            <button onclick="setLocation('<?php echo $this->getUrl('*/*/aggregate') ?>')" type="button" class="goto scalable"><span><?php echo $this->__('Aggregate Now') ?></span></button>
+        </td>
+        <td class="scope-label">
+            <?php echo $this->__('Aggregate data for reports, depending on the number of records and complexity of your filter this may take a few minutes. Usually this is done automatically overnight.') ?>
+        </td>
+    </tr>
+    <?php endif ?>
+    
+    <?php if(!$tracker->isDefault() && $tracker->isTrackingAllCampaigns()): ?>
+    <tr>
+        <td class="scope-label">
+            <button onclick="setLocation('<?php echo $this->getUrl('*/*/makeDefault') ?>')" type="button" class="goto scalable"><span><?php echo $this->__('Make Default') ?></span></button>
+        </td>
+        <td class="scope-label">
+            <?php echo $this->__('Make this the default conversion tracker for all campaigns unless defined otherwise by the campaign.') ?>
+        </td>
+    </tr>
+    <?php endif ?>
+    
+    <?php if(true): ?>
+    <tr>
+        <td class="scope-label">
+            <button onclick="setLocation('<?php echo $this->getUrl('*/*/download') ?>')" type="button" class="scalable"><span><?php echo $this->__('Download') ?></span></button>
+        </td>
+        <td class="scope-label">
+            <?php echo $this->__('Download this conversion tracker to file that can be uploaded on other Magento installations.') ?>
+        </td>
+    </tr>
+    <?php endif ?>
+    
+    <?php if(true): ?>
+    <tr>
+        <td class="scope-label">
+            <button onclick="setLocation('<?php echo $this->getUrl('*/*/duplicate') ?>')" type="button" class="goto scalable"><span><?php echo $this->__('Duplicate') ?></span></button>
+        </td>
+        <td class="scope-label">
+            <?php echo $this->__('Create a duplicate of this conversion tracker.') ?>
+        </td>
+    </tr>
+    <?php endif ?>
+    
+</table>
+<script type="text/javascript">
+$$('#tasks button.goto').each(function(a) {
+    a.observe('click', function(event) {
+        mzax.disable();
+    });
+});
+</script>

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!-- 
+/* @include license-php.txt */
+-->
+<layout version="0.1.0">
+
+
+	<mzax_emarketing_unsubscribe_index>
+        <reference name="content">
+            <block type="mzax_emarketing/unsubscribe" name="mzax_emarketing.unsubscribe" template="mzax/emarketing/unsubscribe/unsubscribe.phtml"/>
+        </reference>
+	</mzax_emarketing_unsubscribe_index>
+	
+	<mzax_emarketing_unsubscribe_done>
+        <reference name="content">
+            <block type="mzax_emarketing/unsubscribe" name="mzax_emarketing.unsubscribe.done" template="mzax/emarketing/unsubscribe/done.phtml"/>
+        </reference>
+	</mzax_emarketing_unsubscribe_done>
+	
+	
+	
+	<mzax_redirect>
+		<block type="page/html" name="redirect" output="toHtml" template="mzax/emarketing/link/redirect.phtml" />
+	</mzax_redirect>
+
+</layout>

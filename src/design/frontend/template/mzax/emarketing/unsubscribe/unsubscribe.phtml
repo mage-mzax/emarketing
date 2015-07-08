@@ -1,0 +1,17 @@
+<?php
+/* @var $this Mzax_Emarketing_Block_Unsubscribe */
+?>
+
+<h1><?php echo $this->__('Are you sure you want to unsubscribe?') ?></h1>
+
+<div class="unsubscribe-confirm-from">
+    <form id="unsubscribe" action="<?php echo $this->getYesUrl() ?>" method="post">
+        <input type="hidden" name="email" value="<?php echo $this->getAddress() ?>" />
+        <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+        <p><?php echo $this->__('Are you sure you want to unsubscribe the email address <strong>%s</strong>?', $this->getAddress()) ?></p>
+        <button class="btn" type="submit"><?php echo $this->__('Yes, please unsubscribe me') ?></button>
+    </form>
+</div>
+
+
+<?php echo $this->getChildHtml() ?>

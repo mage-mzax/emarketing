@@ -69,6 +69,7 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Table
         $column = $this->addColumn('created_at', 'Order Date',   'date');
         $column->allowFuture = false;
         
+        $this->addColumn('store_id',             'Store',   'multiselect', 'adminhtml/system_config_source_store');
         $this->addColumn('base_grand_total',     'Grand Total',   'currency');
         $this->addColumn('base_subtotal',        'Subtotal',   'currency');
         $this->addColumn('base_shipping_amount', 'Shipping Amount',   'currency');

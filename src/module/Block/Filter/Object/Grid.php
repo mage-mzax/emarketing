@@ -102,7 +102,7 @@ class Mzax_Emarketing_Block_Filter_Object_Grid extends Mage_Adminhtml_Block_Widg
      */
     public function getObject()
     {
-        return $this->getFilter()->getObject();
+        return $this->getFilter()->getParentObject();
     }
     
     

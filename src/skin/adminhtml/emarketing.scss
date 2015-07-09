@@ -231,6 +231,13 @@ body.mzax-popup {
   #tab_links_content {
     background:#fff;
     padding:20px;
+    overflow:scroll;
+    
+    /* shrink big images */
+    td.anchor img {
+      max-width: 200px;
+      max-height: 80px;
+    }
   }
 
 

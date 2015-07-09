@@ -1241,6 +1241,10 @@ window.mzax = window.mzax || {};
             else {
                 Element.hide(editor.loader);
             }
+            
+            if(editor._disableLinks) {
+                editor.disableLinks(editor._disableLinks);
+            }
         },
         
         
@@ -2746,11 +2750,11 @@ window.mzax = window.mzax || {};
         },
         
         
-        
         disableLinks : function(onclick)
         {
             var self = this;
-            this.select('a').each(function(a) {
+            self._disableLinks = onclick;
+            self.select('a').each(function(a) {
                 Element.observe(a, 'click', function(event) {
                     Event.stop(event);
                     if(onclick) {

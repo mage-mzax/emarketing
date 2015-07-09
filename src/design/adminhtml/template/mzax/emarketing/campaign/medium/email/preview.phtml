@@ -129,7 +129,7 @@ var preview = new mzax.ui.PreviewFrame($('preview-frame'), {
 });
 
 preview.disableLinks(function(link) {
-    var matches = a.href.match(/\/([a-z0-9]{40})$/i);
+    var matches = link.href.match(/\/([a-z0-9]{16})$/i);
     if(matches) {
         var url = $(matches[1]).down('.url').innerHTML;
         alert("Link ("+url+") Tracked");

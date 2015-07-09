@@ -155,6 +155,7 @@
         		<customer_address_attribute><model>mzax_emarketing/object_filter_customer_address_attribute</model></customer_address_attribute>
         		
         		<order_table><model>mzax_emarketing/object_filter_order_table</model></order_table>
+        		<order_shipped><model>mzax_emarketing/object_filter_order_shippedAt</model></order_shipped>
         		<order_addrass><model>mzax_emarketing/object_filter_order_address</model></order_addrass>
         		<order_previous><model>mzax_emarketing/object_filter_order_previous</model></order_previous>
         		<order_campaign><model>mzax_emarketing/object_filter_order_campaign</model></order_campaign>

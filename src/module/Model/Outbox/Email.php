@@ -21,7 +21,7 @@
  * 
  * @method string getExpireAt()
  * @method string getStatus()
- * @method string getEmail()
+ * @method string getTo()
  * @method string getDomain()
  * @method string getSubject()
  * @method string getBodyText()
@@ -33,7 +33,7 @@
  * 
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email setExpireAt()
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email setStatus()
- * @method Mzax_Emarketing_Model_Resource_Outbox_Email setEmail()
+ * @method Mzax_Emarketing_Model_Resource_Outbox_Email setTo()
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email setDomain()
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email setSubject()
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email setBodyText()
@@ -512,11 +512,14 @@ class Mzax_Emarketing_Model_Outbox_Email
      * @param integer $now
      * @return boolean
      */
-    public function canSend($now)
+    public function canSend($now = null)
     {
         if(!$now) {
             $now = time();
         }
+        
+        // use admin store time
+        $now -= (int) Mage::app()->getLocale()->storeDate(Mage_Core_Model_App::ADMIN_STORE_ID)->getGmtOffset();
         
         if($filter = $this->getDayFilter()) {
             $dayOfWeek = date('w', $now);
@@ -534,7 +537,8 @@ class Mzax_Emarketing_Model_Outbox_Email
                 return false;
             }
         }
-        return !$this->isExpired($now);
+        
+        return true;
     }
     
     
@@ -566,11 +570,14 @@ class Mzax_Emarketing_Model_Outbox_Email
     
     
     
-    public function send()
+    public function send($verbose = false)
     {
         try {
             Mage::log("Send Message: #{$this->getId()} - {$this->getEmail()}");
-            $this->_send();
+            
+            if(!$this->_send()) {
+                Mage::log("Message was not send. #{$this->getId()} - {$this->getEmail()}");
+            }
             $this->setStatus(self::STATUS_SENT);
             $this->setSentAt(now());
             $this->getRecipient()->isSent(true);
@@ -583,6 +590,10 @@ class Mzax_Emarketing_Model_Outbox_Email
             
             $this->getLog()->err($message);
             $this->setStatus(self::STATUS_FAILED);
+            
+            if($verbose) {
+                echo $message;
+            }
             
             if(Mage::getIsDeveloperMode()) {
                 throw $e;
@@ -602,6 +613,10 @@ class Mzax_Emarketing_Model_Outbox_Email
         $mail = $this->createMailObject();
         if($mail) {
             $mail->send($this->_prepareTransporter());
+            return true;
+        }
+        else {
+            return false;
         }
     }
     

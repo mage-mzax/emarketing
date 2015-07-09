@@ -39,8 +39,12 @@ class Mzax_Emarketing_Model_Resource_Outbox_Email_Collection
     public function addTimeFilter($now = null)
     {
         if(!$now) {
-            $now = Mage::app()->getLocale()->storeTimeStamp();
+            $now = time();
         }
+        
+        // use admin store time
+        $now -= (int) Mage::app()->getLocale()->storeDate(Mage_Core_Model_App::ADMIN_STORE_ID)->getGmtOffset();
+        
         $this->addFieldToFilter('day_filter',  array(array('finset' => date('w', $now)), array('eq' => '')));
         $this->addFieldToFilter('time_filter', array(array('finset' => date('G', $now)), array('eq' => '')));
         return $this;

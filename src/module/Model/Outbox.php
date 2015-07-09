@@ -71,12 +71,17 @@ class Mzax_Emarketing_Model_Outbox
      */
     public function sendEmails(array $options = array())
     {
+        $options = new Varien_Object($options);
+        
         $lock = Mage::helper('mzax_emarketing')->lock('send_emails');
         if(!$lock) {
+            if($options->getVerbose()) {
+                echo "\nACITVE LOCK- STOP\n\n\n";
+            }
             return false;
         }
         
-        $options = new Varien_Object($options);
+        
         
         $timeout   = $options->getDataSetDefault('timeout', 60*5);
         $maximum   = $options->getDataSetDefault('maximum', 200);
@@ -96,7 +101,7 @@ class Mzax_Emarketing_Model_Outbox
         $emails->setPageSize($maximum);
         
         if(!$force) {
-            $emails->addTimeFilter();
+            $emails->addTimeFilter($now);
         }
         
         if(!empty($emailIds)) {
@@ -129,6 +134,10 @@ class Mzax_Emarketing_Model_Outbox
             $domainThrottle->purge();
         }
         
+        if($options->getVerbose()) {
+            echo sprintf("found %s emails...\n", count($emails));
+        }
+        
         
         $start = time();
         
@@ -146,7 +155,7 @@ class Mzax_Emarketing_Model_Outbox
             }
             
             if(time() - $start > $timeout) {
-                $this->log("Mzax Emarketing: Reached timelimit of {$timeout}sec");
+                $this->log("Mzax Emarketing: Reached timelimit of {$timeout}sec", $options->getVerbose());
                 break;
             }
             
@@ -166,13 +175,17 @@ class Mzax_Emarketing_Model_Outbox
             
             if($domainThrottle && ($time = $domainThrottle->isResting($email->getDomain()))) {
                 $notice = "DomainThrottle currently prevents this message from sending for at least $time more seconds";
-                $this->log($notice);
+                $this->log($notice, $options->getVerbose());
                 $email->getLog()->notice($notice);
                 $email->save();
                 continue;
             }
             
-            $email->send();
+            if($options->getVerbose()) {
+                echo sprintf("try sending email %s to %s.\n", $email->getId(), $email->getTo());
+            }
+            
+            $email->send($options->getVerbose());
             $lock->touch();
             $count++;
         }
@@ -182,11 +195,18 @@ class Mzax_Emarketing_Model_Outbox
     }
     
     
-    
-    protected function log($message)
+    /**
+     * Log message
+     * 
+     * @param string $message
+     * @param boolean $verbose
+     */
+    protected function log($message, $verbose = false)
     {
         Mage::log($message);
-        echo "$message\n";
+        if($verbose) {
+            echo "$message\n";
+        }
     }
     
     

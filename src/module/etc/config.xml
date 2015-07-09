@@ -164,8 +164,8 @@
         		
         		<quote_table><model>mzax_emarketing/object_filter_quote_table</model></quote_table>
         		<quote_addrass><model>mzax_emarketing/object_filter_quote_address</model></quote_addrass>
-        		<quote_items><model>mzax_emarketing/object_filter_order_items</model></quote_items>
-        		<quote_item_table><model>mzax_emarketing/object_filter_order_item_table</model></quote_item_table>
+        		<quote_items><model>mzax_emarketing/object_filter_quote_items</model></quote_items>
+        		<quote_item_table><model>mzax_emarketing/object_filter_quote_item_table</model></quote_item_table>
         		
         		<addrass_street><model>mzax_emarketing/object_filter_address_street</model></addrass_street>
         		<addrass_city><model>mzax_emarketing/object_filter_address_city</model></addrass_city>

@@ -55,7 +55,7 @@ class Mzax_Emarketing_Model_Object_Filter_Quote_Address
     
     /**
      *
-     * @return Mzax_Emarketing_Model_Object_OrderItem
+     * @return Mzax_Emarketing_Model_Object_OrderAddress
      */
     public function getObject()
     {

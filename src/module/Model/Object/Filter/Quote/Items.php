@@ -52,7 +52,7 @@ class Mzax_Emarketing_Model_Object_Filter_Quote_Items
     /**
      * Use order item object
      * 
-     * @return Mzax_Emarketing_Model_Object_OrderItem
+     * @return Mzax_Emarketing_Model_Object_QuoteItem
      */
     public function getObject()
     {

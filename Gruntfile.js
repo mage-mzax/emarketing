@@ -17,7 +17,7 @@ module.exports = function(grunt) {
         /* Convert new PHP namespaces (a/b/c) to old ones (a_b_c)*/
         phpns: {
             options:{
-                banner: "/*\n * NOTICE:\n * This code has been slightly altered by Jacob Siefer to use old php namespaces.\n */",
+                banner: "/*\n * NOTICE:\n * This code has been slightly altered by the Mzax_Emarketing module to use old php namespaces.\n */",
                 dest: path.resolve(srcPath, 'lib_composer')
             },
             Symfony_CssSelector:{

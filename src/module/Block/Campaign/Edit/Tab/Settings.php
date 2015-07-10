@@ -91,39 +91,75 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
         ));
         
         
-        $fieldset->addField('start_at','date',array(
-            'name'      => 'start_at',
-            'time'      => true,
-            'style'     => 'width:60%;',
-            'format'    => $outputFormat,
-            'label'     => $this->__('Date Start'),
-            'image'     => $this->getSkinUrl('images/grid-cal.gif')
+        
+        $fieldset->addField('check_frequency', 'select', array(
+            'label'     => $this->__('Check Frequency'),
+            'title'     => $this->__('Check Frequency'),
+            'name'      => 'check_frequency',
+            'required'  => true,
+            'options'   => array(
+                '1440'      => $this->__('Once a day'),
+                '720'       => $this->__('Twice a day'),
+                '360'       => $this->__('Every 6 hours'),
+                '180'       => $this->__('Every 3 hours'),
+                '60'        => $this->__('Every hour'),
+                '30'        => $this->__('Every 30 minutes'),
+                '1'         => $this->__('Every time'),
+                '0'         => $this->__('Never automatically'),
+            ),
+            'value'    => '720',
+            'note'     => $this->__("How often to check for new recipients, e.g. Birthdays will do once a day, while abandon carts need to check all the time."),
         ));
-        $fieldset->addField('end_at','date',array(
-            'name'      => 'end_at',
-            'time'      => true,
-            'style'     => 'width:60%;',
-            'format'    => $outputFormat,
-            'label'     => $this->__('Date End'),
-            'image'     => $this->getSkinUrl('images/grid-cal.gif')
+        
+        
+        
+        $fieldset->addField('min_resend_interval', 'select', array(
+            'label'     => $this->__('Minimum Resend Interval'),
+            'title'     => $this->__('Minimum Resend Interval'),
+            'name'      => 'min_resend_interval',
+            'required'  => true,
+            'options'   => array(
+                '0'   => $this->__('[Only send once]'),
+                '1'   => $this->__('One day'),
+                '2'   => $this->__('Two days'),
+                '7'   => $this->__('One week'),
+                '14'  => $this->__('Two weeks'),
+                '31'  => $this->__('1 month'),
+                '62'  => $this->__('2 months'),
+                '91'  => $this->__('3 months'),
+                '122' => $this->__('4 months'),
+                '152' => $this->__('5 months'),
+                '183' => $this->__('6 months'),
+                '274' => $this->__('9 months'),
+                '364' => $this->__('12 months')
+            ),
+            'value' => '0',
+            'note'   => $this->__("The minimum time before a recipient can recieve this campaign again."),
         ));
+        
+        
+
         
         
         
         if($campaign->getId()) {
-/*
-            $fieldset->addField('running', 'select', array(
-                'label'     => $this->__('Running'),
-                'title'     => $this->__('Running'),
-                'name'      => 'running',
-                'required'  => true,
-                'options'   => array(
-                    '1' => $this->__('Yes'),
-                    '0' => $this->__('No'),
-                ),
-                'value' => '1'
+                
+            $fieldset->addField('start_at','date',array(
+                'name'      => 'start_at',
+                'time'      => true,
+                'style'     => 'width:60%;',
+                'format'    => $outputFormat,
+                'label'     => $this->__('Date Start'),
+                'image'     => $this->getSkinUrl('images/grid-cal.gif')
             ));
-            */
+            $fieldset->addField('end_at','date',array(
+                'name'      => 'end_at',
+                'time'      => true,
+                'style'     => 'width:60%;',
+                'format'    => $outputFormat,
+                'label'     => $this->__('Date End'),
+                'image'     => $this->getSkinUrl('images/grid-cal.gif')
+            ));
             
             
             /**
@@ -181,54 +217,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
             
             
             
-            
-            $advanced->addField('check_frequency', 'select', array(
-                'label'     => $this->__('Check Frequency'),
-                'title'     => $this->__('Check Frequency'),
-                'name'      => 'check_frequency',
-                'required'  => true,
-                'options'   => array(
-                    '1440' => $this->__('Once a day'),
-                     '720' => $this->__('Twice a day'),
-                     '360' => $this->__('Every 6 hours'),
-                     '180' => $this->__('Every 3 hours'),
-                      '60' => $this->__('Every hour'),
-                      '30' => $this->__('Every 30 minutes'),
-                       '1' => $this->__('Every time'),
-                       '0' => $this->__('Never automatically'),
-                ),
-                'value' => '720',
-                'note'   => $this->__("How often to check for new recipients, e.g. Birthdays will do once a day, while abandon carts need to check all the time."),
-            ));
-            
-            
-            
-            $advanced->addField('min_resend_interval', 'select', array(
-                'label'     => $this->__('Minimum Resend Interval'),
-                'title'     => $this->__('Minimum Resend Interval'),
-                'name'      => 'min_resend_interval',
-                'required'  => true,
-                'options'   => array(
-                      '0' => $this->__('[Only send once]'),
-                      '1' => $this->__('One day'),
-                      '2' => $this->__('Two days'),
-                      '7' => $this->__('One week'),
-                     '14' => $this->__('Two weeks'),
-                     '31' => $this->__('1 month'),
-                     '62' => $this->__('2 months'),
-                     '91' => $this->__('3 months'),
-                    '122' => $this->__('4 months'),
-                    '152' => $this->__('5 months'),
-                    '183' => $this->__('6 months'),
-                    '274' => $this->__('9 months'),
-                    '364' => $this->__('12 months')
-                ),
-                'value' => '0',
-                'note'   => $this->__("The minimum time before a recipient can recieve this campaign again."),
-            ));
-            
-            
-            
             $advanced->addField('expire_time', 'select', array(
                 'name'      => 'expire_time',
                 'label'     => $this->__('Expire Time'),
@@ -262,7 +250,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'title'    => $this->__('Email Sender'),
                 'values'   => Mage::getModel('adminhtml/system_config_source_email_identity')->toOptionArray(),
                 'required' => true,
-                'note'      => $this->__("The sender identity to use when sending out the emails. Keep in mind that email bounces will get send back to that email address in case you have defined an inbox to check.")                    
+                'note'     => $this->__("The sender identity to use when sending out the emails. Keep in mind that email bounces will get send back to that email address in case you have defined an inbox to check.")                    
             ));
             
             
@@ -273,22 +261,21 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
             
             
             $advanced->addField('default_tracker_id','select', array(
-                    'name'     => 'default_tracker_id',
-                    'label'    => $this->__('Default Conversion Tracker'),
-                    'title'    => $this->__('Default Conversion Tracker'),
-                    'values'   => $trackers,
-                    'required' => true,
+                'name'     => 'default_tracker_id',
+                'label'    => $this->__('Default Conversion Tracker'),
+                'title'    => $this->__('Default Conversion Tracker'),
+                'values'   => $trackers,
+                'required' => true,
             ));
+            
+            
+            if($medium = $campaign->getMedium()) {
+                $medium->initSettingsForm($form, $campaign);
+                $form->addValues($campaign->getMediumData()->getData());
+            }
             
         } // has id
             
-        
-        if($medium = $campaign->getMedium()) {
-            $medium->initSettingsForm($form, $campaign);
-            $form->addValues($campaign->getMediumData()->getData());
-        }
-        
-        
         
         $form->addValues($campaign->getData());
         $this->setForm($form);

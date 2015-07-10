@@ -31,6 +31,7 @@
  * @method Mzax_Emarketing_Model_Campaign setCheckFrequency(string $value)
  * @method Mzax_Emarketing_Model_Campaign setLastCheck(string $value)
  * @method Mzax_Emarketing_Model_Campaign setMinResendInterval(string $value)
+ * @method Mzax_Emarketing_Model_Campaign setExpireTime(string $value)
  * @method Mzax_Emarketing_Model_Campaign setAbtestEnable(string $value)
  * @method Mzax_Emarketing_Model_Campaign setAbtestTraffic(string $value)
  * @method Mzax_Emarketing_Model_Campaign setStoreId(string $value)
@@ -53,6 +54,7 @@
  * @method string getCheckFrequency()
  * @method string getLastCheck()
  * @method string getMinResendInterval()
+ * @method string getExpireTime()
  * @method string getAbtestEnable()
  * @method string getAbtestTraffic()
  * @method string getStoreId()
@@ -176,6 +178,10 @@ class Mzax_Emarketing_Model_Campaign
     protected function _construct()
     {
         $this->_init('mzax_emarketing/campaign');
+        $this->setMinResendInterval(0);
+        $this->setCheckFrequency(720);
+        $this->setExpireTime(720);
+        $this->setIdentity('emarketing');
     }
     
     

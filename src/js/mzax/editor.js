@@ -2600,8 +2600,8 @@ window.mzax = window.mzax || {};
                                         element: selector[1],
                                         attributes: {
                                             'class': selector[2]
-                                        },
-                                        _ST: this.CKEDITOR.tools.normalizeCssText(styles[1], true)
+                                        }
+                                        //_ST: this.CKEDITOR.tools.normalizeCssText(styles[1], true)
                                     });
                                 }
                             }

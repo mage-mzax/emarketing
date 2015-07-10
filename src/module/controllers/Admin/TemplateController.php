@@ -166,9 +166,9 @@ class Mzax_Emarketing_Admin_TemplateController extends Mage_Adminhtml_Controller
                     $template->addData($data['template']);
                 }
                 
-                
                 $template->save();
-
+                
+                Mage::app()->cleanCache(array(Mzax_Emarketing_Model_Campaign::CACHE_TAG));
                 Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Template was successfully saved'));
 
                 if ($redirectBack) {

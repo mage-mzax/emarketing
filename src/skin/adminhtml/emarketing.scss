@@ -142,12 +142,13 @@ body.mzax-popup {
     height:21px;
     left:0;
     right:0;
-    background:#ddd;
-    ackground: #F0F0F0;
+    background:#EEE;
     box-shadow: 0 0 1px 0 rgba(black, 0.3);
-    border-top: 1px solid #8E8E8E;
+    border-top: 1px solid #BBB;
     padding:2px 10px;
     z-index:1000;
+    white-space:nowrap;
+    overflow:hidden;
   
     .render-time {
       display:inline-block;

@@ -42,7 +42,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
      */
     public function getTitle()
     {
-        return "Customer | Has order(s)...";
+        return "Customer | If number of orders,...";
     }
     
     
@@ -80,25 +80,31 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
         
         $select = $this->_combineConditions($conditions, $aggregator, $expectation);
         
-        /* Check if we are looking for customer with no orders,
-         * Use current query object and alter it without breaking the query structure as
-         * we need to union the result with the sub filters
-         */
+        // Check if we are looking for customer with no orders
         if($this->checkIfMatchZero('orders')) {
             
             $customerId = new Zend_Db_Expr('`customer`.`entity_id`');
+            
+            // Query with all orders + customers with out any orders
             $zeroOrderQuery = $this->getQuery();
-            $zeroOrderQuery->joinRight(array('entity_id' => '{customer_id}'), 'customer/entity', 'customer');
-            $zeroOrderQuery->where('{order_id} IS NULL');
-            $zeroOrderQuery->addColumn('customer_id', $customerId);
-            $zeroOrderQuery->group($customerId);
-            $select = $this->_select()->union(array($zeroOrderQuery->getSelect(), $select));
+            $zeroOrderQuery->joinTableRight(array('entity_id' => '{customer_id}'), 'customer/entity', 'customer');
+            $zeroOrderQuery->setColumn('matches', new Zend_Db_Expr('0'));
+            $zeroOrderQuery->setColumn('customer_id', $customerId);
+            $zeroOrderQuery->group($customerId, true);
+            
+            $select = $this->_select()->union(array($zeroOrderQuery, $select));
+            
+            // count customer_id AS order_id maybe NULL
+            // reduce by 1 as we added zero order results as well.
+            $query->having($this->getWhereSql('orders', 'COUNT(`customer_id`)-1'));
         }        
-        
+        else {
+            $query->having($this->getWhereSql('orders', 'COUNT(`order_id`)'));
+        }
         $select->useTemporaryTable($this->getTempTableName());
         
+        
         $query->joinSelect('customer_id', $select, 'filter', 'customer_id');
-        $query->having($this->getWhereSql('orders', 'COUNT(`order_id`)'));
         $query->group();
     }
     

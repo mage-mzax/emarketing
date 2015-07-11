@@ -94,11 +94,22 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Items
         $expectation = $this->getDataSetDefault('expectation', self::DEFAULT_EXPECTATION);
         
         $select = $this->_combineConditions($conditions, $aggregator, $expectation);
-        $select->useTemporaryTable($this->getTempTableName());
         
+        // if value can match zero include all records
+        if($this->checkIfMatchZero('value')) {
+        
+            $zeroRecords = $this->getQuery();
+            // assume all orders have items, no right join required
+            $zeroRecords->setColumn('sum_field', new Zend_Db_Expr('0'));
+            $zeroRecords->setColumn('matches', new Zend_Db_Expr('0'));
+        
+            $select = $this->_select()->union(array($zeroRecords, $select));
+        }
+        
+        $query->useTemporaryTable($this->getTempTableName());
         $query->joinSelect('order_id', $select, 'filter');
         $query->addBinding('value', new Zend_Db_Expr('SUM(`filter`.`sum_field`)'));
-        $query->having($this->getWhereSql('value', 'SUM(`filter`.`sum_field`)'));
+        $query->having($this->getWhereSql('value', '{value}'));
         $query->group();
     }
     
@@ -117,12 +128,19 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Items
     {
         parent::prepareGridColumns($grid);
     
+        $sumOptions = $this->getSumOptions();
+        if(isset($sumOptions[$this->getSum()])) {
+            $title = ucwords($sumOptions[$this->getSum()]);
+        }
+        else {
+            $title = $this->__('Total');
+        }
+    
         $grid->addColumn('value', array(
-            'header'    => $this->__('Total'),
+            'header'    => $title,
             'index'     => 'value',
             'type'      => 'number'
         ));
-        
         
         $grid->setDefaultSort('increment_id');
         $grid->setDefaultDir('DESC');

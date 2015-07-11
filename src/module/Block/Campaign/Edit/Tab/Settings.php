@@ -76,8 +76,13 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
             'label'     => $this->__('Campaign Recipient'),
         	'title'     => $this->__('Campaign Recipient'),
             'values'    => $campaign->getAvailableProviders(false),
-            'note'      => $this->__("Who are the recipients of this campaign"),
-            'disabled'  => (bool) $campaign->getId(),
+            'note'      => !$campaign->getId()
+                ? $this->__("Who are the recipients of this campaign")
+                : ($campaign->countRecipients()
+                    ? $this->__("Changing may alter your current filters")
+                    : $this->__("This can not be changed once a recipient has been created.")
+                ),
+            'disabled'  => $campaign->getId() && $campaign->countRecipients(),
         	'required'  => true,
         ));
         

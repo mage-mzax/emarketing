@@ -787,6 +787,24 @@ class Mzax_Emarketing_Model_Campaign
     
     
     /**
+     * Check number of recipients
+     *
+     * @return integer
+     */
+    public function countRecipients()
+    {
+        $count = $this->getData('recipients_count');
+        if($count === null) {
+            $count = $this->getResource()->countRecipients($this);
+            $this->setData('recipients_count', $count);
+        }
+        return $count;
+    }
+    
+    
+    
+    
+    /**
      * Try to bind recipients to goals
      * 
      * The recipient provider has to do that

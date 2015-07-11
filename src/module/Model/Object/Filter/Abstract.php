@@ -147,6 +147,14 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         if(!$filter instanceof Mzax_Emarketing_Model_Object_Filter_Abstract) {
             return null;
         }
+        
+        if(!$filter->acceptParent($this)) {
+            if(!$quite) {
+                throw new Mage_Exception(Mage::helper('mzax_emarketing')->__('Filter of type “%s” does not allow child of type %s.', $this->getType(), $filter->getType()));
+            }
+            return null;
+        }
+        
         $this->_filters[] = $filter->setParent($this);
         $filter->setId($this->getId() . '--' . count($this->_filters));
         return $filter;

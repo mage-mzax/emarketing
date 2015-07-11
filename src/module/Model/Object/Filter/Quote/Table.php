@@ -72,6 +72,7 @@ class Mzax_Emarketing_Model_Object_Filter_Quote_Table
         $column = $this->addColumn('updated_at', 'Last Update',   'date');
         $column->allowFuture = false;
         
+        $this->addColumn('store_id',             'Store',          'multiselect', 'adminhtml/system_config_source_store');
         $this->addColumn('base_grand_total',     'Grand Total',    'currency');
         $this->addColumn('base_subtotal',        'Subtotal',       'currency');
         $this->addColumn('is_virtual',           'Virtual',        'boolean');

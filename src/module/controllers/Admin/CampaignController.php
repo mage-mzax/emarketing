@@ -81,6 +81,7 @@ class Mzax_Emarketing_Admin_CampaignController extends Mage_Adminhtml_Controller
     public function editAction()
     {
         $campaign = $this->_initCampaign();
+        $campaign->getRecipientProvider()->setDefaultFilters();
 
         if ($values = $this->_getSession()->getCampaignData(true)) {
             if(isset($values['campaign'])) {
@@ -89,6 +90,9 @@ class Mzax_Emarketing_Admin_CampaignController extends Mage_Adminhtml_Controller
             if(isset($values['filters']) && is_array($values['filters'])) {
                 $campaign->setFilters($values['filters']);
             }
+        }
+        else if($campaign->getId() && $this->_getSession()->getData('init_default_filters', true) == $campaign->getId()) {
+            $campaign->getRecipientProvider()->setDefaultFilters();
         }
 
         $this->loadLayout();
@@ -139,9 +143,14 @@ class Mzax_Emarketing_Admin_CampaignController extends Mage_Adminhtml_Controller
                         }
                     }
                 }
-    
-    
+                
+                $initDefaultFilters = !$campaign->getId();
                 $campaign->save();
+                
+                if($initDefaultFilters) {
+                    $this->_getSession()->setData('init_default_filters', $campaign->getId());
+                }
+                
                 
                 Mage::app()->cleanCache(array($campaign::CACHE_TAG));
                 

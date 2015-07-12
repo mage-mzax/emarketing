@@ -20,6 +20,11 @@
 
 /**
  * 
+ * 
+ * @method Mzax_Emarketing_Model_Object_Filter_Order_ShippedAt setShippedAtFrom(string $value)
+ * @method Mzax_Emarketing_Model_Object_Filter_Order_ShippedAt setShippedAtTo(string $value)
+ * @method Mzax_Emarketing_Model_Object_Filter_Order_ShippedAt setShippedAtUnit(string $value)
+ * 
  * @author Jacob Siefer
  *
  */

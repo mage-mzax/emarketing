@@ -51,6 +51,27 @@ class Mzax_Emarketing_Model_Recipient_Provider_Quote
     
     
     
+    /**
+     * Set order default filters
+     *
+     * (non-PHPdoc)
+     * @see Mzax_Emarketing_Model_Recipient_Provider_Abstract::setDefaultFilters()
+     */
+    public function setDefaultFilters()
+    {
+        parent::setDefaultFilters();
+    
+        /* @var $storeFilter Mzax_Emarketing_Model_Object_Filter_Quote_Table */
+        $storeFilter = $this->addFilter('quote_table');
+        if( $storeFilter && $this->getCampaign() ) {
+            $storeFilter->setColumn('store_id');
+            $storeFilter->setValue($this->getCampaign()->getStoreId());
+            $storeFilter->setOperator('()');
+        }
+        
+    }
+    
+    
     
     
     public function prepareRecipient(Mzax_Emarketing_Model_Recipient $recipient)

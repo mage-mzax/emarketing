@@ -18,11 +18,22 @@
  */
 
 
+
+/**
+ * Simple newsletter status filter
+ * 
+ * @method Mzax_Emarketing_Model_Object_Filter_Newsletter setCondition(string $value)
+ * @method Mzax_Emarketing_Model_Object_Filter_Newsletter setStatus(string $value)
+ *
+ * @author Jacob Siefer
+ * @license {{license}}
+ * @version {{version}}
+ */
 class Mzax_Emarketing_Model_Object_Filter_Newsletter
     extends Mzax_Emarketing_Model_Object_Filter_Abstract
 {
     
-    const DEFAULT_STATUS    = 1;
+    const DEFAULT_STATUS    = Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED;
     const DEFAULT_CONDITION = 'is';
     
 
@@ -137,39 +148,6 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
             'is_not'  => $this->__('is not')
         );
     }
-    
-    
-    
-    
-
-    
-    /*
-    protected function _prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
-    {
-        parent::_prepareCollection($collection);
-        
-        if(!$collection->hasBinding('subscriber_status'))
-        {
-            if($collection->hasBinding('subscriber_id')) {
-                $collection->getQuery()->joinLeft('subscriber_id', 'newsletter/subscriber', 'subscriber');
-            }
-            else if($collection->hasBinding('customer_id')) {
-                $collection->getQuery()->joinLeft('customer_id', 'newsletter/subscriber', 'subscriber');
-            }
-            $collection->addField('newsletter_status', 'subscriber.subscriber_status');
-        }
-        else {
-            $collection->addField('newsletter_status', 'subscriber_status');
-        }
-        
-        return $collection;
-    }
-    
-    */
-    
-    
-
-    
     
     
     

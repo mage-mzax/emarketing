@@ -50,6 +50,40 @@ class Mzax_Emarketing_Model_Recipient_Provider_Order
     }
     
     
+    /**
+     * Set order default filters
+     * 
+     * (non-PHPdoc)
+     * @see Mzax_Emarketing_Model_Recipient_Provider_Abstract::setDefaultFilters()
+     */
+    public function setDefaultFilters()
+    {
+        parent::setDefaultFilters();
+    
+        /* @var $storeFilter Mzax_Emarketing_Model_Object_Filter_Order_Table */
+        $storeFilter = $this->addFilter('order_table');
+        if( $storeFilter && $this->getCampaign() ) {
+            $storeFilter->setColumn('store_id');
+            $storeFilter->setValue($this->getCampaign()->getStoreId());
+            $storeFilter->setOperator('()');
+        }
+        
+        /* @var $statusFilter Mzax_Emarketing_Model_Object_Filter_Order_Table */
+        $statusFilter = $this->addFilter('order_table');
+        if( $statusFilter) {
+            $statusFilter->setColumn('status');
+            $statusFilter->setValue(Mage_Sales_Model_Order::STATE_COMPLETE);
+            $statusFilter->setOperator('()');
+        }
+        
+        /* @var $shippedFilter Mzax_Emarketing_Model_Object_Filter_Order_ShippedAt */
+        $shippedFilter = $this->addFilter('order_shipped');
+        if( $shippedFilter) {
+            $shippedFilter->setShippedAtFrom(5);
+            $shippedFilter->setShippedAtTo(8);
+            $shippedFilter->setShippedAtUnit('days');
+        }
+    }
     
     
     

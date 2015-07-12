@@ -52,7 +52,7 @@ class Mzax_Emarketing_Block_Recipients_Column_Renderer_Object extends Mage_Admin
         
         $url = $this->getObject()->getAdminUrl($row->getData($idField));
         if($url) {
-            return "<a href=\"{$url}\">$label</a>";
+            return "<a href=\"{$url}\" target=\"_blank\">$label</a>";
         }
         return $label;
     }

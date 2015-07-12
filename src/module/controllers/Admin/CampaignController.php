@@ -81,7 +81,6 @@ class Mzax_Emarketing_Admin_CampaignController extends Mage_Adminhtml_Controller
     public function editAction()
     {
         $campaign = $this->_initCampaign();
-        $campaign->getRecipientProvider()->setDefaultFilters();
 
         if ($values = $this->_getSession()->getCampaignData(true)) {
             if(isset($values['campaign'])) {

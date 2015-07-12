@@ -49,7 +49,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Column
     
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
-        return $this->_acceptParent($parent, $this->_requireBinding);
+        return $parent->hasBinding($this->_requireBinding);
     }
     
     

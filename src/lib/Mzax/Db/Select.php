@@ -247,8 +247,8 @@ class Mzax_Db_Select extends Varien_Db_Select
     public function hasAnyBindings()
     {
         foreach(func_get_args() as $name) {
-            if(!isset($this->_binding[$name])) {
-                return false;
+            if(isset($this->_binding[$name])) {
+                return true;
             }
         }
         return true;

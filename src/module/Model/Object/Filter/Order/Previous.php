@@ -58,6 +58,11 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Previous
     }
     
     
+    public function acceptChild(Mzax_Emarketing_Model_Object_Filter_Component $child)
+    {
+        return true;
+    }
+    
     
     
     
@@ -66,18 +71,6 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Previous
         return "Order | Has preceded or followed orders matching...";
     }
     
-    
-    
-    
-    /**
-     * The child filter will use order_id binding again which is ok
-     * 
-     * @return boolean
-     */
-    public function allowChildBinding($binding)
-    {
-        return $binding === 'order_id';
-    }
     
     
     

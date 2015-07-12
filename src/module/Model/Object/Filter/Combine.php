@@ -34,19 +34,6 @@ class Mzax_Emarketing_Model_Object_Filter_Combine
     
     
     
-    /**
-     * This filter does not provide its own object
-     * instead it always uses its parents one
-     * 
-     * @return boolean
-     */
-    public function hasOwnObject()
-    {
-        return false;
-    }
-    
-    
-    
 
     /**
      * Works with all parents
@@ -56,6 +43,16 @@ class Mzax_Emarketing_Model_Object_Filter_Combine
      */
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
+        return true;
+    }
+    
+    
+    
+    public function acceptChild(Mzax_Emarketing_Model_Object_Filter_Component $child)
+    {
+        if($this->_parent) {
+            return $this->_parent->acceptChild($child);
+        }
         return true;
     }
     

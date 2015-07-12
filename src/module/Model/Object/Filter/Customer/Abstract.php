@@ -29,7 +29,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Customer_Abstract
     
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
-        return $this->_acceptParent($parent, 'customer_id');
+        return $parent->hasBinding('customer_id');
     }
     
     

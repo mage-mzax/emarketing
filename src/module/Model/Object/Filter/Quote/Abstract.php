@@ -33,7 +33,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Quote_Abstract
     
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
-        return $this->_acceptParent($parent, 'quote_id');
+        return $parent->hasBinding('quote_id');
     }
     
     

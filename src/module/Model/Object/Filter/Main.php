@@ -27,19 +27,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
         return '1';
     }
     
-
-    
-    /**
-     * A main filter object should always provide
-     * its own object
-     *
-     * @return boolean
-     */
-    public function hasOwnObject()
-    {
-        return true;
-    }
-    
     
     /**
      * Has any filters been added?

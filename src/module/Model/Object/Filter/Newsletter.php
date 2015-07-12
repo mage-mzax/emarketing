@@ -37,7 +37,6 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
     
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
-        return $this->_acceptParent($parent, 'customer_id', 'subscriber_id', 'subscriber_status');
         return $parent->hasBinding('customer_id', 'subscriber_id', 'subscriber_status');
     }
     

@@ -83,34 +83,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
     }
     
     
-    /**
-     * Wheather the filter has own object
-     * or uses the parents object only
-     * 
-     * @return boolean
-     */
-    public function hasOwnObject()
-    {
-        return $this->_allowChildren;
-    }
-    
-
-    /**
-     * Allow children to reuse bindings even if this
-     * filter already uses them
-     * 
-     * Be default never
-     *
-     * @param string $binding
-     * @return boolean
-     */
-    public function allowChildBinding($binding)
-    {
-        return false;
-    }
-    
-    
-    
     
     /**
      * Retrieve Expresion used for current time
@@ -256,21 +228,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
     }
     
     
-    
-    
-    /**
-     * 
-     * @return Mzax_Emarketing_Model_Object_Collection
-     *//*
-    public function getCollection()
-    {
-        if(!$this->_collection) {
-            $this->_collection = $this->getParentObject()->getCollection();
-            $this->_prepareCollection($this->_collection);
-        }
-        return $this->_collection;
-    }
-    */
     
     
 
@@ -437,53 +394,52 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
     
     
     
+    /**
+     * Both parent and child need to accept
+     * 
+     * @param Mzax_Emarketing_Model_Object_Filter_Component $filter
+     * @return boolean
+     */
+    public function acceptFilter(Mzax_Emarketing_Model_Object_Filter_Component $filter)
+    {
+        return $filter->acceptParent($this) && $this->acceptChild($filter);
+    }
     
     
+    
+    /**
+     * Accept child
+     * 
+     * By default we can accept all childs, however if the parent
+     * already accepts this child then skip it to prevent useless nesting.
+     * 
+     * Sometimes this is unwanted, in that case overwrite this method
+     * 
+     * @param Mzax_Emarketing_Model_Object_Filter_Component $child
+     * @return boolean
+     */
+    public function acceptChild(Mzax_Emarketing_Model_Object_Filter_Component $child)
+    {
+        if($this->_parent) {
+            return !$child->acceptParent($this->_parent);
+        }
+        return true;
+    }
+    
+    
+    
+    /**
+     * Accept parent
+     * 
+     * @param Mzax_Emarketing_Model_Object_Filter_Component $parent
+     * @return boolean
+     */
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
         return false;
     }
 
     
-    /**
-     * Helper method to if filter can accept parent using bindings
-     * 
-     * @param Mzax_Emarketing_Model_Object_Filter_Component $parent
-     * @param string $binding
-     * @return boolean|Ambigous <boolean, mixed>
-     */
-    protected function _acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent, $binding)
-    {
-        $bindngs = func_get_args();
-        array_shift($bindngs);
-        
-        foreach($bindngs as $binding) {
-            // parent may allow to reuse filters for certain bindings
-            if(!$parent->allowChildBinding($binding)) 
-            {
-                /* @var $ancestor Mzax_Emarketing_Model_Object_Filter_Component */
-                foreach($parent->getAncestors() as $ancestor) {
-                    // skip all filtes that only pass down objects
-                    if(!$ancestor->hasOwnObject()) {
-                        continue;
-                    }
-                    // ignore main
-                    if($ancestor instanceof Mzax_Emarketing_Model_Object_Filter_Main) {
-                        break;
-                    }
-                    // stop if ancestor filter already has binding
-                    if($ancestor->hasBinding($binding)) {
-                        continue 2;
-                    }
-                    break;
-                }
-            }
-            if($parent->hasBinding($binding)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     
     /**
@@ -526,7 +482,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
         
         /* @var $filter Mzax_Emarketing_Model_Object_Filter_Abstract */
         foreach($filters as $name => $filter) {
-            if($filter->acceptParent($this)) {
+            if($this->acceptFilter($filter)) {
                 foreach($filter->getOptions() as $key => $title) {
                     $result[$key] = $title;
                 }

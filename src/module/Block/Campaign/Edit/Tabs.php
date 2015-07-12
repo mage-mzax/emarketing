@@ -72,7 +72,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widg
             {
                 
                 $this->addTab('filters', array(
-                    'label'   => $this->__('Filters'),
+                    'label'   => $this->__('Filters / Segmentation'),
                     'content' => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_filters')->initForm()->toHtml(),
                     'active'  => false
                 ));                

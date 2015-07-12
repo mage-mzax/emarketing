@@ -118,32 +118,33 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
     /**
      * Add child filter
      *
-     * @param mixed $filter
+     * @param mixed $param
      * @return Mzax_Emarketing_Model_Object_Filter_Abstract
      */
-    public function addFilter($filter, $quite = true)
+    public function addFilter($param, $quite = true)
     {
-        if(is_string($filter)) {
-            $instance = self::getFilterFactory()->factory($filter);
-            if(!$instance) {
+        if(is_string($param)) {
+            $filter = self::getFilterFactory()->factory($param);
+            if(!$filter) {
                 if(!$quite) {
                     throw new Mage_Exception(Mage::helper('mzax_emarketing')->__('Failed to initialise filter with type “%s”. This filter might not be installed on your system.', $filter['type']));
                 }
                 return null;
             }
-            $filter = $instance;
         }
-        else if(is_array($filter) && isset($filter['type'])) {
-            $instance = self::getFilterFactory()->factory($filter['type']);
-            if(!$instance) {
+        else if(is_array($param) && isset($param['type'])) {
+            $filter = self::getFilterFactory()->factory($param['type']);
+            if(!$filter) {
                 if(!$quite) {
                     throw new Mage_Exception(Mage::helper('mzax_emarketing')->__('Failed to initialise filter with type “%s”. This filter might not be installed on your system.', $filter['type']));
                 }
                 return null;
             }
-            $instance->load($filter);
-            $filter = $instance;
         }
+        else {
+            $filter = $param;
+        }
+        
         if(!$filter instanceof Mzax_Emarketing_Model_Object_Filter_Abstract) {
             return null;
         }
@@ -157,6 +158,11 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         
         $this->_filters[] = $filter->setParent($this);
         $filter->setId($this->getId() . '--' . count($this->_filters));
+        
+        if(is_array($param)) {
+            $filter->load($param);
+        }
+        
         return $filter;
     }
     

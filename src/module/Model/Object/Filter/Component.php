@@ -467,6 +467,10 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
                     if(!$ancestor->hasOwnObject()) {
                         continue;
                     }
+                    // ignore main
+                    if($ancestor instanceof Mzax_Emarketing_Model_Object_Filter_Main) {
+                        break;
+                    }
                     // stop if ancestor filter already has binding
                     if($ancestor->hasBinding($binding)) {
                         continue 2;

@@ -96,10 +96,10 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
             
             // count customer_id AS order_id maybe NULL
             // reduce by 1 as we added zero order results as well.
-            $query->having($this->getWhereSql('orders', 'COUNT(`customer_id`)-1'));
+            $query->having($this->getWhereSql('orders', 'COUNT({customer_id})-1'));
         }        
         else {
-            $query->having($this->getWhereSql('orders', 'COUNT(`order_id`)'));
+            $query->having($this->getWhereSql('orders', 'COUNT(`filter`.`order_id`)'));
         }
         $select->useTemporaryTable($this->getTempTableName());
         

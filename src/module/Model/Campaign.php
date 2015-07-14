@@ -233,6 +233,13 @@ class Mzax_Emarketing_Model_Campaign
         if( $this->_variations ) {
             $this->_variations->save();
         }
+        
+        if( $variations = $this->getClonedVariations() ) {
+            foreach($variations as $variation) {
+                $variation->save();
+            }
+            $this->setClonedVariations(false);
+        }
     }
     
 
@@ -1050,6 +1057,26 @@ class Mzax_Emarketing_Model_Campaign
     
     
 
+    
+    
+    
+    public function __clone()
+    {
+        $variations = array();
+        foreach($this->getVariations() as $variation) {
+            $newVariation = clone $variation;
+            $newVariation->setCampaign($this);
+            $variations[] = $newVariation;
+        }
+        $this->_variations = null;
+        
+        $this->setDuplicateOf($this->getId());
+        $this->setId(null);
+        $this->setCreatedAt(null);
+        $this->setUpdatedAt(null);
+        $this->setClonedVariations($variations);
+        
+    }
     
     
 }

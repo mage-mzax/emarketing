@@ -106,6 +106,9 @@ class Mzax_Emarketing_Model_Campaign_Variation
         if($this->_mediumData) {
             $this->setData('medium_json', $this->_mediumData->toJson());
         }
+        if($this->_campaign) {
+            $this->setCampaignId($this->_campaign->getId());
+        }
         
         parent::_beforeSave();
     }
@@ -219,6 +222,15 @@ class Mzax_Emarketing_Model_Campaign_Variation
     }
     
     
+
+
+    public function __clone()
+    {
+        $this->setDuplicateOf($this->getId());
+        $this->setId(null);
+        $this->setCreatedAt(null);
+        $this->setUpdatedAt(null);
+    }
     
     
 }

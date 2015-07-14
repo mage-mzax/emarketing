@@ -74,6 +74,15 @@ $campaign = $this->getCampaign();
             </td>
         </tr>
     <?php endif ?>
+    
+    <tr>
+        <td class="scope-label">
+            <button onclick="setLocation('<?php echo $this->getActionUrl('duplicate') ?>')" type="button" class="scalable goto"><span><?php echo $this->__('Duplicate campaign') ?></span></button>
+        </td>
+        <td class="scope-label">
+            <?php echo $this->__('Duplicate this campaign and start again')?>
+        </td>
+    </tr>
 </table>
 
 

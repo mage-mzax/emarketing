@@ -298,7 +298,7 @@ class Mzax_Emarketing_Admin_CampaignController extends Mage_Adminhtml_Controller
                     $this->_getSession()->addSuccess($this->__("Campaign moved to archive."));
                 }
                 else {
-                    $this->_getSession()->addSuccess($this->__("Campaign sucessfully unarchived."));
+                    $this->_getSession()->addSuccess($this->__("Campaign successfully unarchived."));
                 }
             }
         }
@@ -306,6 +306,20 @@ class Mzax_Emarketing_Admin_CampaignController extends Mage_Adminhtml_Controller
     }
     
     
+    
+    
+    public function duplicateAction()
+    {
+        $campaign = $this->_initCampaign();
+        if ($campaign->getId()) {
+            $newCampaign = clone $campaign;
+            $newCampaign->setName($this->__('Copy of %s', $campaign->getName()));
+            $newCampaign->isArchived(false);
+            $newCampaign->save();
+            $this->_getSession()->addSuccess($this->__("Campaign sucessfully duplicated."));
+        }
+        $this->_redirect('*/*/edit', array('_current' => true, 'tab' => 'tasks', 'id' => $newCampaign->getId()));
+    }
     
     
     

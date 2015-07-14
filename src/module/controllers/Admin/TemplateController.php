@@ -25,6 +25,9 @@ class Mzax_Emarketing_Admin_TemplateController extends Mage_Adminhtml_Controller
     
     public function indexAction()
     {
+        $this->_title($this->__('eMarketing'))
+             ->_title($this->__('Manage Templates'));
+        
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
         
@@ -47,7 +50,10 @@ class Mzax_Emarketing_Admin_TemplateController extends Mage_Adminhtml_Controller
                 $template->addData($values['template']);
             }
         }
-
+        
+        $this->_title($this->__('eMarketing'))
+             ->_title($this->__('Edit Template'));
+        
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
         $this->renderLayout();

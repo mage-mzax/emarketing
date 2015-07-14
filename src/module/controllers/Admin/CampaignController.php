@@ -25,6 +25,9 @@ class Mzax_Emarketing_Admin_CampaignController extends Mage_Adminhtml_Controller
     
     public function indexAction()
     {
+        $this->_title($this->__('eMarketing'))
+             ->_title($this->__('Manage Campaigns'));
+        
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
         
@@ -69,6 +72,9 @@ class Mzax_Emarketing_Admin_CampaignController extends Mage_Adminhtml_Controller
             return $this->_forward('edit');
         }
         
+        $this->_title($this->__('eMarketing'))
+             ->_title($this->__('New Campaign'));
+        
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
         $this->renderLayout();
@@ -93,6 +99,9 @@ class Mzax_Emarketing_Admin_CampaignController extends Mage_Adminhtml_Controller
         else if($campaign->getId() && $this->_getSession()->getData('init_default_filters', true) == $campaign->getId()) {
             $campaign->getRecipientProvider()->setDefaultFilters();
         }
+        
+        $this->_title($this->__('eMarketing'))
+             ->_title($this->__('Edit %s', $campaign->getName()));
 
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
@@ -668,6 +677,9 @@ class Mzax_Emarketing_Admin_CampaignController extends Mage_Adminhtml_Controller
     {
         $campaign = $this->_initCampaign();
         
+        $this->_title($this->__('eMarketing'))
+             ->_title($this->__('Preview Email'));
+        
         $this->loadLayout('mzax_popup');
         $this->_addContent(
             $this->getLayout()->createBlock('mzax_emarketing/campaign_preview')->setCampaign($campaign));
@@ -709,7 +721,9 @@ class Mzax_Emarketing_Admin_CampaignController extends Mage_Adminhtml_Controller
         
         Mage::register('current_recipient', $recipient);
         
-
+        $this->_title($this->__('eMarketing'))
+             ->_title($this->__('Send Email'));
+        
         $this->loadLayout('mzax_popup');
         $this->renderLayout();
     }

@@ -33,6 +33,9 @@ class Mzax_Emarketing_Admin_TrackerController extends Mage_Adminhtml_Controller_
 
     public function indexAction()
     {
+        $this->_title($this->__('eMarketing'))
+             ->_title($this->__('Manage Trackers'));
+        
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
         
@@ -59,6 +62,9 @@ class Mzax_Emarketing_Admin_TrackerController extends Mage_Adminhtml_Controller_
         if($tracker->getId() && $tracker->isActive() && !$tracker->isAggregated()) {
             $this->_getSession()->addWarning($this->__('This tracker has changed and is not yet aggregated. You can do it manually under "Tasks" or wait a while.'));
         }
+        
+        $this->_title($this->__('eMarketing'))
+             ->_title($this->__('Edit Tracker'));
 
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
@@ -111,6 +117,9 @@ class Mzax_Emarketing_Admin_TrackerController extends Mage_Adminhtml_Controller_
             return $this->_forward('edit');
         }
     
+        $this->_title($this->__('eMarketing'))
+             ->_title($this->__('New Tracker'));
+        
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
         $this->renderLayout();

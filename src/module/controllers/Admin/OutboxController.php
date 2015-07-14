@@ -24,6 +24,10 @@ class Mzax_Emarketing_Admin_OutboxController extends Mage_Adminhtml_Controller_A
     
     public function indexAction()
     {
+        $this->_title($this->__('eMarketing'))
+             ->_title($this->__('Outbox'));
+        
+        
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
         
@@ -40,6 +44,9 @@ class Mzax_Emarketing_Admin_OutboxController extends Mage_Adminhtml_Controller_A
     public function emailAction()
     {
         $message = $this->_initEmail();
+        
+        $this->_title($this->__('eMarketing'))
+             ->_title($this->__('Outbox Email'));
         
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');

@@ -153,6 +153,7 @@
         		</customer_attribute>
         		<customer_address><model>mzax_emarketing/object_filter_customer_address</model></customer_address>
         		<customer_address_attribute><model>mzax_emarketing/object_filter_customer_address_attribute</model></customer_address_attribute>
+        		<customer_event><model>mzax_emarketing/object_filter_customer_event</model></customer_event>
         		
         		<order_table><model>mzax_emarketing/object_filter_order_table</model></order_table>
         		<order_shipped><model>mzax_emarketing/object_filter_order_shippedAt</model></order_shipped>

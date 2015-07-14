@@ -458,24 +458,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
     
     
     
-    /**
-     * Add hidden input field
-     * 
-     * @param string $name
-     * @param string $value
-     * @return Varien_Data_Form_Element_Abstract
-     */
-    protected function getHiddenField($name, $value)
-    {
-        return $this->getForm()->addField($name, 'hidden', array(
-            'name'    => $name,
-            'class'   => 'hidden',
-            'no_span' => true,
-            'is_meta' => true,
-            'value'   => $value
-        ));
-    }
-    
     
     
     

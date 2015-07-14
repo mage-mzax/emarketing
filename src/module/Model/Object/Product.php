@@ -45,7 +45,7 @@ class Mzax_Emarketing_Model_Object_Product extends Mzax_Emarketing_Model_Object_
     public function getQuery()
     {
         $query = parent::getQuery();
-        $query->addBinding('product_id', 'product_id');
+        $query->addBinding('product_id', $this->getIdFieldName());
     
         return $query;
     }

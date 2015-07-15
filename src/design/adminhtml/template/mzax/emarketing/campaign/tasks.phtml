@@ -77,12 +77,36 @@ $campaign = $this->getCampaign();
     
     <tr>
         <td class="scope-label">
+            <button onclick="setLocation('<?php echo $this->getActionUrl('download') ?>')" type="button" class="scalable"><span><?php echo $this->__('Download as Preset') ?></span></button>
+        </td>
+        <td class="scope-label">
+            <?php echo $this->__('Download this campaign as preset and share or install it on your Magento installation. The campaign preset will include most settings, filters and content.')?>
+        </td>
+    </tr>
+    
+    <tr>
+        <td class="scope-label">
+            <button onclick="setLocation('<?php echo $this->getActionUrl('installAsPreset') ?>')" type="button" class="scalable"><span><?php echo $this->__('Install as preset') ?></span></button>
+        </td>
+        <td class="scope-label">
+            <?php echo $this->__('Install as preset. This will overwrite any preset with the same name.')?>
+        </td>
+    </tr>
+    
+    
+    
+    
+    
+    <tr>
+        <td class="scope-label">
             <button onclick="setLocation('<?php echo $this->getActionUrl('duplicate') ?>')" type="button" class="scalable goto"><span><?php echo $this->__('Duplicate campaign') ?></span></button>
         </td>
         <td class="scope-label">
             <?php echo $this->__('Duplicate this campaign and start again')?>
         </td>
     </tr>
+    
+    
 </table>
 
 

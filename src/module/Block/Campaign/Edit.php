@@ -52,7 +52,15 @@ class Mzax_Emarketing_Block_Campaign_Edit extends Mage_Adminhtml_Block_Widget_Fo
             return $text;
         }
         else {
-            return $this->__('New %s Campaign', Mage::getSingleton('mzax_emarketing/medium')->getOptionText($campaign->getData('medium')));
+            if($preset = $campaign->getPreset()) {
+                return $this->__('New %s - %s campaign', 
+                        Mage::getSingleton('mzax_emarketing/medium')->getOptionText($campaign->getData('medium')), 
+                        $preset->getName());
+            }
+            else {
+                return $this->__('New %s Campaign',
+                         Mage::getSingleton('mzax_emarketing/medium')->getOptionText($campaign->getData('medium')));
+            }
         }
     }
 

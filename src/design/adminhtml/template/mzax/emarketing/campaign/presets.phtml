@@ -1,0 +1,43 @@
+<?php 
+/* @var $this Mzax_Emarketing_Block_Campaign_New_Presets */
+/* @var $preset Mzax_Emarketing_Model_Campaign_Preset */
+
+$showVersionNotice = false;
+?>
+
+
+<div class="mzax-campaign-presets">
+
+    <div class="content-header">
+        <h3 class="head-presets">Create new campaign from a preset.</h3>
+    </div>
+    <div class="mzax-info-element">
+        <p><?php echo $this->__('Campaign presets are pre-configured common campaigns that are easy to use as most filters and settings are already defined. You are of cause still able to do any changes to customise the campaign to your exact needs. ') ?></p>
+    </div>
+    <ul class="campaign-preset-list">
+        <?php foreach($this->getPresets() as $preset): ?>
+            <li class="preset">
+                <span class="preset-title">
+                    <?php echo $this->htmlEscape($preset->getName()) ?>
+                    <?php if(!$preset->validateVersion()): $showVersionNotice = true; ?>
+                    <sup class="version"> (<?php echo $this->htmlEscape($preset->getVersion()) ?>**)</sup>
+                <?php endif ?>
+                </span> 
+                <?php if($description = $preset->getDescription()): ?>
+                    <p class="preset-description"><?php echo $this->htmlEscape($description) ?></p>
+                <?php endif ?>
+                
+                <button type="button" onclick="setLocation('<?php echo $this->getUrl('*/*/usePreset', array('preset' => $preset->getFilename())) ?>');" class="scalable save"><span><?php echo $this->__('Continue') ?></span></button>
+                <?php if($author = $preset->getAuthor()): ?>
+                    <span class="preset-author"><?php echo $this->__('Created by %s', $this->htmlEscape($author)) ?></span>
+                <?php endif ?>
+            </li>
+        <?php endforeach ?>
+    </ul>
+   <?php if($showVersionNotice): ?>
+   <div class="mzax-warn-element">
+        <?php echo $this->__('** This preset was created in a newer version of the Mzax eMarketing extension this may cause problems. Your current version is %s.',  Mage::helper('mzax_emarketing')->getVersion()) ?>
+    </div>
+   <?php endif?>
+
+</div>

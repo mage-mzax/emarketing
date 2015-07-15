@@ -77,6 +77,24 @@ class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
     
     
     
+    public function presetsAction()
+    {
+        /* @var $preset Mzax_Emarketing_Model_Resource_Campaign_Preset */
+        $preset = Mage::getResourceSingleton('mzax_emarketing/campaign_preset');
+        
+        /* @var $collection Mzax_Emarketing_Model_Resource_Campaign_Preset_Collection */
+        $collection = Mage::getResourceModel('mzax_emarketing/campaign_preset_collection');
+        
+        
+        foreach($collection as $preset) {
+            var_dump($preset->debug());
+        }
+        
+        
+        
+    }
+    
+    
     
     /**
      * Test GeoIp

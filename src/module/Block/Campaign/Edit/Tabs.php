@@ -66,11 +66,10 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widg
                 'content'   => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_content')->toHtml(),
                 'active'    => false
             ));
-    
+            
             // only available if saved
             if($campaign->getId()) 
             {
-                
                 $this->addTab('filters', array(
                     'label'   => $this->__('Filters / Segmentation'),
                     'content' => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_filters')->initForm()->toHtml(),
@@ -83,7 +82,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widg
                 ));
                 
                 if(!$campaign->isArchived()) {
-                    // we want to initalize it
                     $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_report');
                     $this->addTab('report', array(
                         'label'   => $this->__('Report'),
@@ -108,8 +106,14 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widg
                         'url'     => $this->getUrl('*/*/errorGrid', array('_current' => true))
                     ));
                 }
-                
-                
+            }
+            else if($campaign->getPreset()) 
+            {
+                $this->addTab('filters', array(
+                    'label'   => $this->__('Filters / Segmentation'),
+                    'content' => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_filters')->initForm()->toHtml(),
+                    'active'  => false
+                ));
             }
         }
         

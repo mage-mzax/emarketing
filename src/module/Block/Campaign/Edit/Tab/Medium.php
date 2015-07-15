@@ -70,6 +70,15 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Medium extends Mage_Adminhtml_Bloc
         ));
         
         
+        
+        /**
+         * Campaign
+         */
+        $fieldset = $form->addFieldset('presets', array(
+            'legend' => $this->__('Campaign Presets'),
+         ))->setRenderer($this->getLayout()->createBlock('mzax_emarketing/campaign_new_presets'));
+        
+        
         $form->addValues($campaign->getData());
         $this->setForm($form);
         

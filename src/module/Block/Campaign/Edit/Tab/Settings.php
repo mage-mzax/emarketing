@@ -55,36 +55,70 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
         }
         
         
-
-        $fieldset->addField('name','text', array(
-            'name'     => 'name',
-        	'required' => true,
-            'label' => $this->__('Campaign Name'),
-            'title' => $this->__('Campaign Name'),
-        ));
-        
-
         $fieldset->addField('medium','hidden', array(
             'name' => 'medium'
         ));
         
         
-    
-        // @todo disable if it has reci
-        $fieldset->addField('provider','select', array(
-            'name'      => 'provider',
-            'label'     => $this->__('Campaign Recipient'),
-        	'title'     => $this->__('Campaign Recipient'),
-            'values'    => $campaign->getAvailableProviders(false),
-            'note'      => !$campaign->getId()
-                ? $this->__("Who are the recipients of this campaign")
-                : ($campaign->countRecipients()
-                    ? $this->__("Changing may alter your current filters")
-                    : $this->__("This can not be changed once a recipient has been created.")
-                ),
-            'disabled'  => $campaign->getId() && $campaign->countRecipients(),
-        	'required'  => true,
+        if($campaign->getPreset()) {
+            $fieldset->addField('preset_name','hidden', array(
+                'name'  => 'preset_name',
+                'value' => $campaign->getPreset()->getName()
+            ));
+        }
+        
+        
+
+        $fieldset->addField('name','text', array(
+            'name'     => 'name',
+        	'required' => true,
+            'label'    => $this->__('Campaign Name'),
+            'title'    => $this->__('Campaign Name'),
         ));
+        
+        
+        if($campaign->getId()) {
+            $fieldset->addField('description','textarea', array(
+                'name'     => 'description',
+                'required' => false,
+                'style'    => 'height:60px;',
+                'label'    => $this->__('Description'),
+                'title'    => $this->__('Description'),
+                'note'     => $this->__("For internal use only"),
+            ));
+            
+            $fieldset->addField('tags','text', array(
+                'name'     => 'tags',
+                'required' => false,
+                'label'    => $this->__('Tags'),
+                'title'    => $this->__('Campaign'),
+                'note'     => $this->__("Space separated tags for internal organising purpose only (e.g. draft reminder ad need-review…)"),
+            ));
+        }
+        
+        
+        // don't show when creating by presets
+        if(!$campaign->getPreset()) {
+            $fieldset->addField('provider','select', array(
+                'name'      => 'provider',
+                'label'     => $this->__('Campaign Recipient'),
+            	'title'     => $this->__('Campaign Recipient'),
+                'values'    => $campaign->getAvailableProviders(false),
+                'note'      => !$campaign->getId()
+                    ? $this->__("Who are the recipients of this campaign")
+                    : ($campaign->countRecipients()
+                        ? $this->__("Changing may alter your current filters")
+                        : $this->__("This can not be changed once a recipient has been created.")
+                    ),
+                'disabled'  => $campaign->getId() && $campaign->countRecipients(),
+            	'required'  => true,
+            ));
+        }
+        else {
+            $fieldset->addField('provider', 'hidden', array(
+                'name' => 'provider'
+            ));
+        }
         
         
         $fieldset->addField('store_id', 'select', array(
@@ -96,52 +130,52 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
         ));
         
         
-        
-        $fieldset->addField('check_frequency', 'select', array(
-            'label'     => $this->__('Check Frequency'),
-            'title'     => $this->__('Check Frequency'),
-            'name'      => 'check_frequency',
-            'required'  => true,
-            'options'   => array(
-                '1440'      => $this->__('Once a day'),
-                '720'       => $this->__('Twice a day'),
-                '360'       => $this->__('Every 6 hours'),
-                '180'       => $this->__('Every 3 hours'),
-                '60'        => $this->__('Every hour'),
-                '30'        => $this->__('Every 30 minutes'),
-                '1'         => $this->__('Every time'),
-                '0'         => $this->__('Never automatically'),
-            ),
-            'value'    => '720',
-            'note'     => $this->__("How often to check for new recipients, e.g. Birthdays will do once a day, while abandon carts need to check all the time."),
-        ));
-        
-        
-        
-        $fieldset->addField('min_resend_interval', 'select', array(
-            'label'     => $this->__('Minimum Resend Interval'),
-            'title'     => $this->__('Minimum Resend Interval'),
-            'name'      => 'min_resend_interval',
-            'required'  => true,
-            'options'   => array(
-                '0'   => $this->__('[Only send once]'),
-                '1'   => $this->__('One day'),
-                '2'   => $this->__('Two days'),
-                '7'   => $this->__('One week'),
-                '14'  => $this->__('Two weeks'),
-                '31'  => $this->__('1 month'),
-                '62'  => $this->__('2 months'),
-                '91'  => $this->__('3 months'),
-                '122' => $this->__('4 months'),
-                '152' => $this->__('5 months'),
-                '183' => $this->__('6 months'),
-                '274' => $this->__('9 months'),
-                '364' => $this->__('12 months')
-            ),
-            'value' => '0',
-            'note'   => $this->__("The minimum time before a recipient can recieve this campaign again."),
-        ));
-        
+        // don't show when creating by presets
+        if(!$campaign->getPreset()) 
+        {
+            $fieldset->addField('check_frequency', 'select', array(
+                'label'     => $this->__('Check Frequency'),
+                'title'     => $this->__('Check Frequency'),
+                'name'      => 'check_frequency',
+                'required'  => true,
+                'options'   => array(
+                    '1440'      => $this->__('Once a day'),
+                    '720'       => $this->__('Twice a day'),
+                    '360'       => $this->__('Every 6 hours'),
+                    '180'       => $this->__('Every 3 hours'),
+                    '60'        => $this->__('Every hour'),
+                    '30'        => $this->__('Every 30 minutes'),
+                    '1'         => $this->__('Every time'),
+                    '0'         => $this->__('Never automatically'),
+                ),
+                'value'    => '720',
+                'note'     => $this->__("How often to check for new recipients, e.g. Birthdays will do once a day, while abandon carts need to check all the time."),
+            ));
+            
+            $fieldset->addField('min_resend_interval', 'select', array(
+                'label'     => $this->__('Minimum Resend Interval'),
+                'title'     => $this->__('Minimum Resend Interval'),
+                'name'      => 'min_resend_interval',
+                'required'  => true,
+                'options'   => array(
+                    '0'   => $this->__('[Only send once]'),
+                    '1'   => $this->__('One day'),
+                    '2'   => $this->__('Two days'),
+                    '7'   => $this->__('One week'),
+                    '14'  => $this->__('Two weeks'),
+                    '31'  => $this->__('1 month'),
+                    '62'  => $this->__('2 months'),
+                    '91'  => $this->__('3 months'),
+                    '122' => $this->__('4 months'),
+                    '152' => $this->__('5 months'),
+                    '183' => $this->__('6 months'),
+                    '274' => $this->__('9 months'),
+                    '364' => $this->__('12 months')
+                ),
+                'value' => '0',
+                'note'   => $this->__("The minimum time before a recipient can recieve this campaign again."),
+            ));
+        }
         
 
         

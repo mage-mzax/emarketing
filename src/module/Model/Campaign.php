@@ -1057,6 +1057,48 @@ class Mzax_Emarketing_Model_Campaign
     
     
 
+
+    
+    
+    
+    
+    
+    //--------------------------------------------------------------------------
+    //
+    //  Misc
+    //
+    //--------------------------------------------------------------------------
+    
+    
+    
+    /**
+     * Convert to campaign to encoded string
+     *
+     * @return string
+     */
+    public function export()
+    {
+        // set current extension version
+        $this->setVersion(Mage::helper('mzax_emarketing')->getVersion());
+        
+        $filterData = $this->getRecipientProvider()->export();
+        $this->setFilterExport(Zend_Json::encode($filterData));
+        
+        $json = $this->toJson(array(
+            'version',
+            'name',
+            'description',
+            'check_frequency',
+            'min_resend_interval',
+            'autologin',
+            'expire_time',
+            'provider',
+            'filter_export',
+            'medium',
+            'medium_json'));
+        
+        return base64_encode($json);
+    }
     
     
     

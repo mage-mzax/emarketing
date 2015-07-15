@@ -219,7 +219,7 @@ class Mzax_Emarketing_Admin_TemplateController extends Mage_Adminhtml_Controller
                     ->setHttpResponseCode(200)
                     ->setHeader('Pragma', 'public', true)
                     ->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0', true)
-                    ->setHeader('Content-type', 'text/csv', true)
+                    ->setHeader('Content-type', 'text/plain', true)
                     ->setHeader('Content-Length', $contentLength)
                     ->setHeader('Content-Disposition', 'attachment; filename="'.$fileName.'"')
                     ->setHeader('Last-Modified', date('r'))

@@ -426,6 +426,17 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
     }
     
     
+    /**
+     * Retreive data for export
+     * 
+     * @return array
+     */
+    public function export()
+    {
+        return $this->asArray();
+    }
+    
+    
     
     
     /**

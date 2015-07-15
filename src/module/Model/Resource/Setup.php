@@ -29,6 +29,25 @@ class Mzax_Emarketing_Model_Resource_Setup extends Mage_Eav_Model_Entity_Setup
 {
     
     
+    /**
+     * Install campaign presets specified dir
+     * 
+     * @param string $sourceDir
+     * @return Mzax_Emarketing_Model_Resource_Setup
+     */
+    public function installCampaignPresets($dir)
+    {
+        /* @var $resource Mzax_Emarketing_Model_Resource_Campaign_Preset */
+        $resource = Mage::getResourceSingleton('mzax_emarketing/campaign_preset');
+        $pattern  = rtrim($dir, DS) . DS . '*' . $resource::SUFFIX;
+        
+        foreach(glob($pattern) as $file) {
+            $resource->installFile($file, true, 'Mzax - eMarketing');
+        }
+        
+        return $this;
+    }
+    
     
     
     /**
@@ -52,9 +71,6 @@ class Mzax_Emarketing_Model_Resource_Setup extends Mage_Eav_Model_Entity_Setup
                 
         $table->addForeignKey($fkName, $columnName, $refTable, $columnName, 
                 Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE);
-        
-        
-        //$this->getConnection()->addForeignKey($fkName, $table, $columnName, $refTable, $refColumnName);
         
         return $this;
     }

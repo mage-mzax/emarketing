@@ -894,18 +894,14 @@ ul.mzax-variation-tabs a.changed span.changed {
   padding: 5px;
 }
 
-.mzax-emergency-stop {
+.mzax-warn-element {
   padding: 10px;
-  text-align: center;
-  margin: 10px;
-  border: 1px solid #CFCFCF;
-  color: #6F6F6F;
-  font-size: 0.9em;
+  margin: 10px 0;
+  color: #444;
+  font-size: 1em;
   cursor: pointer;
-  &:hover {
-    border: 1px solid #E5B7B7;
-    background: url("images/bg-remove.png") rgba(#890F0F, 0.02);
-  }
+  border: 1px solid #E5B7B7;
+  background: url("images/bg-remove.png") rgba(#890F0F, 0.02);
 }
 
 .mzax-info-element {
@@ -978,6 +974,50 @@ ul.mzax-variation-tabs a.changed span.changed {
   
 }
 
+
+
+
+
+
+
+.mzax-campaign-presets {
+  
+  .preset {
+    border:1px solid #ddd;
+    background:#F0F0F0;
+    margin: 0 10px 10px 0;
+    padding:10px;
+    min-width:250px;
+    max-width:50%;
+    display:inline-block;
+    vertical-align:top;
+    
+    .preset-title {
+      display:block;
+      font-size:1.2em;
+      font-weight:bold;
+      margin-bottom:5px;
+      
+      .version {
+        color: #B60000;
+        font-size: 10px;
+      }
+    }
+    
+    .preset-author {
+      font-size:0.8em;
+      color:#999;
+    }
+    
+    button.save {
+      display:block;
+    }
+    
+  }
+  
+  
+  
+}
 
 
 

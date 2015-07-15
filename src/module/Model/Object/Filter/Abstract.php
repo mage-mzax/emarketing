@@ -921,8 +921,8 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
             $future = $this->getTimeDirection($key);
         }
         
-        $from = (int)    $this->getData($fromKey);
-        $to   = (int)    $this->getData($toKey);
+        $from = (float)  $this->getData($fromKey);
+        $to   = (float)  $this->getData($toKey);
         $unit = (string) $this->getData($unitKey);
         // days => DAY, weeks => WEEK,...
         $unit = substr(strtoupper($unit), 0, -1);
@@ -1128,7 +1128,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
     
     protected function getTimeExpr($key, $field, $substract = false)
     {
-        $value = (int)    $this->getData("{$key}_value");
+        $value = (float)  $this->getData("{$key}_value");
         $unit  = (string) $this->getData("{$key}_unit");
         
         $unit = substr(strtoupper($unit), 0, -1);

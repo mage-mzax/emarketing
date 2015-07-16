@@ -1794,7 +1794,6 @@ window.mzax = window.mzax || {};
                                 element.toggleClass('mzax-removed', flag)[flag?'fadeOut':'fadeIn']('fast');
                                 removeHandle.toggleClass('mzax-removed', flag).fixedPosition(flag && !field.parent);
                                 removeMarker.hide();
-                                editor.refreshUi();
                                 
                                 if(!flag /* on insert*/) {
                                     removeHandle.hide();
@@ -1811,6 +1810,7 @@ window.mzax = window.mzax || {};
                                     removeHandle.hide();
                                 }
                             }
+                            editor.refreshUi(1);
                         }
                         
                         
@@ -1863,7 +1863,7 @@ window.mzax = window.mzax || {};
                                     prev = removeHandle.prevAll('.mzax-remove-handle.mzax-field-'+field.parent.uid);
                                 }
                                 
-                                removeHandle.show().animate({
+                                removeHandle.show().stop(true, false).animate({
                                     top: top + (prev.length * (removeHandle.height() + 5)), 
                                     left: left,
                                     opacity: 1

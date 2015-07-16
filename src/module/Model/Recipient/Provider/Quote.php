@@ -73,6 +73,22 @@ class Mzax_Emarketing_Model_Recipient_Provider_Quote
     
     
     
+    public function prepareSnippets(Mzax_Emarketing_Model_Medium_Email_Snippets $snippets)
+    {
+        parent::prepareSnippets($snippets);
+        
+        $snippets->addVar('quote.customer_firstname', 'Customer Firstname', 'Firstname of the customer from the quote');
+        $snippets->addVar('quote.customer_lastname', 'Customer Lastname', 'Lastname of the customer from the quote');
+        
+        $snippets->addSnippets(
+            'mage.cart.products', 
+            '{{block type="mzax_emarketing/template" area="frontend" template="mzax/email/quote-items.phtml" quote="$quote"}}',
+            $this->__('Shopping Cart Products Table'),
+            $this->__('Simple table to display the shopping cart products.'));
+        
+    }
+    
+    
     
     public function prepareRecipient(Mzax_Emarketing_Model_Recipient $recipient)
     {

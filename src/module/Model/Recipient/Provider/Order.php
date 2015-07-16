@@ -87,6 +87,24 @@ class Mzax_Emarketing_Model_Recipient_Provider_Order
     
     
     
+    public function prepareSnippets(Mzax_Emarketing_Model_Medium_Email_Snippets $snippets)
+    {
+        parent::prepareSnippets($snippets);
+        
+        $snippets->addVar('order.customer_firstname', 'Customer Firstname', 'Firstname of the customer from the order');
+        $snippets->addVar('order.customer_lastname', 'Customer Lastname', 'Lastname of the customer from the order');
+        
+        $snippets->addSnippets(
+            'mage.order.products', 
+            '{{block type="mzax_emarketing/template" area="frontend" template="mzax/email/order-items.phtml" order="$order"}}',
+            $this->__('Order Products Table'),
+            $this->__('Simple table to display the order products.'));
+        
+    }
+    
+    
+    
+    
     public function prepareRecipient(Mzax_Emarketing_Model_Recipient $recipient)
     {
         /* @var $order Mage_Sales_Model_Order */

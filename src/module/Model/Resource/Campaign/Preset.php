@@ -84,6 +84,9 @@ class Mzax_Emarketing_Model_Resource_Campaign_Preset
     {
         $name = basename($file, self::SUFFIX);
         $data = file_get_contents($file);
+        if(!$data) {
+            throw new Exception('File is empty');
+        }
         return $this->install($name, $data, $overwrite, $author);
     }
     
@@ -113,6 +116,9 @@ class Mzax_Emarketing_Model_Resource_Campaign_Preset
         }
         
         $data = $this->_decodeData($data);
+        if(!$data) {
+            throw new Exception("Failed to decode preset");
+        }
         if($author) {
             $data['author'] = (string) $author;
         }
@@ -124,7 +130,7 @@ class Mzax_Emarketing_Model_Resource_Campaign_Preset
             throw new Exception("Failed to install preset");
         }
         
-        @chmod($file, 0766);
+        @chmod($file, 0666);
         
         return $this;
     }
@@ -153,10 +159,11 @@ class Mzax_Emarketing_Model_Resource_Campaign_Preset
      */
     public function getPath()
     {
-        $path[] = Mage::getBaseDir('var');
-        $path[] = 'mzax_emarketing';
-        $path[] = 'presets';
-        
+        $path = array(
+            Mage::getBaseDir('var'),
+            'mzax_emarketing',
+            'presets'
+        );
         $path = implode(DS, $path);
         
         if(!is_dir($path) && !mkdir($path, 0777, true)) {

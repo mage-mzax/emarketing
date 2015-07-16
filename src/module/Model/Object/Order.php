@@ -79,6 +79,8 @@ class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Ab
         $collection->addField('created_at');
         $collection->addField('status');
         $collection->addField('increment_id');
+        $collection->addField('customer_id');
+        $collection->addField('email');
     }
     
     
@@ -88,7 +90,7 @@ class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Ab
 
         if (!Mage::app()->isSingleStoreMode()) {
             $grid->addColumn('store_id', array(
-                'header'    => Mage::helper('sales')->__('Purchased From (Store)'),
+                'header'    => $this->__('Purchased From (Store)'),
                 'index'     => 'store_id',
                 'type'      => 'store',
                 'store_view'=> true,
@@ -107,15 +109,22 @@ class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Ab
             'object'      => Mage::getSingleton('mzax_emarketing/object_customer')
         ));
         
+
+        $grid->addColumn('email', array(
+            'header' => Mage::helper('sales')->__('Email'),
+            'index' => 'email'
+        ));
+        
+        
         $grid->addColumn('created_at', array(
-            'header' => Mage::helper('sales')->__('Purchased On'),
+            'header' => $this->__('Purchased On'),
             'index' => 'created_at',
             'type' => 'datetime',
-            'width' => '100px',
+            'width' => '120px',
         ));
 
         $grid->addColumn('status', array(
-            'header' => Mage::helper('sales')->__('Status'),
+            'header' => $this->__('Status'),
             'index' => 'status',
             'type'  => 'options',
             'width' => '70px',

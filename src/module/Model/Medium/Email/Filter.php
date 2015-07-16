@@ -83,4 +83,24 @@ class Mzax_Emarketing_Model_Medium_Email_Filter
     }
     
     
+    
+    /**
+     * Filter the string as template.
+     * Rewrited for logging exceptions
+     *
+     * @param string $value
+     * @return string
+     */
+    public function filter($value)
+    {
+        try {
+            $value = Varien_Filter_Template::filter($value);
+        } 
+        catch (Exception $e) {
+            throw $e;
+            //$value = '';
+            //Mage::logException($e);
+        }
+        return $value;
+    }
 }

@@ -309,5 +309,15 @@ class Mzax_Emarketing_Admin_TemplateController extends Mage_Adminhtml_Controller
     }
     
 
-    
+
+    /**
+     * ACL check
+     *
+     * @return boolean
+     */
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')
+            ->isAllowed('promo/emarketing/templates');
+    }
 }

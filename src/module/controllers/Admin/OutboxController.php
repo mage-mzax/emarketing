@@ -264,4 +264,16 @@ class Mzax_Emarketing_Admin_OutboxController extends Mage_Adminhtml_Controller_A
         return Mage::getSingleton('mzax_emarketing/outbox');
     }
     
+    
+
+    /**
+     * ACL check
+     *
+     * @return boolean
+     */
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')
+            ->isAllowed('promo/emarketing/email');
+    }
 }

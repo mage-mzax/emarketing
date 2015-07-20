@@ -625,4 +625,16 @@ class Mzax_Emarketing_Admin_TrackerController extends Mage_Adminhtml_Controller_
         return $tracker;
     }
     
+    
+
+    /**
+     * ACL check
+     *
+     * @return boolean
+     */
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')
+            ->isAllowed('promo/emarketing/trackers');
+    }
 }

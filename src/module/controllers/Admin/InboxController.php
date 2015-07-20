@@ -238,5 +238,15 @@ class Mzax_Emarketing_Admin_InboxController extends Mage_Adminhtml_Controller_Ac
         $this->_redirect('*/*/index');
     }
     
-    
+
+    /**
+     * ACL check
+     *
+     * @return boolean
+     */
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')
+            ->isAllowed('promo/emarketing/email');
+    }
 }

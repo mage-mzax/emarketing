@@ -1056,4 +1056,15 @@ class Mzax_Emarketing_Admin_CampaignController extends Mage_Adminhtml_Controller
     }
     
     
+    
+    /**
+     * ACL check 
+     *
+     * @return boolean
+     */
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')
+            ->isAllowed('promo/emarketing/campaigns');
+    }
 }

@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-
+$mageOrange: #ea7601;
 
 /**
  * Creates a drop shadow at the top center that curves away to the edges
@@ -973,6 +973,27 @@ ul.mzax-variation-tabs a.changed span.changed {
   }
   
 }
+
+.mzax-grid-tag {
+  font-size: 0.8em;
+  background: $mageOrange;
+  color: white;
+  border-radius: 5px;
+  padding: 2px 3px;
+  vertical-align: baseline;
+  line-height: 120%;
+  margin-left: 4px;
+  letter-spacing: 0.5px;
+}
+
+.mzax-grid-running {
+  background: url('../images/ajax-loader.gif') no-repeat;
+  float:left;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
 
 
 

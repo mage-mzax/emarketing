@@ -374,6 +374,33 @@ class Mzax_Emarketing_Model_Campaign
     
     
     
+    
+    /**
+     * Retrieve tags
+     * 
+     * @return array
+     */
+    public function getTags()
+    {
+        $data = $this->getData('tags');
+        return preg_split('/[\s,]+/', $data, -1, PREG_SPLIT_NO_EMPTY);
+    }
+    
+    
+    /**
+     * Set tags
+     * 
+     * @param string|array $value
+     */
+    public function setTags($value)
+    {
+        if(is_array($value)) {
+            $value = implode(',', $value);
+        }
+        return $this->setData('tags', $value);
+    }
+    
+    
 
     //--------------------------------------------------------------------------
     //

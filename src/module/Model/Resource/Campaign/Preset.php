@@ -130,7 +130,7 @@ class Mzax_Emarketing_Model_Resource_Campaign_Preset
             throw new Exception("Failed to install preset");
         }
         
-        @chmod($file, 0666);
+        @chmod($file, 0777);
         
         return $this;
     }

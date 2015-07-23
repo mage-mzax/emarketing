@@ -20,16 +20,22 @@
 
 /**
  * 
- * @author Jacob Siefer
+ * 
  *
+ * @author Jacob Siefer
+ * @license {{license}}
+ * @version {{version}}
  */
 class Mzax_Emarketing_Model_Object_Filter_Customer_Order
     extends Mzax_Emarketing_Model_Object_Filter_Customer_Abstract
 {
+    
+    
     const DEFAULT_AGGREGATOR = 'all';
     
     const DEFAULT_EXPECTATION = 'true';
     
+    const DEFAULT_SUM = '';
     
 
     protected $_allowChildren = true;
@@ -42,7 +48,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
      */
     public function getTitle()
     {
-        return "Customer | If number of orders,...";
+        return "Customer | If number/grand-total of orders,...";
     }
     
     
@@ -52,7 +58,12 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
         $query = $this->getObject()->getQuery();
         $query->setColumn('customer_id');
         $query->setColumn('order_id');
-    
+        
+        if($sumField = $this->getDataSetDefault('sum', self::DEFAULT_SUM)) {
+            $query->addBinding('sum_field', $sumField);
+            $query->setColumn('sum_field');
+        }
+        
         return $query;
     }
     
@@ -77,6 +88,9 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
         $conditions  = $this->_getConditions();
         $aggregator  = $this->getDataSetDefault('aggregator',  self::DEFAULT_AGGREGATOR);
         $expectation = $this->getDataSetDefault('expectation', self::DEFAULT_EXPECTATION);
+        $sumField    = $this->getDataSetDefault('sum', self::DEFAULT_SUM);
+        
+        
         
         $select = $this->_combineConditions($conditions, $aggregator, $expectation);
         
@@ -91,18 +105,32 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
             $zeroOrderQuery->setColumn('matches', new Zend_Db_Expr('0'));
             $zeroOrderQuery->setColumn('customer_id', $customerId);
             $zeroOrderQuery->group($customerId, true);
+            if($sumField) {
+                $zeroOrderQuery->setColumn('sum_field', new Zend_Db_Expr('0'));
+            }
             
             $select = $this->_select()->union(array($zeroOrderQuery, $select));
             
-            // count customer_id AS order_id maybe NULL
-            // reduce by 1 as we added zero order results as well.
-            $query->having($this->getWhereSql('orders', 'COUNT({customer_id})-1'));
+            
+            if($sumField) {
+                $query->having($this->getWhereSql('orders', 'SUM(`sum_field`)'));
+            }
+            else {
+                // count customer_id AS order_id maybe NULL
+                // reduce by 1 as we added zero order results as well.
+                $query->having($this->getWhereSql('orders', 'COUNT({customer_id})-1'));
+            }
         }        
         else {
-            $query->having($this->getWhereSql('orders', 'COUNT(`filter`.`order_id`)'));
+            if($sumField) {
+                $query->having($this->getWhereSql('orders', 'SUM(`sum_field`)'));
+            }
+            else {
+                $query->having($this->getWhereSql('orders', 'COUNT(`filter`.`order_id`)'));
+            }
+            
         }
         $select->useTemporaryTable($this->getTempTableName());
-        
         
         $query->joinSelect('customer_id', $select, 'filter', 'customer_id');
         $query->group();
@@ -116,7 +144,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
     {
         parent::_prepareCollection($collection);
         $collection->addField('customer_id');
-        $collection->addField('orders', new Zend_Db_Expr('COUNT(`order_id`)'));
+        $collection->addField('orders', new Zend_Db_Expr('COUNT(DISTINCT `order_id`)'));
     }
     
     
@@ -154,7 +182,8 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
         $aggregatorElement  = $this->getSelectElement('aggregator',  self::DEFAULT_AGGREGATOR);
         $expectationElement = $this->getSelectElement('expectation', self::DEFAULT_EXPECTATION);
         
-        return $this->__('If number of orders, with %s of these conditions %s, %s:',
+        return $this->__('If %s of orders, with %s of these conditions %s, %s:',
+            $this->getSelectElement('sum')->toHtml(),
             $aggregatorElement->toHtml(),
             $expectationElement->toHtml(),
             $this->getInputHtml('orders', 'numeric')
@@ -164,5 +193,26 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
     
 
     
+    
+    /**
+     * List of fields to sum up and check against
+     *
+     * @return return array
+     */
+    protected function getSumOptions()
+    {
+        return array(
+            ''                         => $this->__('number'),
+            'base_grand_total'         => $this->__('summed grand total'),
+            'base_discount_invoiced'   => $this->__('summed discount amount'),
+            'base_shipping_invoiced'   => $this->__('summed shipping amount'),
+            'base_subtotal'            => $this->__('summed subtotal'),
+            'base_tax_invoiced'        => $this->__('summed tax amount'),
+            'base_total_invoiced'      => $this->__('summed invoiced amount'),
+            'base_total_paid'          => $this->__('summed paid amount'),
+            'base_total_due'           => $this->__('summed due amount'),
+            'weight'                   => $this->__('summed weight'),
+        );
+    }
 
 }

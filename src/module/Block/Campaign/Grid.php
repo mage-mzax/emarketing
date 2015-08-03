@@ -196,13 +196,62 @@ class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Gr
     }
     
     
-    
-    
+
 
     protected function _prepareMassaction()
     {
+        $this->setMassactionIdField('campaign_id');
+        $this->getMassactionBlock()->setFormFieldName('campaigns');
+    
+        $this->getMassactionBlock()->addItem('start', array(
+            'label'   => $this->__('Start campaigns'),
+            'url'     => $this->getUrl('*/*/massStart'),
+            'confirm' => $this->__('Are you sure you want to START all selected campaigns?')
+        ));
+        $this->getMassactionBlock()->addItem('stop', array(
+            'label'   => $this->__('Stop campaigns'),
+            'url'     => $this->getUrl('*/*/massStop'),
+            'confirm' => $this->__('Are you sure you want to STOP all selected campaigns?')
+        ));
+        $this->getMassactionBlock()->addItem('archive', array(
+            'label'   => $this->__('Archive campaigns'),
+            'url'     => $this->getUrl('*/*/massArchive'),
+            'confirm' => $this->__('Are you sure you want to archive all selected campaigns?')
+        ));
+        
+        $this->getMassactionBlock()->addItem('add_tag', array(
+            'label'=> $this->__('Add tag(s)...'),
+            'url'  => $this->getUrl('*/*/massAddTag', array('_current'=>true)),
+            'additional' => array(
+                'tags' => array(
+                    'name' => 'tags',
+                    'type' => 'text',
+                    'class' => 'required-entry',
+                    'label' => $this->__('Tag(s)')
+                )
+            )
+        ));
+        
+        $this->getMassactionBlock()->addItem('remove_tag', array(
+            'label'=> $this->__('Remove tag(s)...'),
+            'url'  => $this->getUrl('*/*/massRemoveTag', array('_current'=>true)),
+            'additional' => array(
+                'tags' => array(
+                    'name' => 'tags',
+                    'type' => 'text',
+                    'class' => 'required-entry',
+                    'label' => $this->__('Tag(s)')
+                )
+            )
+        ));
+        
+        
         return $this;
     }
+    
+    
+    
+    
 
     public function getGridUrl()
     {

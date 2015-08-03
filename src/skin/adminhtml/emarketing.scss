@@ -1003,9 +1003,16 @@ ul.mzax-variation-tabs a.changed span.changed {
 
 .mzax-campaign-presets {
   
+  .campaign-preset-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: stretch;
+  }
+  
   .preset {
     border:1px solid #ddd;
     background:#F0F0F0;
+    flex: 1;
     margin: 0 10px 10px 0;
     padding:10px;
     min-width:250px;

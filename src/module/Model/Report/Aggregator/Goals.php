@@ -76,6 +76,9 @@ class Mzax_Emarketing_Model_Report_Aggregator_Goals
             if($campaignId = $this->getOption('campaign_id')) {
                 $this->delete(array('`campaign_id` IN(?)' => $campaignId));
             }
+            if($incremental = abs($this->getOption('incremental'))) {
+                $this->delete(array("`goal_time` >= DATE_SUB(?, INTERVAL $incremental DAY)" => $this->getLastRecordTime()));
+            }
         }
         
         

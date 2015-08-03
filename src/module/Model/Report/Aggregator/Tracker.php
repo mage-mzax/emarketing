@@ -45,6 +45,9 @@ class Mzax_Emarketing_Model_Report_Aggregator_Tracker
             if($campaignId = $this->getOption('campaign_id')) {
                 $this->delete(array('`campaign_id` IN(?)' => $campaignId));
             }
+            if($incremental = abs($this->getOption('incremental'))) {
+                $this->delete(array("`date` >= DATE_SUB(?, INTERVAL $incremental DAY)" => $this->getLastRecordTime()));
+            }
         }
         $this->aggregateConversionReport();
     }

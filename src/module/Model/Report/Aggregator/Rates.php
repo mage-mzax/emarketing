@@ -190,7 +190,7 @@ class Mzax_Emarketing_Model_Report_Aggregator_Rates
         $select = $this->_select($table, 'report', 'MAX(`date`)');
         $select->filter('report.campaign_id', $this->_options->getCampaignId());
     
-        return $adapter->fetchOne($select);
+        return (string) $adapter->fetchOne($select);
     }
     
     

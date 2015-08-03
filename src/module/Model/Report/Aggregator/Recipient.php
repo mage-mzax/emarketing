@@ -59,6 +59,9 @@ class Mzax_Emarketing_Model_Report_Aggregator_Recipient
             if($campaignId = $this->getOption('campaign_id')) {
                 $this->delete(array('`campaign_id` IN(?)' => $campaignId));
             }
+            else if($incremental = abs($this->getOption('incremental'))) {
+                $this->delete(array("`date` >= DATE_SUB(?, INTERVAL $incremental DAY)" => $this->getLastRecordTime()));
+            }
         }
         
         $this->aggregateSendings();
@@ -350,7 +353,21 @@ class Mzax_Emarketing_Model_Report_Aggregator_Recipient
     
     
     
-    
+    /**
+     * Get incremental sql expressions
+     *
+     * $field '?' will usally get replaced by getLastRecordTime()
+     * Overwrite, go back at least 14 days to overcome issues with unique count
+     *
+     * @see applyDateFilter()
+     * @param string $field
+     * @return string
+     */
+    public function getIncrementalSql($field = '?')
+    {
+        $incremental = abs((int) $this->getOption('incremental'));
+        return "DATE_SUB($field, INTERVAL GREATEST($incremental, 14) DAY)";
+    }
     
     
     protected function _getLastRecordTime()

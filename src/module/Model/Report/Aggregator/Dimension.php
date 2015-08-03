@@ -55,6 +55,11 @@ class Mzax_Emarketing_Model_Report_Aggregator_Dimension extends Mzax_Emarketing_
                 $this->delete(array('`campaign_id` IN(?)' => $campaignId), self::TABLE_REPORT);
                 $this->delete(array('`campaign_id` IN(?)' => $campaignId), self::TABLE_CONVERSION);
             }
+            if($incremental = abs($this->getOption('incremental'))) {
+                $where = "`date` >= DATE_SUB(NOW(), INTERVAL $incremental DAY)";
+                $this->delete($where, self::TABLE_REPORT);
+                $this->delete($where, self::TABLE_CONVERSION);
+            }
         }
         foreach($this->_dimensions as $type) {
             if(empty($filter) || in_array($type, $filter)) {

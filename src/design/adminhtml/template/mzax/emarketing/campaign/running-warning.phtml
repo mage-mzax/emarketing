@@ -1,8 +1,6 @@
 <?php 
 /* @var $campaign Mzax_Emarketing_Model_Campaign */
 $campaign = Mage::registry('current_campaign');
-
-$stopUrl = $this->getUrl('*/*/stopNow', array('_current' => true));
 ?>
 <?php if($campaign->isRunning()): ?>
     <div class="mzax-info-element">

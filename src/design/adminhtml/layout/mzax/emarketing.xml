@@ -76,7 +76,7 @@
         </reference>
         <reference name="left">
             <block type="mzax_emarketing/campaign_edit_tabs" name="mzax_emarketing_edit_tabs"></block>
-            <block type="adminhtml/template" name="mzax_emarketing.emergency_stop" template="mzax/emarketing/campaign/emergency-stop.phtml"></block>
+            <block type="adminhtml/template" name="mzax_emarketing.emergency_stop" template="mzax/emarketing/campaign/running-warning.phtml"></block>
             <block type="adminhtml/template" name="mzax_emarketing.credits" template="mzax/emarketing/campaign/credits-left.phtml"></block>
         </reference>
         <reference name="js">

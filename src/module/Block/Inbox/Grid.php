@@ -27,7 +27,8 @@ class Mzax_Emarketing_Block_Inbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
         $this->setId('inbox_grid');
         $this->setUseAjax(true);
         $this->setSaveParametersInSession(true);
-        $this->setDefaultSort('email_id');
+        $this->setDefaultSort('created_at');
+        $this->setDefaultDir('desc');
     }
     
     

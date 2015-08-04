@@ -38,7 +38,7 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
      * @see Mzax_Emarketing_Model_Recipient::getBeaconImage()
      * @var string
      */
-    const IMAGE_REGEX = '!emarketing-media/([a-zA-Z0-9]{30})/logo\.gif!i';
+    const IMAGE_REGEX = '!\/emarketing-media\/([a-zA-Z0-9]{16})\/logo\.gif!i';
     
     
     
@@ -46,7 +46,7 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
      * 
      * @var string
      */
-    const LINK_REGEX = '!link-goto/([a-zA-Z0-9]{40})!';
+    const LINK_REGEX = '!\/link-goto\/([a-zA-Z0-9]{16})!';
     
     
     

@@ -194,6 +194,39 @@ class Mzax_Emarketing_Admin_InboxController extends Mage_Adminhtml_Controller_Ac
     
     
     
+    /**
+     * Mass email unsubscribe
+     * 
+     * @return void
+     */
+    public function massUnsubscribeAction()
+    {
+        $messages = $this->getRequest()->getPost('messages');
+        if(!empty($messages)) 
+        {
+            /* @var $collection Mzax_Emarketing_Model_Resource_Inbox_Email_Collection */
+            $collection = Mage::getResourceModel('mzax_emarketing/inbox_email_collection');
+            $collection->addIdFilter($messages);
+            $collection->assignRecipients();
+            
+            /* @var $email Mzax_Emarketing_Model_Inbox_Email */
+            foreach($collection as $email) {
+                $address = $email->getEmail();
+                Mage::getSingleton('mzax_emarketing/medium_email')
+                    ->unsubscribe($address, sprintf('Admin, manual unsubscribe (%s)', $email->getId()));
+                
+                $this->_getSession()->addSuccess(
+                    $this->__('Email `%s` has been unsubscribed.', $address)
+                );
+            }
+        }
+        $this->_redirect('*/*/index');
+    }
+    
+
+    
+    
+    
     public function massFlagAction()
     {
         $messages = $this->getRequest()->getPost('messages');

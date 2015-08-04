@@ -192,14 +192,21 @@ class Mzax_Emarketing_Block_Inbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
         $this->setMassactionIdField('email_id');
         $this->getMassactionBlock()->setFormFieldName('messages');
 
+        
+        $this->getMassactionBlock()->addItem('unsubscribe', array(
+                'label'   => $this->__('Unsubscribe Email(s)'),
+                'url'     => $this->getUrl('*/*/massUnsubscribe'),
+                'confirm' => $this->__('Are you sure you want to unsubscribe all selected emails?')
+        ));
+        
         $this->getMassactionBlock()->addItem('delete', array(
-             'label'   => $this->__('Delete Emails'),
+             'label'   => $this->__('Delete Email(s)'),
              'url'     => $this->getUrl('*/*/massDelete'),
              'confirm' => $this->__('Are you sure?')
         ));
         
         $this->getMassactionBlock()->addItem('reparse', array(
-            'label'   => $this->__('Re-parse Emails'),
+            'label'   => $this->__('Re-parse Email(s)'),
             'url'     => $this->getUrl('*/*/massParse')
         ));
         

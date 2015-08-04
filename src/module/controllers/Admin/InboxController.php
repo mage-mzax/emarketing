@@ -94,12 +94,14 @@ class Mzax_Emarketing_Admin_InboxController extends Mage_Adminhtml_Controller_Ac
     
     public function gridAction()
     {
+        $this->loadLayout();
         $this->getResponse()->setBody($this->getLayout()->createBlock('mzax_emarketing/inbox_grid')->toHtml());
     }
     
     
     public function campaignGridAction()
     {
+        $this->loadLayout();
         $this->getResponse()->setBody($this->getLayout()->createBlock('mzax_emarketing/campaign_edit_medium_email_tab_inbox')->toHtml());
     }
     
@@ -239,6 +241,8 @@ class Mzax_Emarketing_Admin_InboxController extends Mage_Adminhtml_Controller_Ac
     }
     
 
+    
+    
     /**
      * ACL check
      *

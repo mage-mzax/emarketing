@@ -79,6 +79,7 @@ class Mzax_Emarketing_Admin_OutboxController extends Mage_Adminhtml_Controller_A
     
     public function gridAction()
     {
+        $this->loadLayout();
         $this->getResponse()->setBody($this->getLayout()->createBlock('mzax_emarketing/outbox_grid')->toHtml());
     }
     
@@ -86,6 +87,7 @@ class Mzax_Emarketing_Admin_OutboxController extends Mage_Adminhtml_Controller_A
     
     public function campaignGridAction()
     {
+        $this->loadLayout();
         $this->getResponse()->setBody($this->getLayout()->createBlock('mzax_emarketing/campaign_edit_medium_email_tab_outbox')->toHtml());
     }
     

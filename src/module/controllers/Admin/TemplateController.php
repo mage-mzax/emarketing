@@ -116,6 +116,7 @@ class Mzax_Emarketing_Admin_TemplateController extends Mage_Adminhtml_Controller
      */
     public function gridAction()
     {
+        $this->loadLayout();
         $this->getResponse()->setBody($this->getLayout()->createBlock('mzax_emarketing/template_grid')->toHtml());
     }
     

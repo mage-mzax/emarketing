@@ -82,6 +82,7 @@ class Mzax_Emarketing_Admin_TrackerController extends Mage_Adminhtml_Controller_
      */
     public function gridAction()
     {
+        $this->loadLayout();
         $this->getResponse()->setBody($this->getLayout()->createBlock('mzax_emarketing/tracker_grid')->toHtml());
     }
     

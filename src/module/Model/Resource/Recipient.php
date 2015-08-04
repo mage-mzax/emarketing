@@ -134,4 +134,18 @@ class Mzax_Emarketing_Model_Resource_Recipient extends Mage_Core_Model_Resource_
     
     
     
+    /**
+     * Retrieve the number of recipients
+     * 
+     * @return number
+     */
+    public function countRecipients()
+    {
+        $select = $this->_getReadAdapter()->select()
+            ->from($this->getMainTable(), 'COUNT(*)');
+        
+        return (int) $this->_getReadAdapter()->fetchOne($select);
+    }
+    
+    
 }

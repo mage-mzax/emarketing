@@ -34,6 +34,29 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
     
     
     
+    /**
+     * Can show credits?
+     * Credits can be disabled by setting 
+     * global/mzax_emarketing/hide_credits = true
+     * in your local.xml
+     * 
+     * @return boolean
+     */
+    public function showCredits()
+    {
+        if(Mage::getConfig()->getNode('global/mzax_emarketing')->is('hide_credits', false)) {
+            return false;
+        }
+        if(Mage::getResourceSingleton('mzax_emarketing/recipient')->countRecipients() <= 1000) {
+            return false;
+        }
+        return true;
+    }
+    
+    
+    
+    
+    
     
     /**
      * Create a lock with the given name

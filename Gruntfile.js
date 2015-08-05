@@ -46,7 +46,7 @@ module.exports = function(grunt) {
             options: {livereload: true, cwd:srcPath},
             
             php: {
-                files: ['module/**'],
+                files: ['module/**', 'lib/**'],
                 tasks: ['newer:string-replace:'+DEBUG_NS],
                 options: {
                     livereload: false

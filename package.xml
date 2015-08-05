@@ -48,7 +48,7 @@ This project is currently in an early beta release, but it is already quite powe
     <compatible/>
     <dependencies>
     	<required>
-    		<php><min>5.4.0</min><max>6.0.0</max></php>
+    		<php><min>5.3.0</min><max>6.0.0</max></php>
     	</required>
     </dependencies>
 </package>

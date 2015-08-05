@@ -57,6 +57,7 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
         $this->addColumn('created_at', array(
             'header'    => $this->__('Created at'),
             'index'     => 'created_at',
+            'width'     => 150,
             'gmtoffset' => true,
             'type'      =>'datetime'
         ));
@@ -69,16 +70,18 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
         
         
         $this->addColumn('sent_at', array(
-                'header'    => $this->__('Sent at'),
-                'index'     => 'sent_at',
-                'gmtoffset' => true,
-                'type'      =>'datetime'
+            'header'    => $this->__('Sent at'),
+            'index'     => 'sent_at',
+            'width'     => 150,
+            'gmtoffset' => true,
+            'type'      =>'datetime'
         ));
         $this->addColumn('expire_at', array(
-                'header'    => $this->__('Expire at'),
-                'index'     => 'expire_at',
-                'gmtoffset' => true,
-                'type'      =>'datetime'
+            'header'    => $this->__('Expire at'),
+            'index'     => 'expire_at',
+            'width'     => 150,
+            'gmtoffset' => true,
+            'type'      =>'datetime'
         ));
         
         
@@ -111,8 +114,7 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'index'     => 'campaign_id',
             'type'      => 'options',
             'options'   => $campaigns->toOptionHash(),
-            'frame_callback' => array($this, 'addCampaignLink'),
-            'width'     => '100px',
+            'frame_callback' => array($this, 'addCampaignLink')
         ));
         
         

@@ -50,6 +50,7 @@ class Mzax_Emarketing_Block_Inbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'header'    => $this->__('Created At'),
             'index'     => 'created_at',
             'gmtoffset' => true,
+            'width'     => 150,
             'type'      =>'datetime'
         ));
         

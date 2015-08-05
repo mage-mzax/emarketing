@@ -268,23 +268,6 @@ mzax.registerBuild = function(grunt, namespace, targetPath, options) {
     
     
     
-    if(options.push) {
-        addTask('ftp_push', {
-            options: options.push,
-            files: [{
-                expand: true,
-                cwd: targetPath,
-                src: ['app/code/community/Mzax/Emarketing/**/*', 
-                      'lib/Mzax/**/*', 
-                      'js/mzax/**/*', 
-                      'app/design/adminhtml/default/default/mzax/**/*', 
-                      'app/design/frontend/base/default/mzax/**/*',
-                      'skin/adminhtml/default/default/mzax/**/*']
-            }]
-        });
-    }
-    
-    
     if(options.compress) {
         addTask('compress', {
             options: {
@@ -354,11 +337,6 @@ mzax.registerBuild = function(grunt, namespace, targetPath, options) {
     
     
     
-    grunt.task.registerTask(namespace+'-push', 'Deploy '+namespace, function() {
-        
-        grunt.task.run(['ftp_push:'+namespace]);
-        
-    });
     
     grunt.task.registerTask(namespace, 'Build '+namespace, function() 
     {

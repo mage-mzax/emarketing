@@ -457,7 +457,7 @@
                             <validate>validate-email</validate>
                             <comment>Email Address for test mode..</comment>
                         </test_mode_address>
-                        <list_unsubscibe translate="label comment">
+                        <list_unsubscribe translate="label comment">
                             <label>Enable List Unsubscribe</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -467,8 +467,8 @@
                             <show_in_store>1</show_in_store>
                             <validate>validate-not-negative-number</validate>
                             <comment>Add list-unsubscribe header field. (recommended).</comment>
-                        </list_unsubscibe>
-                        <list_unsubscibe_address translate="label comment">
+                        </list_unsubscribe>
+                        <list_unsubscribe_address translate="label comment">
                             <label>List Unsubscribe (mailto:)</label>
                             <sort_order>110</sort_order>
                             <show_in_default>1</show_in_default>
@@ -476,7 +476,7 @@
                             <show_in_store>1</show_in_store>
                             <validate>validate-email</validate>
                             <comment>Http list unsubscribe is handled automatically, if you use the bounce/inbox, enter the reply-to email address to automatically handle mailto: unsubscribes.</comment>
-                        </list_unsubscibe_address>
+                        </list_unsubscribe_address>
                         
                         <transporter translate="label comment">
                             <label>Email Transporter</label>

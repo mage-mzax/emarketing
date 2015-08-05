@@ -364,7 +364,7 @@
 				<css_inliner>1</css_inliner>
 				<remove_comments>1</remove_comments>
 				<test_mode>1</test_mode>
-				<list_unsubscibe>1</list_unsubscibe>
+				<list_unsubscribe>1</list_unsubscribe>
 				<transporter>sendmail</transporter>
 			</email>
         </mzax_emarketing>

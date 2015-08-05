@@ -382,12 +382,12 @@ class Mzax_Emarketing_Model_Outbox_Email
             if($address) {
                 $unsubscribe[] = "mailto:{$address}?subject=Unsubscribe%20{$recipient->getAddress()}%20({$recipient->getBeaconHash()})";
             }
+            $unsubscribe[] = $recipient->getUrl('mzax_emarketing/unsubscribe/list', array('id' => $recipient->getBeaconHash()));
+            
             foreach($unsubscribe as &$value) {
                 $value = "<{$value}>";
             }
-            
-            $unsubscribe[] = $recipient->getUrl('mzax_emarketing/unsubscribe/list', array('id' => $recipient->getBeaconHash()));
-            
+                        
             $mail->addHeader('List-Unsubscribe', implode(',', $unsubscribe));
         }
         

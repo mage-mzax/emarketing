@@ -96,6 +96,21 @@ class Mzax_Bounce_Message extends Mzax_Bounce_Mime_Part
                 $result[] = trim($ref, '<>');
             }
         }
+        
+        // we may also find usefull reference in any rfc822 parts
+        if($part = $this->getMimePart('text/rfc822')) {
+            if($id = $part->getHeader('message-id')) {
+                $result[] = trim($id, '<>');
+            }
+        }
+        
+        if($part = $this->getMimePart('text/rfc822-headers')) {
+            $hash = $part->getDecodedHash();
+            if(isset($hash['message-id'])) {
+                $result[] = trim($hash['message-id'], '<>');
+            }
+        }
+        
         return $result;
     }
     

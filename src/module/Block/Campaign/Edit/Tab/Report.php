@@ -359,7 +359,7 @@ JS;
         $clicks = $this->createCircle('clicks', $this->getTotals()->getCell('clicks'), self::COLOR_CLICKS);
         $orders = $this->createCircle('orders', $this->getTotals()->getCell('conversion'), self::COLOR_CONVERSIONS);
 
-        $optout = $this->createCircle('orders', $this->getTotals()->getSum('bounces', 'optouts'));
+        $optout = $this->createCircle('optouts', $this->getTotals()->getSum('bounces', 'optouts'));
         $optout->setColors(array(self::COLOR_OPTOUT, self::COLOR_BOUNDS, self::COLOR_BLANK));
         $optout->clearRows();
         $optout->addRow(array('optout', $this->getTotals()->getCell('optouts')));

@@ -262,7 +262,7 @@ class Mzax_Db_Select extends Varien_Db_Select
                 return true;
             }
         }
-        return true;
+        return false;
     }
 
     

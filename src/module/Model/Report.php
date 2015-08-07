@@ -73,7 +73,7 @@ class Mzax_Emarketing_Model_Report
      * @throws Exception
      * @return void
      */
-    public function fetchGeoIp()
+    public function fetchGeoIp($verbose = false)
     {
         if(!Mage::getStoreConfigFlag('mzax_emarketing/tracking/use_geo_ip')) {
             return;
@@ -98,6 +98,16 @@ class Mzax_Emarketing_Model_Report
         if(!$geoIp->hasAdapters()) {
             throw new Exception("No GeoIP adapters defined");
         }
+        
+        
+        $log = function($msg) use($verbose) {
+            if($verbose) {
+                echo $msg . "\n";
+            }
+            else {
+                Mage::log($msg);
+            }
+        };
         
         
         
@@ -127,7 +137,7 @@ class Mzax_Emarketing_Model_Report
              * or implmented a custom version
              */
             if(!$geoIp->getRemainingRequests()) {
-                Mage::log("MzaxEmarketing: No GeoIP requests left, you might want to consider different solution.");
+                $log("MzaxEmarketing: No GeoIP requests left, you might want to consider different solution.");
                 break;
             }
             
@@ -138,7 +148,7 @@ class Mzax_Emarketing_Model_Report
              * does not work OK. 
              */
             if($geoIp->getRestTime()) {
-                Mage::log("MzaxEmarketing: GeoIP is resting, try again later.");
+                $log("MzaxEmarketing: GeoIP is resting, try again later.");
                 break;
             }
         
@@ -146,22 +156,37 @@ class Mzax_Emarketing_Model_Report
              * The next cron tab can always finish this later
              */
             if((time()-$startTime) >= $maxRunTime) {
-                Mage::log("MzaxEmarketing: Maximum run time exceeded");
+                $log("MzaxEmarketing: Maximum run time exceeded");
                 break;
             }
             
             try {
                 //$randIp = implode('.', array(rand(1,254),rand(1,254),rand(1,254),rand(1,254)));
                 $result = $geoIp->fetch(inet_ntop($row['ip']));
+                
+                
+                if($result === null && $verbose) {
+                    var_dump($geoIp->getRemainingRequests());
+                    var_dump($geoIp->getRestTime());
+                    var_dump($geoIp);
+                    exit;
+                }
+                
+                if($verbose) {
+                    $log(sprintf("Results for IP: %s (Event #%s)", inet_ntop($row['ip']), $row['event_id']));
+                    $log(var_export($result, true));
+                }
+                
+                
                 if(!$result) {
                     continue;
                 }
                 
                 $update = array();
-                if(!empty($row['country_id'])) {
+                if($row['country_id'] === null) {
                     $update['country_id'] = (string) $result->countryId;
                 }
-                if(!empty($row['region_id'])) {
+                if($row['region_id'] === null) {
                     $update['region_id'] = (string) $result->regionId;
                 }
                 if($row['time_offset'] === null) {
@@ -176,6 +201,14 @@ class Mzax_Emarketing_Model_Report
                         $update['time_offset'] = $result->timeOffset;
                     }
                 }
+                
+                
+                if($verbose) {
+                    $log(sprintf("UPDATE EVENT %s:", $row['event_id']));
+                    $log(var_export($update, true));
+                }
+                
+                
                 $resource->updateEvent($row['event_id'], $update);
                 $lock->touch();
             }

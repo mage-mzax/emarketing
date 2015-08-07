@@ -108,6 +108,8 @@ class Mzax_Emarketing_Model_Resource_Recipient_Event extends Mage_Core_Model_Res
         $adapter->beginTransaction();
         try {
             $this->_prepareData($bind);
+            // don't overwrite capture timestamp
+            unset($bind['captured_at']);
             $adapter->update($this->getMainTable(), $bind, array('event_id = ?' => $eventId));
             $adapter->commit();
         }

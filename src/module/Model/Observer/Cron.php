@@ -74,6 +74,7 @@ class Mzax_Emarketing_Model_Observer_Cron
         $this->aggregateWeekly();
         echo "done\n\n";
         
+        
         $this->_testMode = false;
     }
     
@@ -198,7 +199,7 @@ class Mzax_Emarketing_Model_Observer_Cron
         
         /* @var $report Mzax_Emarketing_Model_Report */
         $report = Mage::getModel('mzax_emarketing/report');
-        $report->fetchGeoIp();
+        $report->fetchGeoIp($this->_testMode);
         $report->parseUseragents();
     }
     

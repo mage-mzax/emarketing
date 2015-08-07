@@ -153,7 +153,10 @@ class Mzax_GeoIp
         $counts = 0;
         /* @var $adapter Mzax_GeoIp_Adapter_Abstract */
         foreach($this->_adapters as $adapter) {
-            $counts += $adapter->getRemainingRequests();
+            if(!$adapter->getRestTime()) {
+                $counts += $adapter->getRemainingRequests();
+            }
+            
         }
         
         return $counts;
@@ -172,7 +175,9 @@ class Mzax_GeoIp
         $time = time();
         /* @var $adapter Mzax_GeoIp_Adapter_Abstract */
         foreach($this->_adapters as $adapter) {
-            $time = min($time, $adapter->getRestTime());
+            if($adapter->getRemainingRequests()) {
+                $time = min($time, $adapter->getRestTime());
+            }
         }
         return $time;
     }

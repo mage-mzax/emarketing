@@ -2,7 +2,7 @@
 <package>
     <name>Mzax_Emarketing</name>
     <version>{{version}}</version>
-    <stability>beta</stability>
+    <stability>stable</stability>
     <license uri="http://opensource.org/licenses/osl-3.0.php">Open Software License v. 3.0 (OSL-3.0)</license>
     <channel>community</channel>
     <extends/>
@@ -18,23 +18,25 @@ Create automated campaigns that will check for new recipients at any specified i
 
 This project is currently in an early beta release, but it is already quite powerful. My focus during development was three-fold:
 
- - Easy to use. 
+ - Easy to use.
    Very little coding (or even no coding) is required. 
    Most tasks can be accomplished without any coding experience. 
    This makes it great for marketing professionals who don’t want to deal with the hassle of coding.
    
- - Flexible and open. 
+ - Flexible and open.
    With a minimum of skills, you can take things a step further and create 
    even more powerful and personalised campaigns. As a developer you can extend and improve 
    your campaigns in order to create custom functionality to suit your needs.
    
- - Strong reporting. 
+ - Strong reporting.
    Collecting data is great, but using it is better. 
    Top-knotch analytics are important for determining if a campaign works or not. 
    I will try my best to aggregate the data and present it in a way that makes sense to the 
    largest number of people possible.
+   
+Find out more at https://github.com/mage-mzax/emarketing
 		</description>
-    <notes>Please note, this extension is currently under development and it is still in beta.</notes>
+    <notes>Find help at https://github.com/mage-mzax/emarketing</notes>
     <authors>
     	<author>
 	    	<name>Jacob Siefer</name>

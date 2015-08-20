@@ -130,6 +130,10 @@
         					<title>SMTP</title>
         					<class>mzax_emarketing/outbox_transporter_smtp</class>
         				</smtp>
+        				<sendgrid>
+        					<title>SendGrid</title>
+        					<class>mzax_emarketing/outbox_transporter_sendgrid</class>
+        				</sendgrid>
         				<file>
         					<title>File System (no emails, for debug only)</title>
         					<class>mzax_emarketing/outbox_transporter_file</class>
@@ -366,6 +370,9 @@
 				<test_mode>1</test_mode>
 				<list_unsubscribe>1</list_unsubscribe>
 				<transporter>sendmail</transporter>
+				<sendgrid_category>Magento, eMarketing</sendgrid_category>
+				<sendgrid_category_tags>1</sendgrid_category_tags>
+				<sendgrid_unique_args>1</sendgrid_unique_args>
 			</email>
         </mzax_emarketing>
         <trans_email>

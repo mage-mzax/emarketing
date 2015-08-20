@@ -488,6 +488,9 @@
                             <show_in_store>1</show_in_store>
                             <comment>How would you like to sendout your emails</comment>
                         </transporter>
+                        
+                        
+                        <!-- SMTP SETTINGS -->
                         <smtp_auth translate="label comment">
                             <label>Authentication</label>
                             <frontend_type>select</frontend_type>
@@ -533,7 +536,7 @@
                             <depends><transporter>smtp</transporter></depends>
                         </smtp_port>
                         <smtp_ssl translate="label">
-                            <label>TLS</label>
+                            <label>SSL TLS</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>1050</sort_order>
@@ -542,6 +545,66 @@
                             <show_in_store>1</show_in_store>
                             <depends><transporter>smtp</transporter></depends>
                         </smtp_ssl>
+                        
+                        <!-- SENDGRID SETTINGS -->
+                        <sendgrid_test translate="label">
+                            <label>Connection Test</label>
+                            <frontend_model>mzax_emarketing/system_config_form_field_sendgrid</frontend_model>
+                            <sort_order>1005</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sendgrid_test>
+                        <sendgrid_username translate="label comment">
+                            <label>Username</label>
+                            <sort_order>1010</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><transporter>sendgrid</transporter></depends>
+                        </sendgrid_username>
+                        <sendgrid_password translate="label comment">
+                            <label>Password</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>1020</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><transporter>sendgrid</transporter></depends>
+                        </sendgrid_password>
+                        <sendgrid_category translate="label comment">
+                            <label>Category</label>
+                            <sort_order>1030</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><transporter>sendgrid</transporter></depends>
+                            <comment><![CDATA[<a href="https://sendgrid.com/docs/API_Reference/SMTP_API/categories.html">Categories</a> should be used to group messages together by broad topic. (e.g. Magento)]]></comment>
+                        </sendgrid_category>
+                        <sendgrid_category_tags translate="label comment">
+                            <label>Tags as Category</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1040</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><transporter>sendgrid</transporter></depends>
+                            <comment><![CDATA[Add campaign tags as category]]></comment>
+                            <tooltip><![CDATA[Each campaign can have tags for organise purpose, you can add those as category]]></tooltip>
+                        </sendgrid_category_tags>
+                        <sendgrid_unique_args translate="label">
+                            <label>Add unique arguments</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1050</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><transporter>sendgrid</transporter></depends>
+                            <comment><![CDATA[Use <a href="https://sendgrid.com/docs/API_Reference/SMTP_API/unique_arguments.html">unique arguments</a> tag to id emails]]></comment>
+                            <tooltip><![CDATA[campaign id, recipient id, variation id, campaign name will be added to the email]]></tooltip>
+                        </sendgrid_unique_args>
                         
                     </fields>
                 </email>

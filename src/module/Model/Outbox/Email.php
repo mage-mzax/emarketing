@@ -363,7 +363,9 @@ class Mzax_Emarketing_Model_Outbox_Email
         $recipient = $this->getRecipient();
         $recipient->prepare();
         
-        $mail = new Zend_Mail('utf-8');
+        /* @var $mail Mzax_Emarketing_Model_Outbox_Email_Mail */
+        $mail = Mage::getModel('mzax_emarketing/outbox_email_mail');
+        $mail->setOutboxEmail($this);
         $mail->setSubject($this->getSubject());
         $mail->addTo($recipient->getAddress(), '=?utf-8?B?'.base64_encode($recipient->getName()).'?=');
         $mail->setMessageId($this->getMessageId());

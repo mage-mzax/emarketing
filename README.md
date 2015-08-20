@@ -3,10 +3,9 @@
 Magento extension to create automated marketing campaigns that run for a set 
 period of time and target customers determined by multiple filters.
 
-You can find it as well on <a href="http://www.magentocommerce.com/magento-connect/mzax-emarketing.html">Magento Connect</a>.
+You can find it as well on <a href="http://www.magentocommerce.com/magento-connect/mzax-emarketing.html">Magento Connect</a> and there is also more information at <a href="http://www.mzax.de/">mzax.de</a>, also make sure to <a href="https://github.com/mage-mzax/emarketing/wiki">check out the wiki</a> here at GitHub.
 
-There is also more information at <a href="http://www.mzax.de/">mzax.de</a>
-
+## What does it?
 
 Send emails to a specific group of your customers, whom you can easily define via a combination of filters.
 
@@ -19,6 +18,7 @@ This project is currently in an early beta release, but it is already quite powe
 * **Easy to use.** Very little coding (or even no coding) is required. Most tasks can be accomplished without any coding experience. This makes it great for marketing professionals who don’t want to deal with the hassle of coding.
 * **Flexible and open.** With a minimum of skills, you can take things a step further and create even more powerful and personalised campaigns. As a developer you can extend and improve your campaigns in order to create custom functionality to suit your needs.
 * **Strong reporting.** Collecting data is great, but using it is better. Top-knotch analytics are important for determining if a campaign works or not. I will try my best to aggregate the data and present it in a way that makes sense to the largest number of people possible.
+
 
 * Auto-login from email with expiration timestamp
 * CSS-inlining

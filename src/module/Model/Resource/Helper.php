@@ -159,9 +159,10 @@ class Mzax_Emarketing_Model_Resource_Helper
      * @param string $alias Alias of the appended column
      * @param string $attributeCode The name of the attribute
      * @param string $bind The collection column used to bind the attribute
+     * @param boolean $joinStatic Join attribute even if static
      * @return Zend_Db_Expr
      */
-    public function joinAttribute(Zend_Db_Select $select, $attributeCode, $bind, $alias = null)
+    public function joinAttribute(Zend_Db_Select $select, $attributeCode, $bind, $alias = null, $joinStatic = false)
     {
         $attribute = $this->getAttribute($attributeCode);
         if(!$attribute) {
@@ -180,6 +181,13 @@ class Mzax_Emarketing_Model_Resource_Helper
                     "(`{$tableAlias}`.`entity_id`={$bind}) AND (`{$tableAlias}`.`attribute_id`={$attribute->getId()})", null);
             
             return new Zend_Db_Expr("`{$tableAlias}`.`value`");
+        }
+        else if($joinStatic) {
+            $select->joinLeft(
+                    array($tableAlias => $attribute->getBackendTable()),
+                    "(`{$tableAlias}`.`entity_id`={$bind})", null);
+            
+            return new Zend_Db_Expr("`{$tableAlias}`.`{$attribute->getName()}`");
         }
         
         return new Zend_Db_Expr("`{$attribute->getName()}`");

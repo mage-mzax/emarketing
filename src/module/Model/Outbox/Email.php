@@ -103,7 +103,12 @@ class Mzax_Emarketing_Model_Outbox_Email
     protected $_linkReferences = array();
     
     
-    
+    /**
+     * List of generated coupons
+     * 
+     * @var array
+     */
+    protected $_coupons = array();
     
     
     
@@ -146,6 +151,9 @@ class Mzax_Emarketing_Model_Outbox_Email
     {
         if(!empty($this->_linkReferences)) {
             $this->saveLinks();
+        }
+        if(!empty($this->_coupons)) {
+            $this->saveCoupons();
         }
     }
     
@@ -194,6 +202,21 @@ class Mzax_Emarketing_Model_Outbox_Email
         return $this;
     }
     
+    
+    
+    /**
+     * Save all attached coupons
+     * 
+     * @return Mzax_Emarketing_Model_Outbox_Email
+     */
+    protected function saveCoupons()
+    {
+        foreach($this->_coupons as $coupon) {
+            $coupon->save();
+        }
+        $this->_coupons = array();
+        return $this;
+    }
     
 
     
@@ -311,6 +334,12 @@ class Mzax_Emarketing_Model_Outbox_Email
             $this->setRenderTime( $composer->getRenderTime() );
             
             $this->_linkReferences = $composer->getLinkReferences();
+            
+            // don't acctually save any coupons for mock emails
+            if(true || !$this->getRecipient()->isMock()) {
+                $this->_coupons = $composer->getCoupons();
+            }
+            
         }
         return $this;
     }

@@ -340,6 +340,7 @@ window.mzax = window.mzax || {};
                     case 'htmlescape':
                     case 'store':
                     case 'skin':
+                    case 'coupon':
                     case 'media':  
                     case 'customvar':
                     case 'config':
@@ -493,6 +494,10 @@ window.mzax = window.mzax || {};
                 case 'customvar':
                     element.update(this.getPreview(params['code']));
                     break; 
+                    
+                case 'coupon':
+                    element.update('COUPON[#'+params['rule']+']');
+                    break;
                     
                 case 'htmlescape':
                     element.update(this.getPreview(params['var']));

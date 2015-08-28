@@ -312,7 +312,8 @@
                             
                             dialog.commitContent(snippet);
                             console.log(snippet);
-                            editor.insertHtml(snippet.snippet);
+                            editor.insertText( snippet.snippet.replace(/="?\$\{[0-9]+(:(.*?))?\}"?/g, '=$2'));
+                            
                         });
                     });
                 }

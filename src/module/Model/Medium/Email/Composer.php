@@ -28,6 +28,7 @@
  */
 class Mzax_Emarketing_Model_Medium_Email_Composer
     extends Mage_Core_Model_Template
+    implements Mzax_Emarketing_Model_SalesRule_ICouponManager
 {
     
     const PRERENDER_CACHE_PREFIX = 'MZAX_EMARKETING_PRERENDER_CACHE_';
@@ -58,6 +59,8 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
     
     protected $_linkReferences;
     
+    protected $_coupons = array();
+    
     
     protected $_prerender = true;
     
@@ -77,6 +80,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
     public function reset()
     {
         $this->_linkReferences = array();
+        $this->_coupons = array();
         $this->_bodyHtml = null;
         $this->_bodyText = null;
         $this->_subject = null;
@@ -146,6 +150,33 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
     }
     
     
+    
+    /**
+     * Add coupon
+     * 
+     * @see Mzax_Emarketing_Model_SalesRule_ICouponManager
+     * @param Mage_SalesRule_Model_Coupon $coupon
+     * @return Mzax_Emarketing_Model_Medium_Email_Composer
+     */
+    public function addCoupon(Mage_SalesRule_Model_Coupon $coupon)
+    {
+        $this->_coupons[] = $coupon;
+        return $this;
+    }
+    
+    
+    /**
+     * 
+     * @see Mzax_Emarketing_Model_SalesRule_ICouponManager
+     * @return array
+     */
+    public function getCoupons()
+    {
+        return $this->_coupons;
+    }
+    
+    
+    
     /**
      * 
      * @return Mzax_Emarketing_Model_Medium_Email_Processor
@@ -160,6 +191,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         
         /* @var $processor Mzax_Emarketing_Model_Medium_Email_Processor */
         $processor = Mage::getModel('mzax_emarketing/medium_email_processor');
+        $processor->setCouponManager($this);
         $processor->setStoreId($recipient->getStoreId());
         $processor->setContent($this->getContent());
         $processor->setVariables($recipient->getData());

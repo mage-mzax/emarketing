@@ -157,6 +157,19 @@ class Mzax_Emarketing_Model_Medium_Email_Processor
     
     
     
+    /**
+     * Set coupon manager
+     * 
+     * @param unknown $manager
+     * @return Mzax_Emarketing_Model_Medium_Email_Processor
+     */
+    public function setCouponManager($manager)
+    {
+        $this->filter->setCouponManager($manager);
+        return $this;
+    }
+    
+    
     
     /**
      * Retrieve processed email subject

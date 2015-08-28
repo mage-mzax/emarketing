@@ -58,6 +58,17 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
         $snippets->addVar('subject', $hlp->__('Email Subject'));
         $snippets->addVar('address', $hlp->__('Recipient Address'));
         $snippets->addVar('email', $hlp->__('Recipient Email'));
+        
+        // requires version 1.6 of sales rule (magento 1.7)
+        if(version_compare(Mage::getConfig()->getModuleConfig('Mage_SalesRule')->version, '1.6.0') >= 0) {
+            $snippets->addSnippets(
+                'mage.coupon', 
+                '{{coupon rule="${1:1}" length="${2:8}" expire="${3:120}" prefix="${4:ABC-}" }}', 
+                $hlp->__('Coupon Code'), 
+                $hlp->__('Generates a coupon code for the specifed shopping cart price rule.'));
+        }
+        
+        
     }
     
     

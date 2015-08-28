@@ -178,11 +178,11 @@
         		<addrass_region><model>mzax_emarketing/object_filter_address_region</model></addrass_region>
         		<addrass_country><model>mzax_emarketing/object_filter_address_country</model></addrass_country>
         		
-        		
         		<product_category><model>mzax_emarketing/object_filter_product_category</model></product_category>
         		<product_attribute><model>mzax_emarketing/object_filter_product_attribute</model></product_attribute>
         		<campaign_goal><model>mzax_emarketing/object_filter_campaign_goal</model></campaign_goal>
 			</filters>
+			
 			<goal_types>
 				<orders><model>mzax_emarketing/conversion_goal_orders</model></orders>
 			</goal_types>
@@ -197,8 +197,8 @@
 				<geoplugin><class>Mzax_GeoIp_Adapter_GeoPlugin</class></geoplugin>
 			</geoip_adapters>
 			
-			
-        </mzax_emarketing>        
+        </mzax_emarketing>  
+        
 		<events>
 			<mzax_emarketing_bind_recipients>
                 <observers>
@@ -209,7 +209,15 @@
                     </mzax_emarketing_direct_goals>
                 </observers>
             </mzax_emarketing_bind_recipients>
-
+        	<salesrule_rule_condition_combine>
+                <observers>
+                    <mzax_emarketing_salesrule_conditions>
+                        <type>singleton</type>
+                        <class>mzax_emarketing/observer_salesRule</class>
+                        <method>addConditions</method>
+                    </mzax_emarketing_salesrule_conditions>
+                </observers>   
+			</salesrule_rule_condition_combine>
 		</events>
     </global>
     <admin>

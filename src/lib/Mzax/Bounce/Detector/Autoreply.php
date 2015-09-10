@@ -34,7 +34,7 @@
 
 
 /**
- * 
+ * Bounce dedector for auto reyplies
  * 
  *
  * @author Jacob Siefer
@@ -45,6 +45,11 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
 {
     
     
+    /**
+     * Typical auto reply headers
+     * 
+     * @var array
+     */
     public static $headers = array(
         // !not X-Auto-Response-Suppress
         'auto-submitted',
@@ -55,6 +60,12 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
     );
     
     
+    
+    /**
+     * Common subject lines
+     * 
+     * @var array
+     */
     public static $subjects = array(
         'Auto:',
         'Received:',
@@ -74,6 +85,12 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
     );
     
     
+    
+    /**
+     * Regex expr. for subjects
+     * 
+     * @var array
+     */
     public static $regex = array(
         '^\[?auto.{0,20}reply\]?',
         '^auto[ -]?response',
@@ -86,8 +103,29 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
     );
     
     
+
+    
+    /**
+     * Text phrases for the acctual content,
+     * 
+     * Be carefull, could easly trigger false alarms
+     * 
+     * @var array
+     */
+    public static $body = array(
+        'away from the office',
+        'out of office'
+    );
     
     
+    
+    
+    /**
+     * Check if message is autoryply
+     * 
+     * @param Mzax_Bounce_Message $message
+     * @return boolean
+     */
     public function isAutoReply(Mzax_Bounce_Message $message)
     {
         if($header = $message->searchHeader(self::$headers)) {
@@ -113,13 +151,31 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
                 return true;
             }
         }
+        
+        
+        // bit more aggressive, check the acctual content
+        $body = $message->asString();
+        $body = preg_replace('/[\s]+/', ' ', $body);
+        
+        foreach(self::$body as $needle) {
+            if(stripos($subject, $needle) === 0) {
+                $message->info('autoreply_body', $needle);
+                return true;
+            }
+        }
+        
+        
         return false;
     }
     
     
     
     
-    
+    /**
+     * 
+     * 
+     * @see Mzax_Bounce_Detector_Abstract::inspect()
+     */
     public function inspect(Mzax_Bounce_Message $message)
     {
         if(!$this->isAutoReply($message)) {

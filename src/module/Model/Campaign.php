@@ -66,6 +66,7 @@
  * @method string getFilterData()
  * @method string getMediumJson()
  * @method string getSendingStats()
+ * @method string getViewStats()
  * @method string getInteractionStats()
  * @method string getConversionStats()
  * @method string getFailStats()

@@ -36,11 +36,13 @@ class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Stats extends Mage_Adminhtml_
         $html = array();
         
         $sendings     = $campagin->getSendingStats();
+        $views        = $campagin->getViewStats();
         $interactions = $campagin->getInteractionStats();
         $conversions  = $campagin->getConversionStats();
         $fails        = $campagin->getFailStats();
         
         $html[] = sprintf('<div class="mzax-grid-stats" title="%s">', $this->__('%s Sendings', $sendings));
+        $html[] = sprintf('<div class="mzax-grid-stat views" style="width:%01.3f%%" title="%s"></div>', (($views)/$sendings)*100, $this->__('%s Views', $interactions));
         $html[] = sprintf('<div class="mzax-grid-stat interactions" style="width:%01.3f%%" title="%s"></div>', (($interactions)/$sendings)*100, $this->__('%s Interactions', $interactions));
         $html[] = sprintf('<div class="mzax-grid-stat conversions" style="width:%01.3f%%" title="%s"></div>', (($conversions)/$sendings)*100, $this->__('%s Conversions', $conversions));
         $html[] = sprintf('<div class="mzax-grid-stat fails" style="width:%01.3f%%" title="%s"></div>', (($fails)/$sendings)*100, $this->__('%s Bounces and Optouts', $fails));

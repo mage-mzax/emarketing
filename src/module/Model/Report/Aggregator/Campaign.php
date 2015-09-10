@@ -60,6 +60,7 @@ class Mzax_Emarketing_Model_Report_Aggregator_Campaign
         $select->setColumn('campaign_id', 'campaign_id');
         
         $select->setColumn('sending_stats', new Zend_Db_Expr('SUM(sendings)'));
+        $select->setColumn('view_stats', new Zend_Db_Expr('SUM(views)'));
         $select->setColumn('interaction_stats', new Zend_Db_Expr('SUM(clicks)'));
         $select->setColumn('fail_stats', new Zend_Db_Expr('SUM(bounces) + SUM(optouts)'));
         
@@ -68,6 +69,7 @@ class Mzax_Emarketing_Model_Report_Aggregator_Campaign
         $updateSql.= "LEFT JOIN ($select) AS `report` ON `report`.`campaign_id` = `campaign`.`campaign_id`\n";
         $updateSql.= "SET\n";
         $updateSql.= "`campaign`.`sending_stats` = IFNULL(`report`.`sending_stats`, 0),\n";
+        $updateSql.= "`campaign`.`view_stats` = IFNULL(`report`.`view_stats`, 0),\n";
         $updateSql.= "`campaign`.`interaction_stats` = IFNULL(`report`.`interaction_stats`, 0),\n";
         $updateSql.= "`campaign`.`fail_stats` = IFNULL(`report`.`fail_stats`, 0)";
         

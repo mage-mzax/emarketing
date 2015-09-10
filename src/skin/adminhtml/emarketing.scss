@@ -937,38 +937,46 @@ ul.mzax-variation-tabs a.changed span.changed {
 
 .mzax-grid-stats {
   position:relative;
-  height:14px;
+  height:16px;
   width:100%;
   background:rgba(#899DA8, 0.2);
-  margin: 2px 0;
-  border-radius: 2px;
+  margin: 1px 0;
+  border-radius: 5px;
   overflow: hidden;
   
   .mzax-grid-stat {
     position:absolute;
-    height:100%;
+    bottom:0;
     top:0;
-    left:0;
+    left:-1px;
     min-width:1px;
+    
+    &.views {
+      background:#CBD7DC;
+      background: linear-gradient(to bottom, #CBD7DC 0%, darken(#CBD7DC,10) 100%);
+      border-radius: 0 10px 10px 0;
+      z-index:1;
+      
+    }
     
     &.interactions {
       background:#D7D020;
-      background: linear-gradient(to bottom, #D7D020 0%, darken(#D7D020,10) 100%);
-      
-      z-index:1;
+      background: linear-gradient(to bottom, #FC7A00 0%, darken(#FC7A00,10) 100%);
+      border-radius: 0 10px 10px 0;
+      z-index:2;
+      top:5px;
     }
     &.conversions {
       background: #A9C200;
       background: linear-gradient(to bottom, #A9C200 0%, darken(#A9C200,10) 100%);
-      //background:#A9C200;
-      z-index:2;
+      z-index:3;
     }
     &.fails {
       background:#BF3A3A;
       background: linear-gradient(to bottom, #BF3A3A 0%, darken(#BF3A3A,10) 100%);
-      z-index:3;
+      z-index:4;
       left:auto;
-      right:0;
+      right:-1px;
     }
   }
   

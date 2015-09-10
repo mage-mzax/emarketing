@@ -154,12 +154,19 @@ class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Gr
         ));
         
         $this->addColumn('stats', array(
-            'header'   => Mage::helper('mzax_emarketing')->__('Stats'),
+            'header'   => Mage::helper('mzax_emarketing')->__('Quick Stats'),
             'filter'   => false,
+            'sortable' => false,
             'renderer' => 'mzax_emarketing/campaign_grid_renderer_stats'
         ));
         
-        
+        $this->addColumn('count', array(
+            'header'    => $this->__('Recip.'),
+            'index'     => 'sending_stats',
+            'filter'    => false,
+            'width'     => 50,
+            'type'      => 'number'
+        ));
 
         return parent::_prepareColumns();
     }

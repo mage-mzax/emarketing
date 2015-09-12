@@ -32,7 +32,130 @@
  */
 class Mzax_Emarketing_Block_Template extends Mage_Core_Block_Template
 {
+    
+    
+    
+    /**
+     * Format Price
+     * 
+     * @param number $price
+     * @param string $includeContainer
+     * @return string
+     */
+    public function formatPrice($price, $includeContainer = false)
+    {
+        return Mage::app()->getStore()->formatPrice($price, $includeContainer);
+    }
+    
 
+
+
+    /**
+     * Retreive cross-sell product list
+     *
+     * @param mixed $object
+     * @return Mage_Catalog_Model_Resource_Product_Link_Product_Collection
+     */
+    public function getCrosssellProducts($object)
+    {
+        $productIds = $this->extractProductIds($object);
+        $collection = $this->getLinkedProducts($productIds,
+                Mage_Catalog_Model_Product_Link::LINK_TYPE_CROSSSELL);
+    
+        return $collection;
+    }
+    
+    
+    
+
+    /**
+     * Retreive up-sell product list
+     *
+     * @param mixed $object
+     * @return Mage_Catalog_Model_Resource_Product_Link_Product_Collection
+     */
+    public function getUpsellProducts($object)
+    {
+        $productIds = $this->extractProductIds($object);
+        $collection = $this->getLinkedProducts($productIds, 
+                          Mage_Catalog_Model_Product_Link::LINK_TYPE_UPSELL);
+        
+        return $collection;
+    }
+    
+    
+    /**
+     * Retreive related product list
+     * 
+     * @param mixed $object
+     * @return Mage_Catalog_Model_Resource_Product_Link_Product_Collection
+     */
+    public function getRelatedProducts($object)
+    {
+        $productIds = $this->extractProductIds($object);
+        $collection = $this->getLinkedProducts($productIds, 
+                          Mage_Catalog_Model_Product_Link::LINK_TYPE_RELATED);
+        
+        return $collection;
+    }
+    
+    
+    
+    
+    /**
+     * Extract all product ids from a given object,
+     * this can be an order, quote or product
+     * 
+     * @param mixed $object
+     * @return array
+     */
+    public function extractProductIds($object)
+    {
+        $productIds = array();
+        
+        if($object instanceof Mage_Sales_Model_Order ||
+                $object instanceof Mage_Sales_Model_Quote)
+        {
+            foreach($object->getAllVisibleItems() as $item) {
+                $productIds[] = $item->getProductId();
+            }
+        }
+        
+        if($object instanceof Mage_Catalog_Model_Product) {
+            $productIds[] = $object->getId();
+        }
+        
+        return $productIds;
+    }
+    
+    
+    
+    
+    /**
+     * Retrieve linked products
+     * 
+     * @param array $productIds
+     * @return Mage_Catalog_Model_Resource_Product_Link_Product_Collection
+     */
+    public function getLinkedProducts($productIds, $linkType = Mage_Catalog_Model_Product_Link::LINK_TYPE_RELATED)
+    {
+        /* @var $linkModel Mage_Catalog_Model_Product_Link */
+        $linkModel = Mage::getModel('catalog/product_link');
+        $linkModel->setLinkTypeId($linkType);
+        
+        $productIds = (array) $productIds;
+        
+        /* @var $collection Mage_Catalog_Model_Resource_Product_Link_Product_Collection */
+        $collection = Mage::getResourceModel('catalog/product_link_product_collection');
+        $collection->setLinkModel($linkModel)
+                   ->addProductFilter($productIds)
+                   ->addExcludeProductFilter($productIds);
+        
+        return $collection;
+    }
+    
+    
+    
     
     /**
      * Retrieve all items from order or quote and

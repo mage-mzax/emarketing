@@ -216,11 +216,7 @@ class Mzax_Emarketing_Model_Inbox_Email
             
             // unsubscribe hard bounces
             if(!$this->getNoUnsubscribe() && $this->getType() == self::BOUNCE_HARD && Mage::getStoreConfigFlag('mzax_emarketing/inbox/unsubscribe_hard_bounce', $this->getStore())) {
-                $email = $this->getEmail();
-                if($this->getRecipient()) {
-                    $email = $this->getRecipient()->getEmail();
-                }
-                Mage::getSingleton('mzax_emarketing/medium_email')->unsubscribe($email, sprintf('%s bounce, email %s', $status, $this->getId()));
+                Mage::getSingleton('mzax_emarketing/medium_email')->unsubscribe($this->getEmail(), sprintf('%s bounce, email %s', $status, $this->getId()));
             }
         }
         catch(Exception $e) {

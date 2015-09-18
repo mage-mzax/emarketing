@@ -2,23 +2,26 @@
 /* @var $product Mage_Catalog_Model_Product */
 /* @var $this Mzax_Emarketing_Block_Template */
 
-$order = $this->getOrder();
+$customer = $this->getCustomer();
 
-$products = $this->getCrosssellProducts( $order );
+// returns the last 6 viewed prodcuts from the last 30 days
+$products = $this->getLastViewedProducts( $customer, 6, 30 );
 
 // attributes you would like to use
 $products->addAttributeToSelect(array('name', 'small_image', 'short_description'));
 
 // add price data for customer and website (optional) - $products->addPriceData()
 $products->addPriceData(
-    $order->getCustomerGroupId(), 
-    $order->getStore()->getWebsiteId());
+    $customer->getGroupId(), 
+    $this->getWebsiteId());
 
 ?>
 
 
 <?php if(count($products)): ?>
-    <h3>You may also like:</h3>
+    <p>Hey <?php echo $customer->getFirstname() ?>, we noticed you liked some of our products and would let you know we
+    have some create new specials this month just for you!</p>
+    
     <table class="product-table crosssell-table" cellspacing="0" cellpadding="0" border="0" width="100%">
     <?php foreach ($products as $i => $product): ?>
         <tr class="<?php echo $i%2 ? 'even' : 'odd' ?>">

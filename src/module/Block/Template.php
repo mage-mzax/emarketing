@@ -25,6 +25,7 @@
  *
  * @method Mage_Sales_Model_Order getOrder()
  * @method Mage_Sales_Model_Quote getQuote()
+ * @method Mage_Customer_Model_Customer getCustomer()
  *
  * @author Jacob Siefer
  * @license {{license}}
@@ -32,6 +33,28 @@
  */
 class Mzax_Emarketing_Block_Template extends Mage_Core_Block_Template
 {
+    
+    
+    /**
+     * Retrieve store id
+     *
+     * @return number
+     */
+    public function getStoreId()
+    {
+        return Mage::app()->getStore()->getId();
+    }
+    
+    
+    /**
+     * Retrieve website id
+     * 
+     * @return number
+     */
+    public function getWebsiteId()
+    {
+        return Mage::app()->getStore()->getWebsiteId();
+    }
     
     
     
@@ -48,6 +71,53 @@ class Mzax_Emarketing_Block_Template extends Mage_Core_Block_Template
     }
     
 
+    
+    
+    /**
+     * Retrieve the products viewd by the specified customer [of the last X days]
+     * 
+     * @param Mage_Customer_Model_Customer $customer
+     * @param number $count
+     * @param number $lastDays
+     * @return Mzax_Emarketing_Model_Resource_Collection_Product
+     */
+    public function getLastViewedProducts(Mage_Customer_Model_Customer $customer, $count = 6, $lastDays = false)
+    {
+        /* @var $collection Mzax_Emarketing_Model_Resource_Collection_Product */
+        $collection = Mage::getResourceModel('mzax_emarketing/collection_product');
+        $collection->addCustomerViewFilter($customer);
+        $collection->addAttributeToSort('logged_at', 'DESC');
+        $collection->addAttributeToFilter('event_store', Mage::app()->getStore()->getId());
+        
+        if($lastDays) {
+            $collection->addEventDateFilter(450);
+        }
+        
+        return $collection;
+    }
+    
+    
+    
+    /**
+     * Retrieve last X orders for the given customer
+     * 
+     * Will return order collection that can be altered.
+     * 
+     * @param Mage_Customer_Model_Customer $customer
+     * @return Mage_Sales_Model_Resource_Order_Collection
+     */
+    public function getLastOrders(Mage_Customer_Model_Customer $customer, $count = 6)
+    {
+        /* @var $collection Mage_Sales_Model_Resource_Order_Collection */
+        $collection = Mage::getResourceModel('sales/order_collection');
+        $collection->addFieldToFilter('customer_id', $customer->getId());
+        $collection->addOrder('entity_id', 'DESC');
+        $collection->setPageSize($count);
+        
+        return $collection;
+    }
+    
+    
 
 
     /**
@@ -114,14 +184,13 @@ class Mzax_Emarketing_Block_Template extends Mage_Core_Block_Template
         $productIds = array();
         
         if($object instanceof Mage_Sales_Model_Order ||
-                $object instanceof Mage_Sales_Model_Quote)
+           $object instanceof Mage_Sales_Model_Quote)
         {
             foreach($object->getAllVisibleItems() as $item) {
                 $productIds[] = $item->getProductId();
             }
         }
-        
-        if($object instanceof Mage_Catalog_Model_Product) {
+        else if($object instanceof Mage_Catalog_Model_Product) {
             $productIds[] = $object->getId();
         }
         
@@ -165,7 +234,7 @@ class Mzax_Emarketing_Block_Template extends Mage_Core_Block_Template
      * @param string $attributes
      * @return Mage_Sales_Model_Resource_Order_Collection
      */
-    public function getAllItems($object, $attributes = '*', $limit = 20)
+    public function getAllItems($object, $attributes = '*')
     {
         $result = array();
         
@@ -177,7 +246,6 @@ class Mzax_Emarketing_Block_Template extends Mage_Core_Block_Template
             //->setVisibility(Mage::getSingleton('catalog/product_visibility')->getVisibleInSiteIds())
             ->addAttributeToSelect($attributes)
             ->addPriceData()
-            ->setPageSize($limit)
             ->load();
         
         foreach($collection as $item) {

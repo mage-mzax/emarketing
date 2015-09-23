@@ -42,7 +42,7 @@ class Mzax_Emarketing_Model_Campaign_Preset extends Varien_Object
     public function validateVersion()
     {
         if($version = $this->getVersion()) {
-            return (version_compare($version, Mage::helper('mzax_emarketing')->getVersion()) >= 0);
+            return (version_compare($version, Mage::helper('mzax_emarketing')->getVersion()) < 0);
         }
         return true;
     }

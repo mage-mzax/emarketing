@@ -93,12 +93,23 @@ class Mzax_Emarketing_Model_Recipient_Provider_Quote
     public function prepareRecipient(Mzax_Emarketing_Model_Recipient $recipient)
     {
         /* @var $quote Mage_Sales_Model_Quote */
-        $quote = Mage::getModel('sales/quote')->load($recipient->getObjectId());
+        $quote = Mage::getModel('sales/quote')->loadByIdWithoutStore($recipient->getObjectId());
                 
         $recipient->setQuote($quote);
-        $recipient->setCustomer($quote->getCustomer());
         $recipient->setEmail($quote->getCustomerEmail());
         $recipient->setName($quote->getCustomerName());
+        
+        if($quote->getCustomerId())
+        {
+            /* @var $customer Mage_Customer_Model_Customer */
+            $customer = Mage::getModel('customer/customer')->load($quote->getCustomerId());
+        
+            if($customer->getId()) {
+                $quote->setCustomer($customer);
+                $recipient->setCustomer($customer);
+                $recipient->setEmail($customer->getEmail());
+            }
+        }
     }
     
     

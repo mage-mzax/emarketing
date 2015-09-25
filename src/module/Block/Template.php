@@ -241,9 +241,9 @@ class Mzax_Emarketing_Block_Template extends Mage_Core_Block_Template
         /* @var $collection Mage_Sales_Model_Resource_Order_Collection */
         $collection = $object->getItemsCollection();
         
-        $productsCollection = Mage::getResourceModel('catalog/product_collection')
+        /* @var $productsCollection Mzax_Emarketing_Model_Resource_Collection_Product */
+        $productsCollection = Mage::getResourceModel('mzax_emarketing/collection_product')
             ->addIdFilter($collection->getColumnValues('product_id'))
-            //->setVisibility(Mage::getSingleton('catalog/product_visibility')->getVisibleInSiteIds())
             ->addAttributeToSelect($attributes)
             ->addPriceData()
             ->load();

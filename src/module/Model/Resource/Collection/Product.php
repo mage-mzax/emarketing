@@ -38,6 +38,21 @@ class Mzax_Emarketing_Model_Resource_Collection_Product extends Mage_Catalog_Mod
     
     
     
+    
+    /**
+     * Retrieve is flat enabled flag
+     * Return always false if magento run admin
+     *
+     * @return bool
+     */
+    public function isEnabledFlat()
+    {
+        return false;
+    }
+    
+    
+    
+    
     /**
      * Add filter to only show products where the event
      * occured within the last X hours.

@@ -65,6 +65,7 @@ class Mzax_Emarketing_Model_Form_Element_EmailEditor
     public function getEditorOptions()
     {
         $storeId = $this->getConfig('store_id');
+        $store = Mage::app()->getStore($storeId);
         $storeParam = null !== $storeId ? 'store/' . $this->getConfig('store_id') . '/' : '';
     
         $options = parent::getEditorOptions();
@@ -76,6 +77,18 @@ class Mzax_Emarketing_Model_Form_Element_EmailEditor
         $options['fieldName'] = $this->getData('name');
         $options['enableCKEditor'] = $this->ckeEnabled();
         $options['startEdit'] = true;
+        
+        /* Good enough - only for preview, no fallback required
+         * http://www.example.com/skin/frontend/{package}/{theme}/ 
+         */
+        $skinPath = array();
+        $skinPath[] = $store->getBaseUrl('skin') . 'frontend';
+        $skinPath[] = $store->getConfig('design/package/name');
+        $skinPath[] = $store->getConfig('design/theme/layout');
+        
+        $options['skinUrl']  = implode('/', $skinPath) . '/';
+        $options['mediaUrl'] = $store->getBaseUrl('media');
+        $options['storeUrl'] = $store->getBaseUrl('web');
         
         return $options;
     }

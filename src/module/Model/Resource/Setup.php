@@ -49,31 +49,72 @@ class Mzax_Emarketing_Model_Resource_Setup extends Mage_Eav_Model_Entity_Setup
     }
     
     
+
+    /**
+     *
+     * @param mixed $tableName
+     * @return string
+     */
+    public function getTable($tableName)
+    {
+        if( $tableName instanceof Varien_Db_Ddl_Table ) {
+            return $tableName->getName();
+        }
+        return parent::getTable($tableName);
+    }
+    
+    
+    
     
     /**
      * Shortcut for adding foreign keys
-     * 
-     * @param Varien_Db_Ddl_Table $table
+     *
+     * @param Varien_Db_Ddl_Table|string $table
      * @param Varien_Db_Ddl_Table|string $refTable
      * @param string $columnName
      * @return Mzax_Emarketing_Model_Resource_Setup
      */
-    public function addForeignKey(Varien_Db_Ddl_Table $table, $refTable, $columnName)
+    public function addForeignKey($table, $refTable, $columnName)
     {
-        if( $refTable instanceof Varien_Db_Ddl_Table ) {
-            $refTable = $refTable->getName();
-        }
-        else {
-            $refTable = $this->getTable($refTable);
-        }
+        $refTable = $this->getTable($refTable);
         
-        $fkName = $this->getFkName($table->getName(), $columnName, $refTable, $columnName);
-                
-        $table->addForeignKey($fkName, $columnName, $refTable, $columnName, 
-                Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE);
+        if($table instanceof Varien_Db_Ddl_Table) 
+        {
+            $fkName = $this->getFkName($table->getName(), $columnName, $refTable, $columnName);
+            $table->addForeignKey($fkName, $columnName, $refTable, $columnName,
+                    Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE);
+        }
+        else 
+        {
+            $table = $this->getTable($table);
+            $fkName = $this->getFkName($table, $columnName, $refTable, $columnName);
+            $this->getConnection()->addForeignKey($fkName, $table, $columnName, $refTable, $columnName);
+        }
         
         return $this;
     }
+    
+    
+    
+    /**
+     *
+     *
+     * @param string $table
+     * @param string $refTable
+     * @param string $columnName
+     * @return Mzax_Emarketing_Model_Resource_Setup
+     */
+    public function dropForeignKey($table, $refTable, $columnName)
+    {
+        $table = $this->getTable($table);
+        $refTable = $this->getTable($refTable);
+    
+        $fkName = $this->getFkName($table, $columnName, $refTable, $columnName);
+        $this->getConnection()->dropForeignKey($table, $fkName);
+    
+        return $this;
+    }
+    
     
     
     

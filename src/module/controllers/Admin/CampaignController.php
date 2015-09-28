@@ -1039,6 +1039,63 @@ class Mzax_Emarketing_Admin_CampaignController extends Mage_Adminhtml_Controller
     
     
     
+    public function mailTesterAction()
+    {
+        
+        
+        try {
+            $campaign = $this->_initCampaign('id');
+        
+            $variationId = (int) $this->getRequest()->getParam('variation');
+            $recipientId = (int) $this->getRequest()->getParam('$recipientId');
+            
+            $recipient   = $campaign->createMockRecipient($recipientId);
+            
+            $hash = "mzax" . $campaign->getId() 
+                           . $campaign->getName() 
+                           . microtime() 
+                           . $recipientId 
+                           . session_id();
+            
+            $hash = Mage::helper('mzax_emarketing')->compressHash(md5($hash));
+            
+            $id = "mzax-{$hash}";
+            $email = "{$id}@mail-tester.com";
+            
+        
+            Mage::register('current_recipient', $recipient);
+            $recipient->prepare();
+            $recipient->setForceAddress($email);
+            $recipient->setAddress($email);
+        
+            if($variationId = (int) $this->getRequest()->getParam('variation')) {
+                $recipient->setVariationId($variationId);
+            }
+        
+            $recipient->isPrepared(true);
+            $recipient->save();
+        
+            $campaign->getMedium()->sendRecipient($recipient);
+        
+            $this->_redirectUrl('http://www.mail-tester.com/' . $id);
+        }
+        catch(Exception $e) {
+            $this->_getSession()->addError($e->getMessage());
+            if(Mage::getIsDeveloperMode()) {
+                throw $e;
+            }
+            $this->_getSession()->addError($this->__("Failed to send test email"));
+            $this->_redirect('*/*/sendTestMail', array('_current' => true));
+        }
+        
+        
+        
+        
+        
+    }
+    
+    
+    
     
     
     

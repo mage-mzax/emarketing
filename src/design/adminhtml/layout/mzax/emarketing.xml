@@ -183,7 +183,8 @@
 	
     <admin_mzax_emarketing_admin_campaign_sendtestmail>
         <reference name="content">
-            <block type="mzax_emarketing/campaign_sendTestMail" name="mzax_emarketing.send_test_mail"></block>
+            <block type="mzax_emarketing/campaign_sendTestMail" name="mzax_emarketing.send_test_mail" />
+            <block type="adminhtml/template" name="mzax_emarketing.mail-tester" template="mzax/emarketing/campaign/mail-tester.phtml" />
         </reference>
         <reference name="root">
         	<action method="addBodyClass"><class>mzax-emarketing-padding</class></action>

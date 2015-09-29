@@ -134,6 +134,10 @@
         					<title>SendGrid</title>
         					<class>mzax_emarketing/outbox_transporter_sendgrid</class>
         				</sendgrid>
+        				<mandrill>
+        					<title>Mandrill</title>
+        					<class>mzax_emarketing/outbox_transporter_mandrill</class>
+        				</mandrill>
         				<file>
         					<title>File System (no emails, for debug only)</title>
         					<class>mzax_emarketing/outbox_transporter_file</class>
@@ -381,6 +385,9 @@
 				<sendgrid_category>Magento, eMarketing</sendgrid_category>
 				<sendgrid_category_tags>1</sendgrid_category_tags>
 				<sendgrid_unique_args>1</sendgrid_unique_args>
+				<mandrill_default_tags>Magento, eMarketing</mandrill_default_tags>
+				<mandrill_category_tags>1</mandrill_category_tags>
+				<mandrill_metatags>1</mandrill_metatags>
 			</email>
         </mzax_emarketing>
         <trans_email>

@@ -19,8 +19,9 @@
 
 $url = $this->getUrl('*/*/mailTester', array('_current' => true));
 
-?>
+$transporter = Mage::getStoreConfig('mzax_emarketing/email/transporter');
 
+?>
 
 <div class="mzax-mail-tester">
     <div class="content-header">
@@ -28,8 +29,11 @@ $url = $this->getUrl('*/*/mailTester', array('_current' => true));
     </div>
     <p><?php echo $this->__("Make sure your email reaches the inbox of your customer by testing your email using %s.", '<a href="http://www.mail-tester.com/">mail-tester.com</a>' ) ?></p>
     
-    <button type="button" class="scalable save" onclick="setLocation('<?php echo $url ?>');"><?php echo $this->__('Run email test now') ?></button>
-    
+    <?php if($transporter != 'file'): ?>
+        <button type="button" class="scalable save" onclick="setLocation('<?php echo $url ?>');"><?php echo $this->__('Run email test now') ?></button>
+    <?php else: ?>
+        <p><strong><?php echo $this->__('Mail-Tester requires the email to be send out, the debug "file" transporter does not support this.') ?></strong></p>
+    <?php endif ?>
     
     <p class="credit">Powered by<br /><a href="http://www.mail-tester.com"><img src="<?php echo $this->getSkinUrl('mzax/images/mail-tester.png') ?>" alt="mail-tester.com" /></a></p>
     <p class="privacy"><a href="http://www.mail-tester.com/faq#privacy"><?php echo $this->__('Privacy') ?></a></p>

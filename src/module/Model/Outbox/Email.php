@@ -437,6 +437,11 @@ class Mzax_Emarketing_Model_Outbox_Email
         
         if(Mage::getStoreConfigFlag('mzax_emarketing/email/test_mode', $recipient->getStoreId())) {
             $address = Mage::getStoreConfig('mzax_emarketing/email/test_mode_address', $recipient->getStoreId());
+            
+            if($recipient->getForceAddress()) {
+                $address = $recipient->getForceAddress();
+            }
+            
             if(!$address) {
                 return null;
             }

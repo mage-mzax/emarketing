@@ -52,11 +52,23 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
         }
         return true;
     }
+
+
+
+    /**
+     * Log message
+     *
+     * @return $this
+     */
+    public function log($message)
+    {
+        $message = call_user_func_array(array($this, '__'), func_get_args());
+
+        Mage::log($message, null, 'mzax_emarketing.log', true);
+        return $this;
+    }
     
-    
-    
-    
-    
+
     
     /**
      * Create a lock with the given name

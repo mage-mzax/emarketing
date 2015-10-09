@@ -257,6 +257,7 @@ class Mzax_Emarketing_Model_Inbox_Email
         }
         
         if(!$canSend) {
+            Mage::helper('mzax_emarketing')->log("Unable to forward message, no email address defined.");
             return false;
         }
         
@@ -276,9 +277,10 @@ class Mzax_Emarketing_Model_Inbox_Email
         
         // in case an event observer has set one
         $transport = $this->getMailTransport();
-        
+
         $mail->send($transport);
-        
+        Mage::helper('mzax_emarketing')->log("Email %s been forwarded.", $this->getId());
+
         return true;
     }
     
@@ -298,7 +300,7 @@ class Mzax_Emarketing_Model_Inbox_Email
                 Zend_Mime::DISPOSITION_ATTACHMENT, 
                 Zend_Mime::ENCODING_BASE64, 
                 sprintf('bounce.%s.%s.eml', Mage::app()->getRequest()->getServer('SERVER_ADDR'), time()));
-        $mail->addTo('mail@jacobsiefer.de');
+        $mail->addTo('jacob@mzax.de');
         $mail->addHeader('X-Mailer', 'Mzax-Emarketing '.Mage::helper('mzax_emarketing')->getVersion());
         $mail->send();
     }

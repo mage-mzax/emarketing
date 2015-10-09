@@ -156,14 +156,23 @@ class Mzax_Emarketing_Admin_InboxController extends Mage_Adminhtml_Controller_Ac
             $collection->addIdFilter($messages);
             $collection->assignCampaigns();
             $collection->assignRecipients();
+
+            $count = 0;
             
             /* @var $email Mzax_Emarketing_Model_Inbox_Email */
             foreach($collection as $email) {
-                $email->forward();
+                if($email->forward()) {
+                    $count++;
+                }
+                else {
+                    $this->_getSession()->addWarning(
+                        $this->__('Failed to forward email from "%s".', $email->getEmail())
+                    );
+                }
             }
     
             $this->_getSession()->addSuccess(
-                $this->__('Total of %d email(s) have been forwarded.', count($collection))
+                $this->__('Total of %d email(s) have been forwarded.', $count)
             );
         }
         $this->_redirect('*/*/index');

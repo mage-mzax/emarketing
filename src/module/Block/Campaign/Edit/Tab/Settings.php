@@ -175,6 +175,18 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'value' => '0',
                 'note'   => $this->__("The minimum time before a recipient can recieve this campaign again."),
             ));
+
+
+            $fieldset->addField('max_per_recipient', 'text', array(
+                'label'     => $this->__('Max Send-outs per Recipient'),
+                'title'     => $this->__('Max Send-outs per Recipient'),
+                'name'      => 'max_per_recipient',
+                'required'  => true,
+                'value' => '0',
+                'note'   => $this->__("Maximum send-outs per recipient, zero = unlimited"),
+            ));
+
+
         }
         
 

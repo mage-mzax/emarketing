@@ -54,6 +54,7 @@
  * @method string getCheckFrequency()
  * @method string getLastCheck()
  * @method string getMinResendInterval()
+ * @method string getMaxPerRecipient()
  * @method string getExpireTime()
  * @method string getAbtestEnable()
  * @method string getAbtestTraffic()

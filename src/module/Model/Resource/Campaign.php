@@ -112,39 +112,43 @@ class Mzax_Emarketing_Model_Resource_Campaign extends Mage_Core_Model_Resource_D
     /**
      * Find and add new recipients for the specified campaign
      * 
-     * @param Mzax_Emarketing_Model_Campaign $camapgin
+     * @param Mzax_Emarketing_Model_Campaign $campaign
      * @return integer The number of recipients found
      */
-    public function findRecipients(Mzax_Emarketing_Model_Campaign $camapgin)
+    public function findRecipients(Mzax_Emarketing_Model_Campaign $campaign)
     {
-        if(!$camapgin->getId() || !$camapgin->getRecipientProvider() || !$camapgin->getMedium()) {
+        if(!$campaign->getId() || !$campaign->getRecipientProvider() || !$campaign->getMedium()) {
             return 0;
         }
         
         $adapter = $this->_getWriteAdapter();
         
         $select = $adapter->select()->from(array('current_recipients' => $this->getTable('recipient')), 'object_id');
-        $select->where('`current_recipients`.`campaign_id` = ?', $camapgin->getId());
+        $select->where('`current_recipients`.`campaign_id` = ?', $campaign->getId());
         $select->where('`current_recipients`.`is_mock` = 0');
+        $select->group('current_recipients.object_id');
         
-        $time = $camapgin->getCurrentTime();
+        $time = $campaign->getCurrentTime();
         if(!$time instanceof Zend_Db_Expr) {
             $time = new Zend_Db_Expr('NOW()');
         }
         
         
-        if($interval = (int) $camapgin->getMinResendInterval()) {
-            $select->where("`current_recipients`.`created_at` > DATE_SUB($time, INTERVAL ? DAY)", $camapgin->getId());
+        if($interval = (int) $campaign->getMinResendInterval()) {
+            // only hide if sent within the last X days
+            $select->orHaving("MAX(`current_recipients`.`created_at`) > DATE_SUB($time, INTERVAL ? DAY)", $interval);
+        }
+        if($maximum = (int) $campaign->getMaxPerRecipient()) {
+            // only hide if sent more than maximum times
+            $select->orHaving("COUNT(`current_recipients`.`recipient_id`)  >= ?", $maximum);
         }
         
-        
-        
         /* skip all already queued recipients */
-        $filterSelect = $camapgin->getRecipientProvider()->getSelect();
+        $filterSelect = $campaign->getRecipientProvider()->getSelect();
         $filterSelect->exists($select, '`current_recipients`.`object_id` = {id}', false);
         $filterSelect->columns(array(
             'created_at'  => $time,
-            'campaign_id' => new Zend_Db_Expr($camapgin->getId())
+            'campaign_id' => new Zend_Db_Expr($campaign->getId())
         ));
         
         $adapter->beginTransaction();
@@ -153,12 +157,12 @@ class Mzax_Emarketing_Model_Resource_Campaign extends Mage_Core_Model_Resource_D
             $insertSql = $adapter->insertFromSelect($filterSelect, 
                                    $this->getTable('recipient'), 
                                    array('object_id', 'created_at', 'campaign_id'));
-                    
+
             $stmt = $adapter->query($insertSql);
             
             $adapter->update($this->getMainTable(), array(
                 'last_check' => new Zend_Db_Expr('NOW()')),
-                $adapter->quoteInto('campaign_id = ?', $camapgin->getId()));
+                $adapter->quoteInto('campaign_id = ?', $campaign->getId()));
             
             $adapter->commit();
         }

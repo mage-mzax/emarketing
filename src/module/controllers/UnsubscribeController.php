@@ -61,13 +61,28 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
                 if($email !== $session->getLastAddress()) {
                     break;
                 }
-                /* @see $subscriber Mzax_Emarketing_Helper_Newsletter */
-                Mage::helper('mzax_emarketing/newsletter')->unsubscribe($email, null, true);
-                $session->setIsUnsubscribed(true);
-                $session->setFormKey(null);
-                
-                return $this->_redirect('*/*/done');
-                
+
+                $recipient = $session->getLastRecipient();
+                if($recipient) {
+                    $recipient->setSkipUnsubscribe(false);
+
+                    // allow custom unsubscribe implementation
+                    Mage::dispatchEvent('mzax_emarketing_user_unsubscribe', array(
+                        'email'     => $email,
+                        'recipient' => $recipient
+                    ));
+
+                    if(!$recipient->getSkipUnsubscribe()) {
+                        /* @see $subscriber Mzax_Emarketing_Helper_Newsletter */
+                        Mage::helper('mzax_emarketing/newsletter')->unsubscribe($email, null, true);
+                    }
+
+                    $session->setIsUnsubscribed(true);
+                    $session->setFormKey(null);
+
+                    return $this->_redirect('*/*/done');
+                }
+
             } while(false);
         }
         $this->_redirectUrl('/');

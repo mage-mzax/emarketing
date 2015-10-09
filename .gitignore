@@ -8,3 +8,4 @@ composer.lock
 Mzax_Emarketing*.tgz
 src/lib_composer/*
 grunt/local.js
+.idea

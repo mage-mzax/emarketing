@@ -49,7 +49,11 @@ class Mzax_Emarketing_Model_Observer_Cron
     public function test()
     {
         $this->_testMode = true;
-        
+
+        echo "Purge old emails... ";
+        $this->purge();
+        echo "done\n\n";
+
         echo "Fetch recipients... ";
         $this->fetchRecipients();
         echo "done\n\n";
@@ -264,7 +268,28 @@ class Mzax_Emarketing_Model_Observer_Cron
             'verbose'     => $this->_testMode
         ));
     }
-    
-    
+
+
+
+
+    /**
+     * Purge/cleanse old emails
+     *
+     * No need to keep full content - it can grow quick.
+     *
+     * @return void
+     */
+    public function purge()
+    {
+        $ttl = 30;
+
+        /* @var $inbox Mzax_Emarketing_Model_Resource_Inbox_Email */
+        $inbox = Mage::getResourceSingleton('mzax_emarketing/inbox_email');
+        $inbox->purge($ttl);
+
+        /* @var $outbox Mzax_Emarketing_Model_Resource_Outbox_Email */
+        $outbox = Mage::getResourceSingleton('mzax_emarketing/outbox_email');
+        $outbox->purge($ttl);
+    }
     
 }

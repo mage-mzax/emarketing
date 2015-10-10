@@ -29,6 +29,7 @@
  * @method string getSentAt()
  * @method string getEmail()
  * @method string getType()
+ * @method string getPurged()
  * 
  * @method Mzax_Emarketing_Model_Recipient_Bounce_Message setCreatedAt(string)
  * @method Mzax_Emarketing_Model_Recipient_Bounce_Message setHeaders(string)
@@ -114,7 +115,7 @@ class Mzax_Emarketing_Model_Inbox_Email
     
     protected function _beforeSave()
     {
-        if($this->_content !== null) {
+        if($this->_content !== null && !$this->isPurged()) {
             $this->setSize(strlen($this->_content));
         }
         
@@ -135,6 +136,11 @@ class Mzax_Emarketing_Model_Inbox_Email
      */
     public function parse()
     {
+        // not possible if email is purged
+        if($this->isPurged()) {
+            return 0;
+        }
+
         $start = microtime(true);
         
         $this->getResource()->flagAsParsed($this);
@@ -242,6 +248,11 @@ class Mzax_Emarketing_Model_Inbox_Email
      */
     public function forward(Mzax_Bounce_Message $message = null)
     {
+        // not possible if email is purged
+        if($this->isPurged()) {
+            return;
+        }
+
         if(!$message) {
             $message = new Mzax_Bounce_Message($this->getRawData());
         }
@@ -289,6 +300,11 @@ class Mzax_Emarketing_Model_Inbox_Email
     
     public function report()
     {
+        // not possible if email is purged
+        if($this->isPurged()) {
+            return;
+        }
+
         $mail = new Zend_Mail();
         
         $sender = $this->getSender();
@@ -370,7 +386,7 @@ class Mzax_Emarketing_Model_Inbox_Email
      */
     public function shouldForward()
     {
-        if(!$this->getIsParsed() || $this->getNoForward()) {
+        if(!$this->getIsParsed() || $this->getNoForward() || $this->isPurged()) {
             return false;
         }
         if($this->isARF() || $this->isAutoreply() || $this->isBounce()) {
@@ -389,7 +405,7 @@ class Mzax_Emarketing_Model_Inbox_Email
      */
     public function getContent()
     {
-        if($this->_content === null && $this->getId()) {
+        if($this->_content === null && $this->getId() && !$this->isPurged()) {
             $file = $this->getResource()->getContentFile($this->getId());
             if(file_exists($file)) {
                 $this->_content = file_get_contents($file);
@@ -415,6 +431,19 @@ class Mzax_Emarketing_Model_Inbox_Email
     }
     
     
+
+    /**
+     * Is purged
+     *
+     * @return boolean
+     */
+    public function isPurged()
+    {
+        return (bool) $this->getData('purged');
+    }
+
+
+
     /**
      * Is already parsed
      *

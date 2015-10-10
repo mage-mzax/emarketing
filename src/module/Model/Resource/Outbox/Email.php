@@ -136,4 +136,36 @@ class Mzax_Emarketing_Model_Resource_Outbox_Email extends Mage_Core_Model_Resour
     
     
     
+
+    /**
+     * Remove content of old emails that is not required anymore
+     *
+     * Once messages is sent we don't need to keep the full content
+     *
+     * However leave the row-entry as it is still relevant for reporting
+     *
+     * @return $this
+     */
+    public function purge($purgeDays = 30)
+    {
+        $this->_getWriteAdapter()->update(
+            $this->getMainTable(),
+            array(
+                'subject'   => null,
+                'body_text' => null,
+                'body_html' => null,
+                'mail'      => null,
+                'log'       => null,
+                'purged'    => 1
+            ),
+            array(
+                'purged = 0',
+                'created_at < DATE_SUB(NOW(), INTERVAL ? DAY)' => $purgeDays
+            )
+        );
+        return $this;
+    }
+
+
+
 }

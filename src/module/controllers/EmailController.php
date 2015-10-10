@@ -33,7 +33,7 @@ class Mzax_Emarketing_EmailController extends Mage_Core_Controller_Front_Action
         }
         
         $email = Mage::getSingleton('mzax_emarketing/outbox')->getEmailByRecipient($recipientId);
-        if(!$email->getId()) {
+        if(!$email->getId() || $email->isPurged()) {
             return $this->_redirectUrl('/');
         }
         

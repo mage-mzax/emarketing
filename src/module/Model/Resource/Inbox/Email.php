@@ -187,4 +187,50 @@ class Mzax_Emarketing_Model_Resource_Inbox_Email extends Mage_Core_Model_Resourc
         }
     }
     
+
+
+    /**
+     * Remove content of old emails that is not required anymore
+     *
+     * Once messages are parsed and forwarded we can delete the content
+     * as it is not required anymore.
+     *
+     * However leave the row-entry as it is still relevant for reporting
+     *
+     * @return $this
+     */
+    public function purge($purgeDays = 30)
+    {
+        $select = $this->_getReadAdapter()->select()
+            ->from($this->getMainTable(), 'email_id')
+            ->where('purged = 0')
+            ->where('created_at <= DATE_SUB(NOW(), INTERVAL ? DAY)', $purgeDays);
+
+        $ids = $this->_getReadAdapter()->fetchCol($select);
+        if(!empty($ids))
+        {
+            foreach($ids as $id) {
+                $file = $this->getContentFile($id);
+                if(file_exists($file)) {
+                    @unlink($file);
+                }
+            }
+            $this->_getWriteAdapter()->update(
+                $this->getMainTable(),
+                array(
+                    'headers' => null,
+                    'message' => new Zend_Db_Expr('IF(`type` = "NB", SUBSTRING(`message`, 1, 200), NULL)'),
+                    'purged'  => 1
+                ),
+                array(
+                    'email_id IN(?)' => $ids
+                )
+            );
+        }
+        return $this;
+    }
+
+
+
+
 }

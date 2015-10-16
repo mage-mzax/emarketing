@@ -381,6 +381,7 @@
 				<remove_comments>1</remove_comments>
 				<test_mode>1</test_mode>
 				<list_unsubscribe>1</list_unsubscribe>
+                <ttl>40</ttl>
 				<transporter>sendmail</transporter>
 				<sendgrid_category>Magento, eMarketing</sendgrid_category>
 				<sendgrid_category_tags>1</sendgrid_category_tags>

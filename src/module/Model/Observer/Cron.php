@@ -281,7 +281,8 @@ class Mzax_Emarketing_Model_Observer_Cron
      */
     public function purge()
     {
-        $ttl = 30;
+        $ttl = (int) Mage::getStoreConfig('mzax_emarketing/ema/email_ttl');
+        $ttl = max($ttl, 14);
 
         /* @var $inbox Mzax_Emarketing_Model_Resource_Inbox_Email */
         $inbox = Mage::getResourceSingleton('mzax_emarketing/inbox_email');

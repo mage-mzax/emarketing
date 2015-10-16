@@ -477,7 +477,17 @@
                             <validate>validate-email</validate>
                             <comment>Http list unsubscribe is handled automatically, if you use the bounce/inbox, enter the reply-to email address to automatically handle mailto: unsubscribes.</comment>
                         </list_unsubscribe_address>
-                        
+                        <ttl translate="label comment">
+                            <label>Email TTL</label>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <validate>validate-not-negative-number</validate>
+                            <comment>All incoming and outgoing emails are saved for the above time to allow
+                                access to the content. Most of the time the content can be deleted as it is
+                                not required, but a minimum of 20 days is recommended.</comment>
+                        </ttl>
                         <transporter translate="label comment">
                             <label>Email Transporter</label>
                             <frontend_type>select</frontend_type>

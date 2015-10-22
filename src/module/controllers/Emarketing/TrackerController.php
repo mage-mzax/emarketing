@@ -26,7 +26,7 @@
  * @license {{license}}
  * @version {{version}}
  */
-class Mzax_Emarketing_Admin_TrackerController extends Mage_Adminhtml_Controller_Action
+class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Controller_Action
 {
 	
 	

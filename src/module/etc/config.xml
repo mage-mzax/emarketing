@@ -226,13 +226,13 @@
     </global>
     <admin>
         <routers>
-            <admin_mzax_emarketing>
-                <use>admin</use>
+            <adminhtml>
                 <args>
-                    <module>Mzax_Emarketing</module>
-                    <frontName>mzaxemarketing</frontName>
+                    <modules>
+                        <mzax_emarketing after="Mage_Adminhtml">Mzax_Emarketing</mzax_emarketing>
+                    </modules>
                 </args>
-            </admin_mzax_emarketing>
+            </adminhtml>
         </routers>
     </admin> 
     <adminhtml>

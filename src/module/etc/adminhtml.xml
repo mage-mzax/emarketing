@@ -25,23 +25,23 @@
                 <emarketing translate="title" module="mzax_emarketing">
                     <title>eMarketing Campaigns</title>
 	                <sort_order>100</sort_order>
-					<action>admin_mzax_emarketing/admin_campaign/index</action>
+					<action>adminhtml/emarketing_campaign/index</action>
                     <depends><module>Mage_Sales</module></depends>
                     <children>
                     	<campaigns translate="title" module="mzax_emarketing">
 		                    <title>Manage Campaigns</title>
 			                <sort_order>10</sort_order>
-							<action>admin_mzax_emarketing/admin_campaign/index</action>
+							<action>adminhtml/emarketing_campaign/index</action>
                     	</campaigns>
                     	<templates translate="title" module="mzax_emarketing">
 		                    <title>Manage Email Templates</title>
 			                <sort_order>20</sort_order>
-							<action>admin_mzax_emarketing/admin_template/index</action>
+							<action>adminhtml/emarketing_template/index</action>
                     	</templates>
                     	<trackers translate="title" module="mzax_emarketing">
 		                    <title>Manage Conversion Trackers</title>
 			                <sort_order>25</sort_order>
-							<action>admin_mzax_emarketing/admin_tracker/index</action>
+							<action>adminhtml/emarketing_tracker/index</action>
                     	</trackers>
                     	<email translate="title" module="mzax_emarketing">
 		                    <title>Manage Emails</title>
@@ -50,12 +50,12 @@
 		                    	<inbox translate="title" module="mzax_emarketing">
 				                    <title>Inbox</title>
 					                <sort_order>10</sort_order>
-									<action>admin_mzax_emarketing/admin_inbox/index</action>
+									<action>adminhtml/emarketing_inbox/index</action>
 		                    	</inbox>
 		                    	<outbox translate="title" module="mzax_emarketing">
 				                    <title>Outbox</title>
 					                <sort_order>10</sort_order>
-									<action>admin_mzax_emarketing/admin_outbox/index</action>
+									<action>adminhtml/emarketing_outbox/index</action>
 		                    	</outbox>
 		                    </children>
 	                    </email>

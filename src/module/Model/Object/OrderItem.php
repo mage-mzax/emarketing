@@ -42,7 +42,7 @@ class Mzax_Emarketing_Model_Object_OrderItem extends Mzax_Emarketing_Model_Objec
     
     public function getAdminUrl($id)
     {
-        return $this->getUrl('admin_mzax_emarketing/admin_shortcut/orderItem', array('id' => $id));
+        return $this->getUrl('adminhtml/emarketing_shortcut/orderItem', array('id' => $id));
     }
     
     

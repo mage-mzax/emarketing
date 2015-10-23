@@ -70,6 +70,11 @@
 					<customer_website><table>customer_website</table></customer_website>
                 </entities>
             </mzax_emarketing_resource>
+            <newsletter_resource>
+                <rewrite>
+                    <subscriber>Mzax_Emarketing_Model_Resource_Newsletter_Subscriber</subscriber>
+                </rewrite>
+            </newsletter_resource>
         </models>
         
         <rewrite>
@@ -342,7 +347,8 @@
     <default>
         <mzax_emarketing>
         	<general>
-        		<can_create_indexes>1</can_create_indexes>
+                <can_create_indexes>1</can_create_indexes>
+                <newsletter_multistore>1</newsletter_multistore>
     		</general>
         	<domain_throttling>
         		<enable>1</enable>

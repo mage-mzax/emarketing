@@ -47,6 +47,16 @@
                             <show_in_store>0</show_in_store>
                             <tooltip><![CDATA[Disabling will only prevent any crontab from running. You can still send out campaigns manually.]]></tooltip>
                         </enable>
+                        <newsletter_multistore translate="label">
+                            <label>Newsletter Multi-Store support</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <tooltip><![CDATA[Fix the Magento newsletter multi store bug]]></tooltip>
+                        </newsletter_multistore>
                         <use_temp_tables translate="label comment">
                             <label>Use Temporary Tables</label>
                             <frontend_type>select</frontend_type>

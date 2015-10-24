@@ -1,17 +1,68 @@
 <?php
+/**
+ * Mzax Emarketing (www.mzax.de)
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this Extension in the file LICENSE.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @version     {{version}}
+ * @category    Mzax
+ * @package     Mzax_Emarketing
+ * @author      Jacob Siefer (jacob@mzax.de)
+ * @copyright   Copyright (c) 2015 Jacob Siefer
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+
 /* @var $this Mzax_Emarketing_Block_Unsubscribe */
+$lists = $this->getNewsletterLists();
 ?>
 
-<h1><?php echo $this->__('Are you sure you want to unsubscribe?') ?></h1>
+<h1><?php echo $this->__('Newsletter Subscription') ?></h1>
 
 <div class="unsubscribe-confirm-from">
+
+    <?php if(!empty($lists)): ?>
+        <form id="update_lists" action="<?php echo $this->getUpdateUrl() ?>" method="post">
+            <div class="fieldset">
+                <input type="hidden" name="email" value="<?php echo $this->getAddress() ?>" />
+                <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+
+                <h2 class="legend">Newsletter Lists</h2>
+                <p><?php echo $this->__('Here you can update the newsletter preferences for <strong>%s</strong>.', $this->escapeHtml($this->getAddress())) ?></p>
+                <p><?php echo $this->__('Choose the lists that you are interested in and click update to change your preferences.') ?></p>
+                <ul class="form-list">
+                    <?php foreach($lists as $list): ?>
+                        <li class="control">
+                            <input id="newsletter-list-<?php echo $list->getId() ?>" class="checkbox" name="lists[]" value="<?php echo $list->getId() ?>" type="checkbox" <?php if($list->getIsSubscribedTo()) : ?>checked="checked"<?php endif ?> />
+                            <label for="newsletter-list-<?php echo $list->getId() ?>"><?php echo $this->escapeHtml($list->getName()) ?></label>
+                            <p class="description"><?php echo $list->getDescription() ?></p>
+                        </li>
+                    <?php endforeach ?>
+
+                    <button class="btn" type="submit"><?php echo $this->__('Update preferences') ?></button>
+                </ul>
+            </div>
+        </form>
+    <?php endif ?>
+
+    <h2 class="legend">Unsubscribe from Newsletter</h2>
+    <p><?php echo $this->__('If you want to unsubscribe <strong>%s</strong> from all our newsletter, click bellow', $this->escapeHtml($this->getAddress())) ?></p>
     <form id="unsubscribe" action="<?php echo $this->getYesUrl() ?>" method="post">
+        <div class="fieldset">
         <input type="hidden" name="email" value="<?php echo $this->getAddress() ?>" />
         <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
-        <p><?php echo $this->__('Are you sure you want to unsubscribe the email address <strong>%s</strong>?', $this->getAddress()) ?></p>
-        <button class="btn" type="submit"><?php echo $this->__('Yes, please unsubscribe me') ?></button>
+        <ul class="form-list">
+            <li class="control">
+                <button class="btn" type="submit"><?php echo $this->__('Unsubscribe from all') ?></button>
+            </li>
+        </ul>
+        </div>
     </form>
 </div>
-
 
 <?php echo $this->getChildHtml() ?>

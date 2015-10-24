@@ -60,9 +60,43 @@ class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
     {
         return $this->getSession()->getFormKey();
     }
-    
-    
-    
+
+
+    public function getCustomerNewsletterLists()
+    {
+        $customer = Mage::getSingleton('customer/session')->getCustomer();
+
+        /* @var $subscriber Mage_Newsletter_Model_Subscriber */
+        $subscriber = Mage::getModel('newsletter/subscriber');
+        $subscriber->loadByCustomer($customer);
+
+        /* @var $collection Mzax_Emarketing_Model_Resource_Newsletter_List_Collection */
+        $collection = Mage::getResourceModel('mzax_emarketing/newsletter_list_collection');
+        $collection->addSubscriberToFilter($subscriber);
+
+        return $collection;
+    }
+
+
+    public function getNewsletterLists()
+    {
+        /* @var $subscriber Mage_Newsletter_Model_Subscriber */
+        $subscriber = Mage::getModel('newsletter/subscriber');
+        $subscriber->loadByEmail($this->getAddress());
+
+        /* @var $collection Mzax_Emarketing_Model_Resource_Newsletter_List_Collection */
+        $collection = Mage::getResourceModel('mzax_emarketing/newsletter_list_collection');
+        $collection->addSubscriberToFilter($subscriber);
+
+        return $collection;
+    }
+
+    public function getUpdateUrl()
+    {
+        return $this->getUrl('*/*/update');
+    }
+
+
     public function getYesUrl()
     {
         return $this->getUrl('*/*/do');

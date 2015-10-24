@@ -54,6 +54,24 @@ class Mzax_Emarketing_Model_Resource_Link_Reference extends Mage_Core_Model_Reso
             }
         }
     }
+
+
+
+    /**
+     * Retrieve last id
+     *
+     * @internal
+     * @return int
+     */
+    public function getLastId()
+    {
+        $select = $this->_getReadAdapter()->select()
+            ->from($this->getMainTable())
+            ->order('reference_id DESC')
+            ->limit(1);
+
+        return (int) $this->_getReadAdapter()->fetchOne($select);
+    }
     
     
     

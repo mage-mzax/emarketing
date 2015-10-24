@@ -39,4 +39,12 @@
 		<block type="page/html" name="redirect" output="toHtml" template="mzax/emarketing/link/redirect.phtml" />
 	</mzax_redirect>
 
+
+
+	<newsletter_manage_index>
+        <reference name="customer_newsletter">
+			<block type="mzax_emarketing/unsubscribe" name="mzax_emarketing.newsletter_lists" as="customer.form.newsletter.extra" template="mzax/emarketing/newsletter/lists.phtml" />
+		</reference>
+	</newsletter_manage_index>
+
 </layout>

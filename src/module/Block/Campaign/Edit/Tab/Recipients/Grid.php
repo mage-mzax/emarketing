@@ -96,11 +96,13 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients_Grid extends Mzax_Emark
     {
         return $this->getUrl('*/*/*', array('_current' => true));
     }
-    
-    
-    protected function getAdditionalJavascript()
+
+
+    public function getAdditionalJavaScript()
     {
-        return "window.{$this->getId()}_massactionJsObject = {$this->getId()}_massactionJsObject;";
+        $object = $this->getMassactionBlock()->getJsObjectName();
+        return "window.{$object} = {$object};";
     }
+
     
 }

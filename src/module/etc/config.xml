@@ -21,7 +21,7 @@
 <config>
     <modules>
         <Mzax_Emarketing>
-        	<version>0.4.3</version>
+        	<version>0.4.4</version>
 		</Mzax_Emarketing>
 	</modules>
     <global>
@@ -68,6 +68,9 @@
 					<report_enum><table>mzax_emarketing_report_enum</table></report_enum>
 					
 					<customer_website><table>customer_website</table></customer_website>
+
+                    <newsletter_list><table>mzax_emarketing_newsletter_list</table></newsletter_list>
+                    <newsletter_list_subscriber><table>mzax_emarketing_newsletter_list_subscriber</table></newsletter_list_subscriber>
                 </entities>
             </mzax_emarketing_resource>
             <newsletter_resource>
@@ -152,8 +155,10 @@
 			</mediums>
         	<filters>
         		<combine><model>mzax_emarketing/object_filter_combine</model></combine>
+
         		<newsletter><model>mzax_emarketing/object_filter_newsletter</model></newsletter>
-        		
+                <newsletter_list><model>mzax_emarketing/object_filter_newsletter_list</model></newsletter_list>
+
         		<customer_name><model>mzax_emarketing/object_filter_customer_name</model></customer_name>
         		<customer_order><model>mzax_emarketing/object_filter_customer_order</model></customer_order>
         		<customer_lastlogin><model>mzax_emarketing/object_filter_customer_lastlogin</model></customer_lastlogin>
@@ -227,6 +232,15 @@
                     </mzax_emarketing_salesrule_conditions>
                 </observers>   
 			</salesrule_rule_condition_combine>
+            <newsletter_subscriber_save_after>
+                <observers>
+                    <mzax_emarketing_newsletter_subscriber>
+                        <type>singleton</type>
+                        <class>mzax_emarketing/observer_subscriber</class>
+                        <method>afterSave</method>
+                    </mzax_emarketing_newsletter_subscriber>
+                </observers>
+            </newsletter_subscriber_save_after>
 		</events>
     </global>
     <admin>
@@ -257,6 +271,18 @@
                 </Mzax_Emarketing>
             </modules>
         </translate>
+        <events>
+            <adminhtml_block_html_before>
+                <observers>
+                    <mzax_emarketing_newsletter_massaction>
+                        <type>singleton</type>
+                        <class>mzax_emarketing/observer_subscriber</class>
+                        <method>girdHtmlBefore</method>
+                    </mzax_emarketing_newsletter_massaction>
+                </observers>
+            </adminhtml_block_html_before>
+
+        </events>
     </adminhtml>
     <frontend>
     	<layout>
@@ -341,7 +367,16 @@
                 </observers>
             </sales_order_save_after>
         	
-        	
+
+            <controller_action_predispatch_newsletter_manage_save>
+                <observers>
+                    <mzax_emarketing_newsletter_lists>
+                        <type>singleton</type>
+                        <class>mzax_emarketing/observer_subscriber</class>
+                        <method>beforeManageSave</method>
+                    </mzax_emarketing_newsletter_lists>
+                </observers>
+            </controller_action_predispatch_newsletter_manage_save>
         </events>
 	</frontend>
     <default>

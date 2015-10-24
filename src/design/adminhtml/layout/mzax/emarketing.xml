@@ -231,9 +231,22 @@
             <block type="mzax_emarketing/template_upload" name="mzax_emarketing_template_upload"></block>
         </reference>
     </adminhtml_emarketing_template_upload>
-	
-	
-	
+
+
+    <adminhtml_emarketing_newsletter_list_edit>
+        <reference name="content">
+            <block type="mzax_emarketing/newsletter_list_edit" name="mzax_emarketing_newsletter_list_edit"></block>
+        </reference>
+        <reference name="left">
+            <block type="mzax_emarketing/newsletter_list_edit_tabs" name="mzax_emarketing_newsletter_list_tabs"></block>
+        </reference>
+        <reference name="js">
+            <block type="adminhtml/template" template="mzax/emarketing/edit/js.phtml" name="mzax_emarketing.edit.js" as="mzax_emarketing_edit_js"></block>
+        </reference>
+    </adminhtml_emarketing_newsletter_list_edit>
+
+
+
     <adminhtml_emarketing_inbox_email>
     	
     	<update handle="mzax_ace_editor"/>

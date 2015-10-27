@@ -21,7 +21,7 @@
 <config>
     <modules>
         <Mzax_Emarketing>
-        	<version>0.4.4</version>
+        	<version>0.4.5</version>
 		</Mzax_Emarketing>
 	</modules>
     <global>

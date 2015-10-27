@@ -78,7 +78,7 @@ class Mzax_Emarketing_Block_Outbox_Email_Form extends Mage_Adminhtml_Block_Widge
             $fieldset->addField('campaign_name', 'link', array(
                 'label' => $this->__('Campagin'),
                 'value' => $campaign->getName(),
-                'href'  => $this->getUrl('*/admin_campaign/edit', array('id' => $campaign->getId()))
+                'href'  => $this->getUrl('*/emarketing_campaign/edit', array('id' => $campaign->getId()))
             ));
         
         }

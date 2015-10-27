@@ -72,7 +72,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email extends Mzax_Emarketing_B
                 'label'     => $this->__('Template'),
                 'class'     => 'mzax-template-select',
                 'text'      => $this->__("Before you can create an email campaign, you need to setup at least one email template."),
-                'after_element_html' => $this->__(' <a href="%s" target="_blank">Edit Templates</a>', $this->getUrl('*/admin_template')),
+                'after_element_html' => $this->__(' <a href="%s" target="_blank">Edit Templates</a>', $this->getUrl('*/emarketing_template')),
             ));
             return;
         }
@@ -97,7 +97,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email extends Mzax_Emarketing_B
             'values'    => $templateOptions,
             'class'     => 'mzax-template-select',
             'note'      => $this->__("A template is required for sending out emails"),
-            'after_element_html' => $this->__(' <a href="%s" target="_blank">Edit Templates</a>', $this->getUrl('*/admin_template')),
+            'after_element_html' => $this->__(' <a href="%s" target="_blank">Edit Templates</a>', $this->getUrl('*/emarketing_template')),
         ));
         
         

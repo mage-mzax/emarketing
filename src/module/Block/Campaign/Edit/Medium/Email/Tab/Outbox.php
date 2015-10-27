@@ -69,7 +69,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email_Tab_Outbox extends Mzax_E
     
     public function getRowUrl($row)
     {
-        return $this->getUrl('*/admin_outbox/email', array('id'=>$row->getId()));
+        return $this->getUrl('*/emarketing_outbox/email', array('id'=>$row->getId()));
     }
     
     

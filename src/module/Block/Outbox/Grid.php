@@ -190,7 +190,7 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
     {
         $id = $row->getCampaignId();
         if($id && !$export) {
-            $url = $this->getUrl('*/admin_campaign/edit', array('id' => $id));
+            $url = $this->getUrl('*/emarketing_campaign/edit', array('id' => $id));
             return sprintf('<a href="%s">%s</a>', $url, $value);
         }
         return $value;
@@ -211,19 +211,19 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
         
         $this->getMassactionBlock()->addItem('send', array(
             'label'      => $this->__('Send'),
-            'url'        => $this->getUrl('*/admin_outbox/massSend'),
+            'url'        => $this->getUrl('*/emarketing_outbox/massSend'),
             'confirm'    => $this->__('Are you sure you want to send those emails now?')
         ));
         
         $this->getMassactionBlock()->addItem('delete', array(
              'label'   => $this->__('Delete'),
-             'url'     => $this->getUrl('*/admin_outbox/massDelete'),
+             'url'     => $this->getUrl('*/emarketing_outbox/massDelete'),
              'confirm' => $this->__('Are you sure?')
         ));
         
         $this->getMassactionBlock()->addItem('discard', array(
             'label'      => $this->__('Discard'),
-            'url'        => $this->getUrl('*/admin_outbox/massDiscard'),
+            'url'        => $this->getUrl('*/emarketing_outbox/massDiscard'),
             'confirm'    => $this->__('Are you sure?')
         ));
         

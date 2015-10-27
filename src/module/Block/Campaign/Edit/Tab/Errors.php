@@ -103,7 +103,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Errors extends Mage_Adminhtml_Bloc
     public function getRowUrl($row)
     {
         return null;
-        //return $this->getUrl('*/admin_outbox/email', array('id'=>$row->getId()));
+        //return $this->getUrl('*/emarketing_outbox/email', array('id'=>$row->getId()));
     }
     
     

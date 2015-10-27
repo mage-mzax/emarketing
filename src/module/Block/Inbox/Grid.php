@@ -175,7 +175,7 @@ class Mzax_Emarketing_Block_Inbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
     {
         $id = $row->getCampaignId();
         if($id && !$export) {
-            $url = $this->getUrl('*/admin_campaign/edit', array('id' => $id));
+            $url = $this->getUrl('*/emarketing_campaign/edit', array('id' => $id));
             return sprintf('<a href="%s">%s</a>', $url, $value);
         }
         return $value;

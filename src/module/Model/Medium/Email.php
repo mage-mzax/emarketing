@@ -106,7 +106,7 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
             $tabs->addTab('inbox', array(
                 'label'   => $tabs->__('Inbox (%s)', $count),
                 'class'   => 'ajax',
-                'url'     => $tabs->getUrl('*/admin_inbox/campaignGrid', array('_current' => true)),
+                'url'     => $tabs->getUrl('*/emarketing_inbox/campaignGrid', array('_current' => true)),
             ));
         }
         
@@ -114,7 +114,7 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
             $tabs->addTab('outbox', array(
                 'label'   => $tabs->__('Outbox (%s)', $count),
                 'class'   => 'ajax',
-                'url'     => $tabs->getUrl('*/admin_outbox/campaignGrid', array('_current' => true)),
+                'url'     => $tabs->getUrl('*/emarketing_outbox/campaignGrid', array('_current' => true)),
             ));
         }
     }
@@ -173,7 +173,7 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
         $previewAction = array(
             'target' => "campaign_{$campaign->getId()}_{id}",
             'url' => array(
-                'base' => '*/admin_campaign/preview',
+                'base' => '*/emarketing_campaign/preview',
                 'params' => array(
                     'id' => $grid->getCampaign()->getId()
                 ),
@@ -185,7 +185,7 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
         $sendAction = array(
             'target' => "campaign_{$campaign->getId()}_{id}",
             'url' => array(
-                'base' => '*/admin_campaign/sendTestMail',
+                'base' => '*/emarketing_campaign/sendTestMail',
                 'params' => array(
                     'id' => $grid->getCampaign()->getId()
                 ),
@@ -219,7 +219,7 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
                 $previewAction['actions'][] = array(
                     'target' => "campaign_{$campaign->getId()}_{$variation->getId()}_{id}",
                     'url' => array(
-                        'base'   => '*/admin_campaign/preview',
+                        'base'   => '*/emarketing_campaign/preview',
                         'params' => $params,
                     ),
                     'field'  => 'entity',
@@ -228,7 +228,7 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
                 );
                 $sendAction['actions'][] = array(
                     'url' => array(
-                        'base'   => '*/admin_campaign/sendTestMail',
+                        'base'   => '*/emarketing_campaign/sendTestMail',
                         'params' => $params,
                     ),
                     'field'  => 'recipient',

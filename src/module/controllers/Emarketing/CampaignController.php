@@ -27,7 +27,14 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     {
         $this->_title($this->__('eMarketing'))
              ->_title($this->__('Manage Campaigns'));
-        
+
+
+        if(!Mage::getStoreConfigFlag('mzax_emarketing/general/enable')) {
+            $msg = $this->__('The emarketing extension is disabled, no cron jobs are triggered. <a href="%s">Change Settings</a>',
+                $this->getUrl('*/system_config/edit', array('section' => 'mzax_emarketing')));
+
+            $this->_getSession()->addWarning($msg);
+        }
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
         

@@ -90,7 +90,21 @@ class Mzax_Emarketing_Model_Medium_Email_Processor
         $this->filter->disableVarDirective($flag);
         return $this;
     }
-    
+
+
+    /**
+     *
+     *
+     * @param string $flag
+     * @return Mzax_Emarketing_Model_Medium_Email_Processor
+     */
+    public function isPreview($flag = true)
+    {
+        $this->filter->isPreview($flag);
+        return $this;
+    }
+
+
     
     /**
      * Add content provider

@@ -320,13 +320,13 @@ class Mzax_Emarketing_Model_Outbox_Email
      * 
      * @return Mzax_Emarketing_Model_Outbox_Email
      */
-    public function render()
+    public function render($previewMode = false)
     {
         if($this->getStatus() == self::STATUS_NOT_SEND) {
             
             $composer = $this->getEmailComposer();
             $composer->setRecipient($this->getRecipient());
-            $composer->compose();
+            $composer->compose($previewMode);
             
             $this->setSubject( $composer->getSubject() );
             $this->setBodyHtml( $composer->getBodyHtml() );

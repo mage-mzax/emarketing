@@ -50,7 +50,14 @@ class Mzax_Emarketing_Model_Medium_Email_Filter
      * @var boolean
      */
     protected $_enableVarDirective = true;
-    
+
+
+    /**
+     * Is in preview mode?
+     *
+     * @var bool
+     */
+    protected $_isPreview = false;
     
     
     
@@ -83,9 +90,21 @@ class Mzax_Emarketing_Model_Medium_Email_Filter
         $this->_enableVarDirective = !$flag;
         return $this;
     }
-    
-    
-    
+
+
+    /**
+     * Flag as preview mode
+     *
+     * @param string $flag
+     * @return Mzax_Emarketing_Model_Medium_Email_Filter
+     */
+    public function isPreview($flag = true)
+    {
+        $this->_isPreview = $flag;
+        return $this;
+    }
+
+
     
     /**
      * Var directive with modifiers support
@@ -115,6 +134,32 @@ class Mzax_Emarketing_Model_Medium_Email_Filter
         $construction[2] .= sprintf(' store_id ="%s"', $this->getStoreId());
         return parent::widgetDirective($construction);
     }
+
+
+    /**
+     * Retrieve Block html directive
+     *
+     * @param array $construction
+     * @return string
+     */
+    public function blockDirective($construction)
+    {
+        if($this->_isPreview && isset($this->_permissionBlock)) {
+            $blockParameters = $this->_getIncludeParameters($construction[2]);
+            if (isset($blockParameters['type'])) {
+                $type = $blockParameters['type'];
+
+                $msg = Mage::helper('mzax_emarketing')
+                    ->__('[BLOCK(%s) is not allowed (Check System -> Permissions -> Block)]', $type);
+
+                if(!$this->_permissionBlock->isTypeAllowed($type)) {
+                    return '<pre style="color:red;">' . $msg . '</pre>';
+                }
+            }
+        }
+        return parent::blockDirective($construction);
+    }
+
     
     
     

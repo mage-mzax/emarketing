@@ -117,7 +117,8 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         $field     = $query->joinAttribute($this->_requireBinding, $attribute, true);
         
         $query->addBinding('attribute_value', $field);
-        
+        $query->group();
+
         $operator  = $this->getDataSetDefault('operator', $this->helper()->getDefaultOperatorByType($this->getInputType()));
         $value     = $this->getData(self::VALUE_KEY);
         

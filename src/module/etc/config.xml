@@ -21,7 +21,7 @@
 <config>
     <modules>
         <Mzax_Emarketing>
-        	<version>0.4.5</version>
+        	<version>0.4.6</version>
 		</Mzax_Emarketing>
 	</modules>
     <global>
@@ -302,17 +302,6 @@
             </mzax_emarketing>
         </routers>
         <events>
-            <customer_login>
-                <observers>
-                    <log_customer_website>
-                        <type>singleton</type>
-                        <class>mzax_emarketing/observer</class>
-                        <method>logCustomerWebsite</method>
-                    </log_customer_website>
-                </observers>
-            </customer_login>
-            
-            
             <controller_action_layout_generate_blocks_after>
             	<observers>
                     <mzax_inject_timeoffset>

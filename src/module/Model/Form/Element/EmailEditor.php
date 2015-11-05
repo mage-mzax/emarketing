@@ -87,9 +87,12 @@ class Mzax_Emarketing_Model_Form_Element_EmailEditor
         $skinPath[] = $store->getConfig('design/theme/layout');
         
         $options['skinUrl']  = implode('/', $skinPath) . '/';
-        $options['mediaUrl'] = $store->getBaseUrl('media');
-        $options['storeUrl'] = $store->getBaseUrl('web');
-        
+        $options['mediaUrl'] = $store->getBaseUrl($store::URL_TYPE_MEDIA);
+        $options['storeUrl'] = $store->getBaseUrl($store::URL_TYPE_WEB);
+
+        $options['ckeditorSrc'] = $store->getBaseUrl($store::URL_TYPE_JS) . 'mzax/ckeditor/ckeditor.js';
+        $options['editorCss']   = Mage::getDesign()->getSkinUrl('mzax/editor.css');
+
         return $options;
     }
     

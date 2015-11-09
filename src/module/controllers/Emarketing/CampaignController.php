@@ -479,7 +479,8 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
                     continue;
                 }
                 try {
-                    $campaign->isArchived(true)->save();
+                    $campaign->isArchived(true);
+                    $campaign->save();
                     $count++;
                 }
                 catch(Exception $e) {

@@ -2483,7 +2483,7 @@ window.mzax = window.mzax || {};
                     if(field = fields[id][i]) {
                         field.index++;
                         delete fields[id][i];
-                        fields[id][tmp.index] = field;
+                        fields[id][field.index] = field;
                     }
                 }
                 

@@ -1186,6 +1186,14 @@ class Mzax_Emarketing_Model_Campaign
         $this->setCreatedAt(null);
         $this->setUpdatedAt(null);
         $this->setClonedVariations($variations);
+
+        // reset aggregated statistics
+        $this->setSendingStats(null);
+        $this->setViewStats(null);
+        $this->setInteractionStats(null);
+        $this->setConversionStats(null);
+        $this->setFailStats(null);
+        $this->setRevenueStats(null);
         
     }
     

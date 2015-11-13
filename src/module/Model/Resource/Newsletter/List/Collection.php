@@ -92,6 +92,18 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
     }
 
 
+    /**
+     * Filter only list that are allowed for specified store
+     *
+     * @param mixed $store
+     * @return $this
+     */
+    public function addStoreFilter($store)
+    {
+        $store = Mage::app()->getStore($store)->getId();
+        $this->getSelect()->where('FIND_IN_SET(0, `store_ids`) OR FIND_IN_SET(?, `store_ids`)', $store);
+        return $this;
+    }
     
     
     public function toOptionArray()

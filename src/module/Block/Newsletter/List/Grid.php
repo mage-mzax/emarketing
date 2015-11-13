@@ -88,7 +88,17 @@ class Mzax_Emarketing_Block_Newsletter_List_Grid extends Mage_Adminhtml_Block_Wi
             'width'     => 100
         ));
 
-
+        if (!Mage::app()->isSingleStoreMode()) {
+            $this->addColumn('allowed_stores', array(
+                'header'        => Mage::helper('cms')->__('Store View'),
+                'index'         => 'allowed_stores',
+                'type'          => 'store',
+                'store_all'     => true,
+                'store_view'    => true,
+                'sortable'      => false,
+                'filter_condition_callback'=> array($this, '_filterStoreCondition'),
+            ));
+        }
 
         $this->addColumn('subscriber_count', array(
             'header'    => $this->__('Subscribers'),
@@ -104,6 +114,17 @@ class Mzax_Emarketing_Block_Newsletter_List_Grid extends Mage_Adminhtml_Block_Wi
     {
         return $this;
     }
+
+
+
+    protected function _filterStoreCondition($collection, $column)
+    {
+        if (!$value = $column->getFilter()->getValue()) {
+            return;
+        }
+        $this->getCollection()->addStoreFilter($value);
+    }
+
 
     public function getGridUrl()
     {

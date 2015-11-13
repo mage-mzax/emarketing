@@ -73,6 +73,7 @@ class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
         /* @var $collection Mzax_Emarketing_Model_Resource_Newsletter_List_Collection */
         $collection = Mage::getResourceModel('mzax_emarketing/newsletter_list_collection');
         $collection->addSubscriberToFilter($subscriber);
+        $collection->addStoreFilter(Mage::app()->getStore());
 
         return $collection;
     }
@@ -87,6 +88,7 @@ class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
         /* @var $collection Mzax_Emarketing_Model_Resource_Newsletter_List_Collection */
         $collection = Mage::getResourceModel('mzax_emarketing/newsletter_list_collection');
         $collection->addSubscriberToFilter($subscriber);
+        $collection->addStoreFilter(Mage::app()->getStore());
 
         return $collection;
     }

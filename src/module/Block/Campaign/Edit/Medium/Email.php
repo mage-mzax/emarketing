@@ -196,6 +196,16 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email extends Mzax_Emarketing_B
             'text'      => $this->__('Keep in mind that this option can significantly delay an email from getting send out. Depending on your campaign this may not be a problem, but sometimes it can. You may want to double check the expire time under "Settings" and make sure it is high enough.')
         ))->setRenderer($renderer);
         
+
+
+        $fieldset->addField('day_filter_empty', 'hidden', array(
+            'name'      => 'day_filter',
+            'value'     => '',
+        ));
+        $fieldset->addField('time_filter_empty', 'hidden', array(
+            'name'      => 'time_filter',
+            'value'     => '',
+        ));
         
         $fieldset->addField('day_filter', 'checkboxes', array(
             'name'      => 'day_filter[]',

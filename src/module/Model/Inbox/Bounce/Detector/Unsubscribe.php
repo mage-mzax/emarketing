@@ -37,7 +37,7 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Unsubscribe
      */
     public function inspect(Mzax_Bounce_Message $message)
     {
-        $subject = trim($message->getSubject());
+        $subject = urldecode(trim($message->getSubject()));
         
         if(preg_match('/^Unsubscribe ([^\s]+) \(([0-9A-Z]+)\)$/i', $subject, $matches)) {
             $email = $matches[1];

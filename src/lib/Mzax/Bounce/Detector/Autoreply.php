@@ -55,7 +55,7 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
         'auto-submitted',
         'x-autorespond',
         'auto-submitted',
-        'precedence' => array('auto_reply'),
+        'precedence' => array('auto_reply', 'bulk'),
         'auto-submitted' => 'auto_reply'
     );
     
@@ -77,6 +77,7 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
         'Risposta Non al computer',
         'Automatisch antwoord',
         'Auto Response',
+        'Thank you for your email',
         'Respuesta automática',
         'Fuori sede',
         'Out of Office',
@@ -114,7 +115,10 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
      */
     public static $body = array(
         'away from the office',
-        'out of office'
+        'out of office',
+        'we are currently away from the office',
+        'respond to your email within',
+        'thank you for contacting',
     );
     
     

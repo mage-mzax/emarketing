@@ -155,6 +155,8 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
     {
         $query = $this->getParentOrSelf()->getQuery();
         $this->_prepareQuery($query->lock());
+        $query->comment('FILTER: ' . get_class($this));
+
         return $query->lock(false);
     }
     

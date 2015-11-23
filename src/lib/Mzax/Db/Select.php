@@ -66,7 +66,15 @@ class Mzax_Db_Select extends Varien_Db_Select
      * @var array
      */
     protected $_seeks = array();
-    
+
+
+
+    /**
+     * Optional comment
+     *
+     * @var string
+     */
+    protected $_comment;
     
     
     /**
@@ -85,6 +93,19 @@ class Mzax_Db_Select extends Varien_Db_Select
             $name = array($this->_tableAlias => $name);
         }
         return parent::from($name,$cols,$schema);
+    }
+
+
+    /**
+     * Set optional comment
+     *
+     * @param $comment
+     * @return $this
+     */
+    public function comment($comment)
+    {
+        $this->_comment = (string) $comment;
+        return $this;
     }
     
     
@@ -571,6 +592,13 @@ class Mzax_Db_Select extends Varien_Db_Select
     public function assemble()
     {
         $sql = parent::assemble();
+
+        if(!empty($this->_comment)) {
+            $comment = implode("\n# ", explode("\n", $this->_comment));
+            $sql = "\n# " . $comment . "\n" . $sql . "\n# END #\n";
+        }
+
+
         $bindings = $this->_binding;
         $select   = $this;
         $regex    = '/{([a-z_]+)}/i';

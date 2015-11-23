@@ -69,9 +69,9 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
     
     
     public function getQuery()
-    { 
+    {
         $campaign = $this->getCampaign();
-                
+
         $query = $this->getObject()->getQuery();
         if($campaign) {
             $query->joinSelect('recipient_id', $this->getRecipientsByOrder(), 'recipient_order');
@@ -223,14 +223,18 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
             $id = $this->getDataSetDefault('campaign');
             
             if($id === 'current') {
-                $this->_campaign = $this->getParam('campaign');
+                return $this->getParam('campaign');
             }
-            if(!$this->_campaign instanceof Mzax_Emarketing_Model_Campaign) {
-                $this->_campaign = Mage::getModel('mzax_emarketing/campaign');
-                if($id > 0) {
-                    $this->_campaign->load($id);
-                }
+            $campaign = Mage::getModel('mzax_emarketing/campaign');
+            if(!$id) {
+                return null;
             }
+            $campaign->load($id);
+            if(!$campaign->getId()) {
+                return null;
+            }
+
+            $this->_campaign = $campaign;
         }
         return $this->_campaign;
     }

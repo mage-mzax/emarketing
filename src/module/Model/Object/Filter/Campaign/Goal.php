@@ -34,7 +34,7 @@ class Mzax_Emarketing_Model_Object_Filter_Campaign_Goal
     
     const ACTION_CLICKED  = 'clicked';
     const ACTION_VIEWED   = 'viewed';
-    const ACTION_RECIEVED = 'recieved';
+    const ACTION_RECEIVED = 'recieved';
     
     
     
@@ -137,7 +137,7 @@ class Mzax_Emarketing_Model_Object_Filter_Campaign_Goal
         return array(
             self::ACTION_VIEWED   => $this->__('viewed'),
             self::ACTION_CLICKED  => $this->__('clicked'),
-            self::ACTION_RECIEVED => $this->__('recieved'),
+            self::ACTION_RECEIVED => $this->__('recieved'),
         );
     }
     

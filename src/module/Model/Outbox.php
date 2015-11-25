@@ -203,7 +203,7 @@ class Mzax_Emarketing_Model_Outbox
      */
     protected function log($message, $verbose = false)
     {
-        Mage::log($message);
+        Mage::helper('mzax_emarketing')->log($message);
         if($verbose) {
             echo "$message\n";
         }

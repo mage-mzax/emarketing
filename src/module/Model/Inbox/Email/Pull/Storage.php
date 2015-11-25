@@ -162,8 +162,8 @@ class Mzax_Emarketing_Model_Inbox_Email_Pull_Storage
                 $header  = $adapter->getRawHeader($id);
                 
                 if($size > $maxSize) {
-                    $content = "Mzaz Emarketing: Email content size ($size) exceeded the maximum content size of $maxSize.";
-                    Mage::log($content);
+                    Mage::helper('mzax_emarketing')
+                        ->log("Email content size (%s) exceeded the maximum content size of %s.", $size, $maxSize);
                 }
                 else {
                     $content = $adapter->getRawContent($id);

@@ -49,7 +49,8 @@ class Mzax_Emarketing_LinkController extends Mage_Core_Controller_Front_Action
             $attempts = Mage::helper('mzax_emarketing/request')->bad();
             if($attempts % 100 === 0) {
                 $ip = $this->getRequest()->getServer('REMOTE_ADDR');
-                Mage::log("Brute force attempt, to many bad requests from '$ip' ({$attempts})");
+                Mage::helper('mzax_emarketing')
+                    ->log("Brute force attempt, to many bad requests from '%s' (%s)", $ip, $attempts);
             }
             return $this->_redirectUrl('/');
         }

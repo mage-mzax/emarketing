@@ -105,7 +105,7 @@ class Mzax_Emarketing_Model_Report
                 echo $msg . "\n";
             }
             else {
-                Mage::log($msg);
+                Mage::helper('mzax_emarketing')->log($msg);
             }
         };
         

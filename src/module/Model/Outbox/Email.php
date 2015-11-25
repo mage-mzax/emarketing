@@ -26,21 +26,16 @@
  * @method string getSubject()
  * @method string getBodyText()
  * @method string getBodyHtml()
- * @method string getMessageId()
  * @method string getTimeFilter()
  * @method string getDayFilter()
- * @method string getLog()
  * 
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email setExpireAt()
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email setStatus()
- * @method Mzax_Emarketing_Model_Resource_Outbox_Email setTo()
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email setDomain()
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email setSubject()
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email setBodyText()
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email setBodyHtml()
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email setMessageId()
- * @method Mzax_Emarketing_Model_Resource_Outbox_Email setTimeFilter()
- * @method Mzax_Emarketing_Model_Resource_Outbox_Email setDayFilter()
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email setLog()
  * 
  * 
@@ -608,11 +603,13 @@ class Mzax_Emarketing_Model_Outbox_Email
     
     public function send($verbose = false)
     {
+        $h = Mage::helper('mzax_emarketing');
         try {
-            Mage::log("Send Message: #{$this->getId()} - {$this->getEmail()}");
+            $h->log("Send Message: #%s - %s", $this->getId(), $this->getEmail());
+
             
             if(!$this->_send()) {
-                Mage::log("Message was not send. #{$this->getId()} - {$this->getEmail()}");
+                $h->log("Message was not send. #%s - %s", $this->getId(), $this->getEmail());
             }
             $this->setStatus(self::STATUS_SENT);
             $this->setSentAt(now());
@@ -620,7 +617,8 @@ class Mzax_Emarketing_Model_Outbox_Email
         }
         catch(Exception $e) {
             Mage::logException($e);
-            
+            $h->log("Mail send exception: %s", $e->getMessage());
+
             $message = $e->getMessage() . "\nStackTrace:\n";
             $message.= $e->getTraceAsString();
             

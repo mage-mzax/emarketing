@@ -93,7 +93,7 @@ module.exports = function(grunt) {
     
     mzax.registerBuild(grunt, 'package', './package', {
         debug: false,
-        extraFiles: ['package.xml', 'LICENSE'],
+        extraFiles: ['package.xml'],
         compress:'./Mzax_Emarketing-<%= config.version %>.tgz'
     });
     

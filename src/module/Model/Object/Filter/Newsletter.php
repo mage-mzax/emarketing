@@ -48,7 +48,7 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
     
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
-        return $parent->hasBinding('customer_id', 'subscriber_id', 'subscriber_status');
+        return $parent->hasBinding('email', 'customer_id', 'subscriber_id', 'subscriber_status');
     }
     
     
@@ -64,6 +64,10 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
             if($query->hasBinding('subscriber_id')) {
                 $query->joinTableLeft('subscriber_id', 'newsletter/subscriber', 'subscriber');
             }
+            else if($query->hasBinding('email')) {
+                $query->joinTableLeft(array('subscriber_email' => 'email'), 'newsletter/subscriber', 'subscriber');
+            }
+
             else if($query->hasBinding('customer_id')) {
                 $query->joinTableLeft('customer_id', 'newsletter/subscriber', 'subscriber');
             }

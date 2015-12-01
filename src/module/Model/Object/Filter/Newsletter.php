@@ -75,8 +75,13 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
         }   
 
         $condition = $condition === 'is' ? '=' : '!=';
-        
-        $query->where("{subscriber_status} $condition ?", $status);
+
+        if($condition === 'is') {
+            $query->where("{subscriber_status} = ?", $status);
+        }
+        else {
+            $query->where("{subscriber_status} != ? OR {subscriber_status} IS NULL", $status);
+        }
     }
     
     

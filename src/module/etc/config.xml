@@ -143,9 +143,13 @@
         					<class>mzax_emarketing/outbox_transporter_sendgrid</class>
         				</sendgrid>
         				<mandrill>
-        					<title>Mandrill</title>
+        					<title>Mandrill (via SMTP)</title>
         					<class>mzax_emarketing/outbox_transporter_mandrill</class>
         				</mandrill>
+                        <mandrill_api>
+                            <title>Mandrill (via API call)</title>
+                            <class>mzax_emarketing/outbox_transporter_mandrillApi</class>
+                        </mandrill_api>
         				<file>
         					<title>File System (no emails, for debug only)</title>
         					<class>mzax_emarketing/outbox_transporter_file</class>
@@ -419,6 +423,9 @@
 				<mandrill_default_tags>Magento, eMarketing</mandrill_default_tags>
 				<mandrill_category_tags>1</mandrill_category_tags>
 				<mandrill_metatags>1</mandrill_metatags>
+                <mandrill_api_default_tags>Magento, eMarketing</mandrill_api_default_tags>
+                <mandrill_api_category_tags>1</mandrill_api_category_tags>
+                <mandrill_api_metatags>1</mandrill_api_metatags>
 			</email>
         </mzax_emarketing>
         <trans_email>

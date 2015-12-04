@@ -38,7 +38,16 @@ class Mzax_Emarketing_Model_Outbox_Email_Mail
      * @var Mzax_Emarketing_Model_Outbox_Email
      */
     protected $_outboxEmail;
-    
+
+
+
+
+    protected $_rawBodyHtml;
+
+
+
+    protected $_rawBodyText;
+
     
     /**
      * 
@@ -48,8 +57,72 @@ class Mzax_Emarketing_Model_Outbox_Email_Mail
     {
         parent::__construct(self::UTF8);
     }
-    
-    
+
+
+    /**
+     *
+     *
+     * @param string $html
+     * @param null $charset
+     * @param string $encoding
+     * @return $this
+     */
+    public function setBodyHtml($html, $charset = null, $encoding = Zend_Mime::ENCODING_QUOTEDPRINTABLE)
+    {
+        $this->_rawBodyHtml = $html;
+        return parent::setBodyHtml($html, $charset, $encoding);
+    }
+
+
+    public function getRawBodyHtml()
+    {
+        if($this->_rawBodyHtml) {
+            return $this->_rawBodyHtml;
+        }
+        if($this->_bodyHtml) {
+            return $this->_bodyHtml->getContent();
+        }
+        return null;
+    }
+
+
+
+
+
+
+
+    /**
+     * @param string $html
+     * @param null $charset
+     * @param string $encoding
+     * @return $this
+     */
+    public function setBodyText($txt, $charset = null, $encoding = Zend_Mime::ENCODING_QUOTEDPRINTABLE)
+    {
+        $this->_rawBodyText = $txt;
+        return parent::setBodyText($txt, $charset, $encoding);
+    }
+
+
+    /**
+     *
+     *
+     * @return null|string
+     */
+    public function getRawBodyText()
+    {
+        if($this->_rawBodyText) {
+            return $this->_rawBodyText;
+        }
+        if($this->_bodyText) {
+            return $this->_bodyText->getContent();
+        }
+        return null;
+    }
+
+
+
+
     /**
      * Set outbox email object
      * 

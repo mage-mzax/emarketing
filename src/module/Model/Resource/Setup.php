@@ -60,6 +60,16 @@ class Mzax_Emarketing_Model_Resource_Setup extends Mage_Eav_Model_Entity_Setup
         if( $tableName instanceof Varien_Db_Ddl_Table ) {
             return $tableName->getName();
         }
+
+        switch(strpos($tableName, '/'))
+        {
+            case false:
+                return $tableName;
+            case 0:
+                $tableName = 'mzax_emarketing' . $tableName;
+                break;
+        }
+
         return parent::getTable($tableName);
     }
     

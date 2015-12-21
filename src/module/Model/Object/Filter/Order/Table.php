@@ -80,6 +80,10 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Table
         $this->addColumn('is_virtual',           'Virtual',   'boolean');
         $this->addColumn('customer_is_guest',    'Guest Checkout',   'boolean');
         $this->addColumn('status',               'Status',   'multiselect', Mage::getSingleton('sales/order_config')->getStatuses());
+        $this->addColumn('customer_email',       'Customer Email',       'string');
+        $this->addColumn('customer_firstname',   'Customer Firstname',   'string');
+        $this->addColumn('customer_lastname',    'Customer Lastname',    'string');
+        $this->addColumn('shipping_description', 'Shipping Description', 'string');
     }
     
     

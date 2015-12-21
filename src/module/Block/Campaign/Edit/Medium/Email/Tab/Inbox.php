@@ -42,39 +42,60 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email_Tab_Inbox extends Mzax_Em
         }
         return $this->_campaign;
     }
-    
-    
-    
+
+
+    /**
+     * Apply campaign id
+     *
+     * @return $this
+     */
     protected function _prepareCollection()
     {
         $this->getCollection()->addFieldToFilter('campaign_id', $this->getCampaign()->getId());
         parent::_prepareCollection();
     }
-    
-    
-    
-    
+
+
+    /**
+     * Remove campaign column
+     *
+     * @return void
+     */
     protected function _prepareColumns()
     {
         parent::_prepareColumns();
         $this->removeColumn('campaign');
         
     }
-    
-    
 
+
+    /**
+     *
+     * @return string
+     */
     public function getGridUrl()
     {
-        return $this->getUrl('*/*/bounces', array('_current'=> true));
+        return $this->getUrl('*/emarketing_inbox/campaignGrid', array('_current'=> true));
     }
-    
+
+
+    /**
+     *
+     * @param $row
+     * @return string
+     */
     public function getRowUrl($row)
     {
         return $this->getUrl('*/emarketing_inbox/email', array('id'=>$row->getId()));
     }
-    
-    
-    
+
+
+
+    /**
+     * Make massaction js object public so it works for tabs
+     *
+     * @return string
+     */
     protected function getAdditionalJavascript()
     {
         return "window.{$this->getId()}_massactionJsObject = {$this->getId()}_massactionJsObject;";

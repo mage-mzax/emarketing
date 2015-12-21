@@ -33,7 +33,7 @@ module.exports = function(grunt) {
             html2text:{
                 source: './vendor/soundasleep/html2text',
                 base:   'Html2Text',
-                ignore: ['tests', 'html2text.php']
+                ignore: ['tests', 'html2text.php', 'convert.php']
             },
             uapphp:{
                 source: './vendor/ua-parser/uap-php',

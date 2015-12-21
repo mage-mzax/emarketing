@@ -236,6 +236,15 @@ grunt.registerMultiTask('phpns', 'Convert new PHP namespace to old', function() 
         
         // get_called_class might return something unexpected
         content = content.replace(/get_called_class\(\)/ig, "str_replace('_','\\\\', get_called_class())");
+        content = content.replace(/class_exists\((.*?)\)/gi, function(m, p1) {
+            return 'class_exists(' + p1.replace(/\\/g, '_') + ')';
+        });
+
+
+
+
+
+
         
         
         if(options.banner) {

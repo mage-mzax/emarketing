@@ -57,6 +57,7 @@ class Mzax_Emarketing_Model_Object_Subscriber extends Mzax_Emarketing_Model_Obje
         $query->addBinding('customer_id',       'customer_id');
         $query->addBinding('email',             'subscriber_email');
         $query->addBinding('subscriber_status', 'subscriber_status');
+        $query->addBinding('subscriber_store',  'store_id');
 
         return $query;
     }

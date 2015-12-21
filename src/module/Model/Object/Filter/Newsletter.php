@@ -72,6 +72,8 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
                 $query->joinTableLeft('customer_id', 'newsletter/subscriber', 'subscriber');
             }
             $query->addBinding('subscriber_status', 'subscriber.subscriber_status');
+            $query->addBinding('subscriber_store', 'subscriber.store_id');
+            $query->group();
         }   
 
         if($condition === 'is') {
@@ -80,6 +82,15 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
         else {
             $query->where("{subscriber_status} != ? OR {subscriber_status} IS NULL", $status);
         }
+
+
+        if(Mage::getStoreConfigFlag('mzax_emarketing/general/newsletter_multistore'))
+        {
+            if($storeId = $this->getParam('store_id') && $query->hasBinding('subscriber_store')) {
+                $query->where("{subscriber_store} = ?", $storeId);
+            }
+        }
+
     }
     
     

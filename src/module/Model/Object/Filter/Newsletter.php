@@ -74,8 +74,6 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
             $query->addBinding('subscriber_status', 'subscriber.subscriber_status');
         }   
 
-        $condition = $condition === 'is' ? '=' : '!=';
-
         if($condition === 'is') {
             $query->where("{subscriber_status} = ?", $status);
         }

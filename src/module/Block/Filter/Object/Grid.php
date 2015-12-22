@@ -152,6 +152,7 @@ class Mzax_Emarketing_Block_Filter_Object_Grid extends Mage_Adminhtml_Block_Widg
             'header'    => $this->__($object->getName() .' ID'),
             'index'     => 'id',
             'is_system' => true,
+            'filter'    => false,
             'width'	    => '50px',
             'renderer'  => 'mzax_emarketing/recipients_column_renderer_object',
             'object'    => $object,

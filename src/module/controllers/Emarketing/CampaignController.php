@@ -167,8 +167,8 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
 
     public function saveAction()
     {
-        if ($data = $this->getRequest()->getPost()) {
-    
+        if ($data = $this->getRequest()->getPost())
+        {
             $campaign = $this->_initCampaign('campaign_id');
             $filter = $this->getRequest()->getPost('filter', array());
     
@@ -181,6 +181,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
                         unset($data['campaign']['medium_data']);
                         $campaign->getMediumData()->addData($mediumData);
                     }
+                    $data['campaign'] = $this->_filterPostData($data['campaign']);
                     $campaign->addData($data['campaign']);
                 }
     
@@ -1354,8 +1355,23 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     
         return $campaign;
     }
-    
-    
+
+
+
+
+    /**
+     * Filtering posted data. Converting localized data if needed
+     *
+     * @param array
+     * @return array
+     */
+    protected function _filterPostData($data)
+    {
+        $data = $this->_filterDates($data, array('start_at', 'end_at'));
+        return $data;
+    }
+
+
     
     /**
      * ACL check 

@@ -37,7 +37,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
         $campaign = Mage::registry('current_campaign');
 
-        $outputFormat = Mage::app()->getLocale()->getDateTimeFormat(Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM);
+        $outputFormat = Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM);
         
         /**
          * Campaign

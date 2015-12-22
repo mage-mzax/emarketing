@@ -798,9 +798,22 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     {
         $this->_renderTab();
     }
-    
-    
-    
+
+
+
+    /**
+     * Recipients Tab Action
+     *
+     * @return void
+     */
+    public function recipientsGridAction()
+    {
+        $this->_renderTab('recipients_grid');
+    }
+
+
+
+
     /**
      * Bounce Tab Action
      * 

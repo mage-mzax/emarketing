@@ -18,10 +18,13 @@
  */
 
 /* @var $this Mzax_Emarketing_Block_Tracker_Test_Emulate */
+
+/* @var $grid Mage_Adminhtml_Block_Widget_Grid */
+$grid = $this->getGrid();
 ?>
 
 <div id="mzax-filter-date-range" class="mzax-filter-date-range">
-    <form id="test-date-range" action="<?php echo $this->getUrl('*/*/*', array('_current' => true, '_query' => array('from' => null, 'to' => null)))?>" method="get">
+    <form id="test-date-range" action="<?php echo $this->getUrl('*/*/*', array('_current' => true, '_query' => array('from' => null, 'to' => null, 'emulate' => 1)))?>" method="get">
         <div>
             <p><?php echo $this->__('Campaigns normaly check any date-time relative filters by using the current time. However durring testing your filters sometimes will not match any recipients, this is why you can emulate a time period as the current time.') ?></p>
             <label>
@@ -50,10 +53,22 @@ $('update-test').on('click', function(event) {
     });
     
     if($('edit_form') && $(this).descendantOf('edit_form')) {
+
         event.stop();
+        if(Ajax.activeRequestCount != 0) {
+            return false;
+        }
+
+
         var tab = $('mzax-filter-date-range').up(),
             url = '<?php echo $this->getUrl('*/*/*', array('_current' => true)) ?>';
-            
+
+        <?php if($grid): ?>
+
+        <?php echo $grid->getJsObjectName() ?>.reloadParams = data;
+        <?php echo $grid->getJsObjectName() ?>.reload(url);
+
+        <?php else: ?>
         new Ajax.Request(url, {
             parameters: data,
             onSuccess: function(transport) {
@@ -72,6 +87,8 @@ $('update-test').on('click', function(event) {
                 }
             }
         });
+
+        <?php endif ?>
         return false;
     }
     mzax.disable();

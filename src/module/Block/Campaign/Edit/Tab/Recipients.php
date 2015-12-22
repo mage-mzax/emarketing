@@ -44,11 +44,12 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients extends Mage_Adminhtml_
     
     protected function _prepareLayout()
     {
+        $grid = $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_recipients_grid');
+
         $emulate = $this->getLayout()->createBlock('mzax_emarketing/campaign_test_emulate');
         $emulate->setTemplate('mzax/emarketing/campaign/filters/emulate.phtml');
-        
-        $grid = $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_recipients_grid');
-        
+        $emulate->setGrid($grid);
+
         $this->setChild('emulate', $emulate);
         $this->setChild('grid', $grid);
     }
@@ -92,8 +93,15 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients extends Mage_Adminhtml_
         return $this->_campaign;
     }
     
-    
-    
-    
-    
+
+
+    protected function _toHtml()
+    {
+        if($this->getRequest()->getParam('emulate')) {
+            return $this->getGrid()->toHtml();
+        }
+        return parent::_toHtml();
+    }
+
+
 }

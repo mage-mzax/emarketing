@@ -66,12 +66,12 @@ class Mzax_Emarketing_Block_Campaign_Test_Emulate extends Mage_Adminhtml_Block_T
         }
     
         if($this->emulate('campaign')) {
-            /* @var $campagin Mzax_Emarketing_Model_Campaign */
-            $campagin = Mage::getModel('mzax_emarketing/campaign');
-            $campagin->load($emulate['campaign_id']);
+            /* @var $campaign Mzax_Emarketing_Model_Campaign */
+            $campaign = Mage::getModel('mzax_emarketing/campaign');
+            $campaign->load($emulate['campaign_id']);
     
-            if($campagin->getId()) {
-                $filter->setParam('campaign', $campagin);
+            if($campaign->getId()) {
+                $filter->setParam('campaign', $campaign);
             }
         }
     }

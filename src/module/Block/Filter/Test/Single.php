@@ -79,7 +79,7 @@ class Mzax_Emarketing_Block_Filter_Test_Single extends Mage_Adminhtml_Block_Temp
             $this->setGridSelect($grid->getCollection()->getSelect());
             $this->setTotal($total);
             
-            $result = $filter->checkIndexes(false);
+            $result = $filter->checkIndexes(true);
             if(is_string($result)) {
                 $this->setIndexCheckResult($result);
             }

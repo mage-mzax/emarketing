@@ -183,8 +183,63 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
             'is_not'  => $this->__('is not')
         );
     }
-    
-    
-    
+
+
+
+
+
+
+    /**
+     * The newsletter table is missing an index for the email
+     *
+     */
+    public function checkIndexes($create = false)
+    {
+        $adapter = $this->_getWriteAdapter();
+
+
+        $table = $this->_getTable('newsletter/subscriber');
+
+        $indexList = $adapter->getIndexList($table);
+
+        // check if we already created an index
+        if(isset($indexList['MZAX_IDX_EMAIL'])) {
+            return true;
+        }
+
+        // check for other indexes that can work
+        foreach($indexList as $index) {
+            switch(count($index['fields'])) {
+                case 1:
+                    if($index['fields'][0] === 'subscriber_email') {
+                        return true;
+                    }
+                    break;
+            }
+        }
+
+
+        if($create && $this->canCreateIndex()) {
+            try {
+                $adapter->addIndex($table, 'MZAX_IDX_EMAIL', array('subscriber_email'));
+                return true;
+            }
+            catch(Exception $e) {
+                if(Mage::getIsDeveloperMode()) {
+                    throw $e;
+                }
+                Mage::logException($e);
+                return $this->__('Failed to create an index for the table "%s". Please check logs.', $table);
+            }
+        }
+        else if($this->canCreateIndex()) {
+            return true;
+        }
+
+        return $this->__('It is recommended to set an index on "subscriber_email" for the table "%s" before using this filter.', $table);
+    }
+
+
+
 
 }

@@ -101,6 +101,7 @@ class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Ab
         
         $grid->addColumn('customer_id', array(
             'header'      => $this->__('Customer ID'),
+            'index'       => 'customer_id',
             'id_field'    => 'customer_id',
             'label_field' => 'customer_id',
             'is_system'   => true,

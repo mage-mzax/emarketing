@@ -171,7 +171,9 @@
             <action method="setCanLoadRulesJs"><flag>1</flag></action>
         </reference>
         <reference name="content">
-            <block type="mzax_emarketing/filter_test_single" name="filter_test"></block>
+            <block type="mzax_emarketing/filter_test_single" name="filter_test">
+                <block type="mzax_emarketing/campaign_test_emulate" template="mzax/emarketing/campaign/filters/emulate.phtml" as="emulate" name="filter.test.emulate" />
+            </block>
         </reference>
         <reference name="root">
         	<action method="addBodyClass"><class>mzax-emarketing-padding</class></action>

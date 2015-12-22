@@ -86,7 +86,7 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
 
         if(Mage::getStoreConfigFlag('mzax_emarketing/general/newsletter_multistore'))
         {
-            if($storeId = $this->getParam('store_id') && $query->hasBinding('subscriber_store')) {
+            if($storeId = $this->getStore() && $query->hasBinding('subscriber_store')) {
                 $query->where("{subscriber_store} = ?", $storeId);
             }
         }
@@ -134,16 +134,33 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
      */
     protected function prepareForm()
     {    
-        $conditionElment = $this->getSelectElement('condition', self::DEFAULT_CONDITION);
-        $subscribeElment = $this->getSelectElement('status', self::DEFAULT_STATUS);
+        $conditionElement = $this->getSelectElement('condition', self::DEFAULT_CONDITION);
+        $subscribeElement = $this->getSelectElement('status', self::DEFAULT_STATUS);
+        $storeElement = $this->getSelectElement('store', '0');
         
-        return $this->__('Newsletter subscription status %s %s.',
-            $conditionElment->toHtml(),
-            $subscribeElment->toHtml()
+        return $this->__('Newsletter subscription status for %s %s %s.',
+            $storeElement->toHtml(),
+            $conditionElement->toHtml(),
+            $subscribeElement->toHtml()
          );
     }
     
-    
+
+
+    protected function getStoreOptions()
+    {
+        $options = array(
+            '0' => $this->__('any store')
+        );
+
+        /* @see Mage_Adminhtml_Model_System_Config_Source_Store */
+        $stores = Mage::getSingleton('adminhtml/system_config_source_store')->toOptionArray();
+        foreach($stores as $store) {
+            $options[$store['value']] = $store['label'];
+        }
+
+        return $options;
+    }
     
     
     

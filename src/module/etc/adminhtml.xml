@@ -64,7 +64,12 @@
 							<sort_order>40</sort_order>
 							<action>adminhtml/emarketing_newsletter_list/index</action>
 						</newsletter_list>
-                    </children>
+						<settings translate="title" module="mzax_emarketing">
+							<title>Configuration</title>
+							<sort_order>1000</sort_order>
+							<action>adminhtml/system_config/edit/section/mzax_emarketing</action>
+						</settings>
+					</children>
                 </emarketing>
             </children>
          </promo>

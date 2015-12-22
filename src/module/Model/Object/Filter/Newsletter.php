@@ -86,7 +86,8 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
 
         if(Mage::getStoreConfigFlag('mzax_emarketing/general/newsletter_multistore'))
         {
-            if($storeId = $this->getStore() && $query->hasBinding('subscriber_store')) {
+            $storeId = (int) $this->getStore();
+            if($storeId && $query->hasBinding('subscriber_store')) {
                 $query->where("{subscriber_store} = ?", $storeId);
             }
         }

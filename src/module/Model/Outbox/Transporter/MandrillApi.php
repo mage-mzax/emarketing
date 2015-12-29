@@ -32,36 +32,36 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
     implements Mzax_Emarketing_Model_Outbox_Transporter_Interface
 {
 
-    const API_URI = 'https://mandrillapp.com/api/1.0/messages/send.json';
+    const API_URI = 'https://mandrillapp.com/api/1.0/';
 
 
-    
+
     /**
-     * 
+     *
      * @var string
      */
     protected $_defaultTags;
-    
-    
+
+
     /**
-     * 
+     *
      * @var boolean
      */
     protected $_categoryTags = false;
-    
-    
-    
+
+
+
     /**
-     * 
+     *
      * @var boolean
      */
     protected $_metaTags = true;
-    
-    
-    
+
+
+
     /**
      * Optional mandrill subacount
-     * 
+     *
      * @var string
      */
     protected $_subaccount;
@@ -73,21 +73,57 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
      * @var string
      */
     protected $_apiKey;
-    
 
-    
-    
-    
+
+
+
+
     /**
-     * 
-     * 
+     * Test API call
+     * or string with error message
+     *
+     * @param string $apiKey
+     * @param string $subaccountId
+     * @return string|true
+     */
+    public function testApi($apiKey, $subAccountId)
+    {
+        try {
+            $response = $this->_call('subaccounts/list', array('key' => $apiKey));
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }
+
+        // Sub-Account is optional
+        if(!$subAccountId) {
+            return true;
+        }
+
+        foreach($response as $subAccount) {
+            if($subAccount['id'] == $subAccountId) {
+                return true;
+            }
+        }
+
+        return sprintf('No sub-account exists with the id "%s"', $subAccountId);
+    }
+
+
+
+
+
+
+    /**
+     *
+     *
      * (non-PHPdoc)
      * @see Mzax_Emarketing_Model_Outbox_Transporter_Smtp::setup()
      */
     public function setup(Mzax_Emarketing_Model_Outbox_Email $email)
     {
         $store  = $email->getRecipient()->getStore();
-        
+
         $this->_apiKey       = Mage::getStoreConfig('mzax_emarketing/email/mandrill_api_key', $store);
         $this->_subaccount   = Mage::getStoreConfig('mzax_emarketing/email/mandrill_api_subaccount', $store);
 
@@ -102,14 +138,65 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
 
 
 
-    
+
     /***
      * (non-PHPdoc)
      * @see Zend_Mail_Transport_Abstract::send()
-     *
-     * @todo Clean Up
      */
     public function send(Zend_Mail $mail)
+    {
+        $message = $this->_prepareMessageData($mail);
+
+        $response = $this->_call('messages/send', array('message' => $message));
+
+        if($response[0]['status'] != 'sent') {
+            throw new Exception(
+                "Mandrill API status {$response[0]['status']}, reason: {$response[0]['reject_reason']}", 2);
+        }
+    }
+
+
+
+
+
+    /**
+     * Call action on API
+     *
+     * @param $action
+     * @param array $data
+     * @return array
+     * @throws Exception
+     * @throws Zend_Http_Client_Exception
+     */
+    protected function _call($action, $data = array())
+    {
+        if(!isset($data['key'])) {
+            $data['key'] = $this->_apiKey;
+        }
+
+        $request = Zend_Json::encode($data);
+
+        $client = new Zend_Http_Client(self::API_URI . $action . '.json');
+        $client->setMethod($client::POST);
+        $client->setRawData($request);
+
+        $response = $client->request();
+
+        return $this->_processResponse($response);
+    }
+
+
+
+
+
+    /**
+     * Convert Zend_Mail object to a valid API array
+     *
+     * @see https://mandrillapp.com/api/docs/messages.JSON.html
+     * @param Zend_Mail $mail
+     * @return array
+     */
+    protected function _prepareMessageData(Zend_Mail $mail)
     {
         $headers = $mail->getHeaders();
         $from = $this->_decodeAddressHeader($headers['From'][0]);
@@ -147,34 +234,34 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
 
         // @see https://mandrill.zendesk.com/hc/en-us/articles/205582117-Using-SMTP-Headers-to-customize-your-messages#tag-your-messages
         $tags = array();
-         
+
         // @see https://mandrill.zendesk.com/hc/en-us/articles/205582117-Using-SMTP-Headers-to-customize-your-messages#use-custom-metadata
         $metadata = array();
-        
-        
+
+
         if(is_array($this->_defaultTags)) {
             $tags = $this->_defaultTags;
         }
-        
+
         if($mail instanceof Mzax_Emarketing_Model_Outbox_Email_Mail)
         {
             $message['html'] = $mail->getRawBodyHtml();
             $message['text'] = $mail->getRawBodyText();
-            
+
             $recipient = $mail->getRecipient();
             $campaign  = $recipient->getCampaign();
-            
+
             if($this->_categoryTags) {
                 $tags = array_merge($campaign->getTags(), $tags);
             }
-            
+
             // there is 200 byte limit - keep things short
             if($this->_metaTags) {
                 $metadata['c_name'] = $campaign->getName();
                 $metadata['c_id']   = $campaign->getId();
                 $metadata['r_id']   = $recipient->getId();
                 $metadata['v_id']   = $recipient->getVariationId();
-                
+
                 if(strlen($metadata['c_name']) > 100) {
                     $metadata['c_name'] = substr($metadata['c_name'], 0, 97) . '...';
                 }
@@ -184,7 +271,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         $message['metadata'] = array();
         $message['tags'] = array();
 
-        
+
         if(!empty($tags)) {
             $message['tags'] = $tags;
         }
@@ -195,44 +282,33 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
             $message['subaccount'] = $this->_subaccount;
         }
 
-
-        $request = array(
-            'key' => $this->_apiKey,
-            'message' => $message
-        );
+        return $message;
+    }
 
 
-        $request = Zend_Json::encode($request);
 
 
-        $client = new Zend_Http_Client(self::API_URI);
-        $client->setMethod($client::POST);
-        $client->setRawData($request);
-
-        $response = $client->request();
-
-
-        if($response->getStatus() != 200) {
-            throw new Exception("Received http status {$response->getStatus()} from Mandrill API, expected 200");
-        }
-
+    /**
+     * Process Mandrill API response
+     *
+     * @param Zend_Http_Response $response
+     * @return array
+     * @throws Exception
+     */
+    protected function _processResponse(Zend_Http_Response $response)
+    {
         try {
-            $responseJson = Zend_Json::decode($response->getBody());
+            $data = Zend_Json::decode($response->getBody());
         }
         catch(Exception $e) {
             throw new Exception("Unexpected API return value", 1);
         }
 
-        if(!is_array($responseJson) || !isset($responseJson[0])) {
-            throw new Exception("Unexpected API return value", 2);
+        if($response->getStatus() != 200) {
+            throw new Exception("Mandrill API Error: {$data['message']}", $data['code']);
         }
 
-        if($responseJson[0]['status'] != 'sent') {
-            throw new Exception(
-                "Mandrill API status {$responseJson[0]['status']}, reason: {$responseJson[0]['reject_reason']}", 2);
-        }
-
-        return true;
+        return $data;
     }
 
 
@@ -262,5 +338,5 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
     }
 
 
-    
+
 }

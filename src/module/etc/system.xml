@@ -700,6 +700,14 @@
 
 
                         <!-- MANDRILL API SETTINGS -->
+                        <mandrill_api_test translate="label">
+                            <label>API Test</label>
+                            <frontend_model>mzax_emarketing/system_config_form_field_mandrillApi</frontend_model>
+                            <sort_order>1010</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </mandrill_api_test>
                         <mandrill_api_key translate="label comment">
                             <label>API Key</label>
                             <frontend_type>password</frontend_type>

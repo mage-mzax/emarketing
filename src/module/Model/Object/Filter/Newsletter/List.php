@@ -34,7 +34,7 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter_List
 {
     
     const DEFAULT_STATUS    = Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED;
-    const DEFAULT_CONDITION = 'is';
+    const DEFAULT_CONDITION = 'in';
 
 
     /**
@@ -61,23 +61,40 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter_List
      * @param Mzax_Emarketing_Db_Select $query
      */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
-    {        
-        $condition = $this->getDataSetDefault('condition', self::DEFAULT_CONDITION);
-        $status    = $this->getDataSetDefault('status',    self::DEFAULT_STATUS);
-
-
+    {
         if($query->hasBinding('subscriber_id')) {
+            $query->joinTableLeft('subscriber_id', 'mzax_emarketing/newsletter_list_subscriber', 'list_subscriber');
+        }
+        else if($query->hasBinding('email')) {
+            $query->addBinding('subscriber_id', 'subscriber.subscriber_id');
+            $query->joinTableLeft(array('subscriber_email' => 'email'), 'newsletter/subscriber', 'subscriber');
             $query->joinTableLeft('subscriber_id', 'mzax_emarketing/newsletter_list_subscriber', 'list_subscriber');
         }
         else if($query->hasBinding('customer_id')) {
             $query->addBinding('subscriber_id', 'subscriber.subscriber_id');
-            $query->joinTable('customer_id', 'newsletter/subscriber', 'subscriber');
-            $query->joinTable('subscriber_id', 'mzax_emarketing/newsletter_list_subscriber', 'list_subscriber');
+            $query->joinTableLeft('customer_id', 'newsletter/subscriber', 'subscriber');
+            $query->joinTableLeft('subscriber_id', 'mzax_emarketing/newsletter_list_subscriber', 'list_subscriber');
         }
 
+        $condition = $this->getDataSetDefault('condition', self::DEFAULT_CONDITION);
+
         $listIds = $this->_explode($this->getLists());
-        $query->where("`list_subscriber`.`list_status` = ?", Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED);
-        $query->where("`list_subscriber`.`list_id` IN(?)", $listIds);
+        $status  = Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED;
+
+        if($condition == 'in') {
+            $query->where("`list_subscriber`.`list_status` = ?", $status);
+            $query->where("`list_subscriber`.`list_id` IN(?)", $listIds);
+        }
+        else {
+            $adapter = $this->_getReadAdapter();
+            $where = array();
+            $where[] = $adapter->quoteInto("`list_subscriber`.`list_status` = ?", $status);
+            $where[] = $adapter->quoteInto("`list_subscriber`.`list_id` IN(?)", $listIds);
+            $where = implode(' AND ', $where);
+
+            $query->having('SUM(IF(' . $where . ', 1, 0)) = 0');
+        }
+
         $query->group();
         $query->addBinding('list_id', 'list_subscriber.list_id');
     }
@@ -120,11 +137,16 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter_List
     protected function prepareForm()
     {
         $listElement      = $this->getMultiSelectElement('lists');
+        $condElement      = $this->getSelectElement('condition');
 
-        return $this->__('Subscriber belongs to one of the following lists: %s.',
+        return $this->__('Subscriber belongs to %s of the following lists: %s.',
+            $condElement->toHtml(),
             $listElement->toHtml()
          );
     }
+
+
+
 
 
     /**
@@ -135,6 +157,70 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter_List
         /* @var $collection Mzax_Emarketing_Model_Resource_Newsletter_List_Collection */
         $collection = Mage::getResourceModel('mzax_emarketing/newsletter_list_collection');
         return $collection->toOptionHash();
+    }
+
+
+
+
+    protected function getConditionOptions()
+    {
+        return array(
+            'in'      => $this->__('one'),
+            'not in'  => $this->__('none')
+        );
+    }
+
+
+
+
+    /**
+     * The newsletter table is missing an index for the email
+     *
+     */
+    public function checkIndexes($create = false)
+    {
+        $adapter = $this->_getWriteAdapter();
+
+
+        $table = $this->_getTable('newsletter/subscriber');
+
+        $indexList = $adapter->getIndexList($table);
+
+        // check if we already created an index
+        if(isset($indexList['MZAX_IDX_EMAIL'])) {
+            return true;
+        }
+
+        // check for other indexes that can work
+        foreach($indexList as $index) {
+            switch(count($index['fields'])) {
+                case 1:
+                    if($index['fields'][0] === 'subscriber_email') {
+                        return true;
+                    }
+                    break;
+            }
+        }
+
+
+        if($create && $this->canCreateIndex()) {
+            try {
+                $adapter->addIndex($table, 'MZAX_IDX_EMAIL', array('subscriber_email'));
+                return true;
+            }
+            catch(Exception $e) {
+                if(Mage::getIsDeveloperMode()) {
+                    throw $e;
+                }
+                Mage::logException($e);
+                return $this->__('Failed to create an index for the table "%s". Please check logs.', $table);
+            }
+        }
+        else if($this->canCreateIndex()) {
+            return true;
+        }
+
+        return $this->__('It is recommended to set an index on "subscriber_email" for the table "%s" before using this filter.', $table);
     }
 
 

@@ -78,6 +78,9 @@ class Mzax_Emarketing_Model_Object_Filter_Quote_Table
         $this->addColumn('is_virtual',           'Virtual',        'boolean');
         $this->addColumn('customer_is_guest',    'Guest Checkout', 'boolean');
         $this->addColumn('base_subtotal_with_discount', 'Subtotal with Discount',   'currency');
+        $this->addColumn('customer_email',       'Customer Email',       'string');
+        $this->addColumn('customer_firstname',   'Customer Firstname',   'string');
+        $this->addColumn('customer_lastname',    'Customer Lastname',    'string');
     }
     
     

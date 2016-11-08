@@ -9,7 +9,7 @@
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
  * 
- * @version     {{version}}
+ * @version     0.4.10
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -584,10 +584,13 @@ class Mzax_Emarketing_Model_Outbox_Email
         $store  = $this->getCampaign()->getStore();
         
         $transporter = Mage::getStoreConfig('mzax_emarketing/email/transporter', $store);
+
+        $isSMTPpro = Mage::getStoreConfig('mzax_emarketing/email/use_smtppro', $store);
+        if($isSMTPpro==1)
+            $transporter = "smtpro";
+
         $transporter = Mage::getSingleton('mzax_emarketing/outbox_transporter')->factory($transporter);
-        $transporter->setup($this);
-        
-        
+
         $wrapper = new Varien_Object();
         $wrapper->setTransporter($transporter);
         Mage::dispatchEvent('mzax_emarketing_email_prepare_transport', array(

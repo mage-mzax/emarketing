@@ -539,6 +539,18 @@ class Mzax_Emarketing_Model_Outbox_Email
     
     
     
+
+    /**
+     * Is purged
+     *
+     * @return boolean
+     */
+    public function isPurged()
+    {
+        return (bool) $this->getData('purged');
+    }
+
+
     /**
      * Can email be send right now
      * Check any filters (e.g. Time and Day) and make

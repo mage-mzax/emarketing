@@ -62,7 +62,7 @@ class Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder
      */
     public function hasBinding($name)
     {
-        if($this->_select) {
+        if ($this->_select) {
             return $this->_select->hasBinding($name);
         }
         return false;
@@ -76,7 +76,7 @@ class Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder
      */
     public function createBinding()
     {
-        if(!$this->_select) {
+        if (!$this->_select) {
             throw new Exception("Unable to create binding, no select defined");
         }
         $select = clone $this->_select;
@@ -97,9 +97,9 @@ class Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder
         $unions = array();
         
         /* @var $select Mzax_Emarketing_Db_Select */
-        foreach($this->_bindings as $select) {
+        foreach ($this->_bindings as $select) {
             // skip if not locked
-            if(!$select->locked()) {
+            if (!$select->locked()) {
                 continue;
             }
             // skip if assemble fails
@@ -107,13 +107,13 @@ class Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder
                 $select->assemble();
             }
             catch(Mzax_Db_Select_Exception $e) {
-                if(Mage::getIsDeveloperMode()) {
+                if (Mage::getIsDeveloperMode()) {
                     throw $e;
                 }
                 Mage::logException($e);
             }
             catch(Exception $e) {
-                if(Mage::getIsDeveloperMode()) {
+                if (Mage::getIsDeveloperMode()) {
                     throw $e;
                 }
                 
@@ -201,24 +201,24 @@ class Mzax_Emarketing_Model_Resource_Recipient_Goal_BinderOld
     public function getSelect()
     {
         $unions = array();
-        if($this->_direct) {
+        if ($this->_direct) {
             $unions[] = $this->_direct;
         }
         
         $unions = array_merge($unions, $this->_unionSelects);
         
-        if(empty($unions)) {
+        if (empty($unions)) {
             return null;
         }
         
         $final = array();
-        foreach($unions as $select) {
-            if($this->_prepareSelect($select)) {
+        foreach ($unions as $select) {
+            if ($this->_prepareSelect($select)) {
                 $final[] = $select;
             }
         }
         
-        if(count($final) === 1) {
+        if (count($final) === 1) {
             $select = $final[0];
         }
         else {
@@ -281,7 +281,7 @@ class Mzax_Emarketing_Model_Resource_Recipient_Goal_BinderOld
      */
     public function getBinding($name)
     {
-        if(isset($this->_bindings[$name])) {
+        if (isset($this->_bindings[$name])) {
             return $this->_bindings[$name]['field'];
         }
         return false;
@@ -333,11 +333,11 @@ class Mzax_Emarketing_Model_Resource_Recipient_Goal_BinderOld
         $fromPart = $select->getPart(Zend_Db_Select::FROM);
         
         // the recipient table is required!
-        if(!isset($fromPart['recipient'])) {
+        if (!isset($fromPart['recipient'])) {
             return false;
         }
         
-        foreach($this->_where as $where) {
+        foreach ($this->_where as $where) {
             $select->where($where);
         }
         

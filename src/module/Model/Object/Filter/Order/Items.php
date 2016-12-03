@@ -96,7 +96,7 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Items
         $select = $this->_combineConditions($conditions, $aggregator, $expectation);
         
         // if value can match zero include all records
-        if($this->checkIfMatchZero('value')) {
+        if ($this->checkIfMatchZero('value')) {
         
             $zeroRecords = $this->getQuery();
             // assume all orders have items, no right join required
@@ -129,7 +129,7 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Items
         parent::prepareGridColumns($grid);
     
         $sumOptions = $this->getSumOptions();
-        if(isset($sumOptions[$this->getSum()])) {
+        if (isset($sumOptions[$this->getSum()])) {
             $title = ucwords($sumOptions[$this->getSum()]);
         }
         else {

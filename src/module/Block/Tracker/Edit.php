@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -19,8 +19,8 @@
 
 
 /**
- * 
- * 
+ *
+ *
  * @author Jacob Siefer
  * @license {{license}}
  * @version {{version}}
@@ -30,7 +30,7 @@ class Mzax_Emarketing_Block_Tracker_Edit extends Mage_Adminhtml_Block_Widget_For
     public function __construct()
     {
         $this->_objectId = 'id';
-        
+
         $this->_blockGroup = 'mzax_emarketing';
         $this->_controller = 'tracker';
 
@@ -42,13 +42,13 @@ class Mzax_Emarketing_Block_Tracker_Edit extends Mage_Adminhtml_Block_Widget_For
     }
 
 
-    
+
     public function getHeaderText()
     {
         $tracker = Mage::registry('current_tracker');
         if ($tracker->getId()) {
             $title = $this->htmlEscape($tracker->getTitle());
-            if($tracker->isDefault()) {
+            if ($tracker->isDefault()) {
                 return $title . ' <sup>' . $this->__('[Default]') . '</sup>';
             }
             return $title;
@@ -62,10 +62,10 @@ class Mzax_Emarketing_Block_Tracker_Edit extends Mage_Adminhtml_Block_Widget_For
     {
         return $this->getUrl('*/*/validate', array('_current'=>true));
     }
-    
-    
-    
-    
+
+
+
+
     protected function _prepareLayout()
     {
         $tracker = Mage::registry('current_tracker');
@@ -75,8 +75,8 @@ class Mzax_Emarketing_Block_Tracker_Edit extends Mage_Adminhtml_Block_Widget_For
                 'onclick'   => 'saveAndContinueEdit(\''.$this->_getSaveAndContinueUrl().'\')',
                 'class' => 'save'
             ), 10);
-        	
-        	if($tracker->isDefault()) {
+
+        	if ($tracker->isDefault()) {
         	    $this->_removeButton('delete');
         	}
         }
@@ -87,8 +87,8 @@ class Mzax_Emarketing_Block_Tracker_Edit extends Mage_Adminhtml_Block_Widget_For
 
     	return parent::_prepareLayout();
     }
-    
-    
+
+
     /**
      * Get form action URL
      *
@@ -101,10 +101,10 @@ class Mzax_Emarketing_Block_Tracker_Edit extends Mage_Adminhtml_Block_Widget_For
         }
         return $this->getUrl('*/*/save');
     }
-    
-    
-    
-    
+
+
+
+
     protected function _getSaveAndContinueUrl()
     {
     	return $this->getUrl('*/*/save', array(

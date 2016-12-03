@@ -63,12 +63,12 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List
      */
     public function addAllSubscribers($list)
     {
-        if( $list instanceof Varien_Object ) {
+        if ( $list instanceof Varien_Object ) {
             $list = $list->getId();
         }
         $list = (int) $list;
 
-        if($list) {
+        if ($list) {
             $adapter = $this->_getWriteAdapter();
 
             $select = $adapter->select()
@@ -97,12 +97,12 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List
      */
     public function addSubscribers($list, array $subscribers)
     {
-        if( $list instanceof Varien_Object ) {
+        if ( $list instanceof Varien_Object ) {
             $list = $list->getId();
         }
         $list = (int) $list;
 
-        if($list) {
+        if ($list) {
             $adapter = $this->_getWriteAdapter();
 
             $select = $adapter->select()
@@ -134,12 +134,12 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List
      */
     public function removeAllSubscribers($list)
     {
-        if( $list instanceof Varien_Object ) {
+        if ( $list instanceof Varien_Object ) {
             $list = $list->getId();
         }
         $list = (int) $list;
 
-        if($list) {
+        if ($list) {
             $adapter = $this->_getWriteAdapter();
 
             $select = $adapter->select()
@@ -169,12 +169,12 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List
      */
     public function removeSubscribers($list, array $subscribers)
     {
-        if( $list instanceof Varien_Object ) {
+        if ( $list instanceof Varien_Object ) {
             $list = $list->getId();
         }
         $list = (int) $list;
 
-        if($list) {
+        if ($list) {
             $adapter = $this->_getWriteAdapter();
 
             $select = $adapter->select()
@@ -208,13 +208,13 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List
      */
     public function subscribeToAutoLists($subscriber)
     {
-        if($subscriber instanceof Varien_Object) {
+        if ($subscriber instanceof Varien_Object) {
             $subscriber = $subscriber->getId();
         }
 
         $subscriber = (int) $subscriber;
 
-        if($subscriber) {
+        if ($subscriber) {
             $adapter = $this->_getReadAdapter();
 
             $select = $adapter->select()

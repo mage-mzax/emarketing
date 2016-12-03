@@ -86,7 +86,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Customer
     public function bindRecipients(Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder $binder)
     {
         
-        if($binder->hasBinding('customer_id')) {
+        if ($binder->hasBinding('customer_id')) {
             $binder->createBinding()
                 ->joinTable(array('object_id' => '{customer_id}'), 'recipient')
                 ->addBinding('campaign_id',  'recipient.campaign_id')
@@ -97,7 +97,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Customer
         }
         
         
-        if($binder->hasBinding('email')) {
+        if ($binder->hasBinding('email')) {
             $binder->createBinding()
                 ->joinTable(array('address'    => '{email}'), 'recipient_address', 'address')
                 ->joinTable(array('address_id' => '`address`.`address_id`'), 'recipient')

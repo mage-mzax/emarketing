@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -26,8 +26,8 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
         parent::_prepareLayout();
     }
 
-    
-    
+
+
     public function initForm()
     {
         $form = new Varien_Data_Form();
@@ -38,7 +38,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
         $campaign = Mage::registry('current_campaign');
 
         $outputFormat = Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM);
-        
+
         /**
          * Campaign
          */
@@ -47,27 +47,27 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
             'offer'    => $this->__('Would you like to send to different recipients? <a href="%s" target="_blank">Contact me</a>!', 'http://www.mzax.de/emarketing/recipients.html?utm_source=extension&utm_medium=link&utm_content=campaign-settings&utm_campaign=needmore'),
             'continue' => false
         ));
-        
-        if(!$campaign->getId()) {
+
+        if (!$campaign->getId()) {
             $renderer = $this->getLayout()->createBlock('adminhtml/widget_form_renderer_fieldset')
                 ->setTemplate('mzax/emarketing/campaign/fieldset-offer.phtml');
             $fieldset->setRenderer($renderer);
         }
-        
-        
+
+
         $fieldset->addField('medium','hidden', array(
             'name' => 'medium'
         ));
-        
-        
-        if($campaign->getPreset()) {
+
+
+        if ($campaign->getPreset()) {
             $fieldset->addField('preset_name','hidden', array(
                 'name'  => 'preset_name',
                 'value' => $campaign->getPreset()->getName()
             ));
         }
-        
-        
+
+
 
         $fieldset->addField('name','text', array(
             'name'     => 'name',
@@ -75,9 +75,9 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
             'label'    => $this->__('Campaign Name'),
             'title'    => $this->__('Campaign Name'),
         ));
-        
-        
-        if($campaign->getId()) {
+
+
+        if ($campaign->getId()) {
             $fieldset->addField('description','textarea', array(
                 'name'     => 'description',
                 'required' => false,
@@ -86,7 +86,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'title'    => $this->__('Description'),
                 'note'     => $this->__("For internal use only"),
             ));
-            
+
             $fieldset->addField('tags','text', array(
                 'name'     => 'tags',
                 'required' => false,
@@ -95,10 +95,10 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'note'     => $this->__("Space separated tags for internal organising purpose only (e.g. draft reminder ad need-review…)"),
             ));
         }
-        
-        
+
+
         // don't show when creating by presets
-        if(!$campaign->getPreset()) {
+        if (!$campaign->getPreset()) {
             $fieldset->addField('provider','select', array(
                 'name'      => 'provider',
                 'label'     => $this->__('Campaign Recipient'),
@@ -119,8 +119,8 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'name' => 'provider'
             ));
         }
-        
-        
+
+
         $fieldset->addField('store_id', 'select', array(
             'name'     => 'store_id',
             'label'    => $this->__('Sender Store'),
@@ -128,10 +128,10 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
             'values'   => Mage::getModel('adminhtml/system_config_source_store')->toOptionArray(),
             'required' => true,
         ));
-        
-        
+
+
         // don't show when creating by presets
-        if(!$campaign->getPreset()) 
+        if (!$campaign->getPreset())
         {
             $fieldset->addField('check_frequency', 'select', array(
                 'label'     => $this->__('Check Frequency'),
@@ -151,7 +151,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'value'    => '720',
                 'note'     => $this->__("How often to check for new recipients, e.g. Birthdays will do once a day, while abandon carts need to check all the time."),
             ));
-            
+
             $fieldset->addField('min_resend_interval', 'select', array(
                 'label'     => $this->__('Minimum Resend Interval'),
                 'title'     => $this->__('Minimum Resend Interval'),
@@ -188,13 +188,13 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
 
 
         }
-        
 
-        
-        
-        
-        if($campaign->getId()) {
-                
+
+
+
+
+        if ($campaign->getId()) {
+
             $fieldset->addField('start_at','date',array(
                 'name'      => 'start_at',
                 'time'      => true,
@@ -211,8 +211,8 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'label'     => $this->__('Date End'),
                 'image'     => $this->getSkinUrl('images/grid-cal.gif')
             ));
-            
-            
+
+
             /**
              * Ab Test
              */
@@ -220,8 +220,8 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'note'    => "If enabled, the user will be logged in if possible.",
                 'legend'  => $this->__('AB Testing'),
             ));
-            
-            
+
+
             $abtestFieldset->addField('abtest_enable', 'select', array(
                 'label'     => $this->__('Enabled'),
                 'title'     => $this->__('Enabled'),
@@ -233,7 +233,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 ),
                 'value' => '0'
             ));
-            
+
             $abtestFieldset->addField('abtest_traffic', 'text', array(
                 'name'      => 'abtest_traffic',
                 'label'     => $this->__('Traffic Percentage'),
@@ -241,17 +241,17 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'required'  => true,
                 'value'     => '100'
             ));
-            
-            
-            
-    
+
+
+
+
             /**
              * Campaign
              */
             $advanced = $form->addFieldset('advanced_fieldset',
                 array('legend'=>$this->__('Advanced Settings'))
             );
-            
+
 
             $advanced->addField('autologin', 'select', array(
                 'label'     => $this->__('Autologin'),
@@ -265,9 +265,9 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 ),
                 'value' => '1'
             ));
-            
-            
-            
+
+
+
             $advanced->addField('expire_time', 'select', array(
                 'name'      => 'expire_time',
                 'label'     => $this->__('Expire Time'),
@@ -291,26 +291,26 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'value'     => '120',
                 'note'      => $this->__("When an recipient is queued things can get delayed do to technical issue, domain throttling or other things. You can define an expire time so that if the message has not been sent in the given time frame, don’t send it anymore."),
             ));
-            
-            
-            
-            
+
+
+
+
             $advanced->addField('identity','select', array(
                 'name'     => 'identity',
                 'label'    => $this->__('Email Sender'),
                 'title'    => $this->__('Email Sender'),
                 'values'   => Mage::getModel('adminhtml/system_config_source_email_identity')->toOptionArray(),
                 'required' => true,
-                'note'     => $this->__("The sender identity to use when sending out the emails. Keep in mind that email bounces will get send back to that email address in case you have defined an inbox to check.")                    
+                'note'     => $this->__("The sender identity to use when sending out the emails. Keep in mind that email bounces will get send back to that email address in case you have defined an inbox to check.")
             ));
-            
-            
-            
+
+
+
             $trackers = Mage::getResourceSingleton('mzax_emarketing/conversion_tracker_collection')->toOptionArray();
-            
+
             array_unshift($trackers, array('value' => '0', 'label' => $this->__("Use Config Default Tracker")));
-            
-            
+
+
             $advanced->addField('default_tracker_id','select', array(
                 'name'     => 'default_tracker_id',
                 'label'    => $this->__('Default Conversion Tracker'),
@@ -318,21 +318,21 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'values'   => $trackers,
                 'required' => true,
             ));
-            
-            
-            if($medium = $campaign->getMedium()) {
+
+
+            if ($medium = $campaign->getMedium()) {
                 $medium->initSettingsForm($form, $campaign);
                 $form->addValues($campaign->getMediumData()->getData());
             }
-            
+
         } // has id
-            
-        
+
+
         $form->addValues($campaign->getData());
         $this->setForm($form);
-        
+
         return $this;
-        
+
 
     }
 }

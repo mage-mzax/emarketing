@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -27,16 +27,16 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email_Tab_Inbox extends Mzax_Em
      * @var Mzax_Emarketing_Model_Campaign
      */
     protected $_campaign;
-    
-    
-    
+
+
+
     /**
      *
      * @return Mzax_Emarketing_Model_Campaign
      */
     public function getCampaign()
     {
-        if(!$this->_campaign) {
+        if (!$this->_campaign) {
             $campaignId = (int) $this->getRequest()->getParam('id');
             $this->_campaign = Mage::getModel('mzax_emarketing/campaign')->load($campaignId);
         }
@@ -65,7 +65,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email_Tab_Inbox extends Mzax_Em
     {
         parent::_prepareColumns();
         $this->removeColumn('campaign');
-        
+
     }
 
 

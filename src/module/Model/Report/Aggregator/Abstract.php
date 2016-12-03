@@ -78,7 +78,7 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Abstract
      */
     protected function truncateTable($table = null)
     {
-        if(!$table) {
+        if (!$table) {
             $table = $this->_reportTable;
         }
         
@@ -97,7 +97,7 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Abstract
      */
     protected function delete($where, $table = null)
     {
-        if(!$table) {
+        if (!$table) {
             $table = $this->_reportTable;
         }
                 
@@ -134,10 +134,10 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Abstract
      */
     protected function log($message)
     {
-        if(func_num_args() > 1) {
+        if (func_num_args() > 1) {
             $message = call_user_func_array('sprintf', func_get_args());
         }
-        if($this->_options->getVerbose()) {
+        if ($this->_options->getVerbose()) {
             echo $message . "\n";
             flush();
         }
@@ -225,7 +225,7 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Abstract
     protected function _select($table = null, $alias = null, $cols = null)
     {
         $select = new Mzax_Emarketing_Db_Select($this->_getWriteAdapter());
-        if($table) {
+        if ($table) {
             $select->from($this->_getTable($table, $alias), $cols);
         }
         return $select;
@@ -241,11 +241,11 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Abstract
      */
     protected function _getTable($table, $alias = null)
     {
-        if($table instanceof Zend_Db_Select) {
+        if ($table instanceof Zend_Db_Select) {
             return array($alias => $table);
         }
         $table = $this->getResourceHelper()->getTable($table);
-        if($alias) {
+        if ($alias) {
             return array($alias => $table);
         }
         return $table;
@@ -325,7 +325,7 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Abstract
     {
         $adapter = $this->_getWriteAdapter();
         $fieldList = array();
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $fieldList[] = $adapter->quoteIdentifier($field);
         }
         return implode(", ", $fieldList);
@@ -346,7 +346,7 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Abstract
         $write = $this->_getWriteAdapter();
         $updateList = array();
     
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $field = $write->quoteIdentifier($field);
             $updateList[] = "$field = VALUES($field)";
         }
@@ -381,11 +381,11 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Abstract
     protected function applyDateFilter(Mzax_Emarketing_Db_Select $select, $lastRecord = null)
     {
         $incremental = $this->getOption('incremental');
-        if($incremental && !$this->getOption('full')) {
-            if( $lastRecord === null ) {
+        if ($incremental && !$this->getOption('full')) {
+            if ( $lastRecord === null ) {
                 $lastRecord = $this->getLastRecordTime();
             }
-            if($lastRecord && $select->hasBinding('date_filter') ) {
+            if ($lastRecord && $select->hasBinding('date_filter') ) {
                 $select->where("{date_filter} >= {$this->getIncrementalSql()}", $lastRecord);
             }
         }
@@ -404,7 +404,7 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Abstract
      */
     public function getLastRecordTime()
     {
-        if(!$this->_lastRecordTime && $this->_options) {
+        if (!$this->_lastRecordTime && $this->_options) {
             $this->_lastRecordTime = $this->_getLastRecordTime();
         }
         return $this->_lastRecordTime;
@@ -433,11 +433,11 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Abstract
     {
         $gmtOffset = (int) Mage::app()->getLocale()->storeDate(Mage_Core_Model_App::ADMIN_STORE_ID)->getGmtOffset()/60;
         
-        if($store) {
+        if ($store) {
             $adapter = $this->_getWriteAdapter();
             
             /* @var $store Mage_Core_Model_Store */
-            foreach(Mage::app()->getStores() as $store) {
+            foreach (Mage::app()->getStores() as $store) {
                 $storeGmtOffset = Mage::app()->getLocale()->storeDate($store)->getGmtOffset()/60;
                 $gmtOffset = $adapter->getCheckSql("{store_id} = {$store->getId()}", $storeGmtOffset, $gmtOffset);
             }
@@ -459,7 +459,7 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Abstract
      */
     protected function getLocalTimeSql($field, $gmtOffset = null)
     {
-        if( $gmtOffset !== null ) {
+        if ( $gmtOffset !== null ) {
             $gmtOffset = $this->_getWriteAdapter()->getIfNullSql($gmtOffset, $this->getDefaultGmtOffset());
         }
         else {

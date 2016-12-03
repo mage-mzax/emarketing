@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -18,7 +18,7 @@
  */
 
 /**
- * 
+ *
  * @method string getCreatedAt()
  * @method string getUpdatedAt()
  * @method string getName()
@@ -27,14 +27,14 @@
  * @method string getAutoSubscribe()
  *
  * @method Mzax_Emarketing_Model_Resource_Newsletter_List getResource()
- * 
+ *
  * @author Jacob Siefer
  *
  */
 class Mzax_Emarketing_Model_Newsletter_List
-    extends Mage_Core_Model_Abstract 
+    extends Mage_Core_Model_Abstract
 {
-    
+
     /**
      * Prefix of model events names
      *
@@ -50,10 +50,10 @@ class Mzax_Emarketing_Model_Newsletter_List
      * @var string
      */
     protected $_eventObject = 'list';
-    
-    
-    
-    
+
+
+
+
 
     protected function _construct()
     {
@@ -67,10 +67,10 @@ class Mzax_Emarketing_Model_Newsletter_List
     {
         // serialize store id
         $storeIds = $this->getData('store_ids');
-        if(empty($storeIds)) {
+        if (empty($storeIds)) {
             $storeIds = Mage_Core_Model_App::ADMIN_STORE_ID;
         }
-        if(is_array($storeIds)) {
+        if (is_array($storeIds)) {
             $storeIds = array_filter($storeIds, 'is_numeric');
             $storeIds = implode(',', $storeIds);
         }
@@ -85,7 +85,7 @@ class Mzax_Emarketing_Model_Newsletter_List
      */
     protected function _afterSave()
     {
-        if($this->isAutoSubscribe() && $this->isObjectNew()) {
+        if ($this->isAutoSubscribe() && $this->isObjectNew()) {
             $this->addAllSubscribers();
         }
 
@@ -141,7 +141,7 @@ class Mzax_Emarketing_Model_Newsletter_List
     }
 
 
-    
+
     /**
      * Check if list is private
      *
@@ -149,13 +149,13 @@ class Mzax_Emarketing_Model_Newsletter_List
      * they are subscribed.
      *
      * Only an admin can subscribe a subscriber to this list
-     * 
+     *
      * @param string $value
      * @return boolean
      */
     protected function isPrivate($value = null)
     {
-        if(is_bool($value)) {
+        if (is_bool($value)) {
             $this->setIsPrivate($value ? 1 : 0);
         }
         return (bool) $this->getIsPrivate();
@@ -175,7 +175,7 @@ class Mzax_Emarketing_Model_Newsletter_List
      */
     protected function isAutoSubscribe($value = null)
     {
-        if(is_bool($value)) {
+        if (is_bool($value)) {
             $this->setAutoSubscribe($value ? 1 : 0);
         }
         return (bool) $this->getAutoSubscribe();
@@ -206,7 +206,7 @@ class Mzax_Emarketing_Model_Newsletter_List
     public function getStoreIds()
     {
         $ids = $this->getData('store_ids');
-        if(empty($ids)) {
+        if (empty($ids)) {
             return array(Mage::app()->getStore(true)->getId());
         }
         return explode(',', $ids);
@@ -226,7 +226,7 @@ class Mzax_Emarketing_Model_Newsletter_List
         $storeIds = $this->getStoreIds();
 
         // either store is allowed
-        if(in_array($store->getId(), $storeIds)) {
+        if (in_array($store->getId(), $storeIds)) {
             return true;
         }
 
@@ -244,7 +244,7 @@ class Mzax_Emarketing_Model_Newsletter_List
      */
     public function getData($key='', $index=null)
     {
-        if($key === 'allowed_stores') {
+        if ($key === 'allowed_stores') {
             return $this->getStoreIds();
         }
         return parent::getData($key, $index);

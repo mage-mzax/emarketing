@@ -74,7 +74,7 @@ class Mzax_Emarketing_Model_Resource_Campaign_Collection extends Mage_Core_Model
     public function addRunningFilter($flag = true)
     {
         $this->addFieldToFilter('running', $flag ? 1 : 0);
-        if($flag) {
+        if ($flag) {
             $now = now();
             $this->addFieldToFilter('start_at', array(array('lteq' => $now), array('null' => true)));
             $this->addFieldToFilter('end_at', array(array('gteq' => $now), array('null' => true)));

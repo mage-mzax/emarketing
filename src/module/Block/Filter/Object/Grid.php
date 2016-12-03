@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -21,9 +21,9 @@
 
 
 /**
- * 
+ *
  * @method Mzax_Emarketing_Model_Object_Collection getCollection()
- * 
+ *
  * @author Jacob Siefer
  *
  */
@@ -35,19 +35,19 @@ class Mzax_Emarketing_Block_Filter_Object_Grid extends Mage_Adminhtml_Block_Widg
      */
     protected $_filter;
 
-    
-    
+
+
     public function __construct($attributes = array())
     {
-        if(isset($attributes['filter'])) {
+        if (isset($attributes['filter'])) {
             $this->setFilter($attributes['filter']);
             unset($attributes['filter']);
-        }   
+        }
         parent::__construct($attributes);
     }
-    
-    
-    
+
+
+
     protected function _prepareLayout()
     {
         $this->setChild('hide_button',
@@ -59,32 +59,32 @@ class Mzax_Emarketing_Block_Filter_Object_Grid extends Mage_Adminhtml_Block_Widg
         );
         return parent::_prepareLayout();
     }
-    
-    
-    
+
+
+
     public function getMainButtonsHtml()
     {
         $html = parent::getMainButtonsHtml();
         $html.= $this->getChildHtml('hide_button');
         return $html;
     }
-    
-    
-    
-    
+
+
+
+
     /**
-     * 
-     * 
+     *
+     *
      * @return Mzax_Emarketing_Model_Object_Filter_Component
      */
     public function getFilter()
     {
         return $this->_filter;
     }
-    
-    
+
+
     /**
-     * 
+     *
      * @param Mzax_Emarketing_Model_Object_Filter_Component $source
      * @return Mzax_Emarketing_Block_Filter_Object_Grid
      */
@@ -93,8 +93,8 @@ class Mzax_Emarketing_Block_Filter_Object_Grid extends Mage_Adminhtml_Block_Widg
         $this->_filter = $filter;
         return $this;
     }
-    
-    
+
+
 
     /**
      *
@@ -104,8 +104,8 @@ class Mzax_Emarketing_Block_Filter_Object_Grid extends Mage_Adminhtml_Block_Widg
     {
         return $this->getFilter()->getParentObject();
     }
-    
-    
+
+
     /**
      * (non-PHPdoc)
      * @see Mage_Adminhtml_Block_Widget_Grid::getCollection()
@@ -115,39 +115,39 @@ class Mzax_Emarketing_Block_Filter_Object_Grid extends Mage_Adminhtml_Block_Widg
     {
         return $this->getFilter()->getCollection();
     }
-    
-    
-    
+
+
+
     /**
      * Allow provider and filters to alter the grid
-     * 
+     *
      */
     protected function _afterLoadCollection()
     {
     	parent::_afterLoadCollection();
     	$this->getFilter()->afterGridLoadCollection($this);
-    	
+
         return $this;
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     /**
      * Prepare grid columns
-     * 
+     *
      * This is done by the email provider. The grid
      * does not know what type of objects it is loading
-     * 
+     *
      */
     protected function _prepareColumns()
     {
         $object = $this->getObject();
-        
+
         $this->setFilterVisibility(true);
         $this->setPagerVisibility(true);
-        
+
         $this->addColumn('main_object_id', array(
             'header'    => $this->__($object->getName() .' ID'),
             'index'     => 'id',
@@ -157,29 +157,29 @@ class Mzax_Emarketing_Block_Filter_Object_Grid extends Mage_Adminhtml_Block_Widg
             'renderer'  => 'mzax_emarketing/recipients_column_renderer_object',
             'object'    => $object,
         ));
-        
+
         $this->setDefaultSort('main_object_id');
         $this->setDefaultDir('DESC');
-        
+
         $this->getFilter()->prepareGridColumns($this);
         return parent::_prepareColumns();
     }
-    
-    
-    
+
+
+
     public function getGridUrl()
     {
         return $this->getData('grid_url');
     }
-    
-    
-    
+
+
+
     public function getRowUrl($row)
     {
         return null;
     }
 
-    
-    
-    
+
+
+
 }

@@ -46,7 +46,7 @@ class Mzax_Emarketing_Emarketing_Newsletter_ListController extends Mage_Adminhtm
         $template = $this->_initList();
 
         if ($values = $this->_getSession()->getNewsletterListData(true)) {
-            if(isset($values['list'])) {
+            if (isset($values['list'])) {
                 $template->addData($values['list']);
             }
         }
@@ -117,12 +117,12 @@ class Mzax_Emarketing_Emarketing_Newsletter_ListController extends Mage_Adminhtm
             catch (Exception $e){
                 $this->_getSession()->addError($e->getMessage());
 
-                if(Mage::getIsDeveloperMode()) {
+                if (Mage::getIsDeveloperMode()) {
                     throw $e;
                 }
             }
 
-            if($request->getParam('src') === 'newsletter') {
+            if ($request->getParam('src') === 'newsletter') {
                 return $this->_redirect('*/newsletter_subscriber');
             }
             return $this->_redirect('*/*/edit', array('_current'=>true, 'tab' => 'subscribers'));
@@ -147,11 +147,11 @@ class Mzax_Emarketing_Emarketing_Newsletter_ListController extends Mage_Adminhtm
             }
             catch (Exception $e){
                 $this->_getSession()->addError($e->getMessage());
-                if(Mage::getIsDeveloperMode()) {
+                if (Mage::getIsDeveloperMode()) {
                     throw $e;
                 }
             }
-            if($request->getParam('src') === 'newsletter') {
+            if ($request->getParam('src') === 'newsletter') {
                 return $this->_redirect('*/newsletter_subscriber');
             }
             return $this->_redirect('*/*/edit', array('_current'=>true, 'tab' => 'subscribers'));
@@ -248,7 +248,7 @@ class Mzax_Emarketing_Emarketing_Newsletter_ListController extends Mage_Adminhtm
     {
         $listId = (int) $this->getRequest()->getParam($idFieldName);
         $list = Mage::getModel('mzax_emarketing/newsletter_list');
-        if($listId) {
+        if ($listId) {
             $list->load($listId);
         }
         

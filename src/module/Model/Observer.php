@@ -35,11 +35,11 @@ class Mzax_Emarketing_Model_Observer extends Mzax_Emarketing_Model_Observer_Abst
      */
     public function injectTimeOffsetJs(Varien_Event_Observer $observer)
     {
-        if(!Mage::getStoreConfigFlag('mzax_emarketing/tracking/inject_timeoffset_js')) {
+        if (!Mage::getStoreConfigFlag('mzax_emarketing/tracking/inject_timeoffset_js')) {
             return;
         }
         
-        if(!$this->getSession()->requireTimeOffset()) {
+        if (!$this->getSession()->requireTimeOffset()) {
             return;
         }
         
@@ -50,7 +50,7 @@ class Mzax_Emarketing_Model_Observer extends Mzax_Emarketing_Model_Observer_Abst
         
         /* @var $block Mage_Core_Block_Text_List */
         $block = $layout->getBlock('before_body_end');
-        if($block && $script) {
+        if ($block && $script) {
             /* @var $script Mage_Core_Block_Text_Tag_Js */
             $jsTag = $layout->createBlock('core/text_tag_js', 'time_offset_js');
             $jsTag->setContents($script);

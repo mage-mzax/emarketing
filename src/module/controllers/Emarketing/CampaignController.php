@@ -29,7 +29,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
              ->_title($this->__('Manage Campaigns'));
 
 
-        if(!Mage::getStoreConfigFlag('mzax_emarketing/general/enable')) {
+        if (!Mage::getStoreConfigFlag('mzax_emarketing/general/enable')) {
             $msg = $this->__('The emarketing extension is disabled, no cron jobs are triggered. <a href="%s">Change Settings</a>',
                 $this->getUrl('*/system_config/edit', array('section' => 'mzax_emarketing')));
 
@@ -62,22 +62,22 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
         $campaign = $this->_initCampaign();
         
         if ($values = $this->_getSession()->getCampaignData(true)) {
-            if(isset($values['campaign'])) {
+            if (isset($values['campaign'])) {
                 $campaign->addData($values['campaign']);
             }
-            if(isset($values['filters']) && is_array($values['filters'])) {
+            if (isset($values['filters']) && is_array($values['filters'])) {
                 $campaign->setFilters($values['filters']);
             }
         }
         
-        if($this->getRequest()->isPost()) {
+        if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost('campaign');
-            if(!empty($data)) {
+            if (!empty($data)) {
                 $campaign->addData($data);
             }
         }
         
-        if($campaign->hasData('medium')) {
+        if ($campaign->hasData('medium')) {
             return $this->_forward('edit');
         }
         
@@ -101,7 +101,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     {
         $presetName = $this->getRequest()->getParam('preset');
         
-        if(!$presetName) {
+        if (!$presetName) {
             $this->_redirect('*/*/new');
             return;
         }
@@ -122,7 +122,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
             return;
         }
         catch(Exception $e) {
-            if(Mage::getIsDeveloperMode()) {
+            if (Mage::getIsDeveloperMode()) {
                 $this->_getSession()->addError($e->getMessage());
             }
             else {
@@ -144,14 +144,14 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
         $campaign = $this->_initCampaign();
 
         if ($values = $this->_getSession()->getCampaignData(true)) {
-            if(isset($values['campaign'])) {
+            if (isset($values['campaign'])) {
                 $campaign->addData($values['campaign']);
             }
-            if(isset($values['filters']) && is_array($values['filters'])) {
+            if (isset($values['filters']) && is_array($values['filters'])) {
                 $campaign->setFilters($values['filters']);
             }
         }
-        else if($campaign->getId() && $this->_getSession()->getData('init_default_filters', true) == $campaign->getId()) {
+        else if ($campaign->getId() && $this->_getSession()->getData('init_default_filters', true) == $campaign->getId()) {
             $campaign->getRecipientProvider()->setDefaultFilters();
         }
         
@@ -176,7 +176,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
                 $redirectBack = $this->getRequest()->getParam('back', false);
     
                 if (isset($data['campaign'])) {
-                    if(isset($data['campaign']['medium_data'])) {
+                    if (isset($data['campaign']['medium_data'])) {
                         $mediumData = $data['campaign']['medium_data'];
                         unset($data['campaign']['medium_data']);
                         $campaign->getMediumData()->addData($mediumData);
@@ -185,20 +185,20 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
                     $campaign->addData($data['campaign']);
                 }
     
-                if(is_array($filter)) {
+                if (is_array($filter)) {
                     $provider = $campaign->getRecipientProvider();
-                    if($provider) {
+                    if ($provider) {
                         $provider->getFilter()->loadFlatArray($filter);
                     }
                 }
     
     
                 $variations = $this->getRequest()->getPost('variation');
-                if(is_array($variations)) {
-                    foreach($variations as $variationId => $variationData) {
+                if (is_array($variations)) {
+                    foreach ($variations as $variationId => $variationData) {
                         $variation = $campaign->getVariation($variationId);
-                        if( $variation ) {
-                            if(isset($variationData['medium_data'])) {
+                        if ( $variation ) {
+                            if (isset($variationData['medium_data'])) {
                                 $mediumData = $variationData['medium_data'];
                                 unset($variationData['medium_data']);
                                 $variation->getMediumData()->addData($mediumData);
@@ -211,14 +211,14 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
                 $initDefaultFilters = !$campaign->getId() && !$campaign->getPresetName();
                 $campaign->save();
                 
-                if($initDefaultFilters) {
+                if ($initDefaultFilters) {
                     $this->_getSession()->setData('init_default_filters', $campaign->getId());
                 }
                 
                 
                 Mage::app()->cleanCache(array($campaign::CACHE_TAG));
                 
-                if($campaign->getPresetName()) {
+                if ($campaign->getPresetName()) {
                     $this->_getSession()->addSuccess($this->__('Campaign was successfully created from preset `%s`.', $campaign->getPresetName()));
                     $this->_getSession()->addNotice($this->__("Double check your filter and segmentation settings!"));
                 }
@@ -258,13 +258,13 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     public function aggregateAction()
     {
         $campaign = $this->_initCampaign();
-        if($campaign->getId()) {
+        if ($campaign->getId()) {
             try {
                 $campaign->aggregate();
                 $this->_getSession()->addSuccess($this->__('Campaign aggregated successfully'));
             }
             catch(Exception $e) {
-                if(Mage::getIsDeveloperMode()) {
+                if (Mage::getIsDeveloperMode()) {
                     throw $e;
                 }
                 Mage::logException($e);
@@ -290,7 +290,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
         $campaign = $this->_initCampaign();
         if ($campaign->getId()) {
             $count = $campaign->findRecipients(true);
-            if($count) {
+            if ($count) {
                 $this->_getSession()->addSuccess($this->__("%s recipients were found.", $count));
             }
             else {
@@ -331,16 +331,16 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     public function massStartAction()
     {
         $campaigns = $this->_initCampaigns();
-        if(!empty($campaigns)) {
+        if (!empty($campaigns)) {
             $count = 0;
             /* @var $campaign Mzax_Emarketing_Model_Campaign */
-            foreach($campaigns as $campaign) 
+            foreach ($campaigns as $campaign) 
             {
-                if($campaign->isArchived()) {
+                if ($campaign->isArchived()) {
                     $this->_getSession()->addWarning($this->__('Campaign `%s` is archived and could not get started.', $campaign->getName()));
                     continue;
                 }
-                if($campaign->isRunning()) {
+                if ($campaign->isRunning()) {
                     continue;
                 }
                 try {
@@ -349,14 +349,14 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
                 }
                 catch(Exception $e) {
                     $this->_getSession()->addError($this->__("Failed to start campaign `%s`", $campaign->getName()));
-                    if(Mage::getIsDeveloperMode()) {
+                    if (Mage::getIsDeveloperMode()) {
                         throw $e;
                     }
                     Mage::logException($e);
                 }
             }
             
-            if($count) {
+            if ($count) {
                 $this->_getSession()->addSuccess($this->__("%s campaign(s) have been started.", $count));
             }
         }
@@ -398,12 +398,12 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     public function massStopAction()
     {
         $campaigns = $this->_initCampaigns();
-        if(!empty($campaigns)) {
+        if (!empty($campaigns)) {
             $count = 0;
             /* @var $campaign Mzax_Emarketing_Model_Campaign */
-            foreach($campaigns as $campaign)
+            foreach ($campaigns as $campaign)
             {
-                if(!$campaign->isRunning()) {
+                if (!$campaign->isRunning()) {
                     continue;
                 }
                 try {
@@ -412,14 +412,14 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
                 }
                 catch(Exception $e) {
                     $this->_getSession()->addError($this->__("Failed to stop campaign `%s`", $campaign->getName()));
-                    if(Mage::getIsDeveloperMode()) {
+                    if (Mage::getIsDeveloperMode()) {
                         throw $e;
                     }
                     Mage::logException($e);
                 }
             }
     
-            if($count) {
+            if ($count) {
                 $this->_getSession()->addSuccess($this->__("%s campaign(s) have been stopped.", $count));
             }
         }
@@ -439,13 +439,13 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     {
         $campaign = $this->_initCampaign();
         if ($campaign->getId()) {
-            if($campaign->isRunning()) {
+            if ($campaign->isRunning()) {
                 $this->_getSession()->addWarning($this->__("You can not archive a running campaign."));
             }
             else {
                 $campaign->isArchived(!$campaign->isArchived());
                 $campaign->save();
-                if($campaign->isArchived()) {
+                if ($campaign->isArchived()) {
                     $this->_getSession()->addSuccess($this->__("Campaign moved to archive."));
                 }
                 else {
@@ -467,16 +467,16 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     public function massArchiveAction()
     {
         $campaigns = $this->_initCampaigns();
-        if(!empty($campaigns)) {
+        if (!empty($campaigns)) {
             $count = 0;
             /* @var $campaign Mzax_Emarketing_Model_Campaign */
-            foreach($campaigns as $campaign)
+            foreach ($campaigns as $campaign)
             {
-                if($campaign->isRunning()) {
+                if ($campaign->isRunning()) {
                     $this->_getSession()->addWarning($this->__('Campaign `%s` is running and could not get archived.', $campaign->getName()));
                     continue;
                 }
-                if($campaign->isArchived()) {
+                if ($campaign->isArchived()) {
                     continue;
                 }
                 try {
@@ -486,14 +486,14 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
                 }
                 catch(Exception $e) {
                     $this->_getSession()->addError($this->__("Failed to archive campaign `%s`", $campaign->getName()));
-                    if(Mage::getIsDeveloperMode()) {
+                    if (Mage::getIsDeveloperMode()) {
                         throw $e;
                     }
                     Mage::logException($e);
                 }
             }
     
-            if($count) {
+            if ($count) {
                 $this->_getSession()->addSuccess($this->__("%s campaign(s) have been archived.", $count));
             }
         }
@@ -639,17 +639,17 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
         $campaign = $this->_initCampaign();
         
         $variationId = $this->getRequest()->getParam('variation');
-        if($variationId == 'all') {
+        if ($variationId == 'all') {
             /* @var $variation Mzax_Emarketing_Model_Campaign_Variation */
-            foreach($campaign->getVariations() as $variation) {
+            foreach ($campaign->getVariations() as $variation) {
                 $variation->isRemoved(true);
             }
             $campaign->setDataChanges(true);
             $campaign->save();
         } 
-        else if($variationId) {
+        else if ($variationId) {
             $variation = $campaign->getVariation($variationId);
-            if($variation) {
+            if ($variation) {
                 $variation->isRemoved(true);
                 $variation->save();
                 $this->_getSession()->addSuccess("Variation '{$variation->getName()}' has been removed.");
@@ -730,7 +730,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
         $campagin = $this->getCurrentCampaign();
         $filter = $campagin->getRecipientProvider()->getFilterById($filterId);
         
-        if($filter) {
+        if ($filter) {
             $this->loadLayout();
             $this->getLayout()->createBlock('mzax_emarketing/campaign_test_emulate')->prepareEmulation($filter);
             $grid = $this->getLayout()->createBlock('mzax_emarketing/campaign_test')->getFilterGrid($filter);
@@ -752,7 +752,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
         $filter = $campagin->getFilterById($filterId);
         
         $this->loadLayout('mzax_popup');
-        if($filter) {
+        if ($filter) {
             $block = $this->getLayout()->getBlock('filter_test')->setFilter($filter);
             $block->setDefaultLimit(20);
         }
@@ -774,7 +774,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
         
         $this->loadLayout('mzax_popup');
         
-        if($this->getRequest()->getParam('isAjax')) {
+        if ($this->getRequest()->getParam('isAjax')) {
             $block = $this->getLayout()->getBlock('filter.test');
             $this->getResponse()->setBody($block->toHtml());
         }
@@ -846,14 +846,14 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
      */
     protected function _renderTab($tab = null)
     {
-        if(!$tab) {
+        if (!$tab) {
             $tab = $this->getRequest()->getActionName();
         }
         
         $campaign = $this->_initCampaign();
         $block = 'mzax_emarketing/campaign_edit_tab_' . $tab;
         
-        if($this->getRequest()->getParam('isAjax')) {
+        if ($this->getRequest()->getParam('isAjax')) {
             $this->loadLayout();
             $block = $this->getLayout()->createBlock($block);
             $this->getResponse()->setBody($block->toHtml());
@@ -936,13 +936,13 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
             $content = $campaign;
             
             $variationId = $this->getRequest()->getParam('variation');
-            if($variationId) {
+            if ($variationId) {
                 $content = $campaign->getVariation($variationId);
             }
             
-            if($content && $content->getId()) {
+            if ($content && $content->getId()) {
                 $data = $this->getRequest()->getPost('data');
-                if(!empty($data)) {
+                if (!empty($data)) {
                     $content->getMediumData()->addData($data);
                     $content->save();
                 }
@@ -989,9 +989,9 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     {
         $request = $this->getRequest();
         
-        if($request->isPost() && $request->getPost('update_links')) {
+        if ($request->isPost() && $request->getPost('update_links')) {
             $optout = $request->getParam('optout');
-            if(is_array($optout)) {
+            if (is_array($optout)) {
                 Mage::getResourceSingleton('mzax_emarketing/link')->updateOptoutFlag($optout);
             }
         }
@@ -1039,7 +1039,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
             $recipient->setAddress($this->getRequest()->getParam('recipient_email'));
             $recipient->setName($this->getRequest()->getParam('recipient_name'));
             
-            if($variationId = (int) $this->getRequest()->getPost('variation')) {
+            if ($variationId = (int) $this->getRequest()->getPost('variation')) {
                 $recipient->setVariationId($variationId);
             }
             
@@ -1052,7 +1052,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
         }
         catch(Exception $e) {
             $this->_getSession()->addError($e->getMessage());
-            if(Mage::getIsDeveloperMode()) {
+            if (Mage::getIsDeveloperMode()) {
                 throw $e;
             }
         }
@@ -1090,7 +1090,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
             $recipient->setForceAddress($email);
             $recipient->setAddress($email);
         
-            if($variationId = (int) $this->getRequest()->getParam('variation')) {
+            if ($variationId = (int) $this->getRequest()->getParam('variation')) {
                 $recipient->setVariationId($variationId);
             }
         
@@ -1103,7 +1103,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
         }
         catch(Exception $e) {
             $this->_getSession()->addError($e->getMessage());
-            if(Mage::getIsDeveloperMode()) {
+            if (Mage::getIsDeveloperMode()) {
                 throw $e;
             }
             $this->_getSession()->addError($this->__("Failed to send test email"));
@@ -1176,11 +1176,11 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     {
         $campaign = $this->_initCampaign('campaign_id');
         if ($data = $this->getRequest()->getPost()) {
-            if(isset($data['campaign']['template_id'])) {
+            if (isset($data['campaign']['template_id'])) {
                 $templateId = (int) $data['campaign']['template_id'];
                 
                 $template = Mage::getModel('core/email_template')->load($templateId);
-                if($template->getId()) {
+                if ($template->getId()) {
                     $data['campaign']['email_subject'] = $template->getTemplateSubject();
                     $data['campaign']['email_text'] = $template->getTemplateText();
                 }
@@ -1216,10 +1216,10 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
         $campaigns = $this->_initCampaigns();
         $tags = $this->getRequest()->getPost('tags');
         
-        if(!empty($campaigns)) {
+        if (!empty($campaigns)) {
             $count = 0;
             /* @var $campaign Mzax_Emarketing_Model_Campaign */
-            foreach($campaigns as $campaign)
+            foreach ($campaigns as $campaign)
             {
                 try {
                     $campaign->addTags($tags)->save();
@@ -1227,14 +1227,14 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
                 }
                 catch(Exception $e) {
                     $this->_getSession()->addError($this->__("Failed to add tags to campaign `%s`", $campaign->getName()));
-                    if(Mage::getIsDeveloperMode()) {
+                    if (Mage::getIsDeveloperMode()) {
                         throw $e;
                     }
                     Mage::logException($e);
                 }
             }
     
-            if($count) {
+            if ($count) {
                 $this->_getSession()->addSuccess($this->__("%s campaign(s) have been updated.", $count));
             }
         }
@@ -1254,10 +1254,10 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
         $campaigns = $this->_initCampaigns();
         $tags = $this->getRequest()->getPost('tags');
     
-        if(!empty($campaigns)) {
+        if (!empty($campaigns)) {
             $count = 0;
             /* @var $campaign Mzax_Emarketing_Model_Campaign */
-            foreach($campaigns as $campaign)
+            foreach ($campaigns as $campaign)
             {
                 try {
                     $campaign->removeTags($tags)->save();
@@ -1265,14 +1265,14 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
                 }
                 catch(Exception $e) {
                     $this->_getSession()->addError($this->__("Failed to add tags to campaign `%s`", $campaign->getName()));
-                    if(Mage::getIsDeveloperMode()) {
+                    if (Mage::getIsDeveloperMode()) {
                         throw $e;
                     }
                     Mage::logException($e);
                 }
             }
     
-            if($count) {
+            if ($count) {
                 $this->_getSession()->addSuccess($this->__("%s campaign(s) have been updated.", $count));
             }
         }
@@ -1293,9 +1293,9 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     protected function _initCampaign($idFieldName = 'id')
     {
         $campaign = Mage::registry('current_campaign');
-        if(!$campaign) {
+        if (!$campaign) {
             $campaign = Mage::getModel('mzax_emarketing/campaign');
-            if($campaignId = (int) $this->getRequest()->getParam($idFieldName)) {
+            if ($campaignId = (int) $this->getRequest()->getParam($idFieldName)) {
                 $campaign->load($campaignId);
             }
             
@@ -1316,7 +1316,7 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     protected function _initCampaigns($idsFieldName = 'campaigns')
     {
         $campaignIds = $this->getRequest()->getPost($idsFieldName);
-        if(!empty($campaignIds)) {
+        if (!empty($campaignIds)) {
             /* @var $collection Mzax_Emarketing_Model_Resource_Campaign_Collection */
             $collection = Mage::getResourceModel('mzax_emarketing/campaign_collection');
             $collection->addIdFilter($campaignIds);
@@ -1347,20 +1347,20 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
         // if we have post data, apply those changes first
         // and store them to the session
         if ($data = $this->getRequest()->getPost()) {
-            if(isset($data['campaign']) && isset($data['filter'])) {
+            if (isset($data['campaign']) && isset($data['filter'])) {
                 $this->_getSession()->setData($cacheKey, $data);
             }
         }
         $data = $this->_getSession()->getData($cacheKey);
     
-        if(is_array($data)) {
+        if (is_array($data)) {
             if (isset($data['campaign'])) {
                 $campaign->addData($data['campaign']);
             }
     
-            if(isset($data['filter'])) {
+            if (isset($data['filter'])) {
                 $provider = $campaign->getRecipientProvider();
-                if( $provider && is_array($data['filter']) ) {
+                if ( $provider && is_array($data['filter']) ) {
                     $provider->loadFlatArray($data['filter']);
                 }
             }

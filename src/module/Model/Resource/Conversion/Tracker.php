@@ -140,7 +140,7 @@ class Mzax_Emarketing_Model_Resource_Conversion_Tracker extends Mage_Core_Model_
         $adapter->beginTransaction();
         $adapter->update($this->getMainTable(), array('is_default' => new Zend_Db_Expr($expr)));
         $validate = $adapter->fetchOne("SELECT COUNT(`tracker_id`) FROM `{$this->getMainTable()}` WHERE is_default = 1");
-        if($validate != 1) {
+        if ($validate != 1) {
             $adapter->rollBack();
             throw new Exception("Unable to set tracker id '$id' as default");
         }

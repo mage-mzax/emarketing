@@ -33,13 +33,13 @@ class Mzax_Emarketing_BeaconController extends Mage_Core_Controller_Front_Action
         $response = $this->getResponse();
         
         
-        if(!$recipient->getId()) {
+        if (!$recipient->getId()) {
             $response->setHttpResponseCode(404);
         }
         else {
             $recipient->captureView($this->getRequest());
             
-            if(!$recipient->getViewedAt()) {
+            if (!$recipient->getViewedAt()) {
                 $recipient->setViewedAt(now());
                 $recipient->save();
             }
@@ -59,7 +59,7 @@ class Mzax_Emarketing_BeaconController extends Mage_Core_Controller_Front_Action
         
         
         $binary = '';
-        foreach(str_split($gif, 2) as $byte) {
+        foreach (str_split($gif, 2) as $byte) {
             $binary .= chr(hexdec($byte));
         }
         

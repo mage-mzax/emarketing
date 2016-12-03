@@ -143,7 +143,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Event
         
         $query->useTemporaryTable($this->getTempTableName());
         $query->joinTable(array('subject_id' => '{customer_id}'), 'reports/event', 'event');
-        if(!empty($conditions)) {
+        if (!empty($conditions)) {
             $select = $this->_combineConditions($conditions, $aggregator, $expectation);
             $query->joinSelect(array('id' => '`event`.`object_id`'), $select, 'filter');
         }
@@ -151,7 +151,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Event
         $query->where('`event`.`event_type_id` = ?', $event->typeId);
         $query->where($this->getTimeRangeExpr('`event`.`logged_at`', 'event_date', false));
         
-        if($storeId = $this->getParam('store_id')) {
+        if ($storeId = $this->getParam('store_id')) {
             $query->where('`event`.`store_id` = ?', $storeId);
         }
                 
@@ -214,7 +214,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Event
     {
         $event = $this->getEvent();
         
-        if(!$event) {
+        if (!$event) {
             return $this->__("No such event defined (%s)", $this->getName());
         }
         
@@ -240,9 +240,9 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Event
      */
     public function getEvent()
     {
-        if( $this->_event === null) {
+        if ( $this->_event === null) {
             $eventName = $this->getName();
-            if(isset($this->_events[$eventName])) {
+            if (isset($this->_events[$eventName])) {
                 $this->_event = $this->_events[$eventName];
             }
         }
@@ -263,7 +263,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Event
         $type  = $this->getType();
         $options = array();
     
-        foreach($this->_events as $event)
+        foreach ($this->_events as $event)
         {
             $options[$type.'?name=' . $event->name] = "{$title} | {$event->label}";
         }
@@ -286,7 +286,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Event
     {
         $typeIds = $this->getEventTypeIds();
         
-        if(isset($typeIds[$name])) {
+        if (isset($typeIds[$name])) {
             return (int) $typeIds[$name];
         }
         return 0;
@@ -301,7 +301,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Event
      */
     protected function getEventTypeIds()
     {
-        if($this->_eventTypeIds === null) {
+        if ($this->_eventTypeIds === null) {
             $select = $this->_select('reports/event_type', null, array('event_name', 'event_type_id'));
             $this->_eventTypeIds = $this->_getReadAdapter()->fetchPairs($select);
         }

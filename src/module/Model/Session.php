@@ -62,7 +62,7 @@ class Mzax_Emarketing_Model_Session extends Mage_Core_Model_Session_Abstract
      */
     public function getLastRecipient()
     {
-        if(!$this->_lastRecipient && $this->getLastRecipientId()) {
+        if (!$this->_lastRecipient && $this->getLastRecipientId()) {
             $this->_lastRecipient = Mage::getModel('mzax_emarketing/recipient')->load($this->getLastRecipientId());
         }
         return $this->_lastRecipient;
@@ -109,7 +109,7 @@ class Mzax_Emarketing_Model_Session extends Mage_Core_Model_Session_Abstract
     public function getClickReferences()
     {
         $clicks = $this->getData('click_references');
-        if(!$clicks) {
+        if (!$clicks) {
             $clicks = array();
         }
         return $clicks;
@@ -129,9 +129,9 @@ class Mzax_Emarketing_Model_Session extends Mage_Core_Model_Session_Abstract
     {
         $timeOffset = $this->getTimeOffset();
         
-        if($timeOffset !== null) {
+        if ($timeOffset !== null) {
             $ids = $this->getData('time_offset_ids', true);
-            if(!empty($ids)) {
+            if (!empty($ids)) {
                 Mage::getResourceSingleton('mzax_emarketing/recipient_event')->updateTimeoffset($timeOffset, $ids);
             }
             return false;
@@ -150,10 +150,10 @@ class Mzax_Emarketing_Model_Session extends Mage_Core_Model_Session_Abstract
     public function getTimeOffset()
     {
         $offset = $this->getData('time_offset');
-        if($offset === null) {
+        if ($offset === null) {
             // check if we have a cookie available
             $offset = $this->getCookie()->get(self::TIME_OFFSET_COOKIE);
-            if($offset === false) {
+            if ($offset === false) {
                 return null;
             }
             $this->setTimeOffset($offset);
@@ -174,13 +174,13 @@ class Mzax_Emarketing_Model_Session extends Mage_Core_Model_Session_Abstract
     public function fetchTimeOffset($recipientId)
     {
         $offset = $this->getTimeOffset();
-        if($offset !== null) {
+        if ($offset !== null) {
             Mage::getResourceSingleton('mzax_emarketing/recipient_event')->updateTimeoffset($offset, $recipientId);
             return $this;
         }
         
         $ids = $this->getData('time_offset_ids');
-        if(!is_array($ids)) {
+        if (!is_array($ids)) {
             $ids = array();
         }
         $ids[] = $recipientId;

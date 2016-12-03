@@ -63,7 +63,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Quote
     
         /* @var $storeFilter Mzax_Emarketing_Model_Object_Filter_Quote_Table */
         $storeFilter = $this->addFilter('quote_table');
-        if( $storeFilter && $this->getCampaign() ) {
+        if ( $storeFilter && $this->getCampaign() ) {
             $storeFilter->setColumn('store_id');
             $storeFilter->setValue($this->getCampaign()->getStoreId());
             $storeFilter->setOperator('()');
@@ -99,12 +99,12 @@ class Mzax_Emarketing_Model_Recipient_Provider_Quote
         $recipient->setEmail($quote->getCustomerEmail());
         $recipient->setName($quote->getCustomerName());
         
-        if($quote->getCustomerId())
+        if ($quote->getCustomerId())
         {
             /* @var $customer Mage_Customer_Model_Customer */
             $customer = Mage::getModel('customer/customer')->load($quote->getCustomerId());
         
-            if($customer->getId()) {
+            if ($customer->getId()) {
                 $quote->setCustomer($customer);
                 $recipient->setCustomer($customer);
                 $recipient->setEmail($customer->getEmail());
@@ -129,7 +129,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Quote
         /* @var $quote Mage_Sales_Model_Quote */
         $quote = Mage::getModel('sales/quote')->load($recipient->getObjectId());
     
-        if($quote->getCustomerId()) {
+        if ($quote->getCustomerId()) {
             $this->getSession()->setCustomerId($quote->getCustomerId());
             $recipient->autologin($quote->getCustomerId());
         }
@@ -155,7 +155,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Quote
     public function bindRecipients(Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder $binder)
     {
         
-        if($binder->hasBinding('customer_id')) {
+        if ($binder->hasBinding('customer_id')) {
             $binder->createBinding()
                 ->joinTable(array('object_id' => '{customer_id}'), 'recipient')
                 ->addBinding('campaign_id',  'recipient.campaign_id')
@@ -166,7 +166,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Quote
         }
         
         
-        if($binder->hasBinding('email')) {
+        if ($binder->hasBinding('email')) {
             $binder->createBinding()
                 ->joinTable(array('address'    => '{email}'), 'recipient_address', 'address')
                 ->joinTable(array('address_id' => '`address`.`address_id`'), 'recipient')

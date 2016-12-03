@@ -30,7 +30,7 @@ class Mzax_Emarketing_Emarketing_ShortcutController extends Mage_Adminhtml_Contr
         $id   = $this->getRequest()->getParam('id');
         $item = Mage::getModel('sales/order_item')->load($id);
         
-        if($item->getId()) {
+        if ($item->getId()) {
             $this->_redirect('adminhtml/sales_order/view', array('order_id' => $item->getOrderId(), '_fragment' => 'order_item_'.$id));
         }
         else {

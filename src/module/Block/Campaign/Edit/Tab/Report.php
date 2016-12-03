@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -20,8 +20,8 @@
 
 
 /**
- * 
- * 
+ *
+ *
  *
  * @author Jacob Siefer
  * @license {{license}}
@@ -60,7 +60,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Report extends Mage_Adminhtml_Bloc
      */
     public function getCampaign()
     {
-        if(!$this->_campaign) {
+        if (!$this->_campaign) {
             $this->_campaign = Mage::registry('current_campaign');
         }
         return $this->_campaign;
@@ -119,13 +119,13 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Report extends Mage_Adminhtml_Bloc
      */
     public function getDateRange()
     {
-        if($this->_dateRange === null) {
+        if ($this->_dateRange === null) {
             $validator = new Zend_Validate_Date;
 
             $from = $this->getRequest()->getParam('from');
             $to   = $this->getRequest()->getParam('to');
 
-            if($validator->isValid($from) && $validator->isValid($to)) {
+            if ($validator->isValid($from) && $validator->isValid($to)) {
                 $this->_dateRange = array($from, $to);
             }
             else {
@@ -149,7 +149,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Report extends Mage_Adminhtml_Bloc
     public function getCachedQuery($key, $dimension, $metrics, $variations, $order = null)
     {
         $query = $this->getData('query_' . $key);
-        if(!$query) {
+        if (!$query) {
             $query = $this->queryReport($dimension, $metrics, $variations, $order);
             $this->setData('query_' . $key, $query);
         }
@@ -204,8 +204,8 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Report extends Mage_Adminhtml_Bloc
         $variations = $table->getTableProperty('variations');
         $dimension  = $table->getTableProperty('dimension');
 
-        foreach($table->getColumns() as $column) {
-            if(isset($column->p->metric)) {
+        foreach ($table->getColumns() as $column) {
+            if (isset($column->p->metric)) {
                 switch($column->p->metric) {
                     case 'sendings':
                         $column->label = $this->__('Recipients');
@@ -233,9 +233,9 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Report extends Mage_Adminhtml_Bloc
                         break;
                 }
             }
-            if(isset($column->p->tracker_id)) {
+            if (isset($column->p->tracker_id)) {
                 $tracker = $this->getCampaign()->getTracker($column->p->tracker_id);
-                if($tracker) {
+                if ($tracker) {
                     $column->label = $tracker->getTitle();
                 }
                 else {
@@ -244,11 +244,11 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Report extends Mage_Adminhtml_Bloc
                 $column->p->color = self::COLOR_CLICKS;
             }
 
-            if(isset($column->p->color)) {
+            if (isset($column->p->color)) {
                 $column->p->color_axis = array($this->brightness($column->p->color, 80), $this->brightness($column->p->color, -80));
             }
 
-            if(isset($column->p->variation_id)) {
+            if (isset($column->p->variation_id)) {
                 $vid = $column->p->variation_id;
 
                 $index = array_search($vid, $variations);
@@ -261,7 +261,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Report extends Mage_Adminhtml_Bloc
                 $column->p->color = $gradient[$index];
 
                 $variation = $this->getCampaign()->getVariation($vid);
-                if($variation) {
+                if ($variation) {
                     $column->label = $variation->getName();
                 }
                 else {
@@ -270,11 +270,11 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Report extends Mage_Adminhtml_Bloc
             }
         }
 
-        if($dimension !== 'date') {
+        if ($dimension !== 'date') {
             $colors = array('627379', 'FC7A00', 'BF4848', '87969E', 'D7D020', '00A6D4', 'A559BF', '14D277',     '627379', 'FC7A00', 'BF4848', '87969E', 'D7D020', '00A6D4', 'A559BF', '14D277','627379', 'FC7A00', 'BF4848', '87969E', 'D7D020', '00A6D4', 'A559BF', '14D277','627379', 'FC7A00', 'BF4848', '87969E', 'D7D020', '00A6D4', 'A559BF', '14D277','627379', 'FC7A00', 'BF4848', '87969E', 'D7D020', '00A6D4', 'A559BF', '14D277');
 
             //$table->addColumn('style', Mzax_Chart_Table::TYPE_STRING, 'style', array('role' => 'style'));
-            foreach($colors as $row => $color) {
+            foreach ($colors as $row => $color) {
                 $table->setRowProperty($row, 'color', $color);
             }
             $table->setTableProperty('dye', true);
@@ -302,14 +302,14 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Report extends Mage_Adminhtml_Bloc
         $start = array_map('hexdec', str_split($start, 2));
         $end   = array_map('hexdec', str_split($end, 2));
 
-        foreach($start as $j => $v) {
+        foreach ($start as $j => $v) {
             $step[$j] = ($v - $end[$j]) / ($steps-1);
         }
 
         $colors = array();
         for($i = 0; $i <= $steps; $i++) {
             $rgb = array();
-            foreach($step as $j => $v) {
+            foreach ($step as $j => $v) {
                 $rgb[$j] = sprintf('%02x', floor($start[$j] - $v * $i));
             }
             $colors[] = implode('', $rgb);
@@ -322,7 +322,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Report extends Mage_Adminhtml_Bloc
     protected function brightness($color, $adjust)
     {
         $rgb = array_map('hexdec', str_split($color, 2));
-        foreach($rgb as &$v) {
+        foreach ($rgb as &$v) {
             $v = sprintf('%02x', max(0,min(255,$v + $adjust)));
         }
         return implode('', $rgb);
@@ -381,7 +381,7 @@ JS;
     {
         /* @var $content Mage_Core_Block_Text_List */
         $content = $this->getLayout()->getBlock('content');
-        if($content) {
+        if ($content) {
             $content->append($this->getGoogleJs());
         }
     }
@@ -491,7 +491,7 @@ JS;
                 'height' => '100%'
         ));
 
-        if($charType === 'geo') {
+        if ($charType === 'geo') {
             $block->getChart()->setHeight(400);
         }
 
@@ -504,34 +504,34 @@ JS;
 
     protected function prepareTabs(Mzax_Emarketing_Block_Chart_Widget_Tab $block, $metric = "%ss", $tabs = null)
     {
-        if(!$tabs || in_array('sendings', $tabs)) {
+        if (!$tabs || in_array('sendings', $tabs)) {
             $block->addTab('sendings', array(
                     'label'  => $this->__('Sendings'),
                     'metric' => sprintf($metric, 'sending')
             ));
         }
 
-        if(!$tabs || in_array('views', $tabs)) {
+        if (!$tabs || in_array('views', $tabs)) {
             $block->addTab('views', array(
                     'label'  => $this->__('Views'),
                     'metric' => sprintf($metric, 'view')
             ));
         }
 
-        if(!$tabs || in_array('clicks', $tabs)) {
+        if (!$tabs || in_array('clicks', $tabs)) {
             $block->addTab('clicks', array(
                     'label'  => $this->__('Clicks'),
                     'metric' => sprintf($metric, 'click')
             ));
         }
 
-        if($this->hasTracker()) {
-            if(!$tabs || in_array('trackers', $tabs)) {
+        if ($this->hasTracker()) {
+            if (!$tabs || in_array('trackers', $tabs)) {
                 $trackers = array();
-                foreach($this->getCampaign()->getTrackers() as $tracker) {
+                foreach ($this->getCampaign()->getTrackers() as $tracker) {
                     $trackers[sprintf($metric, '#'.$tracker->getId())] = $tracker->getTitle();
                 }
-                if($tracker = $this->getCampaign()->getDefaultTracker()) {
+                if ($tracker = $this->getCampaign()->getDefaultTracker()) {
                     $block->addTab('trackers', array(
                             'label'   => $tracker->getTitle(),
                             'default' => sprintf($metric, '#'.$tracker->getId()),
@@ -541,7 +541,7 @@ JS;
             }
         }
 
-        if($tabs && in_array('optouts/bounces', $tabs)) {
+        if ($tabs && in_array('optouts/bounces', $tabs)) {
             $block->addTab('optouts', array(
                     'label'   => $this->__('Optouts'),
                     'default' => 'optouts',
@@ -552,14 +552,14 @@ JS;
             ));
         }
 
-        if(!$tabs || in_array('optouts', $tabs)) {
+        if (!$tabs || in_array('optouts', $tabs)) {
             $block->addTab('optouts', array(
                     'label'   => $this->__('Optouts'),
                     'metric'  => sprintf($metric, 'optout')
             ));
         }
 
-        if(!$tabs || in_array('bounces', $tabs)) {
+        if (!$tabs || in_array('bounces', $tabs)) {
             $block->addTab('bounces', array(
                     'label'   => $this->__('Bounces'),
                     'metric'  => sprintf($metric, 'bounce')
@@ -609,7 +609,7 @@ JS;
         $block->setType($chartType);
         $block->setQuery($query);
 
-        foreach($this->getCampaign()->getTrackers() as $tracker) {
+        foreach ($this->getCampaign()->getTrackers() as $tracker) {
             $block->addTab('tracker_'.$tracker->getId(), array(
                     'class'  => 'trackers',
                     'label'  => $tracker->getTitle(),
@@ -688,32 +688,32 @@ JS;
 
     /**
      * Retrieve GeoIP credits
-     * 
+     *
      * @return array
      */
     public function getGeoIpCredits()
     {
         $adapters = Mage::getSingleton('mzax_emarketing/system_config_source_geoIp')->getSelectedAdapters();
         $credits  = array();
-        
+
         $geoLiteCredit = 'GeoLite data created by MaxMind, available from <a href="http://www.maxmind.com">http://www.maxmind.com</a>.';
         $geoLite = false;
         /* @var $adapter Mzax_GeoIp_Adapter_Abstract */
-        foreach($adapters as $adapter) {
+        foreach ($adapters as $adapter) {
             $credit = $adapter->getCredits();
-            if($credit) {
-                if(strpos($credit, $geoLiteCredit)) {
+            if ($credit) {
+                if (strpos($credit, $geoLiteCredit)) {
                     $geoLite = true;
                     $credit = str_replace($geoLiteCredit, 'GeoLite*', $credit);
                 }
                 $credits[] = $credit;
             }
         }
-        
-        if($geoLite) {
+
+        if ($geoLite) {
             $credits[] = '*' . $geoLiteCredit;
         }
-        
+
         return $credits;
     }
 

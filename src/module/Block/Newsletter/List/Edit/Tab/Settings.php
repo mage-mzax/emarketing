@@ -40,7 +40,7 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit_Tab_Settings extends Mage_Admin
         $list = Mage::registry('current_list');
 
 
-        if($list->getId()) {
+        if ($list->getId()) {
             $form->addField('list_id', 'hidden', array(
                 'name'  => 'list_id',
                 'value' => $list->getId()

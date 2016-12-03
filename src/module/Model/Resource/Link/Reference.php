@@ -48,7 +48,7 @@ class Mzax_Emarketing_Model_Resource_Link_Reference extends Mage_Core_Model_Reso
         catch(Zend_Db_Statement_Exception $e) {
             
             //1062 Duplicate entry 'Tw9xIIhhyIWnK1EX8UXRaeYxI1e6wXU3gfJvZb2z' for key 'UNQ_PUBLIC_ID'"
-            if(strpos($e->getMessage(), '1062') && strpos($e->getMessage(), 'UNQ_PUBLIC_ID')) {
+            if (strpos($e->getMessage(), '1062') && strpos($e->getMessage(), 'UNQ_PUBLIC_ID')) {
                 $object->setPublicId( $object->makePublicKey($object->getLink()) );
                 return $this->save($object);
             }
@@ -114,7 +114,7 @@ class Mzax_Emarketing_Model_Resource_Link_Reference extends Mage_Core_Model_Reso
      */
     public function captureClick(Mzax_Emarketing_Model_Link_Reference $reference, $eventId = null)
     {
-        if($reference->getId()) {
+        if ($reference->getId()) {
             $adapter = $this->_getWriteAdapter();
             $adapter->insert($this->getTable('link_reference_click'), array(
                 'reference_id' => $reference->getId(),

@@ -59,7 +59,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
         $query->setColumn('customer_id');
         $query->setColumn('order_id');
         
-        if($sumField = $this->getDataSetDefault('sum', self::DEFAULT_SUM)) {
+        if ($sumField = $this->getDataSetDefault('sum', self::DEFAULT_SUM)) {
             $query->addBinding('sum_field', $sumField);
             $query->setColumn('sum_field');
         }
@@ -95,7 +95,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
         $select = $this->_combineConditions($conditions, $aggregator, $expectation);
         
         // Check if we are looking for customer with no orders
-        if($this->checkIfMatchZero('orders')) {
+        if ($this->checkIfMatchZero('orders')) {
             
             $customerId = new Zend_Db_Expr('`customer`.`entity_id`');
             
@@ -105,14 +105,14 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
             $zeroOrderQuery->setColumn('matches', new Zend_Db_Expr('0'));
             $zeroOrderQuery->setColumn('customer_id', $customerId);
             $zeroOrderQuery->group($customerId, true);
-            if($sumField) {
+            if ($sumField) {
                 $zeroOrderQuery->setColumn('sum_field', new Zend_Db_Expr('0'));
             }
             
             $select = $this->_select()->union(array($zeroOrderQuery, $select));
             
             
-            if($sumField) {
+            if ($sumField) {
                 $query->having($this->getWhereSql('orders', 'SUM(`sum_field`)'));
             }
             else {
@@ -122,7 +122,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Order
             }
         }        
         else {
-            if($sumField) {
+            if ($sumField) {
                 $query->having($this->getWhereSql('orders', 'SUM(`sum_field`)'));
             }
             else {

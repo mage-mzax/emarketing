@@ -43,7 +43,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Attribute
     
     protected function isAttributeAllowed(Mage_Eav_Model_Entity_Attribute_Abstract $attribute)
     {
-        if($attribute->getFrontendLabel()) {
+        if ($attribute->getFrontendLabel()) {
             return true;
         }
         return false;

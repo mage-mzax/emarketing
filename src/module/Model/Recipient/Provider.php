@@ -57,7 +57,7 @@ class Mzax_Emarketing_Model_Recipient_Provider implements Mage_Eav_Model_Entity_
     {
         
         $config = $this->getConfig();
-        if(!isset($config->$name)) {
+        if (!isset($config->$name)) {
             throw new Exception("No such email provider ({$name}) found");
         }
         $config = $config->$name;
@@ -65,7 +65,7 @@ class Mzax_Emarketing_Model_Recipient_Provider implements Mage_Eav_Model_Entity_
         
         $providerClass = $config->getClassName();
         
-        if(!class_exists($providerClass)) {
+        if (!class_exists($providerClass)) {
             throw new Exception("Email provider config found, but model ($providerClass) was not found");
         }
         
@@ -89,7 +89,7 @@ class Mzax_Emarketing_Model_Recipient_Provider implements Mage_Eav_Model_Entity_
         $options = array();
         
         /* @var $provider Mzax_Emarketing_Model_Recipient_Provider_Abstract */
-        foreach($this->getProviders() as $name => $provider) {
+        foreach ($this->getProviders() as $name => $provider) {
             $options[] = array(
                 'value' => $name,
                 'label' => $provider->getTitle()
@@ -108,7 +108,7 @@ class Mzax_Emarketing_Model_Recipient_Provider implements Mage_Eav_Model_Entity_
         $options = array();
         
         /* @var $provider Mzax_Emarketing_Model_Recipient_Provider_Abstract */
-        foreach($this->getProviders() as $name => $provider) {
+        foreach ($this->getProviders() as $name => $provider) {
             $options[$name] = $provider->getTitle();
         }
         
@@ -128,10 +128,10 @@ class Mzax_Emarketing_Model_Recipient_Provider implements Mage_Eav_Model_Entity_
      */
     public function getProviders()
     {
-        if(!$this->_providers) {
+        if (!$this->_providers) {
             $this->_providers = array();
             
-            foreach($this->getConfig()->children() as $name => $cfg) {
+            foreach ($this->getConfig()->children() as $name => $cfg) {
                 $this->_providers[$name] = $this->factory($name);
             }
         }
@@ -152,7 +152,7 @@ class Mzax_Emarketing_Model_Recipient_Provider implements Mage_Eav_Model_Entity_
     public function getOptionText($value)
     {
         $options = $this->getProviders();
-        if(isset($options[$value])) {
+        if (isset($options[$value])) {
             return $options[$value]->getTitle();
         }
         return false;
@@ -168,7 +168,7 @@ class Mzax_Emarketing_Model_Recipient_Provider implements Mage_Eav_Model_Entity_
      */
     public function getConfig()
     {
-        if(!$this->_config) {
+        if (!$this->_config) {
             $this->_config = Mage::getConfig()->getNode('global/mzax_emarketing/providers');
         }
         return $this->_config;

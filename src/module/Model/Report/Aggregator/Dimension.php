@@ -43,26 +43,26 @@ class Mzax_Emarketing_Model_Report_Aggregator_Dimension extends Mzax_Emarketing_
     {
         $filter = $this->_options->getDimension();
         
-        if($this->getOption('full', false)) {
+        if ($this->getOption('full', false)) {
             $this->truncateTable(self::TABLE_REPORT);
             $this->truncateTable(self::TABLE_CONVERSION);
         }
         else {
-            if($trackerId = $this->getOption('tracker_id')) {
+            if ($trackerId = $this->getOption('tracker_id')) {
                 $this->delete(array('`tracker_id` IN(?)' => $trackerId), self::TABLE_CONVERSION);
             }
-            if($campaignId = $this->getOption('campaign_id')) {
+            if ($campaignId = $this->getOption('campaign_id')) {
                 $this->delete(array('`campaign_id` IN(?)' => $campaignId), self::TABLE_REPORT);
                 $this->delete(array('`campaign_id` IN(?)' => $campaignId), self::TABLE_CONVERSION);
             }
-            if($incremental = abs($this->getOption('incremental'))) {
+            if ($incremental = abs($this->getOption('incremental'))) {
                 $where = "`date` >= DATE_SUB(NOW(), INTERVAL $incremental DAY)";
                 $this->delete($where, self::TABLE_REPORT);
                 $this->delete($where, self::TABLE_CONVERSION);
             }
         }
-        foreach($this->_dimensions as $type) {
-            if(empty($filter) || in_array($type, $filter)) {
+        foreach ($this->_dimensions as $type) {
+            if (empty($filter) || in_array($type, $filter)) {
                 $dimension = $this->getDimension($type);
                 $dimension->aggregate($this->_options);
                 $this->_options->getLock()->touch();

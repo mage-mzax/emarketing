@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -20,7 +20,7 @@
 
 /**
  * Renderer for campaigns
- * 
+ *
  * @author Jacob Siefer
  * @license {{license}}
  * @version {{version}}
@@ -29,7 +29,7 @@ class Mzax_Emarketing_Block_Grid_Column_Renderer_Campaign
     extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Options
 {
 
-    
+
     /**
      * Render a grid cell as options
      *
@@ -39,16 +39,16 @@ class Mzax_Emarketing_Block_Grid_Column_Renderer_Campaign
     public function render(Varien_Object $row)
     {
         $html = parent::render($row);
-        
+
         $id = $row->getCampaignId();
-        if($id) {
+        if ($id) {
             $url = $this->getUrl('*/campaign/edit', array('id' => $id));
             return sprintf('<a href="%s">%s</a>', $url, $html);
         }
         return $html;
     }
-    
-    
-    
-    
+
+
+
+
 }

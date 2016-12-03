@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -30,19 +30,19 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
         $this->setDefaultSort('created_at');
         $this->setDefaultDir('desc');
     }
-    
-    
+
+
     protected function _beforeToHtml()
     {
         $this->setId('outbox_grid');
         parent::_beforeToHtml();
     }
-    
-    
-    
+
+
+
     public function getCollection()
     {
-        if(!$this->_collection) {
+        if (!$this->_collection) {
             /* Mzax_Emarketing_Model_Resource_Outbox_Email_Collection */
             $this->_collection = Mage::getResourceModel('mzax_emarketing/outbox_email_collection');
             $this->_collection->assignRecipients();
@@ -50,8 +50,8 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
         }
         return $this->_collection;
     }
-    
-    
+
+
     protected function _prepareColumns()
     {
         $this->addColumn('created_at', array(
@@ -61,14 +61,14 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'gmtoffset' => true,
             'type'      =>'datetime'
         ));
-        
+
         $this->addColumn('recipient', array(
             'header'         => $this->__('Recipient'),
             'index'          => 'to',
             'frame_callback' => array($this, 'addObjectLink'),
         ));
-        
-        
+
+
         $this->addColumn('sent_at', array(
             'header'    => $this->__('Sent at'),
             'index'     => 'sent_at',
@@ -83,8 +83,8 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'gmtoffset' => true,
             'type'      =>'datetime'
         ));
-        
-        
+
+
         /*
         $this->addColumn('subject', array(
             'header'    => $this->__('Subject'),
@@ -105,10 +105,10 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'truncate'  => 100
         ));
         */
-        
+
         /* @var $campaigns Mzax_Emarketing_Model_Resource_Campaign_Collection */
         $campaigns = Mage::getResourceModel('mzax_emarketing/campaign_collection');
-        
+
         $this->addColumn('campaign', array(
             'header'    => $this->__('Campaign'),
             'index'     => 'campaign_id',
@@ -116,8 +116,8 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'options'   => $campaigns->toOptionHash(),
             'frame_callback' => array($this, 'addCampaignLink')
         ));
-        
-        
+
+
         $this->addColumn('status', array(
             'header'    => $this->__('Status'),
             'index'     => 'status',
@@ -135,19 +135,19 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             },
             'width'     => '100px',
         ));
-        
+
         return parent::_prepareColumns();
     }
 
-    
-    
-    
+
+
+
     /**
      * Frame Callback
-     * 
+     *
      * Add link to admin for subject if available
-     * 
-     * 
+     *
+     *
      * @param string $value
      * @param Varien_Object $row
      * @param Mage_Adminhtml_Block_Widget_Grid_Column $column
@@ -157,14 +157,14 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
     public function addObjectLink($value, $row, $column, $export)
     {
         $recipient = $row->getRecipient();
-        
-        if($recipient instanceof Mzax_Emarketing_Model_Recipient && !$export) 
+
+        if ($recipient instanceof Mzax_Emarketing_Model_Recipient && !$export)
         {
             $campaign = $recipient->getCampaign();
-            if($campaign->getRecipientProvider()) {
+            if ($campaign->getRecipientProvider()) {
                 $object  = $campaign->getRecipientProvider()->getObject();
-                
-                if($object) {
+
+                if ($object) {
                     $url = $object->getAdminUrl($recipient->getObjectId());
                     return sprintf('<a href="%s">%s</a>', $url, $value);
                 }
@@ -172,8 +172,8 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
         }
         return $value;
     }
-    
-    
+
+
 
     /**
      * Frame Callback
@@ -189,54 +189,54 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
     public function addCampaignLink($value, $row, $column, $export)
     {
         $id = $row->getCampaignId();
-        if($id && !$export) {
+        if ($id && !$export) {
             $url = $this->getUrl('*/emarketing_campaign/edit', array('id' => $id));
             return sprintf('<a href="%s">%s</a>', $url, $value);
         }
         return $value;
     }
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
     protected function _prepareMassaction()
     {
         $this->setMassactionIdField('email_id');
         $this->getMassactionBlock()->setFormFieldName('messages');
-        
-        
+
+
         $this->getMassactionBlock()->addItem('send', array(
             'label'      => $this->__('Send'),
             'url'        => $this->getUrl('*/emarketing_outbox/massSend'),
             'confirm'    => $this->__('Are you sure you want to send those emails now?')
         ));
-        
+
         $this->getMassactionBlock()->addItem('delete', array(
              'label'   => $this->__('Delete'),
              'url'     => $this->getUrl('*/emarketing_outbox/massDelete'),
              'confirm' => $this->__('Are you sure?')
         ));
-        
+
         $this->getMassactionBlock()->addItem('discard', array(
             'label'      => $this->__('Discard'),
             'url'        => $this->getUrl('*/emarketing_outbox/massDiscard'),
             'confirm'    => $this->__('Are you sure?')
         ));
-        
-        
+
+
         return $this;
     }
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
 
     public function getGridUrl()
     {

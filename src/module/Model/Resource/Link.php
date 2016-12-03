@@ -62,10 +62,10 @@ class Mzax_Emarketing_Model_Resource_Link extends Mage_Core_Model_Resource_Db_Ab
         $enable = array();
         $disable = array();
         
-        foreach($data as $id => $flag) {
+        foreach ($data as $id => $flag) {
             $id = (int) $id;
-            if($id) {
-                if($flag) {
+            if ($id) {
+                if ($flag) {
                     $enable[] = $id;
                 }
                 else {
@@ -76,10 +76,10 @@ class Mzax_Emarketing_Model_Resource_Link extends Mage_Core_Model_Resource_Db_Ab
         $adapter = $this->_getWriteAdapter();
         $adapter->beginTransaction();
         try {
-            if(!empty($enable)) {
+            if (!empty($enable)) {
                 $this->setOptoutFlag($enable, true);
             }
-            if(!empty($disable)) {
+            if (!empty($disable)) {
                 $this->setOptoutFlag($disable, false);
             }
             $adapter->commit();
@@ -125,7 +125,7 @@ class Mzax_Emarketing_Model_Resource_Link extends Mage_Core_Model_Resource_Db_Ab
         $select = $this->_getLoadSelect('link_hash', $this->_mkHash($url, $anchor), $object);
         
         $data = $this->_getReadAdapter()->fetchRow($select);
-        if($data) {
+        if ($data) {
             $object->setData($data);
         }
         else {

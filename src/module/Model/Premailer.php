@@ -101,7 +101,7 @@ class Mzax_Emarketing_Model_Premailer
     
     protected function _getCacheKey()
     {
-        if(!$this->cacheId) {
+        if (!$this->cacheId) {
             return false;
         }
         $params = $this->getParams();
@@ -119,10 +119,10 @@ class Mzax_Emarketing_Model_Premailer
     {
         $cacheId = $this->_getCacheKey();
         $response = $cacheId ? Mage::app()->loadCache($cacheId) : false;
-        if($response) {
+        if ($response) {
             $response = unserialize($response);
         }
-        if(!$response instanceof Varien_Object) {
+        if (!$response instanceof Varien_Object) {
             $client = new Zend_Http_Client(self::API_URI, $this->_clientConfig);
             $client->setMethod(Zend_Http_Client::POST);
             $client->setParameterPost($this->getParams());
@@ -131,7 +131,7 @@ class Mzax_Emarketing_Model_Premailer
             $data = Zend_Json::decode($result->getBody());
             
             
-            if($data['status'] != 201) {
+            if ($data['status'] != 201) {
                 throw new Exception("Premailer failed to run: {$data['message']} #{$data['status']}");
             }
             
@@ -144,7 +144,7 @@ class Mzax_Emarketing_Model_Premailer
             $response->setHtml($htmlClient->request()->getBody());
             $response->setText($textClient->request()->getBody());
             
-            if($cacheId) {
+            if ($cacheId) {
                 $data = Mage::app()->saveCache(serialize($response), $cacheId, array(self::CACHE_KEY), 60*60);
             }
         }

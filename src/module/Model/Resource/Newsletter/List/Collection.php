@@ -61,7 +61,7 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
      */
     public function addSubscriberToFilter($subscriber)
     {
-        if($subscriber instanceof Varien_Object) {
+        if ($subscriber instanceof Varien_Object) {
             $subscriber = $subscriber->getId();
         }
 
@@ -76,7 +76,7 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
 
         $listIds = $adapter->fetchCol($select);
 
-        if(!empty($listIds)) {
+        if (!empty($listIds)) {
             $this->getSelect()->where('is_private = 0 OR list_id IN(?)', $listIds);
 
             $this->getSelect()->columns(array(

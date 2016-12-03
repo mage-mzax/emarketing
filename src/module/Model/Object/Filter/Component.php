@@ -108,21 +108,21 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
         // check if we emulate current itme
         $now = (array) $this->getParam('current_time');
         $now = array_filter($now);
-        foreach($now as &$time) {
-            if(!$time instanceof Zend_Db_Expr) {
+        foreach ($now as &$time) {
+            if (!$time instanceof Zend_Db_Expr) {
                 $time = $adapter->quote($time);
             }
         }
-        if(empty($now)) {
+        if (empty($now)) {
             $now[] = $adapter->quote(now());
         }
         
         $result = array();
-        foreach($now as $date) {
-            if($gmt && $isLocal) {
+        foreach ($now as $date) {
+            if ($gmt && $isLocal) {
                 $result[] = $this->toGmtTime($date);
             }
-            else if(!$gmt && !$isLocal) {
+            else if (!$gmt && !$isLocal) {
                 $result[] = $this->toLocalTime($date);
             }
             else {
@@ -200,7 +200,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
      */
     public function getQuery()
     {
-        if(!$this->_allowChildren && $this->_parent) {
+        if (!$this->_allowChildren && $this->_parent) {
             return $this->_parent->getQuery();
         }
         return $this->getObject()->getQuery();
@@ -218,7 +218,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
      */
     public function getCollection()
     {
-        if(!$this->_collection) {
+        if (!$this->_collection) {
             /* @var $collection Mzax_Emarketing_Model_Object_Collection */
             $this->_collection = Mage::getModel('mzax_emarketing/object_collection');
             $this->_collection->setObject($this->getParentObject());
@@ -267,7 +267,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
      */
     public function getId()
     {
-        if(!$this->_id) {
+        if (!$this->_id) {
             $this->_id = '1';
         }
         return $this->_id;
@@ -308,7 +308,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
      */
     public function getParentOrSelf()
     {
-        if(!$this->_parent) {
+        if (!$this->_parent) {
             return $this;
         }
         return $this->_parent;
@@ -383,7 +383,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
         /* @var $object Mzax_Emarketing_Model_Object_Filter_Component */
         $object = $this;
         do {
-            if($object instanceof Mzax_Emarketing_Model_Object_Filter_Container) {
+            if ($object instanceof Mzax_Emarketing_Model_Object_Filter_Container) {
                 break;
             }
             $paths[] = $object->getType();
@@ -422,7 +422,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
      */
     public function acceptChild(Mzax_Emarketing_Model_Object_Filter_Component $child)
     {
-        if($this->_parent) {
+        if ($this->_parent) {
             return !$child->acceptParent($this->_parent);
         }
         return true;
@@ -475,7 +475,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
      */
     public function getAvailableFilters()
     {
-        if(!$this->_allowChildren) {
+        if (!$this->_allowChildren) {
             return array();
         }
         
@@ -483,9 +483,9 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
         $result  = array();
         
         /* @var $filter Mzax_Emarketing_Model_Object_Filter_Abstract */
-        foreach($filters as $name => $filter) {
-            if($this->acceptFilter($filter)) {
-                foreach($filter->getOptions() as $key => $title) {
+        foreach ($filters as $name => $filter) {
+            if ($this->acceptFilter($filter)) {
+                foreach ($filter->getOptions() as $key => $title) {
                     $result[$key] = $title;
                 }
             }
@@ -553,7 +553,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
     public function getParam($key, $default = null)
     {
         $value = $this->getRoot()->getData('param_' . $key);
-        if($value === null) {
+        if ($value === null) {
             return $default;
         }
         return $value;
@@ -578,17 +578,17 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
     public function getTempTableName($sufix = 'default')
     {
         // can be globaly disabled
-        if(!Mage::getStoreConfigFlag('mzax_emarketing/general/use_temp_tables')) {
+        if (!Mage::getStoreConfigFlag('mzax_emarketing/general/use_temp_tables')) {
             return false;
         }
         
         // can be disabled by param
-        if($this->getParam('disable_temp_tables')) {
+        if ($this->getParam('disable_temp_tables')) {
             return false;
         }
         
         // only works if we have the rights
-        if(!$this->getResourceHelper()->hasTemporaryTablePrivilege()) {
+        if (!$this->getResourceHelper()->hasTemporaryTablePrivilege()) {
             return false;
         }
         
@@ -689,7 +689,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
     protected function _select($table = null, $alias = null, $cols = null)
     {
         $select = $this->getResourceHelper()->select();
-        if($table) {
+        if ($table) {
             $select->from($this->_getTable($table, $alias), $cols);
         }
         return $select;
@@ -706,7 +706,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
     protected function _getTable($table, $alias = null)
     {
         $table = $this->getResourceHelper()->getTable($table);
-        if($alias) {
+        if ($alias) {
             return array($alias => $table);
         }
         return $table;

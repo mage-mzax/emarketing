@@ -127,7 +127,7 @@ class Mzax_Emarketing_Model_Resource_Outbox_Email extends Mage_Core_Model_Resour
         $result = $this->_getReadAdapter()->fetchCol($select);
         // only return if there is exactly one email
         // don't trust result if there is more then one
-        if(count($result) === 1) {
+        if (count($result) === 1) {
             return $result[0];
         }
         return null;

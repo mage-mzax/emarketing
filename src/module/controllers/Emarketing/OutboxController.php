@@ -65,7 +65,7 @@ class Mzax_Emarketing_Emarketing_OutboxController extends Mage_Adminhtml_Control
     {
         $id = (int) $this->getRequest()->getParam($idFieldName);
         $email = Mage::getModel('mzax_emarketing/outbox_email');
-        if($id) {
+        if ($id) {
             $email->load($id);
         }
         
@@ -96,7 +96,7 @@ class Mzax_Emarketing_Emarketing_OutboxController extends Mage_Adminhtml_Control
     public function renderAction()
     {
         $email = $this->_initEmail();
-        if($email->getId()) {
+        if ($email->getId()) {
             $email->render()->save();
             $this->_redirect('*/*/email', array('_current' => true));
             $this->_getSession()->addSuccess(
@@ -112,7 +112,7 @@ class Mzax_Emarketing_Emarketing_OutboxController extends Mage_Adminhtml_Control
     public function downloadAction()
     {
         $email = $this->_initEmail();
-        if($email->getId()) {
+        if ($email->getId()) {
             $source = $email->getSource();
             
             $filename = "{$email->getCampaign()->getName()}-{$email->getTo()}";
@@ -146,11 +146,11 @@ class Mzax_Emarketing_Emarketing_OutboxController extends Mage_Adminhtml_Control
     public function massDeleteAction()
     {
         $messages = $this->getRequest()->getPost('messages');
-        if(!empty($messages)) {
+        if (!empty($messages)) {
             $rows = $this->getOutbox()
                 ->getResource()
                     ->massDelete($messages);
-            if($rows) {
+            if ($rows) {
                 $this->_getSession()->addSuccess(
                     $this->__('Total of %d emails(s) have been deleted.', $rows)   
                 );
@@ -166,11 +166,11 @@ class Mzax_Emarketing_Emarketing_OutboxController extends Mage_Adminhtml_Control
     public function massDiscardAction()
     {
         $messages = $this->getRequest()->getPost('messages');
-        if(!empty($messages)) {
+        if (!empty($messages)) {
             $rows = $this->getOutbox()
                 ->getResource()
                     ->massTypeChange($messages, Mzax_Emarketing_Model_Outbox_Email::STATUS_DISCARDED);
-            if($rows) {
+            if ($rows) {
                 $this->_getSession()->addSuccess(
                     $this->__('Total of %d email(s) in outbox have been updated.', $rows)   
                 );
@@ -185,8 +185,8 @@ class Mzax_Emarketing_Emarketing_OutboxController extends Mage_Adminhtml_Control
     public function massSendAction()
     {
         $messages = $this->getRequest()->getPost('messages');
-        if(!empty($messages)) {
-            if($count = $this->getOutbox()->sendEmails(array('ids' => $messages, 'force' => true))) {
+        if (!empty($messages)) {
+            if ($count = $this->getOutbox()->sendEmails(array('ids' => $messages, 'force' => true))) {
                 $this->_getSession()->addSuccess(
                     $this->__('%s emails sent.', $count)
                 );
@@ -216,24 +216,24 @@ class Mzax_Emarketing_Emarketing_OutboxController extends Mage_Adminhtml_Control
     public function massRenderAction()
     {
         $messages = $this->getRequest()->getPost('messages');
-        if(!empty($messages)) {
+        if (!empty($messages)) {
             $emails = $this->getOutbox()->getEmails($ids);
             $emails->addFieldToFilter('status', Mzax_Emarketing_Model_Outbox_Email::STATUS_NOT_SEND);
             
             /* @var $email Mzax_Emarketing_Model_Outbox_Email */
-            foreach($emails as $email) {
+            foreach ($emails as $email) {
                 try {
                     $email->render()->save();
                 }
                 catch(Exception $e) {
                     $this->_getSession()->addError($e->getMessage());
-                    if(Mage::getIsDeveloperMode()) {
+                    if (Mage::getIsDeveloperMode()) {
                         throw $e;
                     }
                 }
             }
             
-            if($rows) {
+            if ($rows) {
                 $this->_getSession()->addSuccess(
                     $this->__('Total of %d email(s) in outbox have been re-rendered.', $emails->count())
                 );

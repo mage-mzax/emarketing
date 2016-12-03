@@ -73,7 +73,7 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
         $campaign = $this->getCampaign();
 
         $query = $this->getObject()->getQuery();
-        if($campaign) {
+        if ($campaign) {
             $query->joinSelect('recipient_id', $this->getRecipientsByOrder(), 'recipient_order');
             $query->where('{campaign_id} = ?', $campaign->getId());
         }
@@ -82,7 +82,7 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
         $query->setColumn('recipient_id');
         $query->setColumn('goal_id');
         
-        if(($variationId = $this->getVariation()) !== null) {
+        if (($variationId = $this->getVariation()) !== null) {
             $query->where('{variation_id} = ?', $variationId);
         }
         
@@ -196,7 +196,7 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
         $collection->addArchiveFilter(false);
         
         $options = array();
-        if($this->getParam('tracker') instanceof Mzax_Emarketing_Model_Conversion_Tracker) {
+        if ($this->getParam('tracker') instanceof Mzax_Emarketing_Model_Conversion_Tracker) {
             $options['current'] = $this->__('beeing tracked');
         }
         $options += $collection->toOptionHash();
@@ -218,19 +218,19 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
      */
     public function getCampaign()
     {
-        if(!$this->_campaign) {
+        if (!$this->_campaign) {
                 
             $id = $this->getDataSetDefault('campaign');
             
-            if($id === 'current') {
+            if ($id === 'current') {
                 return $this->getParam('campaign');
             }
             $campaign = Mage::getModel('mzax_emarketing/campaign');
-            if(!$id) {
+            if (!$id) {
                 return null;
             }
             $campaign->load($id);
-            if(!$campaign->getId()) {
+            if (!$campaign->getId()) {
                 return null;
             }
 
@@ -248,7 +248,7 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
     public function getVariation()
     {
         $id =  Mage::registry('mzax_aggregate_variation');
-        if($id !== null && $id > -1) {
+        if ($id !== null && $id > -1) {
             return (int) $id;
         }
         return null;

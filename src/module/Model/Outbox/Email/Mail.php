@@ -76,10 +76,10 @@ class Mzax_Emarketing_Model_Outbox_Email_Mail
 
     public function getRawBodyHtml()
     {
-        if($this->_rawBodyHtml) {
+        if ($this->_rawBodyHtml) {
             return $this->_rawBodyHtml;
         }
-        if($this->_bodyHtml) {
+        if ($this->_bodyHtml) {
             return $this->_bodyHtml->getContent();
         }
         return null;
@@ -111,10 +111,10 @@ class Mzax_Emarketing_Model_Outbox_Email_Mail
      */
     public function getRawBodyText()
     {
-        if($this->_rawBodyText) {
+        if ($this->_rawBodyText) {
             return $this->_rawBodyText;
         }
-        if($this->_bodyText) {
+        if ($this->_bodyText) {
             return $this->_bodyText->getContent();
         }
         return null;
@@ -156,7 +156,7 @@ class Mzax_Emarketing_Model_Outbox_Email_Mail
      */
     public function getRecipient()
     {
-        if($this->_outboxEmail) {
+        if ($this->_outboxEmail) {
             return $this->_outboxEmail->getRecipient();
         }
         return null;

@@ -75,12 +75,12 @@ class Mzax_Emarketing_Model_Report
      */
     public function fetchGeoIp($verbose = false)
     {
-        if(!Mage::getStoreConfigFlag('mzax_emarketing/tracking/use_geo_ip')) {
+        if (!Mage::getStoreConfigFlag('mzax_emarketing/tracking/use_geo_ip')) {
             return;
         }
         
         $lock = Mage::helper('mzax_emarketing')->lock('fetch_geop_ip');
-        if(!$lock) {
+        if (!$lock) {
             return;
         }
         
@@ -91,17 +91,17 @@ class Mzax_Emarketing_Model_Report
         $adapters = Mage::getSingleton('mzax_emarketing/system_config_source_geoIp')->getSelectedAdapters();
         
         /* @var $adapter Mzax_GeoIp_Adapter_Abstract */
-        foreach($adapters as $adapter) {
+        foreach ($adapters as $adapter) {
             $geoIp->addAdapter($adapter);
         }
         
-        if(!$geoIp->hasAdapters()) {
+        if (!$geoIp->hasAdapters()) {
             throw new Exception("No GeoIP adapters defined");
         }
         
         
         $log = function($msg) use($verbose) {
-            if($verbose) {
+            if ($verbose) {
                 echo $msg . "\n";
             }
             else {
@@ -118,7 +118,7 @@ class Mzax_Emarketing_Model_Report
         $rows = $resource->fetchPendingGeoIpRows(3 /* expire in hours*/);
         
         // noting todo, stop
-        if(empty($rows)) {
+        if (empty($rows)) {
             return;
         }
         
@@ -127,7 +127,7 @@ class Mzax_Emarketing_Model_Report
         $startTime = time();
         $maxRunTime = 60*2;
         
-        foreach($rows as $row) 
+        foreach ($rows as $row) 
         {
             /* By default we use free public APIs to retrieve the location
              * of an IP, those however limit each server to only a certain number
@@ -136,7 +136,7 @@ class Mzax_Emarketing_Model_Report
              * If this limit is reached it might be required to go for a payed version
              * or implmented a custom version
              */
-            if(!$geoIp->getRemainingRequests()) {
+            if (!$geoIp->getRemainingRequests()) {
                 $log("MzaxEmarketing: No GeoIP requests left, you might want to consider different solution.");
                 break;
             }
@@ -147,7 +147,7 @@ class Mzax_Emarketing_Model_Report
              * If this showes up in the log too ofter then there is a chance that something
              * does not work OK. 
              */
-            if($geoIp->getRestTime()) {
+            if ($geoIp->getRestTime()) {
                 $log("MzaxEmarketing: GeoIP is resting, try again later.");
                 break;
             }
@@ -155,7 +155,7 @@ class Mzax_Emarketing_Model_Report
             /* Don't run forever...
              * The next cron tab can always finish this later
              */
-            if((time()-$startTime) >= $maxRunTime) {
+            if ((time()-$startTime) >= $maxRunTime) {
                 $log("MzaxEmarketing: Maximum run time exceeded");
                 break;
             }
@@ -165,35 +165,35 @@ class Mzax_Emarketing_Model_Report
                 $result = $geoIp->fetch(inet_ntop($row['ip']));
                 
                 
-                if($result === null && $verbose) {
+                if ($result === null && $verbose) {
                     var_dump($geoIp->getRemainingRequests());
                     var_dump($geoIp->getRestTime());
                     var_dump($geoIp);
                     exit;
                 }
                 
-                if($verbose) {
+                if ($verbose) {
                     $log(sprintf("Results for IP: %s (Event #%s)", inet_ntop($row['ip']), $row['event_id']));
                     $log(var_export($result, true));
                 }
                 
                 
-                if(!$result) {
+                if (!$result) {
                     continue;
                 }
                 
                 $update = array();
-                if($row['country_id'] === null) {
+                if ($row['country_id'] === null) {
                     $update['country_id'] = (string) $result->countryId;
                 }
-                if($row['region_id'] === null) {
+                if ($row['region_id'] === null) {
                     $update['region_id'] = (string) $result->regionId;
                 }
-                if($row['time_offset'] === null) {
+                if ($row['time_offset'] === null) {
                     // assume magento store local time if we could not find out.
                     // INFO: we also use javascript to find the offset
                     // @see injectTimeOffsetJs()
-                    if($result->timeOffset === null) {
+                    if ($result->timeOffset === null) {
                         //$update['time_offset'] = Mage::app()->getLocale()
                         //    ->storeDate($row['store_id'])->getGmtOffset()/60;
                     }
@@ -203,7 +203,7 @@ class Mzax_Emarketing_Model_Report
                 }
                 
                 
-                if($verbose) {
+                if ($verbose) {
                     $log(sprintf("UPDATE EVENT %s:", $row['event_id']));
                     $log(var_export($update, true));
                 }
@@ -214,13 +214,13 @@ class Mzax_Emarketing_Model_Report
             }
             catch(Exception $e) {
                 Mage::logException($e);
-                if(Mage::getIsDeveloperMode()) {
+                if (Mage::getIsDeveloperMode()) {
                     $lock->unlock();
                     throw $e;
                 }
             }
             
-        } // foreach($rows as $row) 
+        } // foreach ($rows as $row) 
         $lock->unlock();
     }
     

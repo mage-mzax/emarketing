@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -28,7 +28,7 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit_Form extends Mage_Adminhtml_Blo
         /* @var $list Mzax_Emarketing_Model_Newsletter_List */
         $list = Mage::registry('current_list');
 
-        if($list->getId()) {
+        if ($list->getId()) {
             $form->addField('list_id', 'hidden', array(
                 'name'  => 'list_id',
                 'value' => $list->getId()

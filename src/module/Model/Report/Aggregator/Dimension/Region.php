@@ -38,7 +38,7 @@ class Mzax_Emarketing_Model_Report_Aggregator_Dimension_Region
     
     protected function _aggregate()
     {
-        if(!$this->_options->getTrackerId()) {
+        if (!$this->_options->getTrackerId()) {
             $this->aggregateSendings();
             $this->aggregateEvent(Mzax_Emarketing_Model_Recipient::EVENT_TYPE_VIEW,  'views');
             $this->aggregateEvent(Mzax_Emarketing_Model_Recipient::EVENT_TYPE_CLICK, 'clicks');
@@ -60,7 +60,7 @@ class Mzax_Emarketing_Model_Report_Aggregator_Dimension_Region
      */
     protected function joinLastViewEvent(Mzax_Emarketing_Db_Select $select, $type = Mzax_Emarketing_Model_Recipient::EVENT_TYPE_VIEW)
     {
-        if($select->hasAnyBindings('region_id')) {
+        if ($select->hasAnyBindings('region_id')) {
             return;
         }
         
@@ -99,7 +99,7 @@ class Mzax_Emarketing_Model_Report_Aggregator_Dimension_Region
     
     public function getValues()
     {
-        if(!$this->_values) {
+        if (!$this->_values) {
             $select = $this->_select('recipient_event', 'event', new Zend_Db_Expr('CONCAT_WS("-", `country_id`, `region_id`)'))->distinct();
             $this->_values = $this->_getWriteAdapter()->fetchCol($select);
             $this->_values = array_filter($this->_values);

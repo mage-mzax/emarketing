@@ -36,11 +36,11 @@ class Mzax_Emarketing_Model_Resource_Recipient extends Mage_Core_Model_Resource_
     protected function _prepareDataForSave(Mage_Core_Model_Abstract $object)
     {
         // get or create address id
-        if(!$object->getAddressId() && $object->getAddress()) {
+        if (!$object->getAddressId() && $object->getAddress()) {
             $object->setAddressId($this->getAddressId($object->getAddress()));
         }
         
-        if(!$object->getId()) {
+        if (!$object->getId()) {
             $object->setCreatedAt(now());
         }
         
@@ -124,7 +124,7 @@ class Mzax_Emarketing_Model_Resource_Recipient extends Mage_Core_Model_Resource_
     public function removePending($campaginId = null)
     {
         $where = array('sent_at IS NULL' , 'is_mock = 0');
-        if($campaginId) {
+        if ($campaginId) {
             $where['campaign_id = ?'] = $campaginId;
         }
         

@@ -98,7 +98,7 @@ class Mzax_Emarketing_Model_Report_Query
      */
     public function __construct($params = null)
     {
-        if(is_array($params)) {
+        if (is_array($params)) {
             $this->setParams($params);
         }
     }
@@ -123,7 +123,7 @@ class Mzax_Emarketing_Model_Report_Query
      */
     public function setParams(array $params)
     {
-        foreach($params as $name => $value) {
+        foreach ($params as $name => $value) {
             $this->setParam($name, $value);
         }
         return $this;
@@ -155,7 +155,7 @@ class Mzax_Emarketing_Model_Report_Query
      */
     public function getParam($name, $default = false)
     {
-        if(isset($this->_params[$name])) {
+        if (isset($this->_params[$name])) {
             return $this->_params[$name];
         }
         return $default;
@@ -189,7 +189,7 @@ class Mzax_Emarketing_Model_Report_Query
      */
     public function load()
     {
-        if(!$this->isLoaded()) {
+        if (!$this->isLoaded()) {
             $this->_prepareParams($this->_params);
             
             switch($this->getParam(self::DIMENSION, self::DEFAULT_DIMENSION)) {
@@ -206,7 +206,7 @@ class Mzax_Emarketing_Model_Report_Query
                     break;
             }
             
-            if($this->_select) {
+            if ($this->_select) {
                 $this->_data = $this->getReadAdapter()->fetchAll($this->_select);
             }
         }
@@ -235,7 +235,7 @@ class Mzax_Emarketing_Model_Report_Query
      */
     public function getData()
     {
-        if(!$this->isLoaded()) {
+        if (!$this->isLoaded()) {
             $this->load();
         }
         return $this->_data;
@@ -250,7 +250,7 @@ class Mzax_Emarketing_Model_Report_Query
      */
     public function getSelect()
     {
-        if(!$this->isLoaded()) {
+        if (!$this->isLoaded()) {
             $this->load();
         }
         return $this->_select;
@@ -265,7 +265,7 @@ class Mzax_Emarketing_Model_Report_Query
      */
     public function getDataTable()
     {
-        if(!$this->_dataTable) {
+        if (!$this->_dataTable) {
             $this->_dataTable = $this->convertArrayToTable($this->getData());
         }
         return $this->_dataTable;
@@ -282,13 +282,13 @@ class Mzax_Emarketing_Model_Report_Query
      */
     protected function _prepareParams(array &$params)
     {
-        if(!isset($params[self::CAMPAIGN])) {
+        if (!isset($params[self::CAMPAIGN])) {
             throw new Exception("No campaign defined for query");
         }
-        if(!isset($params[self::METRICS])) {
+        if (!isset($params[self::METRICS])) {
             throw new Exception("No metric defined for query");
         }
-        if(!isset($params[self::VARIATION])) {
+        if (!isset($params[self::VARIATION])) {
             $params[self::VARIATION] = false;
         }
         
@@ -298,10 +298,10 @@ class Mzax_Emarketing_Model_Report_Query
         $params[self::METRICS] = (array) $params[self::METRICS];
         
         // retrieve all available variations if true
-        if( $params[self::VARIATION] === true ) {
+        if ( $params[self::VARIATION] === true ) {
             $params[self::VARIATION] = $this->getAllVariations($params[self::CAMPAIGN]);
         }
-        else if($params[self::VARIATION]){
+        else if ($params[self::VARIATION]){
             $params[self::VARIATION] = (array) $params[self::VARIATION];
         }
         
@@ -326,13 +326,13 @@ class Mzax_Emarketing_Model_Report_Query
         
         $columns = array();
         
-        if($groupBy === 'date') {
+        if ($groupBy === 'date') {
             
             $timeUnit = $this->getParam('time_unit', self::UNIT_DAYS);
             
-            if($timeUnit === 'auto') {
+            if ($timeUnit === 'auto') {
                 $results = $this->countResults($select);
-                if($results >= 400) {
+                if ($results >= 400) {
                     $timeUnit = self::UNIT_MONTHS;
                 }
                 else {
@@ -342,12 +342,12 @@ class Mzax_Emarketing_Model_Report_Query
             
             $this->_timeUnit = $timeUnit;
             $labelExpr = null;
-            if($timeUnit === self::UNIT_MONTHS) {
+            if ($timeUnit === self::UNIT_MONTHS) {
                 //$groupExpr = new Zend_Db_Expr("CONCAT_WS('-', YEAR(report.date), LPAD(MONTH(report.date), 2, '0'), '01')");
                 $groupExpr = new Zend_Db_Expr("CONCAT_WS('-', YEAR(report.date), MONTH(report.date))");
                 $labelExpr = new Zend_Db_Expr("MIN(report.date)");
             }
-            else if($timeUnit === self::UNIT_WEEKS) {
+            else if ($timeUnit === self::UNIT_WEEKS) {
                 $groupExpr = new Zend_Db_Expr("YEARWEEK(report.date, 1)");
                 $labelExpr = new Zend_Db_Expr("MIN(report.date)");
             }
@@ -356,7 +356,7 @@ class Mzax_Emarketing_Model_Report_Query
                 $groupExpr = 'report.date';
             }
             
-            if(!$labelExpr) {
+            if (!$labelExpr) {
                 $labelExpr = $groupExpr;
             }
             
@@ -373,12 +373,12 @@ class Mzax_Emarketing_Model_Report_Query
         $select->columns($columns);
         
         $order = $this->getParam(self::ORDER, 0);
-        if($order === 0) {
+        if ($order === 0) {
             $select->order("$groupBy ASC");
         }
-        else if(is_int($order)) {
+        else if (is_int($order)) {
             $metrics = $this->getParam(self::METRICS);
-            if(isset($metrics[$order-1])) {
+            if (isset($metrics[$order-1])) {
                 $select->order("{$metrics[$order-1]} DESC");
             }
         }
@@ -437,12 +437,12 @@ class Mzax_Emarketing_Model_Report_Query
         
         
         $order = $this->getParam(self::ORDER);
-        if($order === 0) {
+        if ($order === 0) {
             $select->order("$dimension ASC");
         }
-        else if(is_int($order)) {
+        else if (is_int($order)) {
             $metrics = $this->getParam(self::METRICS);
-            if(isset($metrics[$order-1])) {
+            if (isset($metrics[$order-1])) {
                 $select->order("{$metrics[$order-1]} DESC");
             }
         }
@@ -488,48 +488,48 @@ class Mzax_Emarketing_Model_Report_Query
         $varations = $this->getParam(self::VARIATION);
         $order     = $this->getParam(self::ORDER);
         
-        if($varations) {
-            foreach($metrics as $alias => $metric) {
+        if ($varations) {
+            foreach ($metrics as $alias => $metric) {
                 
-                if(is_numeric($alias)) {
+                if (is_numeric($alias)) {
                     $alias = $metric;
                 }
                 
-                if($this->matchTracker($metric, $trackerId, $field)) {
+                if ($this->matchTracker($metric, $trackerId, $field)) {
                     $tableAlias = $this->_joinTracker($select, $trackerId, $trackerTable);
                     
-                    foreach($varations as $variation) {
+                    foreach ($varations as $variation) {
                         $columns[$alias . self::PIVOT_SEPARATOR . $variation] = $this->getPivotSql($variation, "$tableAlias.$field", null, $this->getFun($metric));
                     }
                 }
                 else {
-                    foreach($varations as $variation) {
+                    foreach ($varations as $variation) {
                         $columns[$alias . self::PIVOT_SEPARATOR . $variation] = $this->getPivotSql($variation, $metric, null, $this->getFun($metric));
                     }
                 }
                 
-                if($order === $alias) {
+                if ($order === $alias) {
                     $select->order("$alias DESC");
                 }
             }
         }
         else {
-            foreach($metrics as $alias => $metric) {
+            foreach ($metrics as $alias => $metric) {
                 
-                if(is_numeric($alias)) {
+                if (is_numeric($alias)) {
                     $alias = $metric;
                 }
                 
                 $field = $adapter->quoteIdentifier($metric);
                 
-                if($this->matchTracker($metric, $trackerId, $field)) {
+                if ($this->matchTracker($metric, $trackerId, $field)) {
                     $tableAlias = $this->_joinTracker($select, $trackerId, $trackerTable);
                     $field = $adapter->quoteIdentifier("$tableAlias.$field");
                 }
                // $expr = $adapter->getIfNullSql($field, 0);
                 $columns[$alias] = "{$this->getFun($metric)}($field)";
                 
-                if($order === $alias) {
+                if ($order === $alias) {
                     $select->order("$alias DESC");
                 }
             }
@@ -549,10 +549,10 @@ class Mzax_Emarketing_Model_Report_Query
     protected function getFun($metric)
     {
         // rate-metrics should use average
-        if(strpos($metric, '_rate')) {
+        if (strpos($metric, '_rate')) {
             return 'AVG';
         }
-        if(strpos($metric, '_sum')) {
+        if (strpos($metric, '_sum')) {
             return 'MAX';
         }
         return 'SUM';
@@ -573,7 +573,7 @@ class Mzax_Emarketing_Model_Report_Query
     {
         $adapter = $this->getReadAdapter();
         
-        if($zero !== null) {
+        if ($zero !== null) {
             
         }
         
@@ -603,7 +603,7 @@ class Mzax_Emarketing_Model_Report_Query
         $alias = 'tracker_'.$trackerId;
         
         // already joined
-        if(array_key_exists($alias, $select->getPart(Varien_Db_Select::FROM))) {
+        if (array_key_exists($alias, $select->getPart(Varien_Db_Select::FROM))) {
             return $alias;
         }
         
@@ -612,8 +612,8 @@ class Mzax_Emarketing_Model_Report_Query
         
         $joins = array('campaign_id', 'variation_id', 'dimension_id', 'value_id' ,'date');
         
-        foreach($joins as $join) {
-            if(isset($description[$join])) {
+        foreach ($joins as $join) {
+            if (isset($description[$join])) {
                 $cond[] = "`report`.`$join` = `$alias`.`$join`";
             }
         }
@@ -622,7 +622,7 @@ class Mzax_Emarketing_Model_Report_Query
         
         // seperate join condition is a bit faster
         //$cond[] = "((`report`.`variation_id` = `$alias`.`variation_id`) OR (`report`.`variation_id` IS NULL && `$alias`.`variation_id` IS NULL))";
-       /* if($this->getParam(self::VARIATION)) {
+       /* if ($this->getParam(self::VARIATION)) {
             $cond[] = "`report`.`variation_id` = `$alias`.`variation_id`";
         }
         else {
@@ -650,22 +650,22 @@ class Mzax_Emarketing_Model_Report_Query
         $select->where('`report`.`campaign_id` = ?', $this->getParam(self::CAMPAIGN));
         
         $variation = $this->getParam(self::VARIATION);
-        if($variation === false) {
+        if ($variation === false) {
             $select->where('`report`.`variation_id` = -1');
         }
-        else if($variation === true) {
+        else if ($variation === true) {
             $select->where('`report`.`variation_id` >= 0', $variation);
         }
-        else if($variation) {
+        else if ($variation) {
             $select->where('`report`.`variation_id` IN(?)', $variation);
         }
         
         $range = $this->getParam('date_range');
-        if(is_array($range)) {
-            if(!empty($range[0])) {
+        if (is_array($range)) {
+            if (!empty($range[0])) {
                 $select->where('`report`.`date` >= ?', $range[0]);
             }
-            if(!empty($range[1])) {
+            if (!empty($range[1])) {
                 $select->where('`report`.`date` <= ?', $range[1]);
             }
         }
@@ -685,7 +685,7 @@ class Mzax_Emarketing_Model_Report_Query
     public function getCell($column, $row = 0)
     {
         $this->load();
-        if(isset($this->_data[$row][$column])) {
+        if (isset($this->_data[$row][$column])) {
             return $this->_data[$row][$column];
         }
         return null;
@@ -703,9 +703,9 @@ class Mzax_Emarketing_Model_Report_Query
     {
         $columns = func_get_args();
         $sum = 0;
-        foreach($this->getData() as $row) {
-            foreach($columns as $col) {
-                if(isset($row[$col])) {
+        foreach ($this->getData() as $row) {
+            foreach ($columns as $col) {
+                if (isset($row[$col])) {
                     $sum += (float) $row[$col];
                 }
             }
@@ -729,7 +729,7 @@ class Mzax_Emarketing_Model_Report_Query
     {
         $table = new Mzax_Chart_Table();
         
-        if(empty($data)) {
+        if (empty($data)) {
             return $table;
         }
         
@@ -744,9 +744,9 @@ class Mzax_Emarketing_Model_Report_Query
         $metrics = $this->getParam(self::METRICS);
         $columns = array_keys(reset($data));
         
-        foreach($columns as $index => $column) 
+        foreach ($columns as $index => $column) 
         {
-            if($column === 'date') {
+            if ($column === 'date') {
                 $column = $table->addColumn('Date', Mzax_Chart_Table::TYPE_DATE, 'date', array('role' => 'domain', 'unit' => $this->_timeUnit));
                 
                 switch($this->_timeUnit) {
@@ -760,33 +760,33 @@ class Mzax_Emarketing_Model_Report_Query
                 
                 continue;
             }
-            else if(!$index) {
+            else if (!$index) {
                 $table->addColumn($this->getParam(self::DIMENSION), Mzax_Chart_Table::TYPE_STRING, $column, array('role' => 'domain'));
                 continue;
             }
             
             $p = array();
             $alias = $column;
-            if(isset($metrics[$alias])) {
+            if (isset($metrics[$alias])) {
                 $column = $metrics[$alias];
                 $p['alias'] = $alias;
             }
-            if(strpos($column, self::PIVOT_SEPARATOR)) {
+            if (strpos($column, self::PIVOT_SEPARATOR)) {
                 list($p['metric'], $p['variation_id']) = explode(self::PIVOT_SEPARATOR, $column);
             }
             else {
                 $p['metric'] = $column;
             }
             
-            if(strpos($column, '_rate')) {
+            if (strpos($column, '_rate')) {
                 $p['_f'] = '%01.2f%%';
                 $p['default'] = '@previous';
             }
-            if(strpos($column, '_revenue_rate')) {
+            if (strpos($column, '_revenue_rate')) {
                 $p['_f'] = '%01.5f';
                 $p['default'] = '@previous';
             }
-            if(strpos($column, '_sum')) {
+            if (strpos($column, '_sum')) {
                 // $p['_f'] = '%01.2f';
                 $p['default'] = '@previous';
             }
@@ -795,7 +795,7 @@ class Mzax_Emarketing_Model_Report_Query
             
             $table->addColumn($alias, Mzax_Chart_Table::TYPE_NUMBER, $column, $p);
         }
-        foreach($data as $row) {
+        foreach ($data as $row) {
             $table->addRow($row);
         }
         
@@ -825,7 +825,7 @@ class Mzax_Emarketing_Model_Report_Query
      */
     public function matchTracker($metric, &$trackerId = false, &$field = false)
     {
-        if(preg_match(self::TRACKER_PATTERN, $metric, $matches)) {
+        if (preg_match(self::TRACKER_PATTERN, $metric, $matches)) {
             $trackerId = (int) $matches[1];
             $field = isset($matches[2]) ? "hit_{$matches[2]}" : "hits";
             return true;
@@ -856,7 +856,7 @@ class Mzax_Emarketing_Model_Report_Query
      */
     protected function getTable($table)
     {
-        if(!strpos($table, '/')) {
+        if (!strpos($table, '/')) {
             $table = 'mzax_emarketing/' . $table;
         }
         return $this->getResourceHelper()->getTable($table);
@@ -874,8 +874,8 @@ class Mzax_Emarketing_Model_Report_Query
     protected function select($table = null, $alias = null, $cols = null)
     {
         $select = $this->getReadAdapter()->select();
-        if($table) {
-            if(!$alias) {
+        if ($table) {
+            if (!$alias) {
                 $alias = $table;
             }
             $table = $this->getTable($table);

@@ -35,17 +35,17 @@ class Mzax_Emarketing_Model_Report_Aggregator_Tracker
     {
         $this->_lastRecordTime = null;
         
-        if($this->getOption('full', false)) {
+        if ($this->getOption('full', false)) {
             $this->truncateTable();
         }
         else {
-            if($trackerId = $this->getOption('tracker_id')) {
+            if ($trackerId = $this->getOption('tracker_id')) {
                 $this->delete(array('`tracker_id` IN(?)' => $trackerId));
             }
-            if($campaignId = $this->getOption('campaign_id')) {
+            if ($campaignId = $this->getOption('campaign_id')) {
                 $this->delete(array('`campaign_id` IN(?)' => $campaignId));
             }
-            if($incremental = abs($this->getOption('incremental'))) {
+            if ($incremental = abs($this->getOption('incremental'))) {
                 $this->delete(array("`date` >= DATE_SUB(?, INTERVAL $incremental DAY)" => $this->getLastRecordTime()));
             }
         }

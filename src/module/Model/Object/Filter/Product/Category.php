@@ -47,7 +47,7 @@ class Mzax_Emarketing_Model_Object_Filter_Product_Category
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
         $categoryIds = $this->getData('value');
-        if(empty($categoryIds)) {
+        if (empty($categoryIds)) {
             $query->where('FALSE = TRUE');
             return;
         }
@@ -58,7 +58,7 @@ class Mzax_Emarketing_Model_Object_Filter_Product_Category
         $query->joinTable('product_id', 'catalog/category_product', 'link')->group();
         $query->addBinding('category_id', 'category_id', 'link');
         
-        if($operator === '()') {
+        if ($operator === '()') {
             $query->where('`link`.`category_id` IN(?)', $categoryIds);
         }
         else {

@@ -30,7 +30,7 @@ class Mzax_Emarketing_Model_Report_Seeder
     public function run()
     {
         $adapter = $this->getWriteAdapter();
-        if(1) {
+        if (1) {
             $adapter->query("SET foreign_key_checks = 0;");
             $adapter->truncateTable($this->_getTable('mzax_emarketing/recipient'));
             $adapter->truncateTable($this->_getTable('mzax_emarketing/recipient_event'));
@@ -518,7 +518,7 @@ UA;
         /* @var $resource Mzax_Emarketing_Model_Resource_Useragent */
         $resource = Mage::getResourceSingleton('mzax_emarketing/useragent');
         
-        foreach($ua as $useragent) {
+        foreach ($ua as $useragent) {
             $resource->getUserAgentId($useragent);
         }
         $resource->parse();
@@ -621,7 +621,7 @@ UA;
         $table = $this->getResourceHelper()->getTable('mzax_emarketing/recipient');
         
         $adapter = $this->getWriteAdapter();
-        if($clear) {
+        if ($clear) {
             $adapter->query("SET foreign_key_checks = 0;");
             $adapter->truncateTable($table);
             $adapter->query("SET foreign_key_checks = 1;");
@@ -764,14 +764,14 @@ UA;
      */
     public function getRandomValueExpr($list)
     {
-        if(!is_array($list)) {
+        if (!is_array($list)) {
             $list = func_get_args();
         }
         
         $adapter = $this->getWriteAdapter();
         
         $values = array();
-        foreach($list as $value) {
+        foreach ($list as $value) {
             $values[] = $adapter->quote($value);
         }
     
@@ -796,7 +796,7 @@ UA;
         $minStart = DateTime::createFromFormat(Varien_Date::DATE_PHP_FORMAT, $minStart)->getTimestamp();
         $maxStart = DateTime::createFromFormat(Varien_Date::DATE_PHP_FORMAT, $maxStart)->getTimestamp();
         
-        if(!$this->_campaigns) {
+        if (!$this->_campaigns) {
             for($i = 1; $i <= self::NUMBER_OF_CAMPAIGNS; $i++) {
                 $start = mt_rand($minStart, $maxStart);
                 $end   = mt_rand($start + $minRunTime, $today);
@@ -853,8 +853,8 @@ UA;
         $adapter->truncateTable($table);
         
         $inserts = array();
-        foreach($this->_dimensionsEnum as $dimension) {
-            foreach($dimension['values'] as $value) {
+        foreach ($this->_dimensionsEnum as $dimension) {
+            foreach ($dimension['values'] as $value) {
                 $cells = array();
                 $cells[] = $adapter->quote($dimension['id']);
                 $cells[] = $adapter->quote($value['id']);
@@ -891,12 +891,12 @@ UA;
         $this->beginnTempTable('mzax_emarketing/report_dimension');
         
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
-        foreach($this->getCampaigns() as $campaignId => $campaign) {
+        foreach ($this->getCampaigns() as $campaignId => $campaign) {
             
             
             $this->log("Aggregate dimensions for campaign: $campaignId", 1);
             
-            foreach($dimensions as $dimension => $values) {
+            foreach ($dimensions as $dimension => $values) {
             
                 $this->log("Aggregate dimension: $dimension", 2);
                 
@@ -907,7 +907,7 @@ UA;
                 $optouts  = rand(2, 6);
                 
                 
-                foreach($values as $value) {
+                foreach ($values as $value) {
                     
                     list($dimensionId, $valueId) = $this->registerDimensionValue($dimension, $value);
                     
@@ -932,7 +932,7 @@ UA;
                     $bounces  = (int) ($bounces * $m);
                     $optouts  = (int) ($optouts * $m);
                     
-                    foreach($campaign[2] as $variationId => $range) {
+                    foreach ($campaign[2] as $variationId => $range) {
                         $this->_insertData($range[0], $range[1], array(
                             'campaign_id'  => $campaignId,
                             'variation_id' => $variationId,
@@ -957,16 +957,16 @@ UA;
         
         $this->beginnTempTable('mzax_emarketing/report_dimension_conversion');
         
-        foreach($this->getTrackers() as $trackerId)
+        foreach ($this->getTrackers() as $trackerId)
         {
             $this->log("Tracker: $trackerId", 1);
-            foreach($this->getCampaigns() as $campaignId => $campaign) 
+            foreach ($this->getCampaigns() as $campaignId => $campaign) 
             {
                 $this->log("Aggregate dimensions convertion for campaign: $campaignId", 2);
-                foreach($dimensions as $dimension => $values) 
+                foreach ($dimensions as $dimension => $values) 
                 {
                     $this->log("Aggregate dimension: $dimension", 3);
-                    foreach($values as $value) 
+                    foreach ($values as $value) 
                     {
                         list($dimensionId, $valueId) = $this->registerDimensionValue($dimension, $value);
             
@@ -981,7 +981,7 @@ UA;
                             'revenue'      => 'RANGE(1000,20000,100)',
                         ));
             
-                        foreach($campaign[2] as $variationId => $range) {
+                        foreach ($campaign[2] as $variationId => $range) {
                             $this->_insertData($range[0], $range[1], array(
                                 'campaign_id'  => $campaignId,
                                 'variation_id' => $variationId,
@@ -1014,7 +1014,7 @@ UA;
         $vkey = trim(strtolower($value));
         
         
-        if(!isset($this->_dimensionsEnum[$dkey])) {
+        if (!isset($this->_dimensionsEnum[$dkey])) {
             $this->_dimensionsEnum[$dkey] = array(
                 'id'     => count($this->_dimensionsEnum)+1,
                 'label'  => $dimension,
@@ -1024,7 +1024,7 @@ UA;
         
         $values = &$this->_dimensionsEnum[$dkey]['values'];
         
-        if(!isset($values[$vkey])) {
+        if (!isset($values[$vkey])) {
             $values[$vkey] = array(
                 'id'    => count($values)+1,
                 'label' => $value
@@ -1045,10 +1045,10 @@ UA;
         
         
         $sql = array();
-        foreach($data as $row) {
+        foreach ($data as $row) {
             $insert = array();
             $insert[] = (int) $campaignId;
-            if($variationId !== null) {
+            if ($variationId !== null) {
                 $insert[] = (int) $variationId;
             }
             else {
@@ -1057,7 +1057,7 @@ UA;
             $insert[] = (int) $dimensionId;
             $insert[] = (int) $valueId;
             
-            foreach($row as $col => $val) {
+            foreach ($row as $col => $val) {
                 $insert[] = $adapter->quote($val);
             }
             $sql[] = '(' . implode(', ', $insert) . ')';
@@ -1087,7 +1087,7 @@ UA;
         $this->log("Aggregate Report Data");
         
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
-        foreach($this->getCampaigns() as $campaignId => $campaign) 
+        foreach ($this->getCampaigns() as $campaignId => $campaign) 
         {
             $this->log("Campaign: $campaignId", 1);
             $this->_insertData($campaign[0], $campaign[1], array(
@@ -1101,7 +1101,7 @@ UA;
                 'optouts'      => 'RANGE(0,5)'
             ));
             
-            foreach($campaign[2] as $variationId => $range) 
+            foreach ($campaign[2] as $variationId => $range) 
             {
                 $this->_insertData($range[0], $range[1], array(
                     'campaign_id'  => $campaignId,
@@ -1120,10 +1120,10 @@ UA;
         
         $this->beginnTempTable('mzax_emarketing/report_conversion');
         
-        foreach($this->getTrackers() as $trackerId) 
+        foreach ($this->getTrackers() as $trackerId) 
         {
             $this->log("Tracker: $trackerId", 1);
-            foreach($this->getCampaigns() as $campaignId => $campaign) 
+            foreach ($this->getCampaigns() as $campaignId => $campaign) 
             {
                 $this->log("Campaign: $campaignId", 2);
                 $this->_insertData($campaign[0], $campaign[1], array(
@@ -1134,7 +1134,7 @@ UA;
                     'hits'         => 'RANGE(0,10)',
                     'revenue'      => 'RANGE(1000,20000,100)',
                 ));  
-                foreach($campaign[2] as $variationId => $range) 
+                foreach ($campaign[2] as $variationId => $range) 
                 {
                     $this->_insertData($range[0], $range[1], array(
                         'campaign_id'  => $campaignId,
@@ -1177,7 +1177,7 @@ UA;
             'date'         => 'result.date',
         );
         
-        foreach($rateColumns as $key) {
+        foreach ($rateColumns as $key) {
             $columns[$key.'_rate'] = new Zend_Db_Expr("(SUM(`calc`.`{$key}s`)/SUM(`calc`.`$totalColumn`))*100");
         }
         
@@ -1200,7 +1200,7 @@ UA;
         
         
         $assignments = array();
-        foreach($rateColumns as $key) {
+        foreach ($rateColumns as $key) {
             $assignments[] = "\t`report`.`{$key}_rate` = CONVERT(`rate`.`{$key}_rate`, DECIMAL(5,2))";
         }
         
@@ -1224,13 +1224,13 @@ UA;
     
     protected function _prepareDateRange(&$startDate, &$endDate)
     {
-        if(!$endDate) {
+        if (!$endDate) {
             $endDate = new DateTime;
         }
-        if(is_string($startDate)) {
+        if (is_string($startDate)) {
             $startDate = new DateTime($startDate);
         }
-        if(is_string($endDate)) {
+        if (is_string($endDate)) {
             $endDate = new DateTime($endDate);
         }
     }
@@ -1263,13 +1263,13 @@ UA;
     
     protected function log($message, $indent = 0)
     {
-        if(is_int($message)) {
+        if (is_int($message)) {
             return $this->log(str_repeat("\n", $message), $indent);
         }
-        if(is_int($indent)) {
+        if (is_int($indent)) {
             $this->_currentIndent = $indent;
         }
-        elseif(is_string($indent)) {
+        elseif (is_string($indent)) {
             $indent = $this->_currentIndent + $indent;
         }
         echo str_repeat("    ", $indent) . $message . "\n";
@@ -1403,7 +1403,7 @@ UA;
      */
     protected function commitTempTable()
     {
-        if($this->_destinationTable) {
+        if ($this->_destinationTable) {
             $adapter = $this->getWriteAdapter();
             sleep(1);
             $start =  microtime(true);
@@ -1445,25 +1445,25 @@ UA;
         $null = new Zend_Db_Expr('NULL');
     
         $columns = array();
-        foreach($values as $key => $value) {
-            if($value instanceof Zend_Db_Expr) {
+        foreach ($values as $key => $value) {
+            if ($value instanceof Zend_Db_Expr) {
                 $columns[$key] = $value;
             }
-            else if($value === null) {
+            else if ($value === null) {
                 $columns[$key] = $null;
             }
-            else if(preg_match('/RANGE\(\s*([0-9]+)\s*,\s*([0-9]+)\s*(?:,\s*([0-9]+))?\)/i', $value, $match)) {
+            else if (preg_match('/RANGE\(\s*([0-9]+)\s*,\s*([0-9]+)\s*(?:,\s*([0-9]+))?\)/i', $value, $match)) {
                 $min = $match[1];
                 $scale = $match[2] - $min;
                 
-                if(isset($match[3])) {
+                if (isset($match[3])) {
                     $min /= $match[3];
                     $scale /= $match[3];
                 }
                 
                 $columns[$key] = new Zend_Db_Expr("FLOOR({$min} + (RAND() * $scale))");
             }
-            else if($value === 'DATE()') {
+            else if ($value === 'DATE()') {
                 $columns[$key] = 'temp_range.date';
             }
             else {
@@ -1493,11 +1493,11 @@ UA;
      */
     protected function _getTable($table, $alias = null)
     {
-        if($table instanceof Zend_Db_Select) {
+        if ($table instanceof Zend_Db_Select) {
             return array($alias => $table);
         }
         $table = $this->getResourceHelper()->getTable($table);
-        if($alias) {
+        if ($alias) {
             return array($alias => $table);
         }
         return $table;

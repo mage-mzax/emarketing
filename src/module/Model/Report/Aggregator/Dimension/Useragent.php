@@ -39,7 +39,7 @@ class Mzax_Emarketing_Model_Report_Aggregator_Dimension_Useragent
     
     protected function _aggregate()
     {
-        if(!$this->_options->getTrackerId()) {
+        if (!$this->_options->getTrackerId()) {
             $this->aggregateSendings();
             $this->aggregateEvent(Mzax_Emarketing_Model_Recipient::EVENT_TYPE_VIEW,  'views');
             $this->aggregateEvent(Mzax_Emarketing_Model_Recipient::EVENT_TYPE_CLICK, 'clicks');
@@ -60,7 +60,7 @@ class Mzax_Emarketing_Model_Report_Aggregator_Dimension_Useragent
      */
     protected function joinLastViewEvent(Mzax_Emarketing_Db_Select $select)
     {
-        if($select->hasAnyBindings('event_id', 'useragent_id')) {
+        if ($select->hasAnyBindings('event_id', 'useragent_id')) {
             return;
         }
         
@@ -103,7 +103,7 @@ class Mzax_Emarketing_Model_Report_Aggregator_Dimension_Useragent
     
     public function getValues()
     {
-        if(!$this->_values) {
+        if (!$this->_values) {
             $select = $this->_select('useragent', null, $this->_column)->distinct();
             $select->where('ua IS NOT NULL');
             $this->_values = $this->_getWriteAdapter()->fetchCol($select);

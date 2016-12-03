@@ -143,7 +143,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
     public function allowPrerender()
     {
         $data = $this->getRecipient()->getContent()->getMediumData();
-        if(isset($data['prerender']) && $data['prerender']) {
+        if (isset($data['prerender']) && $data['prerender']) {
             return true;
         }
         return false;
@@ -215,14 +215,14 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         $content = $this->getRecipient()->getContent();
         $store   = $this->getRecipient()->getStore();
 
-        if($this->allowPrerender()) {
+        if ($this->allowPrerender()) {
             $cacheId = self::PRERENDER_CACHE_PREFIX . $content->getContentCacheId();
 
             $data = Mage::app()->loadCache($cacheId);
-            if($data) {
+            if ($data) {
                 $data = unserialize($data);
             }
-            if(!$data) {
+            if (!$data) {
                 $storeId = $this->getRecipient()->getStoreId();
 
                 /* @var $processor Mzax_Emarketing_Model_Medium_Email_Processor */
@@ -242,11 +242,11 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
                 $bodyText = $processor->getBodyText();
                 $this->revertDesign();
 
-                if(Mage::getStoreConfigFlag('mzax_emarketing/email/css_inliner', $storeId)) {
+                if (Mage::getStoreConfigFlag('mzax_emarketing/email/css_inliner', $storeId)) {
                     $this->inlineCss($bodyHtml);
                 }
 
-                if(Mage::getStoreConfigFlag('mzax_emarketing/email/remove_comments', $storeId)) {
+                if (Mage::getStoreConfigFlag('mzax_emarketing/email/remove_comments', $storeId)) {
                     $this->removeComments($bodyHtml);
                 }
 
@@ -287,7 +287,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
      */
     public function compose($previewMode = false)
     {
-        if(!$this->_recipient) {
+        if (!$this->_recipient) {
             throw new Exception("Can not compose email without a recipient");
         }
         $this->reset();
@@ -299,7 +299,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         $processor = $this->getTemplateProcessor();
         $processor->isPreview($previewMode);
 
-        if($this->allowPrerender()) {
+        if ($this->allowPrerender()) {
             $this->_subject  = $processor->getSubject();
             $processor->setVariables(array('subject' => $this->_subject));
 
@@ -328,10 +328,10 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
             $this->parseLinks($this->_bodyHtml);
 
 
-            if(Mage::getStoreConfigFlag('mzax_emarketing/email/css_inliner', $storeId)) {
+            if (Mage::getStoreConfigFlag('mzax_emarketing/email/css_inliner', $storeId)) {
                 $this->inlineCss($this->_bodyHtml);
             }
-            if(Mage::getStoreConfigFlag('mzax_emarketing/email/remove_comments', $storeId)) {
+            if (Mage::getStoreConfigFlag('mzax_emarketing/email/remove_comments', $storeId)) {
                 $this->removeComments($this->_bodyHtml);
             }
         }
@@ -423,7 +423,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
     {
         list($linkHtml, $url, $anchor) = $matches;
 
-        if(strpos(strtolower($url), 'mailto:') === 0) {
+        if (strpos(strtolower($url), 'mailto:') === 0) {
             return $linkHtml;
         }
 
@@ -453,7 +453,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         $key = md5(strtolower($url.$anchor));
 
         // if not yet created, create new one
-        if(!isset($this->_linkReferences[$key])) {
+        if (!isset($this->_linkReferences[$key])) {
             /* @var $reference Mzax_Emarketing_Model_Link_Reference */
             $reference = Mage::getModel('mzax_emarketing/link_reference');
             $reference->setRecipient($this->_recipient);
@@ -495,11 +495,11 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         $beaconHtml = "<img alt=\"{$this->_recipient->getCampaign()->getStore()->getName()}\" src=\"{$this->getBeaconImage()}\" style=\"width:10px; height:5px;\" />";
 
         // if beacon placeholder exist replace it
-        if(strpos($html, self::BEACON_PLACEHOLDER) !== false) {
+        if (strpos($html, self::BEACON_PLACEHOLDER) !== false) {
             $html = str_replace(self::BEACON_PLACEHOLDER, $beaconHtml, $html);
         }
         // if not try to append it just before the body tag closes
-        else if(strpos($html, "</body>") !== false) {
+        else if (strpos($html, "</body>") !== false) {
             $html = str_replace("</body>", "{$beaconHtml}\n</body>", $html);
         }
         // if everything fails add it to the end
@@ -550,7 +550,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
      */
     public function _getTagByUsemap($usemap)
     {
-        if(preg_match("!<[^>]*usemap=\"#{$usemap}\"[^>]*>!is", $this->_bodyHtml, $matches)) {
+        if (preg_match("!<[^>]*usemap=\"#{$usemap}\"[^>]*>!is", $this->_bodyHtml, $matches)) {
             return $matches[0];
         }
         return '';
@@ -564,16 +564,16 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
     {
         list($area, $url) = $matches;
 
-        if(strpos(strtolower($url), 'mailto:') === 0) {
+        if (strpos(strtolower($url), 'mailto:') === 0) {
             return $url;
         }
 
         $label = array($this->_currentMapName[1]);
 
-        if($shape = $this->_extractAttribute($area, 'shape')) {
+        if ($shape = $this->_extractAttribute($area, 'shape')) {
             $label[] = $shape;
         }
-        if($coords = $this->_extractAttribute($area, 'coords')) {
+        if ($coords = $this->_extractAttribute($area, 'coords')) {
             $label[] = $coords;
         }
 
@@ -597,7 +597,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
      */
     protected function _extractAttribute($htmlTag, $attribute)
     {
-        if(preg_match("!{$attribute}=\"(.*?)\"!i", $htmlTag, $match)) {
+        if (preg_match("!{$attribute}=\"(.*?)\"!i", $htmlTag, $match)) {
             return $match[1];
         }
         return null;

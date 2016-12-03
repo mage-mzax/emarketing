@@ -44,10 +44,10 @@ class Mzax_Emarketing_LinkController extends Mage_Core_Controller_Front_Action
         /* @var $linkReference  Mzax_Emarketing_Model_Link_Reference */
         $linkReference = Mage::getModel('mzax_emarketing/link_reference')->load($publicId, 'public_id');
         
-        if(!$linkReference->getId()) {
+        if (!$linkReference->getId()) {
             // flag bad request
             $attempts = Mage::helper('mzax_emarketing/request')->bad();
-            if($attempts % 100 === 0) {
+            if ($attempts % 100 === 0) {
                 $ip = $this->getRequest()->getServer('REMOTE_ADDR');
                 Mage::helper('mzax_emarketing')
                     ->log("Brute force attempt, to many bad requests from '%s' (%s)", $ip, $attempts);
@@ -56,7 +56,7 @@ class Mzax_Emarketing_LinkController extends Mage_Core_Controller_Front_Action
         }
         
         // stop right here if we can not trust the request anymore
-        if(!Mage::helper('mzax_emarketing/request')->isTrustable()) {
+        if (!Mage::helper('mzax_emarketing/request')->isTrustable()) {
             return $this->_redirectUrl('/');
         }
         
@@ -64,7 +64,7 @@ class Mzax_Emarketing_LinkController extends Mage_Core_Controller_Front_Action
         $recipient = $linkReference->getRecipient();
         $campaign  = $recipient->getCampaign();
         
-        if($recipient->isMock() && !$follow) 
+        if ($recipient->isMock() && !$follow) 
         {
             $this->loadLayout('mzax_redirect');
             $block = $this->getLayout()->getBlock('redirect');

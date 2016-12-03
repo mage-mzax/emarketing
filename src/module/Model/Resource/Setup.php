@@ -41,7 +41,7 @@ class Mzax_Emarketing_Model_Resource_Setup extends Mage_Eav_Model_Entity_Setup
         $resource = Mage::getResourceSingleton('mzax_emarketing/campaign_preset');
         $pattern  = rtrim($dir, DS) . DS . '*' . $resource::SUFFIX;
         
-        foreach(glob($pattern) as $file) {
+        foreach (glob($pattern) as $file) {
             $resource->installFile($file, true, 'Mzax - eMarketing');
         }
         
@@ -57,7 +57,7 @@ class Mzax_Emarketing_Model_Resource_Setup extends Mage_Eav_Model_Entity_Setup
      */
     public function getTable($tableName)
     {
-        if( $tableName instanceof Varien_Db_Ddl_Table ) {
+        if ( $tableName instanceof Varien_Db_Ddl_Table ) {
             return $tableName->getName();
         }
 
@@ -88,7 +88,7 @@ class Mzax_Emarketing_Model_Resource_Setup extends Mage_Eav_Model_Entity_Setup
     {
         $refTable = $this->getTable($refTable);
         
-        if($table instanceof Varien_Db_Ddl_Table) 
+        if ($table instanceof Varien_Db_Ddl_Table) 
         {
             $fkName = $this->getFkName($table->getName(), $columnName, $refTable, $columnName);
             $table->addForeignKey($fkName, $columnName, $refTable, $columnName,

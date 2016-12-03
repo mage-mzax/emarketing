@@ -170,11 +170,11 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
         $column  = $this->getTableColumn();
         $adapter = $query->getAdapter();
         
-        if(!$column) {
+        if (!$column) {
             throw new Exception("No valid table column defined");
         }
         
-        if($this->_tableIdFieldName) {
+        if ($this->_tableIdFieldName) {
             $bind = array($this->_tableIdFieldName => $this->_requireBinding);
         }
         else {
@@ -190,10 +190,10 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
         
 
         // relative date
-        if($this->getData('relative')) {
+        if ($this->getData('relative')) {
             $future = $this->getDirection() == 'future';
             
-            if($this->getAnniversary()) {
+            if ($this->getAnniversary()) {
                 $query->where($this->getAnniversaryTimeExpr('{column_value}', self::VALUE_KEY, $future, $column->applyGmtOffset));
             }
             else {
@@ -202,7 +202,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
             return;
         }
         
-        if($column->type === 'boolean') {
+        if ($column->type === 'boolean') {
             $value = '1';
         }
         
@@ -245,7 +245,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
     {
         parent::prepareGridColumns($grid);
         
-        if($column = $this->getTableColumn()) 
+        if ($column = $this->getTableColumn()) 
         {
             $grid->addColumn('column_value', array(
                 'header'    => ucfirst($column->label),
@@ -269,9 +269,9 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      */
     public function getTableColumn()
     {
-        if( $this->_tableColumn === null) {
+        if ( $this->_tableColumn === null) {
             $column = $this->getData('column');
-            if(isset($this->_columnOptions[$column])) {
+            if (isset($this->_columnOptions[$column])) {
                 $this->_tableColumn = $this->_columnOptions[$column];
             }
             else {
@@ -294,7 +294,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
     protected function prepareForm()
     {
         $column = $this->getTableColumn();
-        if(!$column) {
+        if (!$column) {
             return "**ERROR** NO COLUMN SELECTED.";
         }
         
@@ -304,7 +304,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
         $valueElement = $this->getValueElement();
         
         
-        if($this->getData('relative')) {
+        if ($this->getData('relative')) {
             
             $timeRangeHtml = $this->getTimeRangeHtml(self::VALUE_KEY);
             
@@ -315,7 +315,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
             $timeRangeHtml = $this->getTimeRangeHtml(self::VALUE_KEY);
             $timeDirHtml   = $this->getTimeDirectionHtml(self::VALUE_KEY);
             
-            if($this->getAnniversary()) {
+            if ($this->getAnniversary()) {
                 $text = $this->getDirection() == 'future'
                     ? '%s anniversary is in %s.'
                     : '%s anniversary was %s ago.';
@@ -397,7 +397,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
                 break;
         }
         
-        if($this->getChooserUrl()) {
+        if ($this->getChooserUrl()) {
             $element->setExplicitApply(true);
             $element->setAfterElementHtml($this->getChooserTriggerHtml());
         }
@@ -419,7 +419,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      */
     public function getValueOptions()
     {
-        if($column = $this->getTableColumn()) {
+        if ($column = $this->getTableColumn()) {
             switch($column->type) {
                 case 'boolean':
                     return array(
@@ -441,7 +441,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      */
     public function getGridValueOptions()
     {
-        if($column = $this->getTableColumn()) {
+        if ($column = $this->getTableColumn()) {
             switch($column->type) {
                 case 'boolean':
                     return array(
@@ -449,7 +449,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
                         '0' => $this->__('No')
                     );
             }
-            if(isset($column->gridOptions)) {
+            if (isset($column->gridOptions)) {
                 return $column->gridOptions;
             }
         }
@@ -468,7 +468,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      */
     public function getInputType()
     {
-        if($column = $this->getTableColumn()) {
+        if ($column = $this->getTableColumn()) {
             switch($column->type) {
                 case 'price':
                     return 'numeric';
@@ -490,7 +490,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      */
     public function getColumnType()
     {
-        if($column = $this->getTableColumn()) 
+        if ($column = $this->getTableColumn()) 
         {
             switch($column->type) {
                 case 'multiselect':
@@ -519,12 +519,12 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
     public function addColumn($name, $label, $type = 'numeric', $options = array())
     {
         // assume config source model
-        if(is_string($options)) {
+        if (is_string($options)) {
             $source  = Mage::getSingleton($options);
             $options = array();
-            if(method_exists($source, 'toOptionArray')) {
+            if (method_exists($source, 'toOptionArray')) {
                 // we need a hash, not an array
-                foreach($source->toOptionArray() as $option) {
+                foreach ($source->toOptionArray() as $option) {
                     $options[$option['value']] = $option['label'];
                 }
             }
@@ -568,18 +568,18 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
         $type  = $this->getType();
         $options = array();
         
-        foreach($this->getColumnOptions() as $column) 
+        foreach ($this->getColumnOptions() as $column) 
         {
             $options[$type.'?column=' . $column->name] = "{$title} | {$column->label}";
-            if($column->type === 'date') {
+            if ($column->type === 'date') {
                 
-                if($column->allowFuture) {
+                if ($column->allowFuture) {
                     $options[$type.'?column='.$column->name.'?relative=1?direction=future'] = $title . ' | ' . $this->__('%s is in...', $column->label); 
                 }
-                if($column->allowPast) {
+                if ($column->allowPast) {
                     $options[$type.'?column='.$column->name.'?relative=1?direction=past']   = $title . ' | ' . $this->__('%s was ... ago', $column->label);
                 }
-                if($column->allowAnniversary) {
+                if ($column->allowAnniversary) {
                     $options[$type.'?column='.$column->name.'?relative=1?anniversary=1?direction=future'] = $title . ' | ' . $this->__('%s anniversary is in...', $column->label);
                     $options[$type.'?column='.$column->name.'?relative=1?anniversary=1?direction=past']   = $title . ' | ' . $this->__('%s anniversary was ... ago', $column->label);
                 }

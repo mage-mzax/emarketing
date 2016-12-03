@@ -59,16 +59,16 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
         $condition = $this->getDataSetDefault('condition', self::DEFAULT_CONDITION);
         $status    = $this->getDataSetDefault('status',    self::DEFAULT_STATUS);
         
-        if(!$query->hasBinding('subscriber_status'))
+        if (!$query->hasBinding('subscriber_status'))
         {
-            if($query->hasBinding('subscriber_id')) {
+            if ($query->hasBinding('subscriber_id')) {
                 $query->joinTableLeft('subscriber_id', 'newsletter/subscriber', 'subscriber');
             }
-            else if($query->hasBinding('email')) {
+            else if ($query->hasBinding('email')) {
                 $query->joinTableLeft(array('subscriber_email' => 'email'), 'newsletter/subscriber', 'subscriber');
             }
 
-            else if($query->hasBinding('customer_id')) {
+            else if ($query->hasBinding('customer_id')) {
                 $query->joinTableLeft('customer_id', 'newsletter/subscriber', 'subscriber');
             }
             $query->addBinding('subscriber_status', 'subscriber.subscriber_status');
@@ -76,7 +76,7 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
             $query->group();
         }   
 
-        if($condition === 'is') {
+        if ($condition === 'is') {
             $query->where("{subscriber_status} = ?", $status);
         }
         else {
@@ -84,10 +84,10 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
         }
 
 
-        if(Mage::getStoreConfigFlag('mzax_emarketing/general/newsletter_multistore'))
+        if (Mage::getStoreConfigFlag('mzax_emarketing/general/newsletter_multistore'))
         {
             $storeId = (int) $this->getStore();
-            if($storeId && $query->hasBinding('subscriber_store')) {
+            if ($storeId && $query->hasBinding('subscriber_store')) {
                 $query->where("{subscriber_store} = ?", $storeId);
             }
         }
@@ -156,7 +156,7 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
 
         /* @see Mage_Adminhtml_Model_System_Config_Source_Store */
         $stores = Mage::getSingleton('adminhtml/system_config_source_store')->toOptionArray();
-        foreach($stores as $store) {
+        foreach ($stores as $store) {
             $options[$store['value']] = $store['label'];
         }
 
@@ -204,15 +204,15 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
         $indexList = $adapter->getIndexList($table);
 
         // check if we already created an index
-        if(isset($indexList['MZAX_IDX_EMAIL'])) {
+        if (isset($indexList['MZAX_IDX_EMAIL'])) {
             return true;
         }
 
         // check for other indexes that can work
-        foreach($indexList as $index) {
+        foreach ($indexList as $index) {
             switch(count($index['fields'])) {
                 case 1:
-                    if($index['fields'][0] === 'subscriber_email') {
+                    if ($index['fields'][0] === 'subscriber_email') {
                         return true;
                     }
                     break;
@@ -220,20 +220,20 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
         }
 
 
-        if($create && $this->canCreateIndex()) {
+        if ($create && $this->canCreateIndex()) {
             try {
                 $adapter->addIndex($table, 'MZAX_IDX_EMAIL', array('subscriber_email'));
                 return true;
             }
             catch(Exception $e) {
-                if(Mage::getIsDeveloperMode()) {
+                if (Mage::getIsDeveloperMode()) {
                     throw $e;
                 }
                 Mage::logException($e);
                 return $this->__('Failed to create an index for the table "%s". Please check logs.', $table);
             }
         }
-        else if($this->canCreateIndex()) {
+        else if ($this->canCreateIndex()) {
             return true;
         }
 

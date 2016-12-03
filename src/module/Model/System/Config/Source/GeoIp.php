@@ -29,7 +29,7 @@ class Mzax_Emarketing_Model_System_Config_Source_Geoip
     public function toOptionArray($isMultiselect=false)
     {
         $options = array();
-        foreach($this->getAdapters() as $name => $adapter) {
+        foreach ($this->getAdapters() as $name => $adapter) {
             $options[] = array(
                 'value' => $name, 
                 'label' => $adapter->getName()
@@ -45,19 +45,19 @@ class Mzax_Emarketing_Model_System_Config_Source_Geoip
     
     public function getAdapters()
     {
-        if(!$this->_adapters) {
+        if (!$this->_adapters) {
             $this->_adapters = array();
         
-            foreach($this->getConfig()->children() as $name => $cfg) {
+            foreach ($this->getConfig()->children() as $name => $cfg) {
         
                 $adapterClass = $cfg->getClassName();
         
-                if(!class_exists($adapterClass)) {
+                if (!class_exists($adapterClass)) {
                     continue;
                 }
         
                 $adapter = new $adapterClass;
-                if(!$adapter instanceof Mzax_GeoIp_Adapter_Abstract) {
+                if (!$adapter instanceof Mzax_GeoIp_Adapter_Abstract) {
                     continue;
                 }
         
@@ -82,8 +82,8 @@ class Mzax_Emarketing_Model_System_Config_Source_Geoip
         $selectedAdapters = explode(',', $selectedAdapters);
         
         $selected = array();
-        foreach($selectedAdapters as $name) {
-            if(isset($adapters[$name])) {
+        foreach ($selectedAdapters as $name) {
+            if (isset($adapters[$name])) {
                 $selected[$name] = $adapters[$name];
             }
         }
@@ -100,7 +100,7 @@ class Mzax_Emarketing_Model_System_Config_Source_Geoip
      */
     public function getConfig()
     {
-        if(!$this->_config) {
+        if (!$this->_config) {
             $this->_config = Mage::getConfig()->getNode('global/mzax_emarketing/geoip_adapters');
         }
         return $this->_config;

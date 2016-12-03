@@ -117,7 +117,7 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Previous
         $cond['customer_id'] = '{customer_id}';
         
         
-        if($type === 'preceded') {
+        if ($type === 'preceded') {
             $cond[] = new Zend_Db_Expr('`prev_orders`.`ordered_at` < ' . '{ordered_at}');
             $cond[] = new Zend_Db_Expr('`prev_orders`.`ordered_at` > ' . $this->getTimeExpr('offset', '{ordered_at}', true));
         }

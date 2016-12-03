@@ -36,7 +36,7 @@ class Mzax_Emarketing_Model_Outbox
         $collection = Mage::getResourceModel('mzax_emarketing/outbox_email_collection');
         $collection->assignRecipients();
         $collection->assignCampaigns();
-        if($ids) {
+        if ($ids) {
             $collection->addIdFilter($ids);
         }
         return $collection;
@@ -51,7 +51,7 @@ class Mzax_Emarketing_Model_Outbox
      */
     public function getEmailByRecipient($recipient)
     {
-        if($recipient instanceof Mzax_Emarketing_Model_Recipient) {
+        if ($recipient instanceof Mzax_Emarketing_Model_Recipient) {
             $recipient = $recipient->getId();
         }
         
@@ -74,8 +74,8 @@ class Mzax_Emarketing_Model_Outbox
         $options = new Varien_Object($options);
         
         $lock = Mage::helper('mzax_emarketing')->lock('send_emails');
-        if(!$lock) {
-            if($options->getVerbose()) {
+        if (!$lock) {
+            if ($options->getVerbose()) {
                 echo "\nACITVE LOCK- STOP\n\n\n";
             }
             return false;
@@ -100,21 +100,21 @@ class Mzax_Emarketing_Model_Outbox
         $emails->setOrder('expire_at', 'ASC');
         $emails->setPageSize($maximum);
         
-        if(!$force) {
+        if (!$force) {
             $emails->addTimeFilter($now);
         }
         
-        if(!empty($emailIds)) {
+        if (!empty($emailIds)) {
             $emails->addFieldToFilter('email_id', array('in' => $emailIds));
         }
         
-        if($options->getVerbose()) {
+        if ($options->getVerbose()) {
             echo "\n\n{$emails->getSelect()}\n\n";
         }
                 
         
         $domainThrottle = $this->enableDomainThrottling();
-        if($domainThrottle) {
+        if ($domainThrottle) {
             /* @var $domainThrottle Mzax_Emarketing_Model_DomainThrottle */
             $domainThrottle = Mage::getModel('mzax_emarketing/domainThrottle');
             $domainThrottle->setTimeThreshold($this->getConfig('time_threshold'));
@@ -122,8 +122,8 @@ class Mzax_Emarketing_Model_Outbox
             $domainThrottle->setRestTime($this->getConfig('rest_time'));
             
             $domainSpecific = $this->getConfig('domain_specific');
-            if($domainSpecific) {
-                foreach(unserialize($domainSpecific) as $data) {
+            if ($domainSpecific) {
+                foreach (unserialize($domainSpecific) as $data) {
                     $domainThrottle->addDomainOption($data['domain'], 
                                                      $data['time_threshold'], 
                                                      $data['send_threshold'], 
@@ -134,7 +134,7 @@ class Mzax_Emarketing_Model_Outbox
             $domainThrottle->purge();
         }
         
-        if($options->getVerbose()) {
+        if ($options->getVerbose()) {
             echo sprintf("found %s emails...\n", count($emails));
         }
         
@@ -144,23 +144,23 @@ class Mzax_Emarketing_Model_Outbox
         $count = 0;
         
         /* @var $email Mzax_Emarketing_Model_Outbox_Email */
-        foreach($emails as $email) {
+        foreach ($emails as $email) {
             
             // recipient may has been removed, if so - discard email
-            if(!$email->getRecipient()->getId()) {
+            if (!$email->getRecipient()->getId()) {
                 $email->setStatus(Mzax_Emarketing_Model_Outbox_Email::STATUS_DISCARDED);
                 $email->getLog()->warn("Recipient does not exist any more.");
                 $email->save();
                 continue;
             }
             
-            if(time() - $start > $timeout) {
+            if (time() - $start > $timeout) {
                 $this->log("Mzax Emarketing: Reached timelimit of {$timeout}sec", $options->getVerbose());
                 break;
             }
             
             // check if we can still send the message or if we missed the expire date
-            if($email->isExpired($now)) {
+            if ($email->isExpired($now)) {
                 $email->setStatus(Mzax_Emarketing_Model_Outbox_Email::STATUS_EXPIRED);
                 $warn = "Message has expired, stop sending";
                 $email->getLog()->warn($warn);
@@ -169,11 +169,11 @@ class Mzax_Emarketing_Model_Outbox
             }
             
             // check if we can send now if not ignore
-            if(!$email->canSend($now)) {
+            if (!$email->canSend($now)) {
                 continue;
             }
             
-            if($domainThrottle && ($time = $domainThrottle->isResting($email->getDomain()))) {
+            if ($domainThrottle && ($time = $domainThrottle->isResting($email->getDomain()))) {
                 $notice = "DomainThrottle currently prevents this message from sending for at least $time more seconds";
                 $this->log($notice, $options->getVerbose());
                 $email->getLog()->notice($notice);
@@ -181,7 +181,7 @@ class Mzax_Emarketing_Model_Outbox
                 continue;
             }
             
-            if($options->getVerbose()) {
+            if ($options->getVerbose()) {
                 echo sprintf("try sending email %s to %s.\n", $email->getId(), $email->getTo());
             }
             
@@ -204,7 +204,7 @@ class Mzax_Emarketing_Model_Outbox
     protected function log($message, $verbose = false)
     {
         Mage::helper('mzax_emarketing')->log($message);
-        if($verbose) {
+        if ($verbose) {
             echo "$message\n";
         }
     }

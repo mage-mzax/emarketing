@@ -21,6 +21,7 @@
     	"symfony/css-selector": "~2.7",
     	"soundasleep/html2text": "*",
     	"ua-parser/uap-php": "~3.4",
-    	"tijsverkoyen/css-to-inline-styles": "~1.5"
+    	"tijsverkoyen/css-to-inline-styles": "~1.5",
+        "squizlabs/php_codesniffer": "^2.7"
     }
 }

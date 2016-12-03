@@ -121,7 +121,7 @@ class Mzax_Emarketing_Model_Resource_Collection_Product extends Mage_Catalog_Mod
      */
     public function addCustomerEventFilter($customer, $event = false)
     {
-        if($customer instanceof Varien_Object) {
+        if ($customer instanceof Varien_Object) {
             $customer = $customer->getId();
         }
         
@@ -130,7 +130,7 @@ class Mzax_Emarketing_Model_Resource_Collection_Product extends Mage_Catalog_Mod
             'subject_id' => $customer
         );
         
-        if($event = $this->getEventTypeId($event)) {
+        if ($event = $this->getEventTypeId($event)) {
             $cond['event_type_id'] = $event;
         }
         
@@ -161,13 +161,13 @@ class Mzax_Emarketing_Model_Resource_Collection_Product extends Mage_Catalog_Mod
      */
     public function getEventTypeId($event)
     {
-        if(!self::$_eventTypes) {
+        if (!self::$_eventTypes) {
             self::$_eventTypes = Mage::getResourceModel('reports/event_type_collection')->toOptionArray();
         }
         
         // assume event type id
-        if(is_numeric($event)) {
-            if(array_key_exists($event, self::$_eventTypes)) {
+        if (is_numeric($event)) {
+            if (array_key_exists($event, self::$_eventTypes)) {
                 return (int) $event;
             }
             return false;

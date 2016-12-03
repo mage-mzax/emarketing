@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -18,41 +18,41 @@
  */
 
 /**
- * 
+ *
  * @author Jacob Siefer
  *
  */
 class Mzax_Emarketing_Model_Object_Filter_Address_Country
     extends Mzax_Emarketing_Model_Object_Filter_Column
 {
-    
+
 
     protected $_formText = '%s %s %s.';
-    
-    
+
+
     /**
      *
      * @var string
      */
     protected $_requireBinding = 'country_id';
-    
-    
-    
+
+
+
     protected $_label = 'Country';
-    
-    
+
+
     protected $_inputType = 'multiselect';
-    
-    
+
+
 
     public function getTitle()
     {
         return "Address | Country";
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Retrieve all value options as hash
      *
@@ -63,17 +63,17 @@ class Mzax_Emarketing_Model_Object_Filter_Address_Country
     public function getValueOptions()
     {
         $array = Mage::getResourceSingleton('directory/country_collection')->toOptionArray(false);
-        
+
         $options = array();
-        foreach($array as $option) {
+        foreach ($array as $option) {
             $options[$option['value']] = $option['label'];
         }
-        
+
         return $options;
     }
-    
-    
-    
-    
+
+
+
+
 
 }

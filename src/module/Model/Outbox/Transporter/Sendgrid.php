@@ -110,7 +110,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_Sendgrid
         $this->_categoryTags = Mage::getStoreConfigFlag('mzax_emarketing/email/sendgrid_category_tags', $store);
         $this->_uniqueArgs   = Mage::getStoreConfigFlag('mzax_emarketing/email/sendgrid_unique_args', $store);
         
-        if(!empty($category)) {
+        if (!empty($category)) {
             $this->_category = preg_split('/[\s,]+/', $category, -1, PREG_SPLIT_NO_EMPTY);
         }
         
@@ -146,20 +146,20 @@ class Mzax_Emarketing_Model_Outbox_Transporter_Sendgrid
         
         
         // @see https://sendgrid.com/docs/API_Reference/SMTP_API/categories.html
-        if(is_array($this->_category)) {
+        if (is_array($this->_category)) {
             $smtpApi['category'] = $this->_category;
         }
         
-        if($mail instanceof Mzax_Emarketing_Model_Outbox_Email_Mail) {
+        if ($mail instanceof Mzax_Emarketing_Model_Outbox_Email_Mail) {
             
             $recipient = $mail->getRecipient();
             $campaign  = $recipient->getCampaign();
             
-            if($this->_categoryTags) {
+            if ($this->_categoryTags) {
                 $smtpApi['category'] = array_merge($campaign->getTags(), $smtpApi['category']);
             }
             
-            if($this->_uniqueArgs) {
+            if ($this->_uniqueArgs) {
                 $smtpApi['unique_args']['mzax_campaign']     = $campaign->getName();
                 $smtpApi['unique_args']['mzax_campaign_id']  = $campaign->getId();
                 $smtpApi['unique_args']['mzax_recipient_id'] = $recipient->getId();

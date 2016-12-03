@@ -52,8 +52,8 @@ class Mzax_Emarketing_Model_Object_Filter_Product_Attribute
     
     protected function isAttributeAllowed(Mage_Eav_Model_Entity_Attribute_Abstract $attribute)
     {
-        if($attribute instanceof Mage_Catalog_Model_Resource_Eav_Attribute) {
-            if($attribute->isAllowedForRuleCondition() && $attribute->getDataUsingMethod($this->_isUsedForRuleProperty)) {
+        if ($attribute instanceof Mage_Catalog_Model_Resource_Eav_Attribute) {
+            if ($attribute->isAllowedForRuleCondition() && $attribute->getDataUsingMethod($this->_isUsedForRuleProperty)) {
                 return true;
             }
         }
@@ -67,7 +67,7 @@ class Mzax_Emarketing_Model_Object_Filter_Product_Attribute
     
     public function getChooserUrl()
     {
-        if($this->getAttribute()->getAttributeCode() === 'sku') {
+        if ($this->getAttribute()->getAttributeCode() === 'sku') {
             return 'adminhtml/promo_widget/chooser/attribute/sku/form/filter_conditions_fieldset';
         }        
     }

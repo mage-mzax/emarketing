@@ -51,7 +51,7 @@ class Mzax_Emarketing_Model_Resource_Campaign_Variation_Collection extends Mage_
      */
     public function addCampaignFilter($campaign)
     {
-        if($campaign instanceof Varien_Object) {
+        if ($campaign instanceof Varien_Object) {
             $campaign = $campaign->getId();
         }
     

@@ -81,11 +81,11 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Subscriber_Collection
 
     protected function bindListId()
     {
-        if(!$this->_list) {
+        if (!$this->_list) {
             throw new Exception("No newsletter list defined");
         }
 
-        if(!$this->_list->getId()) {
+        if (!$this->_list->getId()) {
             throw new Exception("No valid newsletter list defined");
         }
 
@@ -143,7 +143,7 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Subscriber_Collection
 
     protected function _afterLoad()
     {
-        foreach($this->_items as $item) {
+        foreach ($this->_items as $item) {
             $item->setList($this->_list);
         }
     }

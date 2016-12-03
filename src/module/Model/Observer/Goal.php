@@ -58,7 +58,7 @@ class Mzax_Emarketing_Model_Observer_Goal
     {
         try {
             $object = $observer->getEvent()->getDataObject();
-            if($object && method_exists($this, '_beforeSave')) {
+            if ($object && method_exists($this, '_beforeSave')) {
                 $this->_beforeSave($object);
             }
         }
@@ -81,7 +81,7 @@ class Mzax_Emarketing_Model_Observer_Goal
     {
         try {
             $object = $observer->getEvent()->getDataObject();
-            if($object && method_exists($this, '_afterSave')) {
+            if ($object && method_exists($this, '_afterSave')) {
                 $this->_afterSave($object);
             }
         }
@@ -101,7 +101,7 @@ class Mzax_Emarketing_Model_Observer_Goal
      */
     protected function _beforeSave(Mage_Core_Model_Abstract $object)
     {
-        if( $object->isObjectNew() && $object->getSaveMzaxGoalReferences() === null ) {
+        if ( $object->isObjectNew() && $object->getSaveMzaxGoalReferences() === null ) {
             // only if object is new
             $object->setSaveMzaxGoalReferences(true);
         }
@@ -116,7 +116,7 @@ class Mzax_Emarketing_Model_Observer_Goal
      */
     protected function _afterSave(Mage_Core_Model_Abstract $object)
     {
-        if(!$object->getSaveMzaxGoalReferences()) {
+        if (!$object->getSaveMzaxGoalReferences()) {
             return;
         }
         
@@ -126,7 +126,7 @@ class Mzax_Emarketing_Model_Observer_Goal
         $clicks = $this->getSession()->getClickReferences();
         
         $data = array();
-        foreach($clicks as $click) {
+        foreach ($clicks as $click) {
             $data[] = array(
                 'object_type'  => $this->_goalType,
                 'object_id'    => $object->getId(),
@@ -135,7 +135,7 @@ class Mzax_Emarketing_Model_Observer_Goal
             );
         }
         
-        if(!empty($data)) {
+        if (!empty($data)) {
             /* @see Mzax_Emarketing_Model_Resource_Goal */
             Mage::getResourceModel('mzax_emarketing/goal')->insertMultiple($data);
         }
@@ -157,7 +157,7 @@ class Mzax_Emarketing_Model_Observer_Goal
         /* @var $binder Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder */
         $binder = $observer->getEvent()->getBinder();
         
-        if($binder->hasBinding('ORDER')) {
+        if ($binder->hasBinding('ORDER')) {
             $binder->createBinding()
                 ->joinTable(array(
                         'object_type' => Mzax_Emarketing_Model_Goal::TYPE_ORDER,

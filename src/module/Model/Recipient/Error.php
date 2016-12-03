@@ -52,7 +52,7 @@ class Mzax_Emarketing_Model_Recipient_Error extends Mage_Core_Model_Abstract
      */
     public function setRecipientId($recipientId)
     {
-        if(($recipient = $this->getData('recipient')) && 
+        if (($recipient = $this->getData('recipient')) && 
            ($recipient->getId() != $recipientId)) {
             $this->getData('recipient', null);
         }
@@ -85,7 +85,7 @@ class Mzax_Emarketing_Model_Recipient_Error extends Mage_Core_Model_Abstract
      */
     public function _beforeSave()
     {
-        if($this->getRecipient()) {
+        if ($this->getRecipient()) {
             $this->setRecipientId($this->getRecipient()->getId());
             $this->setCampaignId($this->getRecipient()->getCampaignId());
         }
@@ -98,7 +98,7 @@ class Mzax_Emarketing_Model_Recipient_Error extends Mage_Core_Model_Abstract
      */
     public function getRecipient()
     {
-        if(!$recipient = $this->getData('recipient')) {
+        if (!$recipient = $this->getData('recipient')) {
             $recipient = Mage::getModel('mzax_emarketing/recipient')->load($this->getRecipientId());
             $this->setData('recipient', $recipient);
         }

@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -41,7 +41,7 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit_Tabs extends Mage_Adminhtml_Blo
             'active'    => true
         ));
 
-        if($list->getId()) {
+        if ($list->getId()) {
             $this->addTab('subscribers', array(
                 'label'   => $this->__('Subscribers'),
                 'content' => $this->getLayout()->createBlock('mzax_emarketing/newsletter_list_edit_tab_subscribers')->toHtml(),
@@ -59,9 +59,9 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit_Tabs extends Mage_Adminhtml_Blo
     protected function _updateActiveTab()
     {
     	$tabId = $this->getRequest()->getParam('tab');
-    	if( $tabId ) {
+    	if ( $tabId ) {
     		$tabId = preg_replace("#{$this->getId()}_#", '', $tabId);
-    		if($tabId) {
+    		if ($tabId) {
     			$this->setActiveTab($tabId);
     		}
     	}

@@ -47,7 +47,7 @@ class Mzax_Emarketing_Model_Resource_Helper
      */
     public function hasTemporaryTablePrivilege()
     {
-        if($this->_temporaryTablePrivilege === null) {
+        if ($this->_temporaryTablePrivilege === null) {
             try {
                 $this->getAdapter()->query('CREATE TEMPORARY TABLE `mzax_tmp_test` SELECT 1;');
                 $this->_temporaryTablePrivilege = true;
@@ -70,13 +70,13 @@ class Mzax_Emarketing_Model_Resource_Helper
      */
     public function getTable($table)
     {
-        if($table instanceof Zend_Db_Select) {
+        if ($table instanceof Zend_Db_Select) {
             return $table;
         }
-        if($table instanceof Zend_Db_Expr) {
+        if ($table instanceof Zend_Db_Expr) {
             return $table;
         }
-        if(strpos($table, '/') === false) {
+        if (strpos($table, '/') === false) {
             $table = 'mzax_emarketing/' . $table;
         }
         return Mage::getSingleton('core/resource')->getTableName($table);
@@ -139,8 +139,8 @@ class Mzax_Emarketing_Model_Resource_Helper
      */
     public function getTableAlias(Zend_Db_Select $select)
     {    
-        foreach($select->getPart(Zend_Db_Select::FROM) as $alias => $table) {
-            if($table['joinType'] === Zend_Db_Select::FROM) {
+        foreach ($select->getPart(Zend_Db_Select::FROM) as $alias => $table) {
+            if ($table['joinType'] === Zend_Db_Select::FROM) {
                 return $alias;
             }
         }
@@ -165,24 +165,24 @@ class Mzax_Emarketing_Model_Resource_Helper
     public function joinAttribute(Zend_Db_Select $select, $attributeCode, $bind, $alias = null, $joinStatic = false)
     {
         $attribute = $this->getAttribute($attributeCode);
-        if(!$attribute) {
+        if (!$attribute) {
             throw new Exception("Attribute does not exist '$attributeCode'");
         }
         
-        if(!$alias) {
+        if (!$alias) {
             $alias = $attribute->getAttributeCode();
         }
         
         $tableAlias = '_table_'.$alias;
         
-        if(!$attribute->isStatic()) {
+        if (!$attribute->isStatic()) {
             $select->joinLeft(
                     array($tableAlias => $attribute->getBackendTable()),
                     "(`{$tableAlias}`.`entity_id`={$bind}) AND (`{$tableAlias}`.`attribute_id`={$attribute->getId()})", null);
             
             return new Zend_Db_Expr("`{$tableAlias}`.`value`");
         }
-        else if($joinStatic) {
+        else if ($joinStatic) {
             $select->joinLeft(
                     array($tableAlias => $attribute->getBackendTable()),
                     "(`{$tableAlias}`.`entity_id`={$bind})", null);
@@ -203,7 +203,7 @@ class Mzax_Emarketing_Model_Resource_Helper
      */
     public function getEntity($name)
     {
-        if(isset($this->_entities[$name])) {
+        if (isset($this->_entities[$name])) {
             return $this->_entities[$name];
         }
         
@@ -228,7 +228,7 @@ class Mzax_Emarketing_Model_Resource_Helper
      */
     public function getAttribute($attribute)
     {
-        if($attribute instanceof Mage_Eav_Model_Entity_Attribute_Abstract) {
+        if ($attribute instanceof Mage_Eav_Model_Entity_Attribute_Abstract) {
             return $attribute;
         }
         $attrArr = explode('/', $attribute);

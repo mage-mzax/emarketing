@@ -28,12 +28,12 @@ class Mzax_Emarketing_EmailController extends Mage_Core_Controller_Front_Action
     {
         $recipientId = $this->getSession()->getLastRecipientId();
         
-        if(!$recipientId) {
+        if (!$recipientId) {
             return $this->_redirectUrl('/');
         }
         
         $email = Mage::getSingleton('mzax_emarketing/outbox')->getEmailByRecipient($recipientId);
-        if(!$email->getId() || $email->isPurged()) {
+        if (!$email->getId() || $email->isPurged()) {
             return $this->_redirectUrl('/');
         }
         

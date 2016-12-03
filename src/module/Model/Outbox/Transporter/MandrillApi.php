@@ -96,12 +96,12 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         }
 
         // Sub-Account is optional
-        if(!$subAccountId) {
+        if (!$subAccountId) {
             return true;
         }
 
-        foreach($response as $subAccount) {
-            if($subAccount['id'] == $subAccountId) {
+        foreach ($response as $subAccount) {
+            if ($subAccount['id'] == $subAccountId) {
                 return true;
             }
         }
@@ -131,7 +131,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         $this->_metaTags     = Mage::getStoreConfigFlag('mzax_emarketing/email/mandrill_api_metatags', $store);
 
         $defaultTags = Mage::getStoreConfig('mzax_emarketing/email/mandrill_api_default_tags', $store);
-        if(!empty($defaultTags)) {
+        if (!empty($defaultTags)) {
             $this->_defaultTags = preg_split('/[\s,]+/', $defaultTags, -1, PREG_SPLIT_NO_EMPTY);
         }
     }
@@ -149,7 +149,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
 
         $response = $this->_call('messages/send', array('message' => $message));
 
-        if($response[0]['status'] != 'sent') {
+        if ($response[0]['status'] != 'sent') {
             throw new Exception(
                 "Mandrill API status {$response[0]['status']}, reason: {$response[0]['reject_reason']}", 2);
         }
@@ -170,7 +170,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
      */
     protected function _call($action, $data = array())
     {
-        if(!isset($data['key'])) {
+        if (!isset($data['key'])) {
             $data['key'] = $this->_apiKey;
         }
 
@@ -215,7 +215,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         $message['from_name']  = $from[1];
 
 
-        foreach($headers['To'] as $recipient) {
+        foreach ($headers['To'] as $recipient) {
             if (is_string($recipient)) {
                 $recipient = $this->_decodeAddressHeader($recipient);
                 $message['to'][] = array(
@@ -227,7 +227,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         }
         $message['subject'] = $mail->getSubject();
 
-        if($replyTo = $mail->getReplyTo()) {
+        if ($replyTo = $mail->getReplyTo()) {
             $message['headers']['Reply-To'] = $replyTo;
         }
 
@@ -239,11 +239,11 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         $metadata = array();
 
 
-        if(is_array($this->_defaultTags)) {
+        if (is_array($this->_defaultTags)) {
             $tags = $this->_defaultTags;
         }
 
-        if($mail instanceof Mzax_Emarketing_Model_Outbox_Email_Mail)
+        if ($mail instanceof Mzax_Emarketing_Model_Outbox_Email_Mail)
         {
             $message['html'] = $mail->getRawBodyHtml();
             $message['text'] = $mail->getRawBodyText();
@@ -251,18 +251,18 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
             $recipient = $mail->getRecipient();
             $campaign  = $recipient->getCampaign();
 
-            if($this->_categoryTags) {
+            if ($this->_categoryTags) {
                 $tags = array_merge($campaign->getTags(), $tags);
             }
 
             // there is 200 byte limit - keep things short
-            if($this->_metaTags) {
+            if ($this->_metaTags) {
                 $metadata['c_name'] = $campaign->getName();
                 $metadata['c_id']   = $campaign->getId();
                 $metadata['r_id']   = $recipient->getId();
                 $metadata['v_id']   = $recipient->getVariationId();
 
-                if(strlen($metadata['c_name']) > 100) {
+                if (strlen($metadata['c_name']) > 100) {
                     $metadata['c_name'] = substr($metadata['c_name'], 0, 97) . '...';
                 }
             }
@@ -272,13 +272,13 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         $message['tags'] = array();
 
 
-        if(!empty($tags)) {
+        if (!empty($tags)) {
             $message['tags'] = $tags;
         }
-        if(!empty($metadata)) {
+        if (!empty($metadata)) {
             $message['metadata'] = $metadata;
         }
-        if(!empty($this->_subaccount)) {
+        if (!empty($this->_subaccount)) {
             $message['subaccount'] = $this->_subaccount;
         }
 
@@ -304,7 +304,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
             throw new Exception("Unexpected API return value", 1);
         }
 
-        if($response->getStatus() != 200) {
+        if ($response->getStatus() != 200) {
             throw new Exception("Mandrill API Error: {$data['message']}", $data['code']);
         }
 
@@ -328,7 +328,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
      */
     protected function _decodeAddressHeader($header)
     {
-        if(preg_match('/(.*)\s+\<(.+)\>/', $header, $match)) {
+        if (preg_match('/(.*)\s+\<(.+)\>/', $header, $match)) {
             $name = $match[1];
             $email = $match[2];
             // @todo decode more?

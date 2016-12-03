@@ -65,13 +65,13 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
     {
         $params = array();
         
-        if(is_string($path)) {
-            if(strpos($path, '?')) {
+        if (is_string($path)) {
+            if (strpos($path, '?')) {
                 $parts = explode('?', $path);
                 $path = array_shift($parts);
-                foreach($parts as $part) {
+                foreach ($parts as $part) {
                     $var = explode('=', $part, 2);
-                    if(count($var) === 2) {
+                    if (count($var) === 2) {
                         $params[$var[0]] = urldecode($var[1]);
                     }
                 }
@@ -86,7 +86,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
         while(count($path)) {
             $filterName = array_shift($path);
             $filter = $this->getFilterFactory()->factory($filterName);
-            if(!$filter) {
+            if (!$filter) {
                 throw new Exception("No filter found by name: $filterName");
             }
             $filter->setParent($parent);
@@ -143,7 +143,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
     public function getFilter()
     {
         return $this;
-        if(!$this->_filter) {
+        if (!$this->_filter) {
             $this->_filter = Mage::getModel('mzax_emarketing/object_filter_combine')
                 ->load($this->getFilterData())
                 ->setId('1')

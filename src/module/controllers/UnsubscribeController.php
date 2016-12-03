@@ -34,7 +34,7 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
         $session = $this->getSession();
         
         $email = $session->getLastAddress();
-        if(!Zend_Validate::is($email, 'EmailAddress') || $this->getSession()->getIsUnsubscribed()) {
+        if (!Zend_Validate::is($email, 'EmailAddress') || $this->getSession()->getIsUnsubscribed()) {
             return $this->_redirectUrl('/');
         }
         
@@ -55,13 +55,13 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
         $session = $this->getSession();
         $request = $this->getRequest();
 
-        if($request->isPost()) {
+        if ($request->isPost()) {
             do {
-                if($request->getPost('form_key') !== $session->getFormKey()) {
+                if ($request->getPost('form_key') !== $session->getFormKey()) {
                     break;
                 }
                 $email = $request->getPost('email');
-                if($email !== $session->getLastAddress()) {
+                if ($email !== $session->getLastAddress()) {
                     break;
                 }
 
@@ -69,7 +69,7 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
                 $subscriber = Mage::getModel('newsletter/subscriber');
                 $subscriber->loadByEmail($email);
 
-                if(!$subscriber->getId()) {
+                if (!$subscriber->getId()) {
                     break;
                 }
 
@@ -80,8 +80,8 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
                 $collection->addSubscriberToFilter($subscriber);
 
                 /* @var $list Mzax_Emarketing_Model_Newsletter_List */
-                foreach($collection as $list) {
-                    if(in_array($list->getId(), $lists)) {
+                foreach ($collection as $list) {
+                    if (in_array($list->getId(), $lists)) {
                         $list->addSubscribers($subscriber->getId());
                     }
                     else {
@@ -112,18 +112,18 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
         $session = $this->getSession();
         $request = $this->getRequest();
         
-        if($request->isPost()) {
+        if ($request->isPost()) {
             do {
-                if($request->getPost('form_key') !== $session->getFormKey()) {
+                if ($request->getPost('form_key') !== $session->getFormKey()) {
                     break;
                 }
                 $email = $request->getPost('email');
-                if($email !== $session->getLastAddress()) {
+                if ($email !== $session->getLastAddress()) {
                     break;
                 }
 
                 $recipient = $session->getLastRecipient();
-                if($recipient) {
+                if ($recipient) {
                     $recipient->setSkipUnsubscribe(false);
 
                     // allow custom unsubscribe implementation
@@ -132,7 +132,7 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
                         'recipient' => $recipient
                     ));
 
-                    if(!$recipient->getSkipUnsubscribe()) {
+                    if (!$recipient->getSkipUnsubscribe()) {
                         /* @see $subscriber Mzax_Emarketing_Helper_Newsletter */
                         Mage::helper('mzax_emarketing/newsletter')->unsubscribe($email, null, true);
                     }
@@ -153,19 +153,19 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
     public function listAction()
     {
         $hash = $this->getRequest()->getParam('id');
-        if(!$hash) {
+        if (!$hash) {
             die('Invalid');
         }
         
         /* @var $recipient Mzax_Emarketing_Model_Recipient */
         $recipient = Mage::getModel('mzax_emarketing/recipient')->loadByBeacon($hash);
-        if(!$recipient->getId()) {
+        if (!$recipient->getId()) {
             die('Invalid');
         }
         
         $recipient->prepare();
         $email = $recipient->getAddress();
-        if($email) {
+        if ($email) {
             /* @see $subscriber Mzax_Emarketing_Helper_Newsletter */
             Mage::helper('mzax_emarketing/newsletter')->unsubscribe($email, $recipient->getStoreId(), false);
         }
@@ -180,7 +180,7 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
     
     public function doneAction()
     {
-        if(!$this->getSession()->getIsUnsubscribed()) {
+        if (!$this->getSession()->getIsUnsubscribed()) {
             return $this->_redirectUrl('/');
         }
         $this->loadLayout();

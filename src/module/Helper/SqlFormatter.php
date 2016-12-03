@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -282,7 +282,7 @@ class Mzax_Emarketing_Helper_SqlFormatter extends Mage_Core_Helper_Abstract
                 }
             }
 
-            if($ret[self::TOKEN_VALUE] !== null) return $ret;
+            if ($ret[self::TOKEN_VALUE] !== null) return $ret;
         }
 
         // Number (decimal, binary, or hex)
@@ -716,9 +716,9 @@ class Mzax_Emarketing_Helper_SqlFormatter extends Mage_Core_Helper_Abstract
             }
 
             // If this is the "-" of a negative number, it shouldn't have a space after it
-            if($token[self::TOKEN_VALUE] === '-' && isset($tokens[$i+1]) && $tokens[$i+1][self::TOKEN_TYPE] === self::TOKEN_TYPE_NUMBER && isset($tokens[$i-1])) {
+            if ($token[self::TOKEN_VALUE] === '-' && isset($tokens[$i+1]) && $tokens[$i+1][self::TOKEN_TYPE] === self::TOKEN_TYPE_NUMBER && isset($tokens[$i-1])) {
                 $prev = $tokens[$i-1][self::TOKEN_TYPE];
-                if($prev !== self::TOKEN_TYPE_QUOTE && $prev !== self::TOKEN_TYPE_BACKTICK_QUOTE && $prev !== self::TOKEN_TYPE_WORD && $prev !== self::TOKEN_TYPE_NUMBER) {
+                if ($prev !== self::TOKEN_TYPE_QUOTE && $prev !== self::TOKEN_TYPE_BACKTICK_QUOTE && $prev !== self::TOKEN_TYPE_WORD && $prev !== self::TOKEN_TYPE_NUMBER) {
                     $return = rtrim($return,' ');
                 }
             }

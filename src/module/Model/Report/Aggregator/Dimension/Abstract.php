@@ -49,7 +49,7 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Dimension_Abstract
         $this->_lastRecordTime = null;
         
         // only aggregate if we have any values
-        if(count($this->getValues())) {
+        if (count($this->getValues())) {
             $this->_aggregate();
         }
     }
@@ -57,7 +57,7 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Dimension_Abstract
     
     protected function _aggregate()
     {
-        if(!$this->_options->getTrackerId()) {
+        if (!$this->_options->getTrackerId()) {
             $this->aggregateSendings();
             $this->aggregateEvent(Mzax_Emarketing_Model_Recipient::EVENT_TYPE_VIEW,  'views');
             $this->aggregateEvent(Mzax_Emarketing_Model_Recipient::EVENT_TYPE_CLICK, 'clicks');
@@ -487,10 +487,10 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Dimension_Abstract
      */
     protected function _getValueId($value)
     {
-        if(is_array($value)) {
+        if (is_array($value)) {
             $result = array();
-            foreach($value as $v) {
-                if($v) {
+            foreach ($value as $v) {
+                if ($v) {
                     $result[$v] = $this->_getValueId($v);
                 }
             }
@@ -503,7 +503,7 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Dimension_Abstract
         $valueId = $adapter->fetchOne(
             $this->_select()->from($table, 'value_id')->where('`value` = ?', $value));
         
-        if(!$valueId) {
+        if (!$valueId) {
             $adapter->insert($table, array('value' => $value));
             $valueId = (int) $adapter->lastInsertId($table);
         }
@@ -532,8 +532,8 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Dimension_Abstract
         $values = array();
         $ids = array();
     
-        foreach($this->getValueIds() as $value => $id) {
-            if(!empty($sqlValues)) {
+        foreach ($this->getValueIds() as $value => $id) {
+            if (!empty($sqlValues)) {
                 $values[] = array_search($value, $sqlValues);
             }
             else {

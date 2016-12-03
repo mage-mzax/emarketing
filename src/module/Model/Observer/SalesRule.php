@@ -41,7 +41,7 @@ class Mzax_Emarketing_Model_Observer_SalesRule extends Mzax_Emarketing_Model_Obs
     public function addConditions($observer)
     {
         $conditions = $observer->getAdditional()->getConditions();
-        if(!$conditions) {
+        if (!$conditions) {
             $conditions = array();
         }
         
@@ -51,7 +51,7 @@ class Mzax_Emarketing_Model_Observer_SalesRule extends Mzax_Emarketing_Model_Obs
         $attributes = $condition->loadAttributeOptions()->getAttributeOption();
         
         $values = array();
-        foreach($attributes as $attribute => $label) {
+        foreach ($attributes as $attribute => $label) {
             $values[] = array(
                 'value' => "mzax_emarketing/salesRule_condition_emarketing|".$attribute,
                 'label' => $label

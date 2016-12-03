@@ -25,7 +25,7 @@ class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
     {
         parent::preDispatch();
         
-        if(!Mage::getIsDeveloperMode()) {
+        if (!Mage::getIsDeveloperMode()) {
             $this->setFlag('', self::FLAG_NO_DISPATCH, true);
             $this->_redirect('/');
             return;
@@ -86,7 +86,7 @@ class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
         $collection = Mage::getResourceModel('mzax_emarketing/campaign_preset_collection');
         
         
-        foreach($collection as $preset) {
+        foreach ($collection as $preset) {
             var_dump($preset->debug());
         }
         
@@ -110,11 +110,11 @@ class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
         $adapters = Mage::getSingleton('mzax_emarketing/system_config_source_geoIp')->getSelectedAdapters();
         
         /* @var $adapter Mzax_GeoIp_Adapter_Abstract */
-        foreach($adapters as $adapter) {
+        foreach ($adapters as $adapter) {
             $geoIp->addAdapter($adapter);
         }
         
-        if(!$geoIp->hasAdapters()) {
+        if (!$geoIp->hasAdapters()) {
             throw new Exception("No GeoIP adapters defined");
         }
         
@@ -124,17 +124,17 @@ class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
         
         while(true)
         {
-            if(!$geoIp->getRemainingRequests()) {
+            if (!$geoIp->getRemainingRequests()) {
                 $this->log("MzaxEmarketing: No GeoIP requests left, you might want to consider different solution.");
                 break;
             }
             
-            if($geoIp->getRestTime()) {
+            if ($geoIp->getRestTime()) {
                 $this->log("MzaxEmarketing: GeoIP is resting, try again later.");
                 break;
             }
             
-            if((time()-$startTime) >= $maxRunTime) {
+            if ((time()-$startTime) >= $maxRunTime) {
                 $this->log("MzaxEmarketing: Maximum run time exceeded");
                 break;
             }
@@ -145,12 +145,12 @@ class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
                 $this->log("Fetch IP: {$ip}...");
                 
                 $result = $geoIp->fetch($ip);
-                if(!$result) {
+                if (!$result) {
                     continue;
                 }
                 $this->log(sprintf("\tCountry %s, Region %s, City %s", $result->countryId, $result->regionId, $result->city));
                 
-                if(!$result->regionId) {
+                if (!$result->regionId) {
                     $this->log($result);
                     $this->log("\n\n\n");
                 }
@@ -338,7 +338,7 @@ class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
     
     protected function log($message)
     {
-        if(!is_string($message)) {
+        if (!is_string($message)) {
             $message = var_export($message, true);
         }
         echo "\n" . $message;

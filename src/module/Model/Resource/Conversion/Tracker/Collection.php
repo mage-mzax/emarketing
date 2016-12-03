@@ -49,7 +49,7 @@ class Mzax_Emarketing_Model_Resource_Conversion_Tracker_Collection extends Mage_
      */
     public function addCampaignFilter($campaign)
     {
-        if($campaign instanceof Mzax_Emarketing_Model_Campaign) {
+        if ($campaign instanceof Mzax_Emarketing_Model_Campaign) {
             $campaign = $campaign->getId();
         }       
         

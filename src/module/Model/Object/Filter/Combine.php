@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -21,23 +21,23 @@
 class Mzax_Emarketing_Model_Object_Filter_Combine
     extends Mzax_Emarketing_Model_Object_Filter_Abstract
 {
-    
+
     const DEFAULT_AGGREGATOR = 'all';
-    
+
     const DEFAULT_EXPECTATION = 'true';
-    
-    
+
+
     protected $_type = 'combine';
-    
-    
+
+
     protected $_allowChildren = true;
-    
-    
-    
+
+
+
 
     /**
      * Works with all parents
-     * 
+     *
      * @see Mzax_Emarketing_Model_Object_Filter_Component::acceptParent()
      * @return boolean Always true
      */
@@ -45,43 +45,43 @@ class Mzax_Emarketing_Model_Object_Filter_Combine
     {
         return true;
     }
-    
-    
-    
+
+
+
     public function acceptChild(Mzax_Emarketing_Model_Object_Filter_Component $child)
     {
-        if($this->_parent) {
+        if ($this->_parent) {
             return $this->_parent->acceptChild($child);
         }
         return true;
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Retrieve final filter query that unites all id filter queries
      * and retrieve only those id's that exist in all filters
      *
      * @return string
-     */    
+     */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
         $conditions  = $this->_getConditions();
         $aggregator  = $this->getDataSetDefault('aggregator',  self::DEFAULT_AGGREGATOR);
         $expectation = $this->getDataSetDefault('expectation', self::DEFAULT_EXPECTATION);
-        
+
         $select = $this->_combineConditions($conditions, $aggregator, $expectation);
         $select->useTemporaryTable($this->getTempTableName());
-        
+
         $query->joinSelect('id', $select, 'filter');
         $query->group();
     }
-    
-    
 
-    
-    
+
+
+
+
     /**
      * Prepare recipient collection
      *
@@ -92,9 +92,9 @@ class Mzax_Emarketing_Model_Object_Filter_Combine
         parent::_prepareCollection($collection);
         $collection->addField('matches', 'filter.matches');
     }
-    
-    
-    
+
+
+
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
         parent::prepareGridColumns($grid);
@@ -104,22 +104,22 @@ class Mzax_Emarketing_Model_Object_Filter_Combine
             'index'     => 'matches'
         ));
     }
-    
-    
-    
+
+
+
     public function getAvailableFilters()
     {
         return $this->_parent->getAvailableFilters();
     }
-    
 
-    
-    
+
+
+
     public function getTitle()
     {
         return "Combinations of conditions";
     }
-    
+
 
     /**
      * html for settings in option form
@@ -130,17 +130,17 @@ class Mzax_Emarketing_Model_Object_Filter_Combine
     {
         $aggregatorElment  = $this->getSelectElement('aggregator',  self::DEFAULT_AGGREGATOR);
         $expectationElment = $this->getSelectElement('expectation', self::DEFAULT_EXPECTATION);
-        
+
         return $this->__('If %s of these conditions are %s:',
                 $aggregatorElment->toHtml(), $expectationElment->toHtml());
     }
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
 
 }

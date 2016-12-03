@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -27,7 +27,7 @@ class Mzax_Emarketing_Block_Campaign_SendTestMail_Form extends Mage_Adminhtml_Bl
 
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
         $campaign  = Mage::registry('current_campaign');
-        
+
         /* @var $recipient Mzax_Emarketing_Model_Recipient */
         $recipient = Mage::registry('current_recipient');
 
@@ -35,43 +35,43 @@ class Mzax_Emarketing_Block_Campaign_SendTestMail_Form extends Mage_Adminhtml_Bl
             'name'  => 'id',
             'value' => $campaign->getId()
         ));
-        
+
         $form->addField('object_id', 'hidden', array(
             'name'  => 'object_id',
             'value' => $recipient->getObjectId()
         ));
-        
+
         $form->addField('recipient_name', 'text', array(
             'name'  => 'recipient_name',
             'label' => $this->__("Recipient Name"),
             'value' => $recipient->getName()
         ));
-        
-        
+
+
         $user = Mage::getSingleton('admin/session')->getUser();
-        
+
         $form->addField('recipient_email', 'text', array(
             'name'  => 'recipient_email',
             'label' => $this->__("Recipient Email"),
             'value' => $user->getEmail()
         ));
-        
-        
-        if($campaign->hasVariations()) {
-            
+
+
+        if ($campaign->hasVariations()) {
+
             $options = $campaign->getVariations()->toOptionArray();
-            
+
             array_unshift($options, array('value' => '0', 'label' => $this->__('[Orignal]')));
-            
+
             $form->addField('variation', 'select', array(
                 'name'   => 'variation',
                 'label'  => $this->__("Variation"),
                 'value'  => $this->getRequest()->getParam('variation', '0'),
                 'values' => $options
             ));
-            
-            
-            
+
+
+
         }
 
 

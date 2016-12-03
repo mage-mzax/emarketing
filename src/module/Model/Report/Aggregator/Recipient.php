@@ -52,14 +52,14 @@ class Mzax_Emarketing_Model_Report_Aggregator_Recipient
         $startTime = microtime(true);
         
         $this->_lastRecordTime = null;
-        if($this->getOption('full', false)) {
+        if ($this->getOption('full', false)) {
             $this->truncateTable($this->_reportTable);
         }
         else {
-            if($campaignId = $this->getOption('campaign_id')) {
+            if ($campaignId = $this->getOption('campaign_id')) {
                 $this->delete(array('`campaign_id` IN(?)' => $campaignId));
             }
-            else if($incremental = abs($this->getOption('incremental'))) {
+            else if ($incremental = abs($this->getOption('incremental'))) {
                 $this->delete(array("`date` >= DATE_SUB(?, INTERVAL $incremental DAY)" => $this->getLastRecordTime()));
             }
         }

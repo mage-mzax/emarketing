@@ -41,7 +41,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Lastlogin
     {
         $query->joinTable('customer_id', 'log/customer', 'log');
         
-        if($storeId = $this->getParam('store_id')) {
+        if ($storeId = $this->getParam('store_id')) {
             $query->where('`log`.`store_id` = ?', $storeId);
         }
         

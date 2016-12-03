@@ -117,7 +117,7 @@ class Mzax_Emarketing_Model_Resource_Campaign extends Mage_Core_Model_Resource_D
      */
     public function findRecipients(Mzax_Emarketing_Model_Campaign $campaign)
     {
-        if(!$campaign->getId() || !$campaign->getRecipientProvider() || !$campaign->getMedium()) {
+        if (!$campaign->getId() || !$campaign->getRecipientProvider() || !$campaign->getMedium()) {
             return 0;
         }
         
@@ -129,16 +129,16 @@ class Mzax_Emarketing_Model_Resource_Campaign extends Mage_Core_Model_Resource_D
         $select->group('current_recipients.object_id');
         
         $time = $campaign->getCurrentTime();
-        if(!$time instanceof Zend_Db_Expr) {
+        if (!$time instanceof Zend_Db_Expr) {
             $time = new Zend_Db_Expr('NOW()');
         }
         
         
-        if($interval = (int) $campaign->getMinResendInterval()) {
+        if ($interval = (int) $campaign->getMinResendInterval()) {
             // only hide if sent within the last X days
             $select->orHaving("MAX(`current_recipients`.`created_at`) > DATE_SUB($time, INTERVAL ? DAY)", $interval);
         }
-        if($maximum = (int) $campaign->getMaxPerRecipient()) {
+        if ($maximum = (int) $campaign->getMaxPerRecipient()) {
             // only hide if sent more than maximum times
             $select->orHaving("COUNT(`current_recipients`.`recipient_id`)  >= ?", $maximum);
         }
@@ -193,7 +193,7 @@ class Mzax_Emarketing_Model_Resource_Campaign extends Mage_Core_Model_Resource_D
         $object->setUpdatedAt(now());
         $data = parent::_prepareDataForSave($object);
         
-        if(empty($data['default_tracker_id'])) {
+        if (empty($data['default_tracker_id'])) {
             $data['default_tracker_id'] = null;
         }
         

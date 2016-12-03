@@ -57,7 +57,7 @@ class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controll
     public function parseAction()
     {
         $email = $this->_initEmail();
-        if($email) {
+        if ($email) {
             $email->setNoForward(true);
             $email->parse();
             
@@ -80,7 +80,7 @@ class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controll
     {
         $id = (int) $this->getRequest()->getParam($idFieldName);
         $email = Mage::getModel('mzax_emarketing/inbox_email');
-        if($id) {
+        if ($id) {
             $email->load($id);
         }
         
@@ -110,9 +110,9 @@ class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controll
     public function massDeleteAction()
     {
         $messages = $this->getRequest()->getPost('messages');
-        if(!empty($messages)) {
+        if (!empty($messages)) {
             $rows = Mage::getResourceSingleton('mzax_emarketing/inbox_email')->massDelete($messages);
-            if($rows) {
+            if ($rows) {
                 $this->_getSession()->addSuccess(
                     $this->__('Total of %d email(s) have been deleted.', $rows)   
                 );
@@ -127,13 +127,13 @@ class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controll
     public function massParseAction()
     {
         $messages = $this->getRequest()->getPost('messages');
-        if(!empty($messages)) {
+        if (!empty($messages)) {
             /* @var $collection Mzax_Emarketing_Model_Resource_Inbox_Email_Collection */
             $collection = Mage::getResourceModel('mzax_emarketing/inbox_email_collection');
             $collection->addIdFilter($messages);
             
             /* @var $email Mzax_Emarketing_Model_Inbox_Email */
-            foreach($collection as $email) {
+            foreach ($collection as $email) {
                 $email->setNoForward(true);
                 $email->parse();
             }
@@ -150,7 +150,7 @@ class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controll
     public function massForwardAction()
     {
         $messages = $this->getRequest()->getPost('messages');
-        if(!empty($messages)) {
+        if (!empty($messages)) {
             /* @var $collection Mzax_Emarketing_Model_Resource_Inbox_Email_Collection */
             $collection = Mage::getResourceModel('mzax_emarketing/inbox_email_collection');
             $collection->addIdFilter($messages);
@@ -160,8 +160,8 @@ class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controll
             $count = 0;
             
             /* @var $email Mzax_Emarketing_Model_Inbox_Email */
-            foreach($collection as $email) {
-                if($email->forward()) {
+            foreach ($collection as $email) {
+                if ($email->forward()) {
                     $count++;
                 }
                 else {
@@ -183,14 +183,14 @@ class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controll
     public function massReportAction()
     {
         $messages = $this->getRequest()->getPost('messages');
-        if(!empty($messages)) {
+        if (!empty($messages)) {
             /* @var $collection Mzax_Emarketing_Model_Resource_Inbox_Email_Collection */
             $collection = Mage::getResourceModel('mzax_emarketing/inbox_email_collection');
             $collection->addIdFilter($messages);
             $collection->assignCampaigns();
     
             /* @var $email Mzax_Emarketing_Model_Inbox_Email */
-            foreach($collection as $email) {
+            foreach ($collection as $email) {
                 $email->report();
             }
     
@@ -211,7 +211,7 @@ class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controll
     public function massUnsubscribeAction()
     {
         $messages = $this->getRequest()->getPost('messages');
-        if(!empty($messages)) 
+        if (!empty($messages)) 
         {
             /* @var $collection Mzax_Emarketing_Model_Resource_Inbox_Email_Collection */
             $collection = Mage::getResourceModel('mzax_emarketing/inbox_email_collection');
@@ -219,7 +219,7 @@ class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controll
             $collection->assignRecipients();
             
             /* @var $email Mzax_Emarketing_Model_Inbox_Email */
-            foreach($collection as $email) {
+            foreach ($collection as $email) {
                 $address = $email->getEmail();
                 Mage::getSingleton('mzax_emarketing/medium_email')
                     ->unsubscribe($address, sprintf('Admin, manual unsubscribe (%s)', $email->getId()));
@@ -240,9 +240,9 @@ class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controll
     {
         $messages = $this->getRequest()->getPost('messages');
         $type = $this->getRequest()->getPost('type');
-        if(!empty($messages) && $type) {
+        if (!empty($messages) && $type) {
             $rows = Mage::getResourceSingleton('mzax_emarketing/inbox_email')->massTypeChange($messages, $type);
-            if($rows) {
+            if ($rows) {
                 $this->_getSession()->addSuccess(
                     $this->__('Total of %d email(s) have been updated.', $rows)   
                 );
@@ -261,7 +261,7 @@ class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controll
             $inbox->downloadEmails();
         }
         catch(Exception $e) {
-            if(Mage::getIsDeveloperMode()) {
+            if (Mage::getIsDeveloperMode()) {
                 throw $e;
             }
             Mage::logException($e);
@@ -272,7 +272,7 @@ class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controll
             $inbox->parseEmails();
         }
         catch(Exception $e) {
-            if(Mage::getIsDeveloperMode()) {
+            if (Mage::getIsDeveloperMode()) {
                 throw $e;
             }
             Mage::logException($e);

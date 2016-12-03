@@ -91,7 +91,7 @@ class Mzax_Emarketing_Model_Observer_Cron
      */
     public function enabled() 
     {
-        if($this->_testMode) {
+        if ($this->_testMode) {
             return true;
         }
         return Mage::getStoreConfigFlag('mzax_emarketing/general/enable');
@@ -106,7 +106,7 @@ class Mzax_Emarketing_Model_Observer_Cron
      */
     public function fetchRecipients()
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return;
         }
         
@@ -127,7 +127,7 @@ class Mzax_Emarketing_Model_Observer_Cron
      */
     public function sendRecipients()
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return;
         }
         
@@ -151,7 +151,7 @@ class Mzax_Emarketing_Model_Observer_Cron
      */
     public function outboxSend()
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return;
         }
         
@@ -176,7 +176,7 @@ class Mzax_Emarketing_Model_Observer_Cron
      */
     public function inboxLoad()
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return;
         }
         
@@ -197,7 +197,7 @@ class Mzax_Emarketing_Model_Observer_Cron
      */
     public function runReportTasks()
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return;
         }
         

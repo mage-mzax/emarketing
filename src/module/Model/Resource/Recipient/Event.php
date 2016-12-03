@@ -65,7 +65,7 @@ class Mzax_Emarketing_Model_Resource_Recipient_Event extends Mage_Core_Model_Res
         $select->where('country_id IS NULL OR region_id IS NULL');
         
         $result = $this->_getWriteAdapter()->fetchAll($select);
-        if(empty($result)) {
+        if (empty($result)) {
             $result = array();
         }
         return $result;
@@ -124,18 +124,18 @@ class Mzax_Emarketing_Model_Resource_Recipient_Event extends Mage_Core_Model_Res
     
     protected function _prepareData(&$bind)
     {
-        if(isset($bind['useragent'])) {
+        if (isset($bind['useragent'])) {
             $bind['useragent_id'] = $this->getUserAgentId($bind['useragent']);
             unset($bind['useragent']);
         }
-        if(!isset($bind['captured_at'])) {
+        if (!isset($bind['captured_at'])) {
             $bind['captured_at'] = now();
         }
-        if(isset($bind['time_offset'])) {
+        if (isset($bind['time_offset'])) {
             $bind['time_offset'] = $bind['time_offset'] / 15;
         }
         
-        if(isset($bind['ip'])) {
+        if (isset($bind['ip'])) {
             $bind['ip'] = @inet_pton($bind['ip']);
         }
     }

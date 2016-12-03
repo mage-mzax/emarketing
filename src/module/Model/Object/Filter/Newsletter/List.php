@@ -62,15 +62,15 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter_List
      */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
-        if($query->hasBinding('subscriber_id')) {
+        if ($query->hasBinding('subscriber_id')) {
             $query->joinTableLeft('subscriber_id', 'mzax_emarketing/newsletter_list_subscriber', 'list_subscriber');
         }
-        else if($query->hasBinding('email')) {
+        else if ($query->hasBinding('email')) {
             $query->addBinding('subscriber_id', 'subscriber.subscriber_id');
             $query->joinTableLeft(array('subscriber_email' => 'email'), 'newsletter/subscriber', 'subscriber');
             $query->joinTableLeft('subscriber_id', 'mzax_emarketing/newsletter_list_subscriber', 'list_subscriber');
         }
-        else if($query->hasBinding('customer_id')) {
+        else if ($query->hasBinding('customer_id')) {
             $query->addBinding('subscriber_id', 'subscriber.subscriber_id');
             $query->joinTableLeft('customer_id', 'newsletter/subscriber', 'subscriber');
             $query->joinTableLeft('subscriber_id', 'mzax_emarketing/newsletter_list_subscriber', 'list_subscriber');
@@ -81,7 +81,7 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter_List
         $listIds = $this->_explode($this->getLists());
         $status  = Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED;
 
-        if($condition == 'in') {
+        if ($condition == 'in') {
             $query->where("`list_subscriber`.`list_status` = ?", $status);
             $query->where("`list_subscriber`.`list_id` IN(?)", $listIds);
         }
@@ -187,15 +187,15 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter_List
         $indexList = $adapter->getIndexList($table);
 
         // check if we already created an index
-        if(isset($indexList['MZAX_IDX_EMAIL'])) {
+        if (isset($indexList['MZAX_IDX_EMAIL'])) {
             return true;
         }
 
         // check for other indexes that can work
-        foreach($indexList as $index) {
+        foreach ($indexList as $index) {
             switch(count($index['fields'])) {
                 case 1:
-                    if($index['fields'][0] === 'subscriber_email') {
+                    if ($index['fields'][0] === 'subscriber_email') {
                         return true;
                     }
                     break;
@@ -203,20 +203,20 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter_List
         }
 
 
-        if($create && $this->canCreateIndex()) {
+        if ($create && $this->canCreateIndex()) {
             try {
                 $adapter->addIndex($table, 'MZAX_IDX_EMAIL', array('subscriber_email'));
                 return true;
             }
             catch(Exception $e) {
-                if(Mage::getIsDeveloperMode()) {
+                if (Mage::getIsDeveloperMode()) {
                     throw $e;
                 }
                 Mage::logException($e);
                 return $this->__('Failed to create an index for the table "%s". Please check logs.', $table);
             }
         }
-        else if($this->canCreateIndex()) {
+        else if ($this->canCreateIndex()) {
             return true;
         }
 

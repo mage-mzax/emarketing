@@ -60,7 +60,7 @@ class Mzax_Emarketing_Model_Resource_Useragent extends Mage_Core_Model_Resource_
     public function parse($all = false)
     {
         $lock = Mage::helper('mzax_emarketing')->lock('parse_user_agent');
-        if(!$lock) {
+        if (!$lock) {
             return;
         }
         
@@ -69,7 +69,7 @@ class Mzax_Emarketing_Model_Resource_Useragent extends Mage_Core_Model_Resource_
         
         $select = $adapter->select();
         $select->from($this->getMainTable(), array('useragent_id', 'useragent'));
-        if(!$all) {
+        if (!$all) {
             $select->where('parsed = 0');
         }
         
@@ -77,14 +77,14 @@ class Mzax_Emarketing_Model_Resource_Useragent extends Mage_Core_Model_Resource_
         $useragents = $adapter->fetchPairs($select);
         
         $regexFile = Mage::getModuleDir('data', 'Mzax_Emarketing') . DS . 'useragent_regexes.php';
-        if(!file_exists($regexFile)) {
+        if (!file_exists($regexFile)) {
             throw new Exception("Regex file for UAParser not found ($regexFile)");
         }
         
         
         $parser = UAParser_Parser::create($regexFile);
         
-        foreach($useragents as $id => $ua) {
+        foreach ($useragents as $id => $ua) {
             try {
                 $result = $parser->parse($ua);
                 $bind = array(
@@ -98,10 +98,10 @@ class Mzax_Emarketing_Model_Resource_Useragent extends Mage_Core_Model_Resource_
                     'parsed'       => 1
                 );
                 
-                foreach($this->_deviceTypes as $key => $types) {
-                    foreach($types as $type => $regex) {
-                        if(isset($bind[$key])) {
-                            if(preg_match($regex, $bind[$key])) {
+                foreach ($this->_deviceTypes as $key => $types) {
+                    foreach ($types as $type => $regex) {
+                        if (isset($bind[$key])) {
+                            if (preg_match($regex, $bind[$key])) {
                                 $bind['device_type'] = $type;
                                 break 2;
                             }
@@ -114,7 +114,7 @@ class Mzax_Emarketing_Model_Resource_Useragent extends Mage_Core_Model_Resource_
             }
             catch(Exception $e) {
                 Mage::logException($e);
-                if(Mage::getIsDeveloperMode()) {
+                if (Mage::getIsDeveloperMode()) {
                     $lock->unlock();
                     throw $e;
                 }
@@ -150,7 +150,7 @@ class Mzax_Emarketing_Model_Resource_Useragent extends Mage_Core_Model_Resource_
         
         $id = (int) $adapter->fetchOne($select);
         
-        if(!$id) {
+        if (!$id) {
             $stmt = $adapter->insert($table, array(
                 'hash'      => md5($useragent),
                 'useragent' => $useragent,

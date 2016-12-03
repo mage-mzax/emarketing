@@ -62,7 +62,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Newsletter
         $recipient->setSubscriber($subscriber);
         $recipient->setEmail($subscriber->getEmail());
         
-        if($subscriber->getCustomerId()) {
+        if ($subscriber->getCustomerId()) {
             /* @var $customer Mage_Customer_Model_Customer */
             $customer = Mage::getModel('customer/customer')->load($subscriber->getCustomerId());
             $recipient->setCustomer($customer);
@@ -87,7 +87,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Newsletter
         /* @var $subscriber Mage_Newsletter_Model_Subscriber */
         $subscriber = Mage::getModel('newsletter/subscriber')->load($recipient->getObjectId());
         
-        if($subscriber->getCustomerId()) {
+        if ($subscriber->getCustomerId()) {
             $this->getSession()->setCustomerId($subscriber->getCustomerId());
             $recipient->autologin($subscriber->getCustomerId());
         }
@@ -110,7 +110,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Newsletter
     public function bindRecipients(Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder $binder)
     {
         
-        if($binder->hasBinding('customer_id')) {
+        if ($binder->hasBinding('customer_id')) {
             $binder->createBinding()
                 ->joinTable(array('customer_id' => '{customer_id}'), 'newsletter/subscriber', 'subscriber')
                 ->joinTable(array('object_id'   => '`subscriber`.`subscriber_id`'), 'recipient')
@@ -122,7 +122,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Newsletter
         }
         
         
-        if($binder->hasBinding('email')) {
+        if ($binder->hasBinding('email')) {
             $binder->createBinding()
                 ->joinTable(array('address'    => '{email}'), 'recipient_address', 'address')
                 ->joinTable(array('address_id' => '`address`.`address_id`'), 'recipient')

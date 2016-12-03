@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -23,7 +23,7 @@ class Mzax_Emarketing_Block_Template_Edit extends Mage_Adminhtml_Block_Widget_Fo
     public function __construct()
     {
         $this->_objectId = 'id';
-        
+
         $this->_blockGroup = 'mzax_emarketing';
         $this->_controller = 'template';
 
@@ -32,8 +32,8 @@ class Mzax_Emarketing_Block_Template_Edit extends Mage_Adminhtml_Block_Widget_Fo
 
         $this->_updateButton('save', 'label', $this->__('Save Template'));
         $this->_updateButton('delete', 'label', $this->__('Delete Template'));
-        
-        if(Mage::registry('current_template')->getId()) {
+
+        if (Mage::registry('current_template')->getId()) {
             $this->_addButton('download', array(
                 'label'     => $this->__('Download'),
                 'class'     => 'download',
@@ -44,7 +44,7 @@ class Mzax_Emarketing_Block_Template_Edit extends Mage_Adminhtml_Block_Widget_Fo
     }
 
 
-    
+
 
     public function getHeaderText()
     {
@@ -61,7 +61,7 @@ class Mzax_Emarketing_Block_Template_Edit extends Mage_Adminhtml_Block_Widget_Fo
     {
         return $this->getUrl('*/*/validate', array('_current'=>true));
     }
-    
+
     protected function _prepareLayout()
     {
     	$this->_addButton('save_and_continue', array(
@@ -72,8 +72,8 @@ class Mzax_Emarketing_Block_Template_Edit extends Mage_Adminhtml_Block_Widget_Fo
 
     	return parent::_prepareLayout();
     }
-    
-    
+
+
     /**
      * Get form action URL
      *
@@ -86,8 +86,8 @@ class Mzax_Emarketing_Block_Template_Edit extends Mage_Adminhtml_Block_Widget_Fo
         }
         return $this->getUrl('*/*/save');
     }
-    
-    
+
+
     protected function _getSaveAndContinueUrl()
     {
     	return $this->getUrl('*/*/save', array(

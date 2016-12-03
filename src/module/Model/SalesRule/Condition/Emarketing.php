@@ -172,13 +172,13 @@ class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Mod
         $options[] = array('value' => 'month', 'label' => $h->__("month(s)"));
         
         
-        if(!($unit = $this->getUnit())) {
+        if (!($unit = $this->getUnit())) {
              $unit = self::DEFAULT_UNIT;
         }
         
         $name = '';
-        foreach($options as $option) {
-            if($unit === $option['value']) {
+        foreach ($options as $option) {
+            if ($unit === $option['value']) {
                 $name = $option['label'];
                 break;
             }
@@ -209,7 +209,7 @@ class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Mod
         $value = max(0, (int) $this->getValue());
         $unit  = $this->getUnit();
         
-        if(!in_array($unit, array('day', 'hour', 'week', 'month'))) {
+        if (!in_array($unit, array('day', 'hour', 'week', 'month'))) {
             $unit = self::DEFAULT_UNIT;
         }
         
@@ -231,12 +231,12 @@ class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Mod
         $recipient = $this->getSession()->getLastRecipient();
         
         // check if we have a recipient
-        if(!$recipient) {
+        if (!$recipient) {
             return false;
         }
         
         // check if he came from the campaign
-        if($this->getCampaign() != $recipient->getCampaignId()) {
+        if ($this->getCampaign() != $recipient->getCampaignId()) {
             return false;
         }
         

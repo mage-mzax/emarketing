@@ -141,20 +141,20 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Address
         $indexList = $adapter->getIndexList($table);
         
         // check if we already created an index
-        if(isset($indexList['MZAX_IDX_VALUE_ID'])) {
+        if (isset($indexList['MZAX_IDX_VALUE_ID'])) {
             return true;
         }
         
         // check for other indexes that can work
-        foreach($indexList as $index) {
+        foreach ($indexList as $index) {
             switch(count($index['fields'])) {
                 case 1:
-                    if($index['fields'][0] === 'value') {
+                    if ($index['fields'][0] === 'value') {
                         return true;
                     }
                     break;
                 case 2:
-                    if($index['fields'][0] === 'attribute_id' && $index['fields'][1] === 'value') {
+                    if ($index['fields'][0] === 'attribute_id' && $index['fields'][1] === 'value') {
                         return true;
                     }
                     break;
@@ -162,20 +162,20 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Address
         }
         
         
-        if($create && $this->canCreateIndex()) {
+        if ($create && $this->canCreateIndex()) {
             try {
                 $adapter->addIndex($table, 'MZAX_IDX_VALUE_ID', array('attribute_id', 'value'));
                 return true;
             }
             catch(Exception $e) {
-                if(Mage::getIsDeveloperMode()) {
+                if (Mage::getIsDeveloperMode()) {
                     throw $e;
                 }
                 Mage::logException($e);
                 return $this->__('Failed to create an index for the table "%s". Please check logs.', $table);
             }
         }
-        else if($this->canCreateIndex()) {
+        else if ($this->canCreateIndex()) {
             return true;
         }
         

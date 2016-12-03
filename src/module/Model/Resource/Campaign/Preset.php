@@ -59,12 +59,12 @@ class Mzax_Emarketing_Model_Resource_Campaign_Preset
      */
     public function load(Mzax_Emarketing_Model_Campaign_Preset $preset, $name)
     {
-        if(!preg_match('/^[a-z0-9_-]+$/i', $name)) {
+        if (!preg_match('/^[a-z0-9_-]+$/i', $name)) {
             throw new Exception("Invalid preset filename. ($name)");
         }
         $file = $this->getPath() . DS . $name . self::SUFFIX;
         
-        if(!file_exists($file)) {
+        if (!file_exists($file)) {
             throw new Mage_Core_Exception(Mage::helper('mzax_emarketing')->__("Could not find any preset by name '%s'", $name));
         }
         
@@ -84,7 +84,7 @@ class Mzax_Emarketing_Model_Resource_Campaign_Preset
     {
         $name = basename($file, self::SUFFIX);
         $data = file_get_contents($file);
-        if(!$data) {
+        if (!$data) {
             throw new Exception('File is empty');
         }
         return $this->install($name, $data, $overwrite, $author);
@@ -105,28 +105,28 @@ class Mzax_Emarketing_Model_Resource_Campaign_Preset
      */
     public function install($name, $data, $overwrite = false, $author = null)
     {
-        if(!preg_match('/^[a-z0-9_-]+$/i', $name)) {
+        if (!preg_match('/^[a-z0-9_-]+$/i', $name)) {
             throw new Exception("Invalid preset filename. ($name)");
         }
         
         $file = $this->getPath() . DS . $name . self::SUFFIX;
         
-        if(!$overwrite && !file_exists($file)) {
+        if (!$overwrite && !file_exists($file)) {
             throw new Mage_Core_Exception(Mage::helper('mzax_emarketing')->__("Preset by nae '%s' already installed", $name));
         }
         
         $data = $this->_decodeData($data);
-        if(!$data) {
+        if (!$data) {
             throw new Exception("Failed to decode preset");
         }
-        if($author) {
+        if ($author) {
             $data['author'] = (string) $author;
         }
         $data['installed_at'] = time();
         
         $data = $this->_encodeData($data);
         
-        if(!file_put_contents($file, $data)) {
+        if (!file_put_contents($file, $data)) {
             throw new Exception("Failed to install preset");
         }
         
@@ -166,7 +166,7 @@ class Mzax_Emarketing_Model_Resource_Campaign_Preset
         );
         $path = implode(DS, $path);
         
-        if(!is_dir($path) && !mkdir($path, 0777, true)) {
+        if (!is_dir($path) && !mkdir($path, 0777, true)) {
             throw new Exception("Failed to make directory ($path)");
         }
         

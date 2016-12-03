@@ -46,7 +46,7 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
         $template = $this->_initTemplate();
 
         if ($values = $this->_getSession()->getTemplateData(true)) {
-            if(isset($values['template'])) {
+            if (isset($values['template'])) {
                 $template->addData($values['template']);
             }
         }
@@ -71,11 +71,11 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
     public function uploadPostAction()
     {
         try {
-            if(!isset($_FILES['template'])) {
+            if (!isset($_FILES['template'])) {
                 throw new Mage_Exception($this->__("No template file selected"));
             }
             $file = $_FILES['template'];
-            if($file['error']['file'] !== UPLOAD_ERR_OK) {
+            if ($file['error']['file'] !== UPLOAD_ERR_OK) {
                 throw new Mage_Exception($this->__("Error when uploading template (#%s)", $file['error']['file']));
             }
             
@@ -83,7 +83,7 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
             $template->loadFromFile($file['tmp_name']['file']);
             $template->save();
             
-            if(version_compare($template->getVersion(), Mage::helper('mzax_emarketing')->getVersion()) < 0) {
+            if (version_compare($template->getVersion(), Mage::helper('mzax_emarketing')->getVersion()) < 0) {
                 $this->_getSession()->addWarning($this->__("The template you just uploaded was made with version %s, you only have version %s of Mzax Emarketing. This might cause an issue."));
             }
             $this->_getSession()->addSuccess($this->__("Template successfully uploaded."));
@@ -94,7 +94,7 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
             $this->_getSession()->addError($e->getMessage());
         }
         catch(Exception $e) {
-            if(Mage::getIsDeveloperMode()) {
+            if (Mage::getIsDeveloperMode()) {
                 throw $e;
             }
             Mage::logException($e);
@@ -255,7 +255,7 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
             }
             catch(Mzax_Emarketing_Model_Template_Exception $e) {
                 $seesion = $this->_getSession();
-                foreach($e->getErrors() as $error) {
+                foreach ($e->getErrors() as $error) {
                     switch($error->level) {
                         case LIBXML_ERR_WARNING:
                             $seesion->addWarning("Line {$error->line}/{$error->column}: $error->message (#{$error->code})");
@@ -301,7 +301,7 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
     {
         $templateId = (int) $this->getRequest()->getParam($idFieldName);
         $template = Mage::getModel('mzax_emarketing/template');
-        if($templateId) {
+        if ($templateId) {
             $template->load($templateId);
         }
         

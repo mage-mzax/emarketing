@@ -38,7 +38,7 @@ class Mzax_Emarketing_Model_Resource_Outbox_Email_Collection
      */
     public function addTimeFilter($now = null)
     {
-        if(!$now) {
+        if (!$now) {
             $now = time();
         }
         

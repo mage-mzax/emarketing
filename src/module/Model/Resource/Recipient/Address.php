@@ -76,7 +76,7 @@ class Mzax_Emarketing_Model_Resource_Recipient_Address extends Mage_Core_Model_R
         
         $id = (int) $adapter->fetchOne($select);
         
-        if(!$id) {
+        if (!$id) {
             $adapter->insert($table, array(
                 'address' => $address,
                 'exists'  => 1

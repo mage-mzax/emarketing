@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -23,12 +23,12 @@ class Mzax_Emarketing_Block_Campaign_Edit extends Mage_Adminhtml_Block_Widget_Fo
     public function __construct()
     {
         $this->_objectId = 'id';
-        
+
         $this->_blockGroup = 'mzax_emarketing';
         $this->_controller = 'campaign';
-        
+
         parent::__construct();
-        
+
         $this->_updateButton('save', 'label', $this->__('Save Campaign'));
         $this->_updateButton('delete', 'label', $this->__('Delete Campaign'));
 
@@ -46,15 +46,15 @@ class Mzax_Emarketing_Block_Campaign_Edit extends Mage_Adminhtml_Block_Widget_Fo
         $campaign = Mage::registry('current_campaign');
         if ($campaign->getId()) {
             $text = $this->htmlEscape($campaign->getName());
-            if($campaign->isRunning()) {
+            if ($campaign->isRunning()) {
                 return '<span class="mzax-running"></span>' . $text;
             }
             return $text;
         }
         else {
-            if($preset = $campaign->getPreset()) {
-                return $this->__('New %s - %s campaign', 
-                        Mage::getSingleton('mzax_emarketing/medium')->getOptionText($campaign->getData('medium')), 
+            if ($preset = $campaign->getPreset()) {
+                return $this->__('New %s - %s campaign',
+                        Mage::getSingleton('mzax_emarketing/medium')->getOptionText($campaign->getData('medium')),
                         $preset->getName());
             }
             else {
@@ -68,33 +68,33 @@ class Mzax_Emarketing_Block_Campaign_Edit extends Mage_Adminhtml_Block_Widget_Fo
     {
         return $this->getUrl('*/*/validate', array('_current'=>true));
     }
-    
+
     protected function _prepareLayout()
     {
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
         $campaign = Mage::registry('current_campaign');
-        
+
     	$this->_addButton('save_and_continue', array(
             'label'     => $this->__('Save And Continue Edit'),
             'onclick'   => 'saveAndContinueEdit(\''.$this->_getSaveAndContinueUrl().'\')',
             'class' => 'save'
         ), 10);
-    	
-    	
-    	if($campaign->getId() && !$campaign->isArchived()) {
-    	    
-    	    if($campaign->isRunning()) {
-    	        
+
+
+    	if ($campaign->getId() && !$campaign->isArchived()) {
+
+    	    if ($campaign->isRunning()) {
+
     	        $this->_removeButton('save');
     	        $this->removeButton('delete');
-    	        
+
     	        $this->_addButton('stop', array(
 	                'label'     => $this->__('STOP'),
 	                'onclick'   => "confirmSetLocation('{$this->__('Are you sure you want to stop this campaign?')}', '{$this->getUrl('*/*/stop', array('_current' => true))}')",
 	                'class' => 'mzax-stop'
     	        ), 100, 0);
-    	        
-    	        
+
+
     	        $this->_addButton('save_and_continue', array(
 	                'label'     => $this->__('Save Changes'),
 	                'onclick'   => "saveAndContinueEdit('{$this->_getSaveAndContinueUrl()}', '{$this->__('Are you sure you want to apply those changes to this running campaign?')}')",
@@ -112,8 +112,8 @@ class Mzax_Emarketing_Block_Campaign_Edit extends Mage_Adminhtml_Block_Widget_Fo
 
     	return parent::_prepareLayout();
     }
-    
-    
+
+
     /**
      * Get form action URL
      *
@@ -124,12 +124,12 @@ class Mzax_Emarketing_Block_Campaign_Edit extends Mage_Adminhtml_Block_Widget_Fo
         if ($this->hasFormActionUrl()) {
             return $this->getData('form_action_url');
         }
-        
-        
+
+
         return $this->getUrl('*/*/save');
     }
-    
-    
+
+
     protected function _getSaveAndContinueUrl()
     {
     	return $this->getUrl('*/*/save', array(

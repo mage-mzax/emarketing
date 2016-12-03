@@ -45,9 +45,9 @@ class Mzax_Emarketing_Model_Resource_Recipient_Collection extends Mage_Core_Mode
         parent::_afterLoad();
         
         // inject campaign if available
-        if($this->_campaign) {
+        if ($this->_campaign) {
             /* @var $recipient Mzax_Emarketing_Model_Recipient */
-            foreach($this as $recipient) {
+            foreach ($this as $recipient) {
                 $recipient->setCampaign($this->_campaign);
             }
         }
@@ -95,7 +95,7 @@ class Mzax_Emarketing_Model_Resource_Recipient_Collection extends Mage_Core_Mode
      */
     protected function _renderFiltersBefore()
     {
-        if($this->_campaign) {
+        if ($this->_campaign) {
             $this->addFilter('campaign_id', $this->_campaign->getId());
         }
     }
@@ -109,7 +109,7 @@ class Mzax_Emarketing_Model_Resource_Recipient_Collection extends Mage_Core_Mode
      */
     public function addSendFilter($flag = true)
     {
-        if($flag) {
+        if ($flag) {
             $this->_select->where("main_table.sent_at IS NOT NULL");
         }
         else {
@@ -129,7 +129,7 @@ class Mzax_Emarketing_Model_Resource_Recipient_Collection extends Mage_Core_Mode
      */
     public function addPrepareFilter($flag = true)
     {
-        if($flag) {
+        if ($flag) {
             $this->_select->where("main_table.prepared_at IS NOT NULL");
         }
         else {

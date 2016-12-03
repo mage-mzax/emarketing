@@ -62,7 +62,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Order
     
         /* @var $storeFilter Mzax_Emarketing_Model_Object_Filter_Order_Table */
         $storeFilter = $this->addFilter('order_table');
-        if( $storeFilter && $this->getCampaign() ) {
+        if ( $storeFilter && $this->getCampaign() ) {
             $storeFilter->setColumn('store_id');
             $storeFilter->setValue($this->getCampaign()->getStoreId());
             $storeFilter->setOperator('()');
@@ -70,7 +70,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Order
         
         /* @var $statusFilter Mzax_Emarketing_Model_Object_Filter_Order_Table */
         $statusFilter = $this->addFilter('order_table');
-        if( $statusFilter) {
+        if ( $statusFilter) {
             $statusFilter->setColumn('status');
             $statusFilter->setValue(Mage_Sales_Model_Order::STATE_COMPLETE);
             $statusFilter->setOperator('()');
@@ -78,7 +78,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Order
         
         /* @var $shippedFilter Mzax_Emarketing_Model_Object_Filter_Order_ShippedAt */
         $shippedFilter = $this->addFilter('order_shipped');
-        if( $shippedFilter) {
+        if ( $shippedFilter) {
             $shippedFilter->setShippedAtFrom(5);
             $shippedFilter->setShippedAtTo(8);
             $shippedFilter->setShippedAtUnit('days');
@@ -122,12 +122,12 @@ class Mzax_Emarketing_Model_Recipient_Provider_Order
         $recipient->setEmail($order->getCustomerEmail());
         $recipient->setName($order->getCustomerName());
         
-        if($order->getCustomerId()) 
+        if ($order->getCustomerId()) 
         {
             /* @var $customer Mage_Customer_Model_Customer */
             $customer = Mage::getModel('customer/customer')->load($order->getCustomerId());
             
-            if($customer->getId()) {
+            if ($customer->getId()) {
                 $order->setCustomer($customer);
                 $recipient->setCustomer($customer);
                 $recipient->setEmail($customer->getEmail());
@@ -153,7 +153,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Order
         /* @var $order Mage_Sales_Model_Order */
         $order = Mage::getModel('sales/order')->load($recipient->getObjectId());
     
-        if($order->getCustomerId()) {
+        if ($order->getCustomerId()) {
             $this->getSession()->setCustomerId($order->getCustomerId());
             $recipient->autologin($order->getCustomerId());
         }
@@ -178,7 +178,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Order
     public function bindRecipients(Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder $binder)
     {
         
-        if($binder->hasBinding('customer_id')) {
+        if ($binder->hasBinding('customer_id')) {
             $binder->createBinding()
                 ->joinTable(array('object_id' => '{customer_id}'), 'recipient')
                 ->addBinding('campaign_id',  'recipient.campaign_id')
@@ -189,7 +189,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Order
         }
         
         
-        if($binder->hasBinding('email')) {
+        if ($binder->hasBinding('email')) {
             $binder->createBinding()
                 ->joinTable(array('address'    => '{email}'), 'recipient_address', 'address')
                 ->joinTable(array('address_id' => '`address`.`address_id`'), 'recipient')

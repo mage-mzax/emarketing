@@ -45,7 +45,7 @@ class Mzax_Emarketing_Model_Resource_Inbox_Email extends Mage_Core_Model_Resourc
         $path[] = $id . '.mail';
         $path = implode(DS, $path);
         
-        if(!Mage::getConfig()->createDirIfNotExists(dirname($path))) {
+        if (!Mage::getConfig()->createDirIfNotExists(dirname($path))) {
             throw new Exception("Unable to create dir: ".dirname($path));
         }
             
@@ -62,7 +62,7 @@ class Mzax_Emarketing_Model_Resource_Inbox_Email extends Mage_Core_Model_Resourc
     protected function _afterDelete(Mage_Core_Model_Abstract $object)
     {
         $file = $this->getContentFile($object->getId());
-        if(file_exists($file)) {
+        if (file_exists($file)) {
             @unlink($file);
         }
         return parent::_afterDelete($object);
@@ -77,9 +77,9 @@ class Mzax_Emarketing_Model_Resource_Inbox_Email extends Mage_Core_Model_Resourc
             $this->getMainTable(), array('email_id IN(?)' => $mails)
         );
         
-        foreach($mails as $id) {
+        foreach ($mails as $id) {
             $file = $this->getContentFile($id);
-            if(file_exists($file)) {
+            if (file_exists($file)) {
                 @unlink($file);
             }
         }
@@ -147,11 +147,11 @@ class Mzax_Emarketing_Model_Resource_Inbox_Email extends Mage_Core_Model_Resourc
      */
     public function flagAsParsed($email)
     {
-        if($email instanceof Varien_Object) {
+        if ($email instanceof Varien_Object) {
             $email = $email->getId();
         }
         $email = (int) $email;
-        if($email) {
+        if ($email) {
             $this->_getWriteAdapter()
                 ->update($this->getMainTable(), 
                          array('is_parsed' => 1), 
@@ -176,7 +176,7 @@ class Mzax_Emarketing_Model_Resource_Inbox_Email extends Mage_Core_Model_Resourc
             ));
             $id = $this->_getWriteAdapter()->lastInsertId($this->getMainTable());
             $file = $this->getContentFile($id);
-            if(file_put_contents($file, $content) === false) {
+            if (file_put_contents($file, $content) === false) {
                 throw new Exception("Failed to save email content to file '$file'");
             }
             $adapter->commit();
@@ -207,11 +207,11 @@ class Mzax_Emarketing_Model_Resource_Inbox_Email extends Mage_Core_Model_Resourc
             ->where('created_at <= DATE_SUB(NOW(), INTERVAL ? DAY)', $purgeDays);
 
         $ids = $this->_getReadAdapter()->fetchCol($select);
-        if(!empty($ids))
+        if (!empty($ids))
         {
-            foreach($ids as $id) {
+            foreach ($ids as $id) {
                 $file = $this->getContentFile($id);
-                if(file_exists($file)) {
+                if (file_exists($file)) {
                     @unlink($file);
                 }
             }

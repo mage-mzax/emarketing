@@ -71,7 +71,7 @@ class Mzax_Emarketing_Model_Template
      */
     public function loadFromFile($filename)
     {
-        if(!file_exists($filename)) {
+        if (!file_exists($filename)) {
             throw new Mage_Exception("File not found ($filename)");
         }
         return $this->import(file_get_contents($filename));
@@ -139,7 +139,7 @@ class Mzax_Emarketing_Model_Template
         $document->loadHTML($html);
         
         $errors = libxml_get_errors();
-        if(!empty($errors)) {
+        if (!empty($errors)) {
             throw new Mzax_Emarketing_Model_Template_Exception($errors);
         }
     
@@ -167,23 +167,23 @@ class Mzax_Emarketing_Model_Template
         $placeholders = array();
         $fieldMapping = array();
         
-        if($elements = $xpath->query("//*[@mage-id]")) {
+        if ($elements = $xpath->query("//*[@mage-id]")) {
         
             /*
              * Fetch all mage elements and insert any
              * repeated content
              */
-            foreach($elements as $element)
+            foreach ($elements as $element)
             {
                 $id = $element->getAttribute('mage-id');
                 $repeatable = $this->isTrue($element->getAttribute('mage-repeatable'));
         
-                if(!isset($fields[$id])) {
+                if (!isset($fields[$id])) {
                     continue;
                 }
         
                 $field = $fields[$id];
-                if($repeatable && count($field) > 1) {
+                if ($repeatable && count($field) > 1) {
                     for($i = 1; $i < count($field); $i++) {
                         $copy = $element->cloneNode(true);
                         $element->parentNode->appendChild($copy);
@@ -195,12 +195,12 @@ class Mzax_Emarketing_Model_Template
              * Fetch again all fields and try to map all elements
              * to a field
              */
-            foreach($xpath->query("//*[@mage-id]") as $element)
+            foreach ($xpath->query("//*[@mage-id]") as $element)
             {
                 $id = $element->getAttribute('mage-id');
         
                 // skip if no field found
-                if(!isset($fields[$id])) {
+                if (!isset($fields[$id])) {
                     continue;
                 }
                 $field = array_shift($fields[$id]);
@@ -211,12 +211,12 @@ class Mzax_Emarketing_Model_Template
              * Now that we have a valid mapping go through it and
              * work out the elements that should get removed
              */
-            foreach($fieldMapping as $binding) {
+            foreach ($fieldMapping as $binding) {
                 /* @var $element DOMElemet*/
                 list($element, $field) = $binding;
         
-                if(!$field) {
-                    if( $element->parentNode ) {
+                if (!$field) {
+                    if ( $element->parentNode ) {
                         $element->parentNode->removeChild($element);
                         continue;
                     }
@@ -226,14 +226,14 @@ class Mzax_Emarketing_Model_Template
         
                 $remove = isset($field['remove']) ? $field['remove'] : false;
         
-                if($removalbe && $remove) {
-                    if( $element->parentNode ) {
+                if ($removalbe && $remove) {
+                    if ( $element->parentNode ) {
                         $element->parentNode->removeChild($element);
                         continue;
                     }
                 }
         
-                if($editable) {
+                if ($editable) {
                     // don't bother inserting HTML using DOMNode,
                     // just add a placeholder and use regex later
                     $value = '?!?!----' . md5(microtime().rand(0, 10000)) . '----!?!?';
@@ -241,10 +241,10 @@ class Mzax_Emarketing_Model_Template
         
                     switch($element->nodeName) {
                         case 'img':
-                            if(isset($field['value'])) {
+                            if (isset($field['value'])) {
                                 $element->setAttribute('src', $value);
                             }
-                            if(isset($field['alt'])) {
+                            if (isset($field['alt'])) {
                                 $element->setAttribute('alt', $field['alt']);
                             }
                             break;
@@ -258,9 +258,9 @@ class Mzax_Emarketing_Model_Template
         }
         
         // add custom css to head tag if available
-        if(isset($data['customCss'])) {
+        if (isset($data['customCss'])) {
             $head = $xpath->query("//head");
-            if(count($head) === 1) {
+            if (count($head) === 1) {
                 $head = $head->item(0);
                 
                 $value = '?!?!----' . md5(microtime().rand(0, 10000)) . '----!?!?';
@@ -277,7 +277,7 @@ class Mzax_Emarketing_Model_Template
         
         // replace all pending placeholders
         $html = preg_replace_callback('/\?!\?!----([0-9A-F]{32})----!\?!\?/i', function($match) use ($placeholders) {
-            if(isset($placeholders[$match[0]])) {
+            if (isset($placeholders[$match[0]])) {
                 return $placeholders[$match[0]];
             }
             return '';

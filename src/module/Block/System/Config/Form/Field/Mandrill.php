@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -19,36 +19,36 @@
 
 
 /**
- * 
+ *
  * @author Jacob Siefer
  *
  */
 class Mzax_Emarketing_Block_System_Config_Form_Field_Mandrill
     extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
-    
-    
-    
+
+
+
     protected function _getHtml()
     {
         $username = Mage::getStoreConfig('mzax_emarketing/email/mandrill_username');
         $password = Mage::getStoreConfig('mzax_emarketing/email/mandrill_password');
-        
-        if(empty($username)) {
+
+        if (empty($username)) {
             $message = Mage::helper('mzax_emarketing')->__('Please provider a valid Mandrill username.');
             $class = 'inbox-failure';
         }
-        else if(empty($password)) {
+        else if (empty($password)) {
             $message = Mage::helper('mzax_emarketing')->__('Please provider a valid Mandrill password.');
             $class = 'inbox-failure';
         }
         else {
             /* @var $transprot Mzax_Emarketing_Model_Outbox_Transporter_Mandrill */
             $transprot = Mage::getModel('mzax_emarketing/outbox_transporter_mandrill');
-            
+
             $result = $transprot->testAuth($username, $password);
-            
-            if($result === true) {
+
+            if ($result === true) {
                 $message = Mage::helper('mzax_emarketing')->__('Successfully conntected to Mandrill');
                 $class = 'inbox-success';
             }
@@ -57,20 +57,20 @@ class Mzax_Emarketing_Block_System_Config_Form_Field_Mandrill
                 $class = 'inbox-failure';
             }
         }
-        
+
         return '<div class="inbox-status '.$class.'">' . $message . '</div>';
     }
-    
-    
-    
+
+
+
     public function render(Varien_Data_Form_Element_Abstract $element)
     {
         $id = $element->getHtmlId();
-        
-        if(Mage::getStoreConfig('mzax_emarketing/email/transporter') !== 'mandrill') {
+
+        if (Mage::getStoreConfig('mzax_emarketing/email/transporter') !== 'mandrill') {
             return '';
         }
-    
+
         $useContainerId = $element->getData('use_container_id');
         $html = '<tr id="row_' . $id . '">'
               .   '<td class="mzax-mail-storage-test" colspan="3">' . $this->_getHtml(). '</td>'

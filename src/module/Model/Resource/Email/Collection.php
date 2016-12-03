@@ -61,11 +61,11 @@ abstract class Mzax_Emarketing_Model_Resource_Email_Collection extends Mage_Core
     protected function _assignModel($model, $idField = null)
     {
         // only run ones
-        if($this->getFlag($model . '_assigned')) {
+        if ($this->getFlag($model . '_assigned')) {
             return $this;
         }
         
-        if(!$idField) {
+        if (!$idField) {
             $idField = $model . '_id';
         }
         
@@ -76,9 +76,9 @@ abstract class Mzax_Emarketing_Model_Resource_Email_Collection extends Mage_Core
         $collection->addFieldToFilter($idField, array('in' => $ids));
         
         /* @var $email Mzax_Emarketing_Model_Email */
-        foreach($this as $email) {
-            if($id = $email->getData($idField)) {
-                if($item = $collection->getItemById($id)) {
+        foreach ($this as $email) {
+            if ($id = $email->getData($idField)) {
+                if ($item = $collection->getItemById($id)) {
                     $email->setDataUsingMethod($model, $item);
                 }
             }
@@ -99,7 +99,7 @@ abstract class Mzax_Emarketing_Model_Resource_Email_Collection extends Mage_Core
      */
     public function assignRecipients($flag = true)
     {
-        if(!$this->isLoaded()) {
+        if (!$this->isLoaded()) {
             return $this->setFlag('assign_recipients', $flag);
         }
         return $this->_assignModel('recipient');
@@ -116,7 +116,7 @@ abstract class Mzax_Emarketing_Model_Resource_Email_Collection extends Mage_Core
      */
     public function assignCampaigns($flag = true)
     {
-        if(!$this->isLoaded()) {
+        if (!$this->isLoaded()) {
             return $this->setFlag('assign_campaigns', $flag);
         }
         return $this->_assignModel('campaign');
@@ -134,10 +134,10 @@ abstract class Mzax_Emarketing_Model_Resource_Email_Collection extends Mage_Core
     protected function _afterLoad()
     {
         parent::_afterLoad();
-        if($this->getFlag('assign_campaigns')) {
+        if ($this->getFlag('assign_campaigns')) {
             $this->assignCampaigns();
         }
-        if($this->getFlag('assign_recipients')) {
+        if ($this->getFlag('assign_recipients')) {
             $this->assignCampaigns();
         }
     }

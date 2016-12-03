@@ -43,7 +43,7 @@ class Mzax_Emarketing_Model_Observer_Subscriber
         /* @var $subscriber Mage_Newsletter_Model_Subscriber */
         $subscriber = $observer->getEvent()->getSubscriber();
 
-        if($subscriber->isObjectNew()) {
+        if ($subscriber->isObjectNew()) {
             $this->getResouce()->subscribeToAutoLists($subscriber);
         }
 
@@ -60,12 +60,12 @@ class Mzax_Emarketing_Model_Observer_Subscriber
         /* @var $grid Mage_Core_Block_Abstract */
         $grid = $observer->getEvent()->getBlock();
 
-        if($grid instanceof Mage_Adminhtml_Block_Newsletter_Subscriber_Grid)
+        if ($grid instanceof Mage_Adminhtml_Block_Newsletter_Subscriber_Grid)
         {
             /* @see Mzax_Emarketing_Model_Resource_Newsletter_List_Collection */
             $options = Mage::getResourceModel('mzax_emarketing/newsletter_list_collection')->toOptionHash();
 
-            if(!empty($options)) {
+            if (!empty($options)) {
                 $grid->getMassactionBlock()->addItem('list_add', array(
                     'label'        => Mage::helper('mzax_emarketing')->__('Add to list'),
                     'url'          => $grid->getUrl('*/emarketing_newsletter_list/massAdd', array('src' => 'newsletter')),
@@ -112,7 +112,7 @@ class Mzax_Emarketing_Model_Observer_Subscriber
         $request = $controller->getRequest();
         $lists   = (array) $request->getPost('lists', array());
 
-        if(!$this->_validateFormKey($request)) {
+        if (!$this->_validateFormKey($request)) {
             return;
         }
 
@@ -136,7 +136,7 @@ class Mzax_Emarketing_Model_Observer_Subscriber
             }
         }
         catch(Exception $e) {
-            if(Mage::getIsDeveloperMode()) {
+            if (Mage::getIsDeveloperMode()) {
                 throw $e;
             }
             Mage::logException($e);

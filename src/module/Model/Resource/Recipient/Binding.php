@@ -62,24 +62,24 @@ class Mzax_Emarketing_Model_Resource_Recipient_Binding
     public function getSelect($wrap = true)
     {
         $unions = array();
-        if($this->_direct) {
+        if ($this->_direct) {
             $unions[] = $this->_direct;
         }
         
         $unions = array_merge($unions, $this->_unionSelects);
         
-        if(empty($unions)) {
+        if (empty($unions)) {
             return null;
         }
         
         $final = array();
-        foreach($unions as $select) {
-            if($this->_prepareSelect($select)) {
+        foreach ($unions as $select) {
+            if ($this->_prepareSelect($select)) {
                 $final[] = $select;
             }
         }
         
-        if(count($final) === 1) {
+        if (count($final) === 1) {
             $select = $final[0];
         }
         else {
@@ -87,7 +87,7 @@ class Mzax_Emarketing_Model_Resource_Recipient_Binding
             $select->union($final, Zend_Db_Select::SQL_UNION);
         }
         
-        if($wrap) {
+        if ($wrap) {
             $wrapper = $this->getResourceHelper()->getWriteAdapter()->select();
             $wrapper->from(array('binder' => $select), '*');
             return $wrapper;
@@ -102,7 +102,7 @@ class Mzax_Emarketing_Model_Resource_Recipient_Binding
     
     public function addCampaignFilter($campaign)
     {
-        if($campaign instanceof Varien_Object) {
+        if ($campaign instanceof Varien_Object) {
             $campaign = $campaign->getId();
         }
         $this->_campaignFilter = $campaign;
@@ -112,7 +112,7 @@ class Mzax_Emarketing_Model_Resource_Recipient_Binding
     
     public function addVariationFilter($variation)
     {
-        if($variation instanceof Varien_Object) {
+        if ($variation instanceof Varien_Object) {
             $variation = $variation->getId();
         }
         $this->_variationFilter = $variation;
@@ -169,7 +169,7 @@ class Mzax_Emarketing_Model_Resource_Recipient_Binding
      */
     public function getBinding($name)
     {
-        if(isset($this->_bindings[$name])) {
+        if (isset($this->_bindings[$name])) {
             return $this->_bindings[$name]['field'];
         }
         return false;
@@ -221,20 +221,20 @@ class Mzax_Emarketing_Model_Resource_Recipient_Binding
         $fromPart = $select->getPart(Zend_Db_Select::FROM);
         
         // the recipient table is required!
-        if(!isset($fromPart['recipient'])) {
+        if (!isset($fromPart['recipient'])) {
             return false;
         }
         
-        foreach($this->_where as $where) {
+        foreach ($this->_where as $where) {
             $select->where($where);
         }
         
         /*
         $select->where('`recipient`.`sent_at` IS NOT NULL');
-        if($this->_campaignFilter !== null) {
+        if ($this->_campaignFilter !== null) {
             $select->where('`recipient`.`campaign_id` = ?', $this->_campaignFilter);
         }
-        if($this->_variationFilter !== null) {
+        if ($this->_variationFilter !== null) {
             $select->where('`recipient`.`variation_id` = ?', $this->_variationFilter);
         }
         */

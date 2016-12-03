@@ -61,7 +61,7 @@ abstract class Mzax_Emarketing_Model_Recipient_Provider_Abstract
     
     public function prepareParams()
     {
-        if($this->_campaign) {
+        if ($this->_campaign) {
             $this->setParam('campaign', $this->_campaign);
             $this->setParam('store_id', $this->_campaign->getStoreId());
             
@@ -110,7 +110,7 @@ abstract class Mzax_Emarketing_Model_Recipient_Provider_Abstract
         
         /* @var $newsletterFilter Mzax_Emarketing_Model_Object_Filter_Newsletter */
         $newsletterFilter = $this->addFilter('newsletter');
-        if( $newsletterFilter ) {
+        if ( $newsletterFilter ) {
             $newsletterFilter->setCondition('is');
             $newsletterFilter->setStatus(Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED);
         }

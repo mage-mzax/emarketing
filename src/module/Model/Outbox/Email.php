@@ -28,18 +28,18 @@
  * @method string getBodyHtml()
  * @method string getTimeFilter()
  * @method string getDayFilter()
- * 
- * @method Mzax_Emarketing_Model_Resource_Outbox_Email setExpireAt()
- * @method Mzax_Emarketing_Model_Resource_Outbox_Email setStatus()
- * @method Mzax_Emarketing_Model_Resource_Outbox_Email setDomain()
- * @method Mzax_Emarketing_Model_Resource_Outbox_Email setSubject()
- * @method Mzax_Emarketing_Model_Resource_Outbox_Email setBodyText()
- * @method Mzax_Emarketing_Model_Resource_Outbox_Email setBodyHtml()
- * @method Mzax_Emarketing_Model_Resource_Outbox_Email setMessageId()
- * @method Mzax_Emarketing_Model_Resource_Outbox_Email setLog()
- * 
- * 
- * 
+ * @method bool getCancelEmail()
+ *
+ * @method $this setExpireAt()
+ * @method $this setStatus()
+ * @method $this setDomain()
+ * @method $this setSubject()
+ * @method $this setBodyText()
+ * @method $this setBodyHtml()
+ * @method $this setMessageId()
+ * @method $this setLog()
+ * @method $this setCancelEmail(bool $value)
+ *
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email getResource()
  * 
  * 
@@ -226,7 +226,11 @@ class Mzax_Emarketing_Model_Outbox_Email
     {
         if(!$this->_source) {
             $this->_source = new Mzax_Mail_Transport_Mock();
-            $this->createMailObject()->send($this->_source);
+
+            $mailObject = $this->createMailObject();
+            if ($mailObject) {
+                $mailObject->send($this->_source);
+            }
         }
         return $this->_source;
     }

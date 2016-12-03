@@ -9,7 +9,7 @@
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
  * 
- * @version     {{version}}
+ * @version     0.4.10
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -33,27 +33,37 @@ class Mzax_Emarketing_Model_Outbox_Transporter
      */
     public function factory($name)
     {
-        $config = $this->getConfig();
-        if(!isset($config->$name)) {
-            throw new Exception("No such email transporter found ({$name})");
+
+        //Se não for pra disparar pelo SMTP PRO
+        if($name!="smtpro") {
+
+            $config = $this->getConfig();
+
+            if (!isset($config->$name)) {
+                throw new Exception("No such email transporter found ({$name})");
+            }
+            $config = $config->$name;
+
+            $transporterClass = $config->getClassName();
+
+            if (!class_exists($transporterClass)) {
+                throw new Exception("Email transporter config found, but model ($transporterClass) was not found");
+            }
+
+            /* @var $transporter Mzax_Emarketing_Model_Outbox_Transporter_Interface */
+            $transporter = new $transporterClass;
+
+            if (!$transporter instanceof Mzax_Emarketing_Model_Outbox_Transporter_Interface) {
+                throw new Exception("Email transporter '{$name}' must implement 'Mzax_Emarketing_Model_Outbox_Email_Transporter_Interface'");
+            }
+
+            return $transporter;
         }
-        $config = $config->$name;
-        
-        
-        $transporterClass = $config->getClassName();
-        
-        if(!class_exists($transporterClass)) {
-            throw new Exception("Email transporter config found, but model ($transporterClass) was not found");
+        else{
+            $helperSMTP = Mage::helper('smtppro/data');
+            $transporter = $helperSMTP->getTransport();
+            return $transporter;
         }
-        
-        /* @var $transporter Mzax_Emarketing_Model_Outbox_Transporter_Interface */
-        $transporter = new $transporterClass;
-        
-        if(!$transporter instanceof Mzax_Emarketing_Model_Outbox_Transporter_Interface) {
-            throw new Exception("Email transporter '{$name}' must implement 'Mzax_Emarketing_Model_Outbox_Email_Transporter_Interface'");
-        }
-        
-        return $transporter;
     }
     
     

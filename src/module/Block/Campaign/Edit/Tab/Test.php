@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -21,10 +20,10 @@
 class Mzax_Emarketing_Block_Campaign_Edit_Tab_Test extends Mzax_Emarketing_Block_Filter_Test_Recursive
 {
 
-    
+
     /**
      * Retrieve filter
-     * 
+     *
      * @return Mzax_Emarketing_Model_Object_Filter_Abstract
      */
     public function getFilter()
@@ -33,12 +32,12 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Test extends Mzax_Emarketing_Block
         $campaign = Mage::registry('current_campaign');
         return $campaign->getRecipientProvider()->getFilter();
     }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     /**
      * Generate url by route and parameters
      *
@@ -51,10 +50,10 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Test extends Mzax_Emarketing_Block
         $params['campaign'] = $this->getCampaign()->getId();
         return parent::getUrl($route, $params);
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Retrieve current campaign
      *
@@ -64,6 +63,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Test extends Mzax_Emarketing_Block
     {
         return Mage::registry('current_campaign');
     }
-    
-    
+
+
 }

@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -19,11 +18,10 @@
 
 
 /**
- * 
+ *
  *
  * @author Jacob Siefer
  * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Emarketing_Block_Tracker_Edit_Tab_GoalType extends Mage_Adminhtml_Block_Widget_Form
 {
@@ -32,9 +30,9 @@ class Mzax_Emarketing_Block_Tracker_Edit_Tab_GoalType extends Mage_Adminhtml_Blo
     {
         parent::_prepareLayout();
     }
-    
-    
-    
+
+
+
     public function initForm()
     {
         $form = new Varien_Data_Form();
@@ -44,10 +42,10 @@ class Mzax_Emarketing_Block_Tracker_Edit_Tab_GoalType extends Mage_Adminhtml_Blo
         /* @var $tracker Mzax_Emarketing_Model_Conversion_Tracker */
         $tracker = Mage::registry('current_tracker');
 
-        
+
         $renderer = $this->getLayout()->createBlock('adminhtml/widget_form_renderer_fieldset_element')
             ->setTemplate('cms/page/edit/form/renderer/content.phtml');
-        
+
         /**
          * Tracker
          */
@@ -57,31 +55,31 @@ class Mzax_Emarketing_Block_Tracker_Edit_Tab_GoalType extends Mage_Adminhtml_Blo
             'offer'    => $this->__('Would you like to track different goals or have any suggestions? <a href="%s" target="_blank">Contact me</a>!', 'http://www.mzax.de/emarketing/goals.html?utm_source=extension&utm_medium=link&utm_content=setup-tracker&utm_campaign=needmore'),
             'continue' => !$tracker->getId()
         ));
-        
+
         $fieldset->addType('info', Mage::getConfig()->getModelClassName('mzax_emarketing/form_element_info'));
         $fieldset->addType('wildselect', Mage::getConfig()->getModelClassName('mzax_emarketing/form_element_wildselect'));
-        
-        
-        
+
+
+
         $offerRenderer = $this->getLayout()->createBlock('adminhtml/widget_form_renderer_fieldset')
             ->setTemplate('mzax/emarketing/campaign/fieldset-offer.phtml');
         $fieldset->setRenderer($offerRenderer);
-        
-        
+
+
         $fieldset->addField('info', 'info', array(
             'text' => $this->__('First you must decide what conversion goals this tracker should use as this will drive what filters are available.')
         ))->setRenderer($renderer);
-        
-        
-        
+
+
+
         $fieldset->addField('title','text', array(
             'name'     => 'title',
         	'required' => true,
             'label'    => $this->__('Title'),
             'title'    => $this->__('Title'),
         ));
-        
-        
+
+
         // @todo disable if it has reci
         $fieldset->addField('goal_type','select', array(
             'name'     => 'goal_type',
@@ -90,14 +88,14 @@ class Mzax_Emarketing_Block_Tracker_Edit_Tab_GoalType extends Mage_Adminhtml_Blo
             'note'     => $this->__("What conversion goal would you like to track"),
         	'required' => true
         ));
-        
-        
-        
+
+
+
         $form->addValues($tracker->getData());
         $this->setForm($form);
-        
+
         return $this;
-        
+
 
     }
 }

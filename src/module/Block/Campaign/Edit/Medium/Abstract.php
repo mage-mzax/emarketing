@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -25,32 +24,32 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Abstract extends Mage_Adminhtml
         parent::_prepareLayout();
     }
 
-    
+
     /**
      * Retrieve current campaign
-     * 
+     *
      * @return Mzax_Emarketing_Model_Campaign
      */
     public function getCampaign()
     {
         return Mage::registry('current_campaign');
     }
-    
-    
+
+
     /**
      * Retrieve campaign content
      * Usally the campaign it self or a variation object
-     * 
+     *
      * @return Mzax_Emarketing_Model_Campaign_Content
      */
     public function getContent()
     {
         return $this->getData('content');
     }
-    
-    
+
+
     /**
-     * 
+     *
      * @param Varien_Data_Form $form
      * @return Mzax_Emarketing_Block_Campaign_Edit_Medium_Abstract
      */
@@ -60,10 +59,10 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Abstract extends Mage_Adminhtml
         $this->_prepareForm();
         return $this;
     }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
 }

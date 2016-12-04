@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -18,30 +17,29 @@
  */
 
 /**
- * 
- * 
+ *
+ *
  *
  * @author Jacob Siefer
  * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
 {
 
     const REGEX_LINEND = "/\\r\\n|\\r|\\n/";
-    
-    
-    
-    
+
+
+
+
     protected $_headers = array();
-    
-    
+
+
     protected $_contentType;
-    
-    
+
+
     protected $_mimeParts;
-    
-    
+
+
     public function __construct($data = array())
     {
         if(is_string($data)) {
@@ -51,18 +49,18 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
             $this->_headers = $data['header'];
             $this->_content = $data['body'];
         }
-        
+
         $this->type     = $this->getContentType('type');
         $this->charset  = $this->getContentType('charset');
         $this->encoding = $this->getHeader('content-transfer-encoding', $this->encoding);
         $this->boundary = $this->getContentType('boundary');
     }
-    
-    
-    
+
+
+
     /**
      * Retreive header value
-     * 
+     *
      * @param string $name
      * @param string $default
      * @return string
@@ -75,12 +73,12 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
         }
         return $default;
     }
-    
-    
-    
+
+
+
     /**
      * Set header
-     * 
+     *
      * @param string $name
      * @param string $value
      * @return Mzax_Bounce_Mime_Part
@@ -93,26 +91,26 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
         }
         return $this;
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Is multipart
-     * 
+     *
      * @return boolean
      */
     public function isMultipart()
     {
         return strpos($this->type, 'multipart/') === 0;
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Retrieve all mime parts
-     * 
+     *
      * @return array|NULL
      */
     public function getMimeParts()
@@ -130,8 +128,8 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
         }
         return $this->_mimeParts;
     }
-    
-    
+
+
 
     /**
      * Retrieve mime part by content-type or index
@@ -158,13 +156,13 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
         }
         return null;
     }
-    
-    
-    
+
+
+
     /**
      * Try to find a mime part by content type within
      * all multiparts.
-     * 
+     *
      * @param string $type
      * @return Mzax_Bounce_Mime_Part|NULL
      */
@@ -187,12 +185,12 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
         }
         return null;
     }
-    
-    
-    
+
+
+
     /**
      * Retrieve all mime parts matching the given content-type
-     * 
+     *
      * @param string $type
      * @return array
      */
@@ -212,12 +210,12 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
         }
         return $result;
     }
-    
-    
-    
+
+
+
     /**
      * Retrieve all text like mime parts as a string
-     * 
+     *
      * @return string
      */
     public function asString()
@@ -232,13 +230,13 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
         }
         return implode("\n\n----------\n\n", $parts);
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Retrieve content type data
-     * 
+     *
      * @return array
      */
     public function getContentType($what = null, $default = null)
@@ -258,15 +256,15 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
             }
             return $default;
         }
-        
+
         return $this->_contentType;
     }
-    
-    
-    
+
+
+
     /**
      * Retreive decoded content
-     * 
+     *
      * @return string
      */
     public function getDecodedContent()
@@ -275,7 +273,7 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
             case Zend_Mime::ENCODING_BASE64:
                 $content = base64_decode($this->_content);
                 break;
-                
+
             case Zend_Mime::ENCODING_QUOTEDPRINTABLE:
                 if(function_exists('imap_qprint')) {
                     $content = imap_qprint($this->_content);
@@ -295,21 +293,21 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
         }
         return str_replace("\r\n", "\n", $content);
     }
-    
-    
+
+
     /**
-     * Assume hash like content 
+     * Assume hash like content
      * like the message/feedback-report has
-     * 
+     *
      * @return array
      */
     public function getDecodedHash()
     {
         return Mzax_Bounce_Mime_Decode::decodeHash($this->_content);
     }
-    
-    
-    
+
+
+
 
     /**
      * Get the Content of the current Mime Part in the given encoding.
@@ -320,9 +318,9 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
     {
         return preg_replace(self::REGEX_LINEND, $EOL, $this->_content);
     }
-    
-    
-    
+
+
+
     /**
      * Create and return the array of headers for this MIME part
      *
@@ -332,18 +330,18 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
     public function getHeadersArray($EOL = Zend_Mime::LINEEND)
     {
         $result = array();
-        
+
         $headers = array(
-            'message-id', 
-            'mime-version', 
-            'content-type', 
-            'importance', 
+            'message-id',
+            'mime-version',
+            'content-type',
+            'importance',
             'content-id',
             'content-disposition',
             'content-location',
             'content-language',
             'content-transfer-encoding');
-        
+
         foreach($this->_headers as $key => $value) {
             if(in_array($key, $headers)) {
                 if(is_array($value)) {
@@ -361,7 +359,7 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
         }
         return $result;
     }
-    
-    
-    
+
+
+
 }

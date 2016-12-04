@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -18,15 +17,14 @@
  */
 
 /**
- * 
- * 
- * 
+ *
+ *
+ *
  * @link https://freegeoip.net/
  * @link http://www.geoplugin.com/webservices/json
- * 
+ *
  * @author Jacob Siefer
  * @license {{license}}
- * @version {{version}}
  */
 class Mzax_GeoIp_Adapter_FreeGeoIp extends Mzax_GeoIp_Adapter_Abstract
 {
@@ -36,11 +34,11 @@ class Mzax_GeoIp_Adapter_FreeGeoIp extends Mzax_GeoIp_Adapter_Abstract
     public $timeThreshold = 30;
     public $requestThreshold = 30;
     public $resetTime = 500;
-    
+
     public $resetPeriode = 'Y-m-d-h-i'; //self::HOURLY;
-    
-    
-    
+
+
+
     /**
      * Retrieve the name of this adapter
      *
@@ -50,33 +48,33 @@ class Mzax_GeoIp_Adapter_FreeGeoIp extends Mzax_GeoIp_Adapter_Abstract
     {
         return 'freegeoip.net';
     }
-    
-    
+
+
     public function getCredits()
     {
         return '<a href="http://www.freegeoip.net"><strong>freegeoip.net</strong></a> - this product includes GeoLite data created by MaxMind, available from <a href="http://www.maxmind.com">http://www.maxmind.com</a>.';
     }
-    
-    
+
+
     protected function _fetch(Mzax_GeoIp_Request $request)
     {
         $uri = str_replace('{IP}', $request->ip, self::API_URI);
         $client = new Zend_Http_Client($uri);
-        
+
         try {
             $response = $client->request();
             $request->httpResponse = $response;
-            
+
             if($response->getStatus() == 403) {
                 $this->ease(60*60);
             }
-            
+
             $data = Zend_Json::decode($response->getBody());
-            
+
             if(isset($data['city'])) {
                 $request->city = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $data['city']);
             }
-            if(isset($data['region_name'])) {                
+            if(isset($data['region_name'])) {
                 $request->region = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $data['region_name']);
             }
             if(isset($data['country_code'])) {
@@ -100,17 +98,17 @@ class Mzax_GeoIp_Adapter_FreeGeoIp extends Mzax_GeoIp_Adapter_Abstract
             if(isset($data['longitude']) && isset($data['latitude'])) {
                 $request->loc = array($data['longitude'], $data['latitude']);
             }
-            
+
         }
         catch(Zend_Json_Exception $e) {
             $this->easeTillNextDay();
             throw $e;
         }
     }
-    
-    
-    
-    
+
+
+
+
 
 }
 

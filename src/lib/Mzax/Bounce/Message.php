@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -18,29 +17,28 @@
  */
 
 /**
- * 
- * 
+ *
+ *
  *
  * @author Jacob Siefer
  * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Bounce_Message extends Mzax_Bounce_Mime_Part
 {
-    
-    
+
+
     /**
      * Result of bounce detector
-     * 
+     *
      * @var array
      */
     protected $_info;
 
     protected $_certainty;
-    
-    
-    
-    
+
+
+
+
     public function reset()
     {
         $this->_info = array();
@@ -50,9 +48,9 @@ class Mzax_Bounce_Message extends Mzax_Bounce_Mime_Part
         $this->_mimeParts = array();
         $this->_contentType = null;
     }
-    
-    
-    
+
+
+
     /**
      * Retrieve email subject
      *
@@ -62,9 +60,9 @@ class Mzax_Bounce_Message extends Mzax_Bounce_Mime_Part
     {
         return $this->getHeader('subject');
     }
-    
-    
-    
+
+
+
     /**
      * Retrieve email from header
      *
@@ -78,12 +76,12 @@ class Mzax_Bounce_Message extends Mzax_Bounce_Mime_Part
         }
         return '';
     }
-    
-    
-    
+
+
+
     /**
      * Retrieve reference message ids
-     * 
+     *
      * @return array
      */
     public function getReferences()
@@ -96,29 +94,29 @@ class Mzax_Bounce_Message extends Mzax_Bounce_Mime_Part
                 $result[] = trim($ref, '<>');
             }
         }
-        
+
         // we may also find usefull reference in any rfc822 parts
         if($part = $this->getMimePart('text/rfc822')) {
             if($id = $part->getHeader('message-id')) {
                 $result[] = trim($id, '<>');
             }
         }
-        
+
         if($part = $this->getMimePart('text/rfc822-headers')) {
             $hash = $part->getDecodedHash();
             if(isset($hash['message-id'])) {
                 $result[] = trim($hash['message-id'], '<>');
             }
         }
-        
+
         return $result;
     }
-    
-    
-    
+
+
+
     /**
      * Retrieve date if available
-     * 
+     *
      * @return string|NULL
      */
     public function getDate()
@@ -132,11 +130,11 @@ class Mzax_Bounce_Message extends Mzax_Bounce_Mime_Part
         }
         return null;
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     /**
      * Retrieve header by name if available
      * if not return false
@@ -152,9 +150,9 @@ class Mzax_Bounce_Message extends Mzax_Bounce_Mime_Part
         }
         return false;
     }
-    
-    
-    
+
+
+
     /**
      * Set/Get info string
      *
@@ -182,10 +180,10 @@ class Mzax_Bounce_Message extends Mzax_Bounce_Mime_Part
         }
         return false;
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Checks for any header from the given
      * $headers array, if one is found
@@ -211,16 +209,16 @@ class Mzax_Bounce_Message extends Mzax_Bounce_Mime_Part
         }
         return false;
     }
-    
-    
-    
-    
-    
+
+
+
+
+
 
     /**
      * Converts the message to a new zend mail object
      * which can be forwared
-     * 
+     *
      * @return Mzax_Bounce_Mail
      */
     public function forward()
@@ -229,10 +227,10 @@ class Mzax_Bounce_Message extends Mzax_Bounce_Mime_Part
         $mail->setBodyPart($this);
         $mail->setReplyTo($this->getFrom());
         $mail->setSubject($this->getSubject());
-        
+
         return $mail;
     }
-    
-    
-    
+
+
+
 }

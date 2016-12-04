@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -23,7 +22,7 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit extends Mage_Adminhtml_Block_Wi
     public function __construct()
     {
         $this->_objectId = 'id';
-        
+
         $this->_blockGroup = 'mzax_emarketing';
         $this->_controller = 'newsletter_list';
 
@@ -34,7 +33,7 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit extends Mage_Adminhtml_Block_Wi
     }
 
 
-    
+
 
     public function getHeaderText()
     {
@@ -51,7 +50,7 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit extends Mage_Adminhtml_Block_Wi
     {
         return $this->getUrl('*/*/validate', array('_current'=>true));
     }
-    
+
     protected function _prepareLayout()
     {
     	$this->_addButton('save_and_continue', array(
@@ -62,8 +61,8 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit extends Mage_Adminhtml_Block_Wi
 
     	return parent::_prepareLayout();
     }
-    
-    
+
+
     /**
      * Get form action URL
      *
@@ -76,8 +75,8 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit extends Mage_Adminhtml_Block_Wi
         }
         return $this->getUrl('*/*/save');
     }
-    
-    
+
+
     protected function _getSaveAndContinueUrl()
     {
     	return $this->getUrl('*/*/save', array(

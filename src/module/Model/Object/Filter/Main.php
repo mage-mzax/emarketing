@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -20,38 +19,38 @@
 
 abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_Model_Object_Filter_Combine
 {
-    
-    
+
+
     public function getId()
     {
         return '1';
     }
-    
-    
+
+
     /**
      * Has any filters been added?
-     * 
+     *
      * @return boolean
      */
     public function hasFilters()
     {
         return !empty($this->_filters);
     }
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
     public function getAvailableFilters()
     {
         return Mzax_Emarketing_Model_Object_Filter_Component::getAvailableFilters();
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Retrieve filter using type path
      *
@@ -64,7 +63,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
     public function createFilterFromTypePath($path)
     {
         $params = array();
-        
+
         if (is_string($path)) {
             if (strpos($path, '?')) {
                 $parts = explode('?', $path);
@@ -80,7 +79,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
         }
         // ignore self
         array_shift($path);
-        
+
         $filter = null;
         $parent = $this;
         while(count($path)) {
@@ -95,10 +94,10 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
         $filter->addData($params);
         return $filter;
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Retrieve filter by id
      *
@@ -110,18 +109,18 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
         $path = explode('--', $id);
         array_shift($path);
         $filter = $this->getFilter();
-    
+
         /* @var $filter Mzax_Emarketing_Model_Object_Filter_Abstract */
         while($filter && $i = (int) array_shift($path)) {
             $filter = $filter->getFilterByIndex($i-1);
         }
         return $filter;
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     /**
      * (non-PHPdoc)
      * @see Mzax_Emarketing_Model_Object_Filter_Component::getQuery()
@@ -131,10 +130,10 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
         $query = $this->getObject()->getQuery();
         return $query;
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * The default filter instance
      *
@@ -151,7 +150,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
         }
         return $this->_filter;
     }
-    
-    
-    
+
+
+
 }

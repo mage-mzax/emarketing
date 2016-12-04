@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -18,51 +17,50 @@
  */
 
 /**
- * 
+ *
  * @method Zend_Db_Adapter_Abstract getAdapter()
  *
  * @author Jacob Siefer
  * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Db_Select extends Varien_Db_Select
 {
-    
-    
+
+
     /**
      * The main table alias
-     * 
+     *
      * @var string
      */
     protected $_tableAlias = 'main_table';
-    
-    
+
+
     /**
      * Flag if selection is locked
      * If locked now more columns can be added
-     * 
+     *
      * @var boolean
      */
     protected $_lock = false;
-    
-    
+
+
     /**
      * Public bindings that can be
      * used to join tables or query by
-     * 
+     *
      * @var array
      */
     protected $_binding = array();
-    
-    
-    
+
+
+
     protected $_joins = array();
-    
-    
-    
+
+
+
     /**
      * List of seeked columns
-     * 
+     *
      * @var array
      */
     protected $_seeks = array();
@@ -75,8 +73,8 @@ class Mzax_Db_Select extends Varien_Db_Select
      * @var string
      */
     protected $_comment;
-    
-    
+
+
     /**
      * (non-PHPdoc)
      * @see Zend_Db_Select::from()
@@ -107,13 +105,13 @@ class Mzax_Db_Select extends Varien_Db_Select
         $this->_comment = (string) $comment;
         return $this;
     }
-    
-    
-    
+
+
+
     /**
      * Lock/unlock select to prevent further changes
      * to columns
-     * 
+     *
      * @param string $flag
      * @return Mzax_Db_Select
      */
@@ -122,23 +120,23 @@ class Mzax_Db_Select extends Varien_Db_Select
         $this->_lock = (bool) $flag;
         return $this;
     }
-    
-    
-    
+
+
+
     /**
      * Is locked
-     * 
+     *
      * @return boolean
      */
     public function locked()
     {
         return $this->_lock;
     }
-    
-    
+
+
     /**
      * Retrieve column fields of this select
-     * 
+     *
      * @return array
      */
     public function getFields()
@@ -155,12 +153,12 @@ class Mzax_Db_Select extends Varien_Db_Select
         }
         return $fields;
     }
-    
+
 
 
     /**
      * Add binding expression to query
-     * 
+     *
      * One should use the available bindings to join tables etc
      * A binding name is global unique, means the customer_id will
      * allways point to a column that holds the customer ID
@@ -175,7 +173,7 @@ class Mzax_Db_Select extends Varien_Db_Select
     public function addBinding($name, $expr, $correlationName = null)
     {
         if(!$expr instanceof Zend_Db_Expr) {
-            
+
             if (preg_match('/\(.*\)/', (string) $expr)) {
                 $expr = new Zend_Db_Expr($expr);
             }
@@ -193,11 +191,11 @@ class Mzax_Db_Select extends Varien_Db_Select
         $this->_binding[$name] = $expr;
         return $this;
     }
-    
-    
+
+
     /**
      * Remove existing bindings
-     * 
+     *
      * @param string $name
      * @return Mzax_Db_Select
      */
@@ -206,12 +204,12 @@ class Mzax_Db_Select extends Varien_Db_Select
         unset($this->_binding[$name]);
         return $this;
     }
-    
-    
-    
+
+
+
     /**
      * Remove all bindings
-     * 
+     *
      * @return Mzax_Db_Select
      */
     public function removeAllBindings()
@@ -219,14 +217,14 @@ class Mzax_Db_Select extends Varien_Db_Select
         $this->_binding = array();
         return $this;
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     /**
      * Retrieve binding expression if exists
-     * 
+     *
      * @param string $fieldName
      * @return Zend_Db_Expr
      */
@@ -237,21 +235,21 @@ class Mzax_Db_Select extends Varien_Db_Select
         }
         return null;
     }
-    
-    
-    
+
+
+
     /**
      * Retrieve all bindings
-     * 
+     *
      * @return array
      */
     public function getBindings()
     {
         return $this->_binding;
     }
-    
-    
-    
+
+
+
     /**
      * Check if object provides any of the given bindings
      *
@@ -267,9 +265,9 @@ class Mzax_Db_Select extends Varien_Db_Select
         }
         return false;
     }
-    
-    
-    
+
+
+
     /**
      * Check if object provides all of the given bindings
      *
@@ -286,7 +284,7 @@ class Mzax_Db_Select extends Varien_Db_Select
         return false;
     }
 
-    
+
     /**
      * Check if object provides all of the given bindings
      *
@@ -302,14 +300,14 @@ class Mzax_Db_Select extends Varien_Db_Select
         }
         return true;
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     /**
-     * 
-     * 
+     *
+     *
      * @param string $key
      * @return mixed
      */
@@ -320,14 +318,14 @@ class Mzax_Db_Select extends Varien_Db_Select
         }
         return null;
     }
-    
-    
-    
-    
+
+
+
+
 
     /**
      * Join select statement to query
-     * 
+     *
      * @param string $bind
      * @param Zend_Db_Select $select
      * @param string $alias
@@ -339,16 +337,16 @@ class Mzax_Db_Select extends Varien_Db_Select
         if($this->getJoin($alias)) {
             return $this;
         }
-        
+
         $cond = $this->_getJoinCondition($alias, $bind);
-    
+
         $this->joinInner(array($alias => $select), $cond, null);
         $this->_joins[$alias] = $select;
         return $this;
     }
-    
-    
-    
+
+
+
     /**
      * Join select statement to query
      *
@@ -363,29 +361,29 @@ class Mzax_Db_Select extends Varien_Db_Select
         if($this->getJoin($alias)) {
             return $this;
         }
-    
+
         $cond = $this->_getJoinCondition($alias, $bind);
-    
+
         $this->joinLeft(array($alias => $select), $cond, null);
         $this->_joins[$alias] = $select;
         return $this;
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     /**
      * Create simple join condition from $bind
-     * 
-     * e.g. 
+     *
+     * e.g.
      * 'customer_id'
      *     {customer_id} = 'alias'.'customer_id'
-     *     
+     *
      * array('object_id' => '{customer_id}', 'object_type' => 1)
      *     {customer_id} = 'alias'.'object_id' AND 'alias'.'object_type' = 1
-     * 
-     * 
+     *
+     *
      * @param string $tableAlias
      * @param string|array $bind
      * @param string $tableColumn
@@ -414,16 +412,16 @@ class Mzax_Db_Select extends Varien_Db_Select
                     else {
                         $result[] = $this->_getJoinCondition($tableAlias, $cond, $value);
                     }
-                    
+
                 }
             }
-            
+
             return implode(' '.self::SQL_AND.' ', $result);
         }
         if(!$tableColumn) {
             $tableColumn = trim($bind, '{}');
         }
-        
+
         if(is_string($bind)) {
             $bind = $this->_getBindExpr($bind);
             if(is_string($bind)) {
@@ -433,17 +431,17 @@ class Mzax_Db_Select extends Varien_Db_Select
                 $bind = '{' . $bind . '}';
             }
         }
-        
+
         return "(`$tableAlias`.`$tableColumn` = $bind)";
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Check expression for binders and convert them
      * to valid placeholders
-     * 
+     *
      * @param mixed $expr
      * @return mixed
      */
@@ -467,17 +465,17 @@ class Mzax_Db_Select extends Varien_Db_Select
         }
         return $expr;
     }
-    
-    
-    
+
+
+
     /**
      * Simple optional filter
-     * 
+     *
      * @param string $field
      * @param mixed $value
      * @return Mzax_Db_Select
      */
-    public function filter($field, $value) 
+    public function filter($field, $value)
     {
         if($value !== null) {
             $field = $this->getAdapter()->quoteIdentifier($field, true);
@@ -490,12 +488,12 @@ class Mzax_Db_Select extends Varien_Db_Select
         }
         return $this;
     }
-    
-    
-    
-    
+
+
+
+
     /**
-     * 
+     *
      * @param string $spec Default id field
      * @return Mzax_Db_Select
      */
@@ -510,12 +508,12 @@ class Mzax_Db_Select extends Varien_Db_Select
         parent::group($this->_getBindExpr($spec));
         return $this;
     }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     /**
      * Add column to the select statment result
      *
@@ -529,9 +527,9 @@ class Mzax_Db_Select extends Varien_Db_Select
         if(!$expr) {
             $expr = new Zend_Db_Expr('{' . $alias . '}');
         }
-        
+
         $expr = $this->_getBindExpr($expr);
-        
+
         // replace column if it does exist already
         foreach($this->_parts[self::COLUMNS] as &$column) {
             if(isset($column[2]) && $column[2] === $alias) {
@@ -539,21 +537,21 @@ class Mzax_Db_Select extends Varien_Db_Select
                 return $this;
             }
         }
-        
+
         if($this->_lock) {
             throw new Zend_Db_Exception("Select is locked, unable to add column '$alias'");
         }
-        
+
         $this->columns(array($alias => $expr));
         return $this;
     }
-    
-    
-    
+
+
+
     /**
      * Seeks are optional columns that are initally set to NULL
-     * but can be added 
-     * 
+     * but can be added
+     *
      * @param string $what
      * @return Mzax_Db_Select
      */
@@ -564,12 +562,12 @@ class Mzax_Db_Select extends Varien_Db_Select
         $this->setColumn($what, $expr);
         return $this;
     }
-    
-    
-    
+
+
+
     /**
      * Provide optional data which might be asked by a seek call
-     * 
+     *
      * @param string $what
      * @param Zend_Db_Expr $expr
      */
@@ -581,10 +579,10 @@ class Mzax_Db_Select extends Varien_Db_Select
         }
         return $this;
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * (non-PHPdoc)
      * @see Zend_Db_Select::assemble()
@@ -602,32 +600,32 @@ class Mzax_Db_Select extends Varien_Db_Select
         $bindings = $this->_binding;
         $select   = $this;
         $regex    = '/{([a-z_]+)}/i';
-        
+
         $cb = function($match) use (&$cb, $regex, $bindings, $sql, $select) {
             if(isset($bindings[$match[1]])) {
                 return preg_replace_callback($regex, $cb, $bindings[$match[1]]);
             }
-            
+
             $exception = new Mzax_Db_Select_Exception("Binding '{$match[1]}' does not exist", 1001, $select);
             $exception->sql = $sql;
-            
+
             throw $exception;
         };
-        
+
         // replace all binding placeholders
         return preg_replace_callback($regex, $cb, $sql);
     }
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
 
     /**
      * Get insert from Select object query
-     * 
+     *
      * Derived from Varien_Db_Adapter_Pdo_Mysql::insertFromSelect()
      * however the insert select should be in parenthèse or CROSS JOINTS
      * fail
@@ -642,14 +640,14 @@ class Mzax_Db_Select extends Varien_Db_Select
     public function insertFromSelect($table, $fields = array(), $mode = true)
     {
         $adapter = $this->getAdapter();
-        
+
         if(!$fields) {
             $fields = $this->getFields();
         }
         if($mode === true) {
             $mode = $adapter::INSERT_ON_DUPLICATE;
         }
-        
+
         $query = 'INSERT';
         if ($mode == $adapter::INSERT_IGNORE) {
             $query .= ' IGNORE';
@@ -659,22 +657,22 @@ class Mzax_Db_Select extends Varien_Db_Select
             $columns = array_map(array($adapter, 'quoteIdentifier'), $fields);
             $query = sprintf('%s (%s)', $query, join(', ', $columns));
         }
-    
+
         $query = sprintf('%s (%s)', $query, $this->assemble());
-    
+
         if ($mode == $adapter::INSERT_ON_DUPLICATE) {
             $update = array();
             foreach ($fields as $field) {
                 $update[] = sprintf('%1$s = VALUES(%1$s)', $adapter->quoteIdentifier($field));
             }
-    
+
             if ($update) {
                 $query = sprintf('%s ON DUPLICATE KEY UPDATE %s', $query, join(', ', $update));
             }
         }
-    
+
         return $query;
     }
-    
-    
+
+
 }

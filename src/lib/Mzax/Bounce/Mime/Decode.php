@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -18,18 +17,17 @@
  */
 
 /**
- * 
- * 
+ *
+ *
  *
  * @author Jacob Siefer
  * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
 {
-    
-    
-    
+
+
+
     /**
      * decodes a mime encoded String and returns a
      * struct of parts with header and body
@@ -54,11 +52,11 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
         }
         return $result;
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     /**
      * Split message struct
      *
@@ -74,7 +72,7 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
     {
         // TODO: we're ignoring \r for now - is this function fast enough and is it safe to asume noone needs \r?
         $body = str_replace("\r", '', $body);
-    
+
         $start = 0;
         $res = array();
         // find every mime part limiter and cut out the
@@ -85,15 +83,15 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
             // no parts found!
             return array();
         }
-    
+
         // position after first boundary line
         $start = $p + 3 + strlen($boundary);
-    
+
         while (($p = strpos($body, '--' . $boundary . "\n", $start)) !== false) {
             $res[] = substr($body, $start, $p-$start);
             $start = $p + 3 + strlen($boundary);
         }
-    
+
         // no more parts, find end boundary
         $p = strpos($body, '--' . $boundary . '--', $start);
         if ($p===false) {
@@ -107,10 +105,10 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
         }
         return $res;
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Decode a report message
      * e.g.
@@ -143,10 +141,10 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
         }
         return $hash;
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Parse an RFC-822 message
      *
@@ -160,18 +158,18 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
     {
         try {
             Zend_Mime_Decode::splitMessage(ltrim($message), $headers, $content);
-        
+
             $contentType = isset($headers['content-type']) ? $headers['content-type'] : '';
             if($contentType) {
                 $contentType = Zend_Mime_Decode::splitContentType($contentType);
             }
-        
+
             if(isset($contentType['boundary'])) {
                 $mimeParts = self::splitMessageStruct($content, $contentType['boundary']);
             } else {
                 $mimeParts = array();
             }
-        
+
             $message = array(
                 'headers'      => $headers,
                 'content'      => $content,
@@ -184,7 +182,7 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
             return false;
         }
     }
-    
-    
-    
+
+
+
 }

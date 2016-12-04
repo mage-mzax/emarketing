@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -33,12 +32,11 @@
 */
 
 /**
- * 
- * 
+ *
+ *
  *
  * @author Jacob Siefer
  * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Bounce_Detector_Failure extends Mzax_Bounce_Detector_Abstract
 {
@@ -49,38 +47,38 @@ class Mzax_Bounce_Detector_Failure extends Mzax_Bounce_Detector_Abstract
      * @var string
      */
     const RFC3463_CODE = '[245]\.[01234567]\.[0-9]{1,2}';
-    
+
     /**
      * @see https://tools.ietf.org/html/rfc2821
      * @var string
      */
     const RFC2821_CODE = '[45][01257][012345]';
-    
-    
-    
-    
+
+
+
+
     const DEFAULT_STATUS = '5.5.0';
-    
-    
-    
-    
-    
+
+
+
+
+
     public static function getPhrases()
     {
         static $phrases;
-        
+
         if(!$phrases) {
             $filename = dirname(__FILE__) . '/Data/phrases.cnf';
             if (!file_exists($filename)) {
                 throw new Exception("Missing file '$file'.");
             }
             $data = file_get_contents($filename);
-            
+
             // remove comments and empty lines
             $data = preg_replace('/^#(.*)$/m', '', $data);
             $data = preg_replace('/^\s*\n/m', '', $data);
             $data = trim($data);
-            
+
             $data = preg_split('/^\[([0-9.]+)\](?:\s*([0-9+-]+))$/m', $data, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
             //var_dump($data); exit;
             $phrases = array();
@@ -88,21 +86,21 @@ class Mzax_Bounce_Detector_Failure extends Mzax_Bounce_Detector_Abstract
                 $code = $data[$i];
                 $sort = (float) $data[$i+1];
                 $rows = explode("\n", trim($data[$i+2]));
-                
+
                 if(!isset($phrases[$sort])) {
                     $phrases[$sort] = array();
                 }
                 $phrases[$sort][$code] = $rows;
             }
             krsort($phrases, SORT_NUMERIC);
-            
+
             //var_dump($phrases); exit;
-            
+
         }
         return $phrases;
     }
-    
-    
+
+
     protected static $subjects = array(
         #EN
         'delivery errors',
@@ -130,40 +128,40 @@ class Mzax_Bounce_Detector_Failure extends Mzax_Bounce_Detector_Abstract
         'spam eater',
         'undeliverable',
         'undelivered mail',
-        'warning: message',  
+        'warning: message',
         'deletver reports about your email',
         'returned email',
         #NL
-        'Onbestelbaar',   
+        'Onbestelbaar',
         #FR
         'Non remis',
         #ES
-        'No se puede entregar', 
+        'No se puede entregar',
     );
-    
-    
-    
+
+
+
     public static function normalizeSubject(&$subject)
     {
         $subject = preg_replace('/\W+/', ' ', $subject);
         $subject = str_replace('mail', 'email', $subject);
     }
-    
-    
+
+
     public function isFailure(Mzax_Bounce_Message $message)
     {
         $from = $this->findEmail($message->getFrom());
-        
+
         /* FROM CHECK */
         if(preg_match("/^(postmaster|mailer-daemon)\@?/i", $from)) {
             $message->info('bounce_justification', 'From: ' . $from);
             return true;
         }
-        
-        
+
+
         $subject = $message->getSubject();
         self::normalizeSubject($subject);
-        
+
         if($subject) {
             foreach(self::$subjects as $needle) {
                 if(stripos($subject, $needle) !== false) {
@@ -172,70 +170,70 @@ class Mzax_Bounce_Detector_Failure extends Mzax_Bounce_Detector_Abstract
                 }
             }
         }
-        
-        
+
+
         return false;
     }
-    
-    
-    
-    
+
+
+
+
     public function inspect(Mzax_Bounce_Message $message)
     {
         if(!$this->isFailure($message)) {
             return;
         }
-        
+
         $status = $this->detectStatus($message);
-        
+
         $message->info('type', Mzax_Bounce::TYPE_BOUNCE);
         $message->info('status', $status);
-        
+
         // try to find recipient in body text
-        if(!$message->info('recipient')) {        
+        if(!$message->info('recipient')) {
             // assume recipient email in body text
             if($email = $this->findEmail($message->asString())) {
                 $message->info('recipient', $email);
             }
         }
-        
+
         return true;
     }
-    
-    
-    
+
+
+
     public function detectStatus(Mzax_Bounce_Message $message)
     {
         $body = $message->asString();
         $body = strtolower($body);
         $body = preg_replace('/[\s]+/', ' ', $body);
-        
-        
+
+
         $RFC3463 = self::RFC3463_CODE;
         $RFC2821 = self::RFC2821_CODE;
-        
-        
-        
+
+
+
         // e.g. 421 #4.7.0  |  421-4.7.1/
         if(preg_match("/{$RFC2821}[- ]#?({$RFC3463})/i" ,$body, $matches)) {
             $message->info('found_phrase', strtolower($matches[0]));
             return $matches[1];
         }
-        
-        
+
+
         // e.g. Diagnostic-Code: smtp; 41 4.5.12
         if(preg_match("/diagnostic[- ]code: smtp; ?\d\d\ ({$RFC3463})/i" ,$body, $matches)) {
             $message->info('found_phrase', strtolower($matches[0]));
             return $matches[1];
         }
-        
-        
+
+
         // e.g. Status: 4.5.12
         if(preg_match("/status: ({$RFC3463})/i" ,$body, $matches)) {
             $message->info('found_phrase', strtolower($matches[0]));
             return $matches[1];
         }
-        
+
         // Use common phrases to detect status code
         foreach(self::getPhrases() as $sort => $phrasesByCodes) {
             foreach($phrasesByCodes as $code => $phrases) {
@@ -248,15 +246,15 @@ class Mzax_Bounce_Detector_Failure extends Mzax_Bounce_Detector_Abstract
                 }
             }
         }
-        
+
 
         // https://tools.ietf.org/html/rfc3463#section-2
         if(preg_match("/\W($RFC3463)\W/", $body, $matches)) {
             $message->info('found_phrase', strtolower($matches[0]));
             return $matches[1];
         }
-        
-        
+
+
 
         // search for RFC2821 return code
         // thanks to mark.tolman@gmail.com
@@ -276,11 +274,11 @@ class Mzax_Bounce_Detector_Failure extends Mzax_Bounce_Detector_Abstract
                 }
             }
         }
-        
+
         return self::DEFAULT_STATUS;
     }
-    
-    
-    
+
+
+
 }
 

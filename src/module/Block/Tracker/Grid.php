@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -30,17 +29,17 @@ class Mzax_Emarketing_Block_Tracker_Grid extends Mage_Adminhtml_Block_Widget_Gri
         $this->setDefaultSort('tracker_id');
     }
 
-    
+
     protected function _prepareCollection()
     {
         /* @var $collection Mzax_Emarketing_Model_Resource_Conversion_Tracker_Collection */
         $collection = Mage::getResourceModel('mzax_emarketing/conversion_tracker_collection');
         $this->setCollection($collection);
-        
+
         return parent::_prepareCollection();
     }
-    
-    
+
+
     protected function _prepareColumns()
     {
         $this->addColumn('updated_at', array(
@@ -49,17 +48,17 @@ class Mzax_Emarketing_Block_Tracker_Grid extends Mage_Adminhtml_Block_Widget_Gri
             'gmtoffset' => true,
             'type'      =>'datetime'
         ));
-        
+
         $this->addColumn('title', array(
             'header'    => $this->__('Title'),
             'index'     => 'title',
         ));
-        
+
         $this->addColumn('description', array(
             'header'    => $this->__('Description'),
             'index'     => 'description',
         ));
-        
+
         $this->addColumn('is_active', array(
             'header'    => Mage::helper('cms')->__('Active'),
             'index'     => 'is_active',
@@ -70,7 +69,7 @@ class Mzax_Emarketing_Block_Tracker_Grid extends Mage_Adminhtml_Block_Widget_Gri
                 1 => $this->__('Enabled')
             ),
         ));
-        
+
         $this->addColumn('is_aggregated', array(
             'header'    => Mage::helper('cms')->__('Is Aggregated'),
             'index'     => 'is_aggregated',
@@ -81,13 +80,13 @@ class Mzax_Emarketing_Block_Tracker_Grid extends Mage_Adminhtml_Block_Widget_Gri
                 1 => $this->__('Yes')
             ),
         ));
-        
-        
+
+
 
         return parent::_prepareColumns();
     }
 
-    
+
     protected function _prepareMassaction()
     {
         $this->setMassactionIdField('tracker_id');
@@ -98,7 +97,7 @@ class Mzax_Emarketing_Block_Tracker_Grid extends Mage_Adminhtml_Block_Widget_Gri
              'url'     => $this->getUrl('*/*/massDelete'),
              'confirm' => $this->__('Are you sure?')
         ));
-        
+
         $this->getMassactionBlock()->addItem('is_active', array(
             'label'=> $this->__('Enable/Disable'),
             'url'  => $this->getUrl('*/*/massEnable', array('_current'=>true)),
@@ -120,13 +119,13 @@ class Mzax_Emarketing_Block_Tracker_Grid extends Mage_Adminhtml_Block_Widget_Gri
             'confirm' => $this->__('This may take some time depending on the size of your data, would you like to continue?'),
             'url'     => $this->getUrl('*/*/massAggregate')
         ));
-        
-        
-        
+
+
+
         return $this;
     }
-    
-    
+
+
 
     public function getGridUrl()
     {

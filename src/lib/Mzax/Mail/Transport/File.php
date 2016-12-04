@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -20,21 +19,20 @@
 
 
 /**
- * 
- * 
+ *
+ *
  *
  * @author Jacob Siefer
  * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Mail_Transport_File extends Zend_Mail_Transport_Abstract
 {
-    
-    
+
+
     protected $_file;
 
     protected $_saveHtml = true;
-    
+
 
     /**
      * Constructor.
@@ -47,7 +45,7 @@ class Mzax_Mail_Transport_File extends Zend_Mail_Transport_Abstract
         $this->setFile($file);
     }
 
-    
+
     /**
      * set folder where emails are saved
      */
@@ -60,32 +58,32 @@ class Mzax_Mail_Transport_File extends Zend_Mail_Transport_Abstract
         }
         return $this;
     }
-    
-    
+
+
     public function setSaveHtml($html)
     {
         $this->_saveHtml = $html;
         return $this;
     }
-    
+
     public function getSaveHtml()
     {
         return $this->_saveHtml;
     }
-    
-    
+
+
     /**
      * get folder where emails are saved
-     * 
+     *
      * @return unknown_type
-     */  
+     */
     public function getFile()
     {
         return $this->_file;
     }
 
-    
-    
+
+
     /**
      * Send mail using PHP native mail()
      *
@@ -96,20 +94,20 @@ class Mzax_Mail_Transport_File extends Zend_Mail_Transport_Abstract
     public function _sendMail()
     {
         $file = $this->getFile();
-        
+
         if(!file_exists($file)) {
             touch($file);
             chmod($file, 0777);
         }
-        
+
         $content = $this->_saveToFile();
-        
+
         $this->_mail->getBodyHtml();
-        
+
         $fp = fopen($file, 'a');
         fwrite($fp, $content);
         fclose($fp);
-        
+
         if($this->getSaveHtml()) {
             $path = dirname($file);
 
@@ -118,19 +116,19 @@ class Mzax_Mail_Transport_File extends Zend_Mail_Transport_Abstract
             if(preg_match('/\=\?utf\-8\?B\?([a-z0-9=]+)\?\=/i', $subject, $matches)) {
                 $subject = base64_decode($matches[1]);
             }
-            
-            
+
+
             $recipients = $this->_mail->getRecipients();
             $recipients = implode('_', $recipients);
             $recipients = str_replace('@','_at_', $recipients);
-            
+
             $filename = $recipients.'__'.$subject;
-            
+
             $filename = preg_replace('/([^a-z0-9_]+)/i', '_', $filename);
             $filename = trim($filename, '_');
             $filename = strtolower($filename);
-            
-            
+
+
             $body = $this->_mail->getBodyHtml();
             if(!$body) {
                 $body = $this->_mail->getBodyText();
@@ -138,26 +136,26 @@ class Mzax_Mail_Transport_File extends Zend_Mail_Transport_Abstract
             } else {
                 $filename .= '.html';
             }
-            
+
             if($body) {
                 $body->encoding = false;
                 $content = $body->getContent();
-                
+
                 file_put_contents($path . DS . $filename, $content);
                 chmod($path . DS . $filename, 0777);
             }
         }
-        
-        
+
+
     }
 
-    
-    
+
+
     protected function _saveToFile()
     {
         $content  = $this->header;
         $content .= "\r\n";
-        
+
         $content .= $this->body;
         $content .= "\r\n\r\n-----REAL BODY-----\r\n\r\n\r\n";
         $body = $this->_mail->getBodyHtml();
@@ -166,7 +164,7 @@ class Mzax_Mail_Transport_File extends Zend_Mail_Transport_Abstract
             $content .= $body->getContent();
         }
         $content .= "\r\n\r\n\r\n#############################################################\r\n\r\n\r\n";
-        
+
         return $content;
     }
 }

@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -23,7 +22,7 @@ class Mzax_Emarketing_Block_Campaign_SendTestMail extends Mage_Adminhtml_Block_W
     public function __construct()
     {
         $this->_objectId = 'id';
-        
+
         $this->_blockGroup = 'mzax_emarketing';
         $this->_controller = 'campaign';
         $this->_mode       = 'sendTestMail';
@@ -37,7 +36,7 @@ class Mzax_Emarketing_Block_Campaign_SendTestMail extends Mage_Adminhtml_Block_W
     }
 
 
-    
+
 
     public function getHeaderText()
     {
@@ -48,10 +47,10 @@ class Mzax_Emarketing_Block_Campaign_SendTestMail extends Mage_Adminhtml_Block_W
     {
         return $this->getUrl('*/*/validateTestMail', array('_current'=>true));
     }
-    
 
-    
-    
+
+
+
     /**
      * Get form action URL
      *
@@ -64,6 +63,6 @@ class Mzax_Emarketing_Block_Campaign_SendTestMail extends Mage_Adminhtml_Block_W
         }
         return $this->getUrl('*/*/sendTestMailPost', array('_current' => true));
     }
-    
-    
+
+
 }

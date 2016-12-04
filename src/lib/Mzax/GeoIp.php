@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -19,41 +18,40 @@
 
 
 /**
- * 
- * 
+ *
+ *
  *
  * @author Jacob Siefer
  * @license {{license}}
- * @version {{version}}
  */
 class Mzax_GeoIp
 {
-    
-    
+
+
     /**
-     * 
+     *
      * @var array
      */
     protected $_adapters = array();
-    
-    
+
+
     /**
      * File resource handle for persist managment
-     * 
+     *
      * @var resource
      */
     protected $_persistence;
-    
-    
-    
-    
+
+
+
+
     protected $_cache = array();
-    
-    
-    
-    
+
+
+
+
     /**
-     * 
+     *
      * @param string $persist
      */
     public function __construct($persist = null)
@@ -61,19 +59,19 @@ class Mzax_GeoIp
         if($persist) {
             $this->persist($persist);
         }
-        
+
         if(empty($this->_adapters)) {
             $this->addAdapter(new Mzax_GeoIp_Adapter_FreeGeoIp());
             $this->addAdapter(new Mzax_GeoIp_Adapter_Ipinfo());
             $this->addAdapter(new Mzax_GeoIp_Adapter_GeoPlugin());
         }
     }
-    
-    
-    
+
+
+
     /**
      * Add another adapter
-     * 
+     *
      * @param Mzax_GeoIp_Adapter_Abstract $adapter
      * @throws Exception
      * @return Mzax_GeoIp
@@ -86,11 +84,11 @@ class Mzax_GeoIp
         $this->_adapters[] = $adapter;
         return $this;
     }
-    
-    
+
+
     /**
      * Remove all adapters
-     * 
+     *
      * @return Mzax_GeoIp
      */
     public function clearAdapters()
@@ -98,24 +96,24 @@ class Mzax_GeoIp
         $this->_adapters = array();
         return $this;
     }
-    
-    
+
+
     /**
      * Has adapters
-     * 
+     *
      * @return boolean
      */
     public function hasAdapters()
     {
         return !empty($this->_adapters);
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Fetch information for the given IP address
-     * 
+     *
      * @param string $ip
      * @return Mzax_GeoIp_Request|NULL
      */
@@ -124,9 +122,9 @@ class Mzax_GeoIp
         if(isset($this->_cache[$ip])) {
             return $this->_cache[$ip];
         }
-        
+
         $request = new Mzax_GeoIp_Request($ip);
-        
+
         /* @var $adapter Mzax_GeoIp_Adapter_Abstract */
         foreach($this->_adapters as $adapter) {
             if( $adapter->isReady() ) {
@@ -138,14 +136,14 @@ class Mzax_GeoIp
         }
         return null;
     }
-    
-    
-    
+
+
+
     /**
      * Get number of remaning request that
      * we can send out without reaching our
      * periodical limits
-     * 
+     *
      * @return integer
      */
     public function getRemainingRequests()
@@ -156,18 +154,18 @@ class Mzax_GeoIp
             if(!$adapter->getRestTime()) {
                 $counts += $adapter->getRemainingRequests();
             }
-            
+
         }
-        
+
         return $counts;
     }
-    
-    
-    
+
+
+
     /**
      * Retrieve the minimum rest time before we can
      * send out another request
-     * 
+     *
      * @return integer
      */
     public function getRestTime()
@@ -181,9 +179,9 @@ class Mzax_GeoIp
         }
         return $time;
     }
-    
-    
-    
+
+
+
     /**
      * Set file for persistence
      *
@@ -195,7 +193,7 @@ class Mzax_GeoIp
     public function persist($filename)
     {
         $this->_persistence = fopen($filename, 'c+');
-        
+
         if($this->_persistence) {
             flock($this->_persistence, LOCK_EX);
             try {
@@ -206,12 +204,12 @@ class Mzax_GeoIp
         }
         return $this;
     }
-    
-    
-    
+
+
+
     /**
      * Save to persistence file
-     * 
+     *
      * @return Mzax_GeoIp
      */
     public function drop()
@@ -226,9 +224,9 @@ class Mzax_GeoIp
         }
         return $this;
     }
-    
-    
-    
+
+
+
     public function __destruct()
     {
         try {
@@ -236,6 +234,6 @@ class Mzax_GeoIp
         }
         catch(Exception $e) {}
     }
-    
-    
+
+
 }

@@ -9,7 +9,6 @@
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
  *
- * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -21,41 +20,40 @@
 
 
 /**
- * 
- * 
+ *
+ *
  *
  * @author Jacob Siefer
  * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Db_Select_Exception extends Zend_Db_Exception
 {
-    
-    
+
+
     /**
-     * 
+     *
      * @var Mzax_Db_Select
      */
     public $select;
-    
-    
-    
+
+
+
     /**
-     * 
+     *
      * @var string
      */
     public $sql;
-    
-    
-    
+
+
+
     /**
-     * 
+     *
      * @var array
      */
     public $bindings = array();
-    
-    
-    
+
+
+
     public function __construct($msg = '', $code = 0, Mzax_Db_Select $select = null, Exception $previous = null)
     {
         parent::__construct($msg, $code, $previous);
@@ -64,9 +62,9 @@ class Mzax_Db_Select_Exception extends Zend_Db_Exception
             $this->bindings = $select->getBindings();
         }
     }
-    
-    
-    
+
+
+
     /**
      * String representation of the exception
      *
@@ -75,7 +73,7 @@ class Mzax_Db_Select_Exception extends Zend_Db_Exception
     public function __toString()
     {
         $str = parent::__toString();
-        
+
         if($this->sql) {
             $str .= "\n\n" . $this->sql;
         }
@@ -85,8 +83,8 @@ class Mzax_Db_Select_Exception extends Zend_Db_Exception
                 $str .= "\n\t" . $name . " \t->  " . $expr;
             }
         }
-        
+
         return $str;
     }
-    
+
 }

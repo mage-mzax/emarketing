@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -20,16 +19,15 @@
 
 
 /**
- * 
- * 
+ *
+ *
  *
  * @author Jacob Siefer
  * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
 {
-    
+
 
 
     /**
@@ -41,21 +39,21 @@ class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
     {
         return Mage::getSingleton('mzax_emarketing/session');
     }
-    
-    
-    
+
+
+
     /**
      * Retrieve address
-     * 
+     *
      * @return string
      */
     public function getAddress()
     {
         return $this->getSession()->getLastAddress();
     }
-    
-    
-    
+
+
+
     public function getFormKey()
     {
         return $this->getSession()->getFormKey();
@@ -103,7 +101,7 @@ class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
     {
         return $this->getUrl('*/*/do');
     }
-    
+
     public function getNoUrl()
     {
         return $this->getUrl('/');

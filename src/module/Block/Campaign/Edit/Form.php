@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -33,7 +32,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Form extends Mage_Adminhtml_Block_Widg
                 'value' => $campaign->getId()
             ));
         }
-        
+
         $form->setUseContainer(true);
         $this->setForm($form);
         return parent::_prepareForm();

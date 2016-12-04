@@ -1,15 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -34,7 +33,7 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit_Tab_Subscribers extends Mage_Ad
     }
 
 
-    
+
     protected function _prepareCollection()
     {
         /* @var $collection Mzax_Emarketing_Model_Resource_Newsletter_List_Subscriber_Collection */
@@ -154,5 +153,5 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit_Tab_Subscribers extends Mage_Ad
     {
         return null;
     }
-    
+
 }

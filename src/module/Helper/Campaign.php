@@ -20,27 +20,26 @@
 
 /**
  * Helper class for campaign related tasks
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Emarketing_Helper_Campaign extends Mage_Core_Helper_Abstract
 {
-
-
     /**
      * Check all campaigns for new recipients
      *
      * This will look for new recipients that match the current filters
      * and should recieve the campaign
      *
-     * @return integer The number of new recipients
+     * @param array $options
+     *
+     * @return int The number of new recipients
+     * @throws Exception
      */
     public function fetchNewRecipients(array $options)
     {
-        $lock = Mage::helper('mzax_emarketing')->lock('fetch_new_recipients');
+        /** @var Mzax_Emarketing_Helper_Data $helper */
+        $helper = Mage::helper('mzax_emarketing');
+
+        $lock = $helper->lock('fetch_new_recipients');
         if (!$lock) {
             return false;
         }
@@ -55,12 +54,13 @@ class Mzax_Emarketing_Helper_Campaign extends Mage_Core_Helper_Abstract
         // then go for a random sort to make sure they all get a chance
         $campaigns->setOrder('RAND()', 'ASC');
 
-
         $options = new Varien_Object($options);
         $options->getDataSetDefault('timeout', 150);
         $options->getDataSetDefault('break_on_error', Mage::getIsDeveloperMode());
 
-        if ($options->getVerbose()) {
+        $verbose = (bool)$options->getData('verbose');
+
+        if ($verbose) {
             echo "\n\n{$campaigns->getSelect()}\n\n";
         }
 
@@ -71,26 +71,25 @@ class Mzax_Emarketing_Helper_Campaign extends Mage_Core_Helper_Abstract
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
         foreach ($campaigns as $campaign) {
             try {
-                if ($options->getVerbose()) {
+                if ($verbose) {
                     echo sprintf("Find Recipients for '%s' (#%s)...", $campaign->getName(), $campaign->getId());
                 }
 
                 $count += $found = $campaign->findRecipients();
 
-                if ($options->getVerbose()) {
+                if ($verbose) {
                     echo sprintf(" \tfound %s\n", $found);
                 }
 
                 $lock->touch();
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 if ($options->getBreakOnError()) {
                     $lock->unlock();
                     throw $e;
                 }
                 Mage::logException($e);
 
-                if ($options->getVerbose()) {
+                if ($verbose) {
                     echo "\n{$e->getMessage()}\n{$e->getTraceAsString()}\n\n";
                 }
             }
@@ -100,26 +99,27 @@ class Mzax_Emarketing_Helper_Campaign extends Mage_Core_Helper_Abstract
             }
         }
         $lock->unlock();
+
         return $count;
     }
-
-
-
 
     /**
      * Send recipients
      *
      * @param array $options
+     *
+     * @return int
      * @throws Exception
-     * @return number
      */
     public function sendRecipients(array $options)
     {
-        $lock = Mage::helper('mzax_emarketing')->lock('send_recipients');
-        if (!$lock) {
-            return false;
-        }
+        /** @var Mzax_Emarketing_Helper_Data $helper */
+        $helper = Mage::helper('mzax_emarketing');
 
+        $lock = $helper->lock('send_recipients');
+        if (!$lock) {
+            return 0;
+        }
 
         /* @var $campaigns Mzax_Emarketing_Model_Resource_Campaign_Collection */
         $campaigns = Mage::getResourceModel('mzax_emarketing/campaign_collection');
@@ -132,8 +132,9 @@ class Mzax_Emarketing_Helper_Campaign extends Mage_Core_Helper_Abstract
         $options->getDataSetDefault('maximum', 500);
         $options->getDataSetDefault('break_on_error', Mage::getIsDeveloperMode());
 
+        $verbose = (bool)$options->getData('verbose');
 
-        if ($options->getVerbose()) {
+        if ($verbose) {
             echo "\n\n{$campaigns->getSelect()}\n\n";
         }
 
@@ -146,7 +147,7 @@ class Mzax_Emarketing_Helper_Campaign extends Mage_Core_Helper_Abstract
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
         foreach ($campaigns as $campaign) {
             try {
-                if ($options->getVerbose()) {
+                if ($verbose) {
                     echo sprintf("Send Recipients for '%s' (#%s)...", $campaign->getName(), $campaign->getId());
                 }
 
@@ -156,17 +157,16 @@ class Mzax_Emarketing_Helper_Campaign extends Mage_Core_Helper_Abstract
                     'break_on_error' => $options->getBreakOnError()
                 ));
 
-                if ($options->getVerbose()) {
+                if ($verbose) {
                     echo sprintf(" \tsent %s\n", $sent);
                 }
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 if ($options->getBreakOnError()) {
                     $lock->unlock();
                     throw $e;
                 }
                 Mage::logException($e);
-                if ($options->getVerbose()) {
+                if ($verbose) {
                     echo "\n{$e->getMessage()}\n{$e->getTraceAsString()}\n\n";
                 }
             }
@@ -181,10 +181,7 @@ class Mzax_Emarketing_Helper_Campaign extends Mage_Core_Helper_Abstract
             $lock->touch();
         }
         $lock->unlock();
+
         return $count;
     }
-
-
-
-
 }

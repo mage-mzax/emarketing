@@ -17,23 +17,26 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
+/**
+ * Class Mzax_Emarketing_Model_Form_Element_TemplateEditor
+ */
 class Mzax_Emarketing_Model_Form_Element_TemplateEditor extends Mzax_Emarketing_Model_Form_Element_Ace
 {
-
+    /**
+     * @return string
+     */
     public function getEditorClass()
     {
         return 'mzax.ui.TemplateEditor';
     }
 
-
+    /**
+     * @return string
+     */
     public function getTypeClass()
     {
         return 'mage-template-editor';
     }
-
-
-
 
     /**
      * Retrieve editor options
@@ -52,16 +55,10 @@ class Mzax_Emarketing_Model_Form_Element_TemplateEditor extends Mzax_Emarketing_
         return $options;
     }
 
-
-
-
-
-
     /**
      * Prepare Html buttons for additional WYSIWYG features
      *
-     * @param bool $visible Display button or not
-     * @return void
+     * @return string
      */
     protected function _getPluginButtonsHtml()
     {
@@ -117,11 +114,6 @@ class Mzax_Emarketing_Model_Form_Element_TemplateEditor extends Mzax_Emarketing_
             }
         }
 
-
         return $buttonsHtml;
     }
-
-
-
-
 }

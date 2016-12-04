@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -18,31 +18,25 @@
  */
 
 
-
 /**
- * 
- * 
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Model_Object_Quote
  */
 class Mzax_Emarketing_Model_Object_Quote extends Mzax_Emarketing_Model_Object_Abstract
 {
-    
+
     public function _construct()
     {
         $this->_init('sales/quote');
     }
-    
-    
-    
+
+
+
     public function getName()
     {
         return $this->__('Quote');
     }
-    
-    
+
+
 
     public function getQuery()
     {
@@ -55,25 +49,25 @@ class Mzax_Emarketing_Model_Object_Quote extends Mzax_Emarketing_Model_Object_Ab
         $query->addBinding('quote_id', 'entity_id');
         $query->addBinding('customer_id', 'customer_id');
         $query->addBinding('email', 'customer_email');
-        
+
         return $query;
     }
-    
-    
-    
+
+
+
     public function prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::prepareCollection($collection);
-    
+
         $collection->addField('store_id');
         $collection->addField('created_at');
         $collection->addField('updated_at');
         $collection->addField('customer_id');
         $collection->addField('email');
     }
-    
-    
-    
+
+
+
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
 
@@ -87,7 +81,7 @@ class Mzax_Emarketing_Model_Object_Quote extends Mzax_Emarketing_Model_Object_Ab
                 'width' => '20%',
             ));
         }
-        
+
         $grid->addColumn('customer_id', array(
             'header'      => $this->__('Customer ID'),
             'id_field'    => 'customer_id',
@@ -97,29 +91,29 @@ class Mzax_Emarketing_Model_Object_Quote extends Mzax_Emarketing_Model_Object_Ab
             'renderer'    => 'mzax_emarketing/recipients_column_renderer_object',
             'object'      => Mage::getSingleton('mzax_emarketing/object_customer')
         ));
-        
-        
+
+
         $grid->addColumn('email', array(
             'header'     => $this->__('Email'),
             'index'      => 'email'
         ));
-        
-        
+
+
         $grid->addColumn('created_at', array(
             'header' => Mage::helper('sales')->__('Created At'),
             'index' => 'created_at',
             'type' => 'datetime',
             'width' => '120px',
         ));
-        
+
         $grid->addColumn('updated_at', array(
             'header' => Mage::helper('sales')->__('Last Touch'),
             'index' => 'updated_at',
             'type' => 'datetime',
             'width' => '120px',
         ));
-        
+
     }
-    
-    
+
+
 }

@@ -21,22 +21,20 @@
 
 /**
  * SalesRule Oberserver
- * 
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Emarketing_Model_Observer_SalesRule extends Mzax_Emarketing_Model_Observer_Abstract
 {
-	
-    
     /**
      * Register emarketing sales rule conditions
-     * 
+     *
      * @see Mzax_Emarketing_Model_SalesRule_Condition_Emarketing
      * @see Mage_SalesRule_Model_Rule_Condition_Combine::getNewChildSelectOptions()
+     *
      * @event salesrule_rule_condition_combine
+     *
      * @param $observer
+     *
+     * @return void
      */
     public function addConditions($observer)
     {
@@ -44,12 +42,12 @@ class Mzax_Emarketing_Model_Observer_SalesRule extends Mzax_Emarketing_Model_Obs
         if (!$conditions) {
             $conditions = array();
         }
-        
+
         /* @var $condition Mzax_Emarketing_Model_SalesRule_Condition_Emarketing */
         $condition = Mage::getModel('mzax_emarketing/salesRule_condition_emarketing');
-        
+
         $attributes = $condition->loadAttributeOptions()->getAttributeOption();
-        
+
         $values = array();
         foreach ($attributes as $attribute => $label) {
             $values[] = array(
@@ -57,14 +55,12 @@ class Mzax_Emarketing_Model_Observer_SalesRule extends Mzax_Emarketing_Model_Obs
                 'label' => $label
             );
         }
-        
+
         $conditions[] = array(
             'value' => $values,
             'label' => "Emarketing"
         );
-        
+
         $observer->getAdditional()->setConditions($conditions);
     }
-    
-    
 }

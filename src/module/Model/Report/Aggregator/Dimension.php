@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -18,14 +18,17 @@
  */
 
 
-
+/**
+ * Class Mzax_Emarketing_Model_Report_Aggregator_Dimension
+ */
 class Mzax_Emarketing_Model_Report_Aggregator_Dimension extends Mzax_Emarketing_Model_Report_Aggregator_Abstract
 {
-    
     const TABLE_REPORT = 'report_dimension';
     const TABLE_CONVERSION = 'report_dimension_conversion';
-    
-    
+
+    /**
+     * @var string[]
+     */
     protected $_dimensions = array(
         'dayofweek',
         'hour',
@@ -36,18 +39,18 @@ class Mzax_Emarketing_Model_Report_Aggregator_Dimension extends Mzax_Emarketing_
         'country',
         'region',
     );
-    
-    
-    
+
+    /**
+     * @return void
+     */
     protected function _aggregate()
     {
         $filter = $this->_options->getDimension();
-        
+
         if ($this->getOption('full', false)) {
             $this->truncateTable(self::TABLE_REPORT);
             $this->truncateTable(self::TABLE_CONVERSION);
-        }
-        else {
+        } else {
             if ($trackerId = $this->getOption('tracker_id')) {
                 $this->delete(array('`tracker_id` IN(?)' => $trackerId), self::TABLE_CONVERSION);
             }
@@ -61,6 +64,7 @@ class Mzax_Emarketing_Model_Report_Aggregator_Dimension extends Mzax_Emarketing_
                 $this->delete($where, self::TABLE_CONVERSION);
             }
         }
+
         foreach ($this->_dimensions as $type) {
             if (empty($filter) || in_array($type, $filter)) {
                 $dimension = $this->getDimension($type);
@@ -69,17 +73,18 @@ class Mzax_Emarketing_Model_Report_Aggregator_Dimension extends Mzax_Emarketing_
             }
         }
     }
-    
+
     /**
-     * 
+     *
      * @param string $type
+     *
      * @return Mzax_Emarketing_Model_Report_Aggregator_Dimension_Abstract
      */
     public function getDimension($type)
     {
-        return Mage::getSingleton('mzax_emarketing/report_aggregator_dimension_' . $type);
+        /** @var Mzax_Emarketing_Model_Report_Aggregator_Dimension_Abstract $dimension */
+        $dimension = Mage::getSingleton('mzax_emarketing/report_aggregator_dimension_' . $type);
+
+        return $dimension;
     }
-    
-    
-    
 }

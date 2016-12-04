@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -21,43 +21,27 @@
 
 /**
  * Mandrill API transporter
- * 
- * 
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
     extends Zend_Mail_Transport_Abstract
     implements Mzax_Emarketing_Model_Outbox_Transporter_Interface
 {
-
     const API_URI = 'https://mandrillapp.com/api/1.0/';
 
-
-
     /**
-     *
      * @var string
      */
     protected $_defaultTags;
 
-
     /**
-     *
      * @var boolean
      */
     protected $_categoryTags = false;
 
-
-
     /**
-     *
      * @var boolean
      */
     protected $_metaTags = true;
-
-
 
     /**
      * Optional mandrill subacount
@@ -66,7 +50,6 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
      */
     protected $_subaccount;
 
-
     /**
      * API Key
      *
@@ -74,24 +57,20 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
      */
     protected $_apiKey;
 
-
-
-
-
     /**
      * Test API call
      * or string with error message
      *
      * @param string $apiKey
-     * @param string $subaccountId
+     * @param string $subAccountId
+     *
      * @return string|true
      */
     public function testApi($apiKey, $subAccountId)
     {
         try {
             $response = $this->_call('subaccounts/list', array('key' => $apiKey));
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             return $e->getMessage();
         }
 
@@ -109,13 +88,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         return sprintf('No sub-account exists with the id "%s"', $subAccountId);
     }
 
-
-
-
-
-
     /**
-     *
      *
      * (non-PHPdoc)
      * @see Mzax_Emarketing_Model_Outbox_Transporter_Smtp::setup()
@@ -136,9 +109,6 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         }
     }
 
-
-
-
     /***
      * (non-PHPdoc)
      * @see Zend_Mail_Transport_Abstract::send()
@@ -151,13 +121,11 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
 
         if ($response[0]['status'] != 'sent') {
             throw new Exception(
-                "Mandrill API status {$response[0]['status']}, reason: {$response[0]['reject_reason']}", 2);
+                "Mandrill API status {$response[0]['status']}, reason: {$response[0]['reject_reason']}",
+                2
+            );
         }
     }
-
-
-
-
 
     /**
      * Call action on API
@@ -185,10 +153,6 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         return $this->_processResponse($response);
     }
 
-
-
-
-
     /**
      * Convert Zend_Mail object to a valid API array
      *
@@ -214,7 +178,6 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         $message['from_email'] = $from[0];
         $message['from_name']  = $from[1];
 
-
         foreach ($headers['To'] as $recipient) {
             if (is_string($recipient)) {
                 $recipient = $this->_decodeAddressHeader($recipient);
@@ -231,20 +194,17 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
             $message['headers']['Reply-To'] = $replyTo;
         }
 
-
         // @see https://mandrill.zendesk.com/hc/en-us/articles/205582117-Using-SMTP-Headers-to-customize-your-messages#tag-your-messages
         $tags = array();
 
         // @see https://mandrill.zendesk.com/hc/en-us/articles/205582117-Using-SMTP-Headers-to-customize-your-messages#use-custom-metadata
         $metadata = array();
 
-
         if (is_array($this->_defaultTags)) {
             $tags = $this->_defaultTags;
         }
 
-        if ($mail instanceof Mzax_Emarketing_Model_Outbox_Email_Mail)
-        {
+        if ($mail instanceof Mzax_Emarketing_Model_Outbox_Email_Mail) {
             $message['html'] = $mail->getRawBodyHtml();
             $message['text'] = $mail->getRawBodyText();
 
@@ -271,7 +231,6 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         $message['metadata'] = array();
         $message['tags'] = array();
 
-
         if (!empty($tags)) {
             $message['tags'] = $tags;
         }
@@ -285,9 +244,6 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         return $message;
     }
 
-
-
-
     /**
      * Process Mandrill API response
      *
@@ -299,8 +255,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
     {
         try {
             $data = Zend_Json::decode($response->getBody());
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             throw new Exception("Unexpected API return value", 1);
         }
 
@@ -311,14 +266,12 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         return $data;
     }
 
-
-
-
+    /**
+     * @return void
+     */
     protected function _sendMail()
-    {}
-
-
-
+    {
+    }
 
     /**
      * Decode from/to headers
@@ -336,7 +289,4 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
         }
         return array($header, null);
     }
-
-
-
 }

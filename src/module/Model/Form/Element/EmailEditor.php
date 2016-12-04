@@ -22,16 +22,10 @@
  * Email Editor
  *
  * The email editor requires a template to work.
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Emarketing_Model_Form_Element_EmailEditor
     extends Mzax_Emarketing_Model_Form_Element_TemplateEditor
 {
-
-
     /**
      * The JS editor class
      *
@@ -42,8 +36,6 @@ class Mzax_Emarketing_Model_Form_Element_EmailEditor
         return 'mzax.ui.PreviewFrame';
     }
 
-
-
     /**
      * CSS class for this editor
      *
@@ -53,9 +45,6 @@ class Mzax_Emarketing_Model_Form_Element_EmailEditor
     {
         return 'mage-email-editor';
     }
-
-
-
 
     /**
      * Retrieve editor options
@@ -96,10 +85,9 @@ class Mzax_Emarketing_Model_Form_Element_EmailEditor
         return $options;
     }
 
-
-
-
-
+    /**
+     * @return string
+     */
     public function getExtaScript()
     {
         $templateField = $this->getConfig('template_field') ? $this->getConfig('template_field')->getHtmlId() : '';
@@ -117,8 +105,9 @@ JS;
         return '';
     }
 
-
-
+    /**
+     * @return array
+     */
     protected function getQuicksaveFields()
     {
         $fields = $this->getConfig('quicksave_fields');
@@ -133,27 +122,23 @@ JS;
         return $quicksaveFields;
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getTemplateHtml()
     {
         if ($this->getTemplate()) {
             $html = (string) $this->getTemplate()->getBody();
-        }
-        else {
+        } else {
             $html = '';
         }
         return $html;
     }
 
-
-
-
     /**
      * Prepare Html buttons for additional WYSIWYG features
      *
-     * @param bool $visible Display button or not
-     * @return void
+     * @return string
      */
     protected function _getPluginButtonsHtml()
     {
@@ -174,11 +159,6 @@ JS;
             }
         }
 
-
         return $buttonsHtml;
     }
-
-
-
-
 }

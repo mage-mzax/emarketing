@@ -19,20 +19,23 @@
 
 
 /**
+ * Class Mzax_Emarketing_Model_Medium_Email_Snippets
  *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Snippets are used by the ACE code editor for auto completion
  */
 class Mzax_Emarketing_Model_Medium_Email_Snippets
 {
-
+    /**
+     * @var array[]
+     */
     protected $_snippets = array();
 
-
-
+    /**
+     * @param array $snippet
+     *
+     * @return $this
+     * @throws Exception
+     */
     public function add(array $snippet)
     {
         if (!isset($snippet['value'])) {
@@ -46,11 +49,21 @@ class Mzax_Emarketing_Model_Medium_Email_Snippets
         }
 
         $this->_snippets[$snippet['value']] = $snippet;
+
         return $this;
     }
 
-
-
+    /**
+     * Add snippet
+     *
+     * @param $value
+     * @param $snippet
+     * @param $title
+     * @param null $description
+     * @param null $shortcut
+     *
+     * @return $this
+     */
     public function addSnippets($value, $snippet, $title, $description = null, $shortcut = null)
     {
         return $this->add(array(
@@ -62,17 +75,24 @@ class Mzax_Emarketing_Model_Medium_Email_Snippets
         ));
     }
 
-
-
+    /**
+     * Add var snippet
+     *
+     * @param $value
+     * @param $title
+     * @param null $description
+     * @param null $shortcut
+     *
+     * @return $this
+     */
     public function addVar($value, $title, $description = null, $shortcut = null)
     {
         return $this->addSnippets('mage.' . $value, '{{var ' . $value . '}}', $title, $description, $shortcut);
     }
 
-
-
-
-
+    /**
+     * @return array
+     */
     public function toArray()
     {
         $data = $this->_snippets;
@@ -80,7 +100,4 @@ class Mzax_Emarketing_Model_Medium_Email_Snippets
 
         return array_values($data);
     }
-
-
-
 }

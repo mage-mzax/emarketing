@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -19,21 +19,23 @@
 
 
 /**
- * 
- * 
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Model_Inbox_Email_Pull_Abstract
  */
 abstract class Mzax_Emarketing_Model_Inbox_Email_Pull_Abstract extends Varien_Object
 {
-    
-    
-    abstract function pull(Mzax_Emarketing_Model_Inbox_Email_Collector $collector);
-    
-    
-    abstract function test();
-    
-    
+    /**
+     * Pull messages from storage
+     *
+     * @param Mzax_Emarketing_Model_Inbox_Email_Collector $collector
+     *
+     * @return int
+     */
+    abstract public function pull(Mzax_Emarketing_Model_Inbox_Email_Collector $collector);
+
+    /**
+     * Test storage
+     *
+     * @return bool
+     */
+    abstract public function test();
 }

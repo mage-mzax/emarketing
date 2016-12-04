@@ -18,6 +18,7 @@
  */
 
 /**
+ * Class Mzax_Emarketing_Model_Inbox_Email
  *
  * @method string getCreatedAt()
  * @method string getHeaders()
@@ -30,28 +31,27 @@
  * @method string getEmail()
  * @method string getType()
  * @method string getPurged()
+ * @method string getSize()
  *
- * @method Mzax_Emarketing_Model_Recipient_Bounce_Message setCreatedAt(string)
- * @method Mzax_Emarketing_Model_Recipient_Bounce_Message setHeaders(string)
- * @method Mzax_Emarketing_Model_Recipient_Bounce_Message setContent(string)
- * @method Mzax_Emarketing_Model_Recipient_Bounce_Message setIsParsed(string)
- * @method Mzax_Emarketing_Model_Recipient_Bounce_Message setRecipientId(string)
- * @method Mzax_Emarketing_Model_Recipient_Bounce_Message setCampaignId(string)
- * @method Mzax_Emarketing_Model_Recipient_Bounce_Message setSubject(string)
- * @method Mzax_Emarketing_Model_Recipient_Bounce_Message setMessage(string)
- * @method Mzax_Emarketing_Model_Recipient_Bounce_Message setSentAt(string)
- * @method Mzax_Emarketing_Model_Recipient_Bounce_Message setEmail(string)
- * @method Mzax_Emarketing_Model_Recipient_Bounce_Message setType(string)
+ * @method $this setCreatedAt(string $value)
+ * @method $this setHeaders(string $value)
+ * @method $this setContent(string $value)
+ * @method $this setIsParsed(string $value)
+ * @method $this setRecipientId(string $value)
+ * @method $this setCampaignId(string $value)
+ * @method $this setSubject(string $value)
+ * @method $this setMessage(string $value)
+ * @method $this setSentAt(string $value)
+ * @method $this setEmail(string $value)
+ * @method $this setType(string $value)
+ * @method $this setSize(string $value)
  *
  * @method Mzax_Emarketing_Model_Resource_Inbox_Email getResource()
- *
- * @author Jacob Siefer
  *
  */
 class Mzax_Emarketing_Model_Inbox_Email
     extends Mzax_Emarketing_Model_Email
 {
-
     const BOUNCE_SOFT  = 'SB';
     const BOUNCE_HARD  = 'HB';
     const AUTOREPLY    = 'AR';
@@ -74,16 +74,12 @@ class Mzax_Emarketing_Model_Inbox_Email
      */
     protected $_eventObject = 'email';
 
-
-
     /**
      * Email content
      *
      * @var string
      */
     protected $_content;
-
-
 
     /**
      * Retrieve bounce decoder
@@ -102,49 +98,52 @@ class Mzax_Emarketing_Model_Inbox_Email
         return $bounceDecoder;
     }
 
-
-
-
-
+    /**
+     * Model constructor
+     */
     protected function _construct()
     {
         $this->_init('mzax_emarketing/inbox_email');
     }
 
-
-
+    /**
+     * Before save
+     *
+     * @return $this
+     */
     protected function _beforeSave()
     {
         if ($this->_content !== null && !$this->isPurged()) {
             $this->setSize(strlen($this->_content));
         }
+        parent::_beforeSave();
 
-        return parent::_beforeSave();
+        return $this;
     }
-
-
-
-
-
 
     /**
      * Parse the current message
      *
-     * Return the parse time
+     * Return the parsing duration
      *
-     * @return number
+     * @return int
+     * @throws Exception
      */
     public function parse()
     {
+        /** @var Mzax_Emarketing_Helper_Newsletter $newsletterHelper */
+        $newsletterHelper = Mage::helper('mzax_emarketing/newsletter');
+
+        /** @var Mzax_Emarketing_Model_Medium_Email $emailMedium */
+        $emailMedium = Mage::getSingleton('mzax_emarketing/medium_email');
+
         // not possible if email is purged
         if ($this->isPurged()) {
             return 0;
         }
-
         $start = microtime(true);
 
         $this->getResource()->flagAsParsed($this);
-
 
         try {
             /* @var $message Mzax_Bounce_Message */
@@ -153,7 +152,6 @@ class Mzax_Emarketing_Model_Inbox_Email
 
             $result = self::getBounceDecoder()->inspect($message);
             $result = new Varien_Object($result);
-
 
             $update = array(
                 'is_parsed'    => 1,
@@ -176,24 +174,20 @@ class Mzax_Emarketing_Model_Inbox_Email
                 if (strpos($status, '5.') === 0) {
                     $update['type'] = self::BOUNCE_HARD;
                 }
-            }
-            else if ($result->getAutoreply()) {
+            } elseif ($result->getAutoreply()) {
                 $update['type'] = self::AUTOREPLY;
-            }
-            else if ($result->getUnsubscribe()) {
+            } elseif ($result->getUnsubscribe()) {
                 $update['type'] = self::UNSUBSCRIBE;
                 /* @see $subscriber Mzax_Emarketing_Helper_Newsletter */
-                Mage::helper('mzax_emarketing/newsletter')->unsubscribe($result->getRecipient(), $result->getStoreId(), false);
-            }
-            else {
+                $newsletterHelper->unsubscribe($result->getRecipient(), $result->getStoreId(), false);
+            } else {
                 $update['type'] = self::NO_BOUNCE;
             }
 
 
             if ($part = $message->findMinePart(Zend_Mime::TYPE_TEXT)) {
                 $text = $part->getDecodedContent();
-            }
-            else {
+            } else {
                 $text = $message->getDecodedContent();
             }
             if ($pos = strpos($text, '---')) {
@@ -219,13 +213,16 @@ class Mzax_Emarketing_Model_Inbox_Email
                 $this->forward($message);
             }
 
+            $unsubscribeHardBounce = Mage::getStoreConfigFlag(
+                'mzax_emarketing/inbox/unsubscribe_hard_bounce',
+                $this->getStore()
+            );
 
             // unsubscribe hard bounces
-            if (!$this->getNoUnsubscribe() && $this->getType() == self::BOUNCE_HARD && Mage::getStoreConfigFlag('mzax_emarketing/inbox/unsubscribe_hard_bounce', $this->getStore())) {
-                Mage::getSingleton('mzax_emarketing/medium_email')->unsubscribe($this->getEmail(), sprintf('%s bounce, email %s', $status, $this->getId()));
+            if (!$this->getData('no_unsubscribe') && $this->getType() == self::BOUNCE_HARD && $unsubscribeHardBounce) {
+                $emailMedium->unsubscribe($this->getEmail(), sprintf('%s bounce, email %s', $status, $this->getId()));
             }
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             if (Mage::getIsDeveloperMode()) {
                 throw $e;
             }
@@ -235,22 +232,18 @@ class Mzax_Emarketing_Model_Inbox_Email
         return microtime(true) - $start;
     }
 
-
-
-
-
-
     /**
      * Forward email
      *
      * @param Mzax_Bounce_Message $message
+     *
      * @return boolean
      */
     public function forward(Mzax_Bounce_Message $message = null)
     {
         // not possible if email is purged
         if ($this->isPurged()) {
-            return;
+            return false;
         }
 
         if (!$message) {
@@ -271,7 +264,6 @@ class Mzax_Emarketing_Model_Inbox_Email
             Mage::helper('mzax_emarketing')->log("Unable to forward message, no email address defined.");
             return false;
         }
-
 
         $sender = $this->getSender();
         $mail->setFrom($sender['email'], $sender['name']);
@@ -295,40 +287,39 @@ class Mzax_Emarketing_Model_Inbox_Email
         return true;
     }
 
-
-
-
+    /**
+     * Send email report
+     *
+     * @return void
+     */
     public function report()
     {
         // not possible if email is purged
         if ($this->isPurged()) {
             return;
         }
+        $sender = $this->getSender();
 
         $mail = new Zend_Mail();
-
-        $sender = $this->getSender();
         $mail->setFrom($sender['email'], $sender['name']);
         $mail->setSubject(sprintf("Bounce Report (%s)", Mage::helper('mzax_emarketing')->getVersion()));
         $mail->setBodyText("The following message appears to be a bounce.\nPlease verify.\n\n");
-        $mail->createAttachment($this->getRawData(),
-                'message/rfc822',
-                Zend_Mime::DISPOSITION_ATTACHMENT,
-                Zend_Mime::ENCODING_BASE64,
-                sprintf('bounce.%s.%s.eml', Mage::app()->getRequest()->getServer('SERVER_ADDR'), time()));
+        $mail->createAttachment(
+            $this->getRawData(),
+            'message/rfc822',
+            Zend_Mime::DISPOSITION_ATTACHMENT,
+            Zend_Mime::ENCODING_BASE64,
+            sprintf('bounce.%s.%s.eml', Mage::app()->getRequest()->getServer('SERVER_ADDR'), time())
+        );
         $mail->addTo('jacob@mzax.de');
         $mail->addHeader('X-Mailer', 'Mzax-Emarketing '.Mage::helper('mzax_emarketing')->getVersion());
         $mail->send();
     }
 
-
-
-
-
     /**
      * Retrieve sender
      *
-     * @return array
+     * @return string[]
      */
     public function getSender()
     {
@@ -336,22 +327,17 @@ class Mzax_Emarketing_Model_Inbox_Email
             return $campaign->getSender();
         }
         $sender = Mage::getStoreConfig('mzax_emarketing/inbox/forward_identity', $this->getStore());
+
         return array(
             'name'  => Mage::getStoreConfig('trans_email/ident_'.$sender.'/name', $this->getStore()),
             'email' => Mage::getStoreConfig('trans_email/ident_'.$sender.'/email', $this->getStore()),
         );
     }
 
-
-
-
-
-
-
     /**
      * Retrieve email addresses to forward non-bonce messages
      *
-     * @return array
+     * @return string[]
      */
     public function getForwardToEmails()
     {
@@ -376,9 +362,6 @@ class Mzax_Emarketing_Model_Inbox_Email
         return $emails;
     }
 
-
-
-
     /**
      * Should this message get forwarded
      *
@@ -395,9 +378,6 @@ class Mzax_Emarketing_Model_Inbox_Email
         return true;
     }
 
-
-
-
     /**
      * Load email content
      *
@@ -409,16 +389,12 @@ class Mzax_Emarketing_Model_Inbox_Email
             $file = $this->getResource()->getContentFile($this->getId());
             if (file_exists($file)) {
                 $this->_content = file_get_contents($file);
-            }
-            else {
+            } else {
                 $this->_content = (string) $this->getData('content');
             }
         }
         return $this->_content;
     }
-
-
-
 
     /**
      * Retrieve full raw email data
@@ -430,8 +406,6 @@ class Mzax_Emarketing_Model_Inbox_Email
         return $this->getHeaders() . Zend_Mime::LINEEND . $this->getContent();
     }
 
-
-
     /**
      * Is purged
      *
@@ -441,8 +415,6 @@ class Mzax_Emarketing_Model_Inbox_Email
     {
         return (bool) $this->getData('purged');
     }
-
-
 
     /**
      * Is already parsed
@@ -454,7 +426,6 @@ class Mzax_Emarketing_Model_Inbox_Email
         return (bool) $this->getData('is_parsed');
     }
 
-
     /**
      * Is Bounce (soft or hard)
      *
@@ -462,14 +433,13 @@ class Mzax_Emarketing_Model_Inbox_Email
      */
     public function isBounce()
     {
-        switch($this->getData('type')) {
+        switch ($this->getData('type')) {
             case self::BOUNCE_HARD:
             case self::BOUNCE_SOFT:
                 return true;
         }
         return false;
     }
-
 
     /**
      * Is ARF (aka Feedback Loop)
@@ -481,8 +451,6 @@ class Mzax_Emarketing_Model_Inbox_Email
         return (bool) $this->getData('is_arf');
     }
 
-
-
     /**
      * Is autoreply
      *
@@ -492,6 +460,4 @@ class Mzax_Emarketing_Model_Inbox_Email
     {
         return (bool) $this->getData('is_autoreply');
     }
-
-
 }

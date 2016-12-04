@@ -18,45 +18,30 @@
  */
 
 
-
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Helper_Request
  */
 class Mzax_Emarketing_Helper_Request extends Mage_Core_Helper_Abstract
 {
     /**
-     *
      * @var string
      */
     const CACHE_ID = 'mzax_emarketing_bad_requests';
 
-
     /**
-     *
      * @var integer
      */
     const MAX_BAD_REQUESTS = 25;
 
-
     /**
-     *
      * @var integer
      */
     const RESET_TIME = 3600;
 
-
     /**
-     *
      * @var array
      */
     protected $_data;
-
-
 
     /**
      * Check if we can "trust" the request
@@ -67,19 +52,19 @@ class Mzax_Emarketing_Helper_Request extends Mage_Core_Helper_Abstract
     public function isTrustable($request = null)
     {
         $data = $this->getData($request);
+
         return ($data[0] < self::MAX_BAD_REQUESTS);
     }
-
-
 
     /**
      * Flag current connection
      *
      * if a connection (IP) has to many bad requests
      * then we should not trust them anymore with
-     * any sensetive data
+     * any sensitive data
      *
      * @param string $request
+     *
      * @return number
      */
     public function bad($request = null)
@@ -96,16 +81,15 @@ class Mzax_Emarketing_Helper_Request extends Mage_Core_Helper_Abstract
         $data[1] = time();
 
         $this->setData($data, $request);
+
         return $data[0];
     }
-
-
-
 
     /**
      * Retrieve data for request
      *
      * @param string $request
+     *
      * @return array
      */
     public function getData($request = null)
@@ -117,7 +101,7 @@ class Mzax_Emarketing_Helper_Request extends Mage_Core_Helper_Abstract
 
         $data = $this->loadData();
 
-        if ( isset($data[$ip]) ) {
+        if (isset($data[$ip])) {
             return $data[$ip];
         }
 
@@ -125,13 +109,13 @@ class Mzax_Emarketing_Helper_Request extends Mage_Core_Helper_Abstract
         return array(0, time());
     }
 
-
-
     /**
      * Set dat for request
      *
      * @param array $data
      * @param string $request
+     *
+     * @return void
      */
     public function setData(array $data, $request = null)
     {
@@ -145,8 +129,6 @@ class Mzax_Emarketing_Helper_Request extends Mage_Core_Helper_Abstract
         $this->saveData($cacheData);
     }
 
-
-
     /**
      * Load dat from cache
      *
@@ -158,15 +140,12 @@ class Mzax_Emarketing_Helper_Request extends Mage_Core_Helper_Abstract
             $this->_data = Mage::app()->loadCache(self::CACHE_ID);
             if ($this->_data) {
                 $this->_data = unserialize($this->_data);
-            }
-            else {
+            } else {
                 $this->_data = array();
             }
         }
         return $this->_data;
     }
-
-
 
     /**
      * save data to cache
@@ -178,7 +157,4 @@ class Mzax_Emarketing_Helper_Request extends Mage_Core_Helper_Abstract
         $this->_data = $data;
         Mage::app()->saveCache(serialize($data), self::CACHE_ID);
     }
-
-
-
 }

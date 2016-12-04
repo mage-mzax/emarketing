@@ -59,7 +59,10 @@ abstract class Mzax_Emarketing_Model_Medium_Abstract
 
     public function initSettingsForm(Varien_Data_Form $form, Mzax_Emarketing_Model_Campaign $campaign)
     {
+    }
 
+    public function prepareRecipient(Mzax_Emarketing_Model_Recipient $recipient)
+    {
     }
 
 

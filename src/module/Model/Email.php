@@ -20,36 +20,45 @@
 
 
 /**
+ * Class Mzax_Emarketing_Model_Email
  *
  * @method string getCreatedAt()
+ * @method $this setCreatedAt(string $value)
+ *
  * @method string getMessageId()
+ * @method $this setMessageId(string $value)
+ *
  * @method string getCampaignId()
+ * @method $this setCampaignId(string $value)
+ *
  * @method string getRecipientId()
+ * @method $this setRecipientId(string $value)
  *
- * @author Jacob Siefer
- *
+ * @method string getStoreId()
+ * @method $this setStoreId(string $value)
  */
 abstract class Mzax_Emarketing_Model_Email
     extends Mage_Core_Model_Abstract
 {
-
-
     /**
+     * Recipient
      *
      * @var Mzax_Emarketing_Model_Recipient
      */
     protected $_recipient;
 
-
     /**
+     * Campaign
      *
      * @var Mzax_Emarketing_Model_Campaign
      */
     protected $_campaign;
 
-
-
-
+    /**
+     * Before save
+     *
+     * @return $this
+     */
     protected function _beforeSave()
     {
         if ($this->_campaign) {
@@ -58,28 +67,27 @@ abstract class Mzax_Emarketing_Model_Email
         if ($this->_recipient) {
             $this->setRecipientId($this->_recipient->getId());
         }
+        parent::_beforeSave();
 
-        return parent::_beforeSave();
+        return $this;
     }
-
-
 
     /**
      * Set campaign
      *
      * @param Mzax_Emarketing_Model_Campaign $campaign
-     * @return Mzax_Emarketing_Model_Recipient_Bounce_Message
+     *
+     * @return $this
      */
     public function setCampaign(Mzax_Emarketing_Model_Campaign $campaign)
     {
         $this->_campaign = $campaign;
-        if ( $this->_recipient ) {
+        if ($this->_recipient) {
             $this->_recipient->setCampaign($campaign);
         }
+
         return $this;
     }
-
-
 
     /**
      * Retrieve campaign if available
@@ -89,33 +97,31 @@ abstract class Mzax_Emarketing_Model_Email
     public function getCampaign()
     {
         if (!$this->_campaign && $this->getCampaignId()) {
-            $this->_campaign = Mage::getModel('mzax_emarketing/campaign')->load($this->getCampaignId());
+            $this->_campaign = Mage::getModel('mzax_emarketing/campaign');
+            $this->_campaign->load($this->getCampaignId());
         }
+
         return $this->_campaign;
     }
-
-
-
 
     /**
      * Set recipient
      *
      * @param Mzax_Emarketing_Model_Recipient $recipient
-     * @return Mzax_Emarketing_Model_Recipient_Bounce_Message
+     *
+     * @return $this
      */
     public function setRecipient(Mzax_Emarketing_Model_Recipient $recipient)
     {
         $this->_recipient = $recipient;
-        if ( $this->_campaign ) {
+        if ($this->_campaign) {
             $this->_recipient->setCampaign($this->_campaign);
-        }
-        else {
+        } else {
             $this->_campaign = $recipient->getCampaign();
         }
+
         return $this;
     }
-
-
 
     /**
      * Retrieve recipient if available
@@ -125,43 +131,37 @@ abstract class Mzax_Emarketing_Model_Email
     public function getRecipient()
     {
         if (!$this->_recipient && $this->getRecipientId()) {
-            $this->_recipient = Mage::getModel('mzax_emarketing/recipient')->load($this->getRecipientId());
+            $this->_recipient = Mage::getModel('mzax_emarketing/recipient');
+            $this->_recipient->load($this->getRecipientId());
         }
+
         return $this->_recipient;
     }
-
-
 
     /**
      * Retrieve store
      *
-     * @return Mage_Core_Model_Store|NULL
+     * @return Mage_Core_Model_Store
      */
     public function getStore()
     {
         if ($this->_campaign) {
             return $this->_campaign->getStore();
         }
+
         return Mage::app()->getStore($this->getStoreId());
     }
-
-
 
     /**
      * Load email by message id
      *
      * @param string $messageId
-     * @return Mzax_Emarketing_Model_Email
+     * @return $this
      */
     public function loadByMessageId($messageId)
     {
         $this->getResource()->load($this, $messageId, 'message_id');
+
         return $this;
     }
-
-
-
-
-
-
 }

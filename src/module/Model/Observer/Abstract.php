@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -18,18 +18,11 @@
  */
 
 
-
 /**
- * Observer Abstract
- * 
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Model_Observer_Abstract
  */
 abstract class Mzax_Emarketing_Model_Observer_Abstract
 {
-        
-    
     /**
      * Retrieve session object model
      *
@@ -39,5 +32,4 @@ abstract class Mzax_Emarketing_Model_Observer_Abstract
     {
         return Mage::getSingleton('mzax_emarketing/session');
     }
-    
 }

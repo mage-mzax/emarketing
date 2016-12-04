@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -21,43 +21,36 @@
 
 /**
  * PHP Sendmail transporter
- * 
- * 
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Emarketing_Model_Outbox_Transporter_Smtp
     extends Zend_Mail_Transport_Smtp
     implements Mzax_Emarketing_Model_Outbox_Transporter_Interface
 {
-    
-    
-    
+    /**
+     * @param Mzax_Emarketing_Model_Outbox_Email $email
+     *
+     * @return void
+     */
     public function setup(Mzax_Emarketing_Model_Outbox_Email $email)
     {
         $store  = $email->getCampaign()->getStore();
-        
+
         $hostname = Mage::getStoreConfig('mzax_emarketing/email/smtp_hostname', $store);
         $username = Mage::getStoreConfig('mzax_emarketing/email/smtp_username', $store);
         $password = Mage::getStoreConfig('mzax_emarketing/email/smtp_password', $store);
         $auth     = Mage::getStoreConfig('mzax_emarketing/email/smtp_auth', $store);
         $ssl      = Mage::getStoreConfig('mzax_emarketing/email/smtp_ssl', $store);
         $port     = Mage::getStoreConfig('mzax_emarketing/email/smtp_port', $store);
-        
+
         $this->_auth = $auth;
         $this->_host = $hostname;
         $this->_port = $port;
-        
+
         $this->_config = array(
             'username' => $username,
             'password' => $password,
             'port'     => $port,
-            'ssl'      => $ssl ? 'tls' : false, 
+            'ssl'      => $ssl ? 'tls' : false,
         );
-        
-        
     }
-    
-    
 }

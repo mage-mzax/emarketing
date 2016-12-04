@@ -19,18 +19,10 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Model_Inbox_Email_Collector
  */
 class Mzax_Emarketing_Model_Inbox_Email_Collector
 {
-
-
-
    /**
     * Retrieve puller
     *
@@ -40,9 +32,6 @@ class Mzax_Emarketing_Model_Inbox_Email_Collector
     {
         return Mage::getModel('mzax_emarketing/inbox_email_pull_storage');
     }
-
-
-
 
     /**
      * Collect new messages from inbox
@@ -59,8 +48,6 @@ class Mzax_Emarketing_Model_Inbox_Email_Collector
         return $messages;
     }
 
-
-
     /**
      * Test current setup
      *
@@ -75,26 +62,20 @@ class Mzax_Emarketing_Model_Inbox_Email_Collector
         return false;
     }
 
-
-
-
-
     /**
-     *
+     * Add email
      *
      * @param string $header
      * @param string $content
-     * @return Mzax_Emarketing_Model_Inbox_Bounce_Collector
+     *
+     * @return $this
      */
     public function add($header, $content)
     {
         /* @var $resource Mzax_Emarketing_Model_Resource_Inbox_Email */
         $resource = Mage::getResourceModel('mzax_emarketing/inbox_email');
         $resource->insertEmail($header, $content);
-        return true;
+
+        return $this;
     }
-
-
-
-
 }

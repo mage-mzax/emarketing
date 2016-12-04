@@ -18,26 +18,24 @@
  */
 
 
-
 /**
- * Emarketing Sales Rule Condition
- * 
- * 
- * @method string getUnit()
- * @method string getCampaign()
- * @method string getValue()
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Interface Mzax_Emarketing_Model_SalesRule_ICouponManager
  */
 interface Mzax_Emarketing_Model_SalesRule_ICouponManager
 {
-    
-    
+    /**
+     * Add coupon instance
+     *
+     * @param Mage_SalesRule_Model_Coupon $coupon
+     *
+     * @return mixed
+     */
     public function addCoupon(Mage_SalesRule_Model_Coupon $coupon);
-    
+
+    /**
+     * Retrieve all coupon instances
+     *
+     * @return Mage_SalesRule_Model_Coupon[]
+     */
     public function getCoupons();
-    
-    
 }

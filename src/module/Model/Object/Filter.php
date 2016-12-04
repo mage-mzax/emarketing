@@ -18,6 +18,9 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Model_Object_Filter
+ */
 class Mzax_Emarketing_Model_Object_Filter implements Mage_Eav_Model_Entity_Attribute_Source_Interface
 {
 

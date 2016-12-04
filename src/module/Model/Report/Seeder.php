@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -18,15 +18,21 @@
  */
 
 
-
+/**
+ * Class Mzax_Emarketing_Model_Report_Seeder
+ */
 class Mzax_Emarketing_Model_Report_Seeder
 {
-    
     const NUMBER_OF_CAMPAIGNS = 1;
-    
-    
+
+    /**
+     * @var
+     */
     protected $_campaigns;
-    
+
+    /**
+     *
+     */
     public function run()
     {
         $adapter = $this->getWriteAdapter();
@@ -40,48 +46,41 @@ class Mzax_Emarketing_Model_Report_Seeder
         }
         $this->generateAddresses();
         $this->generateUseragents();
-        
+
         $this->_generateEntityIds(1, 100);
         $this->_generateRecipients(1);
        // $this->_generateRecipients(2);
-        
-        
+
+
         $this->_generateRecipientEvents();
         $this->_generateInboxEmail();
-      
+
         $this->_generateTestLinks();
         $this->_generateLinkReferences();
         $this->_generateLinkClicks();
-        
-        
-        
     }
-    
-    
-    
+
+    /**
+     *
+     */
     public function generateAddresses()
     {
         $adapter = $this->getWriteAdapter();
-        
-        
+
+
         $select = $adapter->select();
         $select->from($this->_getTable('customer/entity'), 'email');
-        
+
 
         $table = $this->_getTable('recipient_address');
         $sql = "INSERT IGNORE INTO `$table` (`address`) \n$select";
-        
+
         $adapter->query($sql);
-        
-        
-        
-        
     }
-    
-    
-    
-    
-    
+
+    /**
+     *
+     */
     public function generateUseragents()
     {
         $ua = <<<UA
@@ -512,25 +511,26 @@ Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Win64; x64; Trident/7.0; .NET
 Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.2; WOW64; Trident/7.0; .NET4.0E; .NET4.0C; .NET CLR 3.5.30729; .NET CLR 2.0.50727; .NET CLR 3.0.30729; MAARJS; Microsoft Outlook 15.0.4719; ms-office; MSOffice 15)
 Mozilla/5.0 (Linux; Android 5.0.2; SM-G920I Build/LRX22G; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/42.0.2311.138 Mobile Safari/537.36
 UA;
-        
+
         $ua = explode("\n", $ua);
-        
+
         /* @var $resource Mzax_Emarketing_Model_Resource_Useragent */
         $resource = Mage::getResourceSingleton('mzax_emarketing/useragent');
-        
+
         foreach ($ua as $useragent) {
             $resource->getUserAgentId($useragent);
         }
         $resource->parse();
-        
+
     }
-    
-    
-    
+
+    /**
+     *
+     */
     public function _generateLinkClicks()
     {
         $adapter = $this->getWriteAdapter();
-        
+
         $select = $adapter->select();
         $select->from($this->_getTable('link_reference', 'ref'), null);
         $select->join($this->_getTable('recipient_event', 'event'), 'event.recipient_id = ref.recipient_id', null);
@@ -539,99 +539,99 @@ UA;
             'reference_id' => 'ref.reference_id',
             'clicked_at'   => 'event.captured_at'
         ));
-        
+
         $table = $this->_getTable('link_reference_click');
         $sql = "INSERT INTO `$table` (`reference_id`, `clicked_at`) \n$select";
-        
+
         $start =  microtime(true);
         $stmt = $adapter->query($sql);
         $duration =  microtime(true) - $start;
-        
+
         $this->log(sprintf('Generation of %s link reference clicks took %01.4fsec', $stmt->rowCount(), $duration), '+1');
-        
-        
+
+
     }
-    
-    
-    
+
+
+
     public function _generateLinkReferences()
     {
         $adapter = $this->getWriteAdapter();
-        
+
         $select = $adapter->select();
         $select->from($this->_getTable('link'), 'link_id');
         $select->where('`url` LIKE "http://example.com/%"');
-        
+
         $linkIds = $adapter->fetchCol($select);
-        
+
         $randomLinkId = new Zend_Db_Expr(sprintf("ELT(FLOOR(1 + (RAND()*%s)), %s)", count($linkIds), implode(',', $linkIds)));
-        
+
         $select = $adapter->select();
         $select->from($this->_getTable('recipient'), null);
         $select->where('RAND() > 0.9');
-        
+
         $select->columns(array(
             'recipient_id' => 'recipient_id',
             'link_id' => $randomLinkId,
             'public_id' => 'MD5(CONCAT("asdfasdf", recipient_id, RAND(), RAND()))'
         ));
-        
+
         $table = $this->_getTable('link_reference');
-        
+
         $sql = "INSERT INTO `$table` (`recipient_id`, `link_id`, `public_id`) \n$select";
-        
-        
+
+
         $start =  microtime(true);
         $stmt = $adapter->query($sql);
         $duration =  microtime(true) - $start;
-        
+
         $this->log(sprintf('Generation of %s link references took %01.4fsec', $stmt->rowCount(), $duration), '+1');
     }
-    
-    
-    
+
+
+
     public function _generateTestLinks()
     {
         $table = $this->getResourceHelper()->getTable('mzax_emarketing/link');
         $adapter = $this->getWriteAdapter();
         $adapter->delete($table, '`url` LIKE "http://example.com/%"');
-        
+
         $inserts = array();
         for($i = 0; $i < 200; $i++) {
             $anchor = "Click Me $i";
             $url    = "http://example.com/myproduct?id=".($i%20);
             $optout = (mt_rand(0,100) < 5) ? '1': '0';
             $hash   = md5($url.$anchor);
-            
+
             $inserts[] = "('$hash', '$url', '$anchor', $optout)";
         }
-        
+
         $inserts = implode(",\n", $inserts);
         $sql = "INSERT INTO `$table` (`link_hash`, `url`, `anchor`, `optout`) VALUES\n$inserts";
         $adapter->query($sql);
     }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     public function _generateRecipients($campaignId, $clear = false)
     {
         $table = $this->getResourceHelper()->getTable('mzax_emarketing/recipient');
-        
+
         $adapter = $this->getWriteAdapter();
         if ($clear) {
             $adapter->query("SET foreign_key_checks = 0;");
             $adapter->truncateTable($table);
             $adapter->query("SET foreign_key_checks = 1;");
         }
-        
+
         $variations = $adapter->select()->from($this->_getTable('campaign_variation'), 'variation_id')->where('campaign_id = ?', $campaignId);
         $variations = $adapter->fetchCol($variations);
         $variations[] = '0';
         $variations[] = '-1';
-        
+
         $columns = array(
             'created_at'    => 'NOW()',
             'sent_at'       => 'DATE_ADD("2009-07-01", INTERVAL FLOOR(1000 + (RAND() * 60*24*300)) MINUTE)',
@@ -640,23 +640,23 @@ UA;
             'campaign_id'   => new Zend_Db_Expr($campaignId),
             'variation_id'  => $this->getRandomValueExpr($variations)
         );
-        
+
         $select = $adapter->select();
         $select->from('temp_entities', null);
         $select->columns($columns);
-        
+
         $sql = $adapter->insertFromSelect($select, $table, array_keys($columns));
-        
+
         $adapter->query("SET foreign_key_checks = 0;");
         $start =  microtime(true);
         $stmt = $adapter->query($sql);
         $duration =  microtime(true) - $start;
         $adapter->query("SET foreign_key_checks = 1;");
-        
+
         $this->log(sprintf('Generation of %s recipients took %01.4fsec', $stmt->rowCount(), $duration), '+1');
     }
-    
-    
+
+
 
     public function _generateRecipientEvents()
     {
@@ -665,18 +665,18 @@ UA;
         $adapter->query("SET foreign_key_checks = 0;");
         $adapter->truncateTable($table);
         $adapter->query("SET foreign_key_checks = 1;");
-        
+
         $this->_generateRecipientEvent(Mzax_Emarketing_Model_Recipient::EVENT_TYPE_VIEW, 0.8, 0.2);
         $this->_generateRecipientEvent(Mzax_Emarketing_Model_Recipient::EVENT_TYPE_CLICK, 0.3, 0.2);
-        
+
     }
-    
-    
+
+
     public function _generateRecipientEvent($eventType, $rate, $rate2)
     {
         $table = $this->getResourceHelper()->getTable('mzax_emarketing/recipient_event');
         $adapter = $this->getWriteAdapter();
-        
+
         $columns = array(
             'event_type'    => new Zend_Db_Expr($eventType),
             'recipient_id'  => 'recipient_id',
@@ -685,42 +685,42 @@ UA;
             'ip'            => new Zend_Db_Expr("INET_ATON(CONCAT_WS('.', FLOOR(3+(RAND()*240)),FLOOR(1+(RAND()*250)),FLOOR(1+(RAND()*250)),FLOOR(1+(RAND()*254))))"),
             'country_id'    => $this->getRandomValueExpr('DE', 'AU', 'US', 'FR', 'ES', 'CH', 'DK', 'EC', 'GB', 'CA'),
             'region_id'     => $this->getRandomValueExpr(
-                    'DE-BW', 'DE-BY', 'DE-BE', 'DE-BB', 'DE-HB', 'DE-HH', 
-                    'DE-HE', 'DE-MV', 'DE-NI', 'DE-NW', 'DE-RP', 'DE-SL', 
-                    'DE-SN', 'DE-ST', 'DE-SH', 'DE-TH', 
-                    'US-KS', 'US-MA', 'US-NE', 'US-NC', 'US-ID', 'US-NM', 
+                    'DE-BW', 'DE-BY', 'DE-BE', 'DE-BB', 'DE-HB', 'DE-HH',
+                    'DE-HE', 'DE-MV', 'DE-NI', 'DE-NW', 'DE-RP', 'DE-SL',
+                    'DE-SN', 'DE-ST', 'DE-SH', 'DE-TH',
+                    'US-KS', 'US-MA', 'US-NE', 'US-NC', 'US-ID', 'US-NM',
                     'US-TN', 'US-UT', 'US-WA')
-                
+
         );
-        
+
         $select = $adapter->select();
         $select->from($this->getResourceHelper()->getTable('mzax_emarketing/recipient'), null);
         $select->columns($columns);
         $select->where('RAND() < ?', $rate);
-        
+
         $sql = $adapter->insertFromSelect($select, $table, array_keys($columns));
-        
+
         $start =  microtime(true);
         $stmt = $adapter->query($sql);
         $duration =  microtime(true) - $start;
-        
+
         $this->log(sprintf('Generation of %s recipient events took %01.4fsec', $stmt->rowCount(), $duration), '+1');
-        
-        
+
+
         $select->reset(Zend_Db_Select::WHERE);
         $select->where('RAND() < ?', $rate2);
-        
+
         $sql = $adapter->insertFromSelect($select, $table, array_keys($columns));
-        
+
         $start =  microtime(true);
         $stmt = $adapter->query($sql);
         $duration =  microtime(true) - $start;
-        
+
         $this->log(sprintf('Generation of %s 2nd recipient events took %01.4fsec', $stmt->rowCount(), $duration), '+1');
     }
-    
-    
-    
+
+
+
     public function _generateInboxEmail()
     {
         $table = $this->getResourceHelper()->getTable('mzax_emarketing/inbox_email');
@@ -728,33 +728,33 @@ UA;
         $adapter->query("SET foreign_key_checks = 0;");
         $adapter->truncateTable($table);
         $adapter->query("SET foreign_key_checks = 1;");
-    
+
         $columns = array(
             'recipient_id'  => 'recipient_id',
             'created_at'    => 'DATE_ADD(`sent_at`, INTERVAL FLOOR(30 + (RAND() * 1500*10)) MINUTE)',
             'is_parsed'     => new Zend_Db_Expr('1'),
             'type'          => $this->getRandomValueExpr('HB', 'SB', 'NB', 'AR')
         );
-        
+
         $select = $adapter->select();
         $select->from($this->getResourceHelper()->getTable('mzax_emarketing/recipient'), null);
         $select->columns($columns);
         $select->where('RAND()<0.0005');
-        
+
         $sql = $adapter->insertFromSelect($select, $table, array_keys($columns));
-        
+
         $start =  microtime(true);
         $stmt = $adapter->query($sql);
         $duration =  microtime(true) - $start;
-    
+
         $this->log(sprintf('Generation of %s inbox emails took %01.4fsec', $stmt->rowCount(), $duration), '+1');
-   
+
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     /**
      * Create expression that convers a string value to
      * the value id previously insert into the enum table
@@ -767,40 +767,40 @@ UA;
         if (!is_array($list)) {
             $list = func_get_args();
         }
-        
+
         $adapter = $this->getWriteAdapter();
-        
+
         $values = array();
         foreach ($list as $value) {
             $values[] = $adapter->quote($value);
         }
-    
+
         $values = implode(', ', $values);
         $size = count($list);
-    
+
         return new Zend_Db_Expr("ELT(FLOOR(1 + (RAND()*$size)), $values)");
     }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     public function getCampaigns()
     {
         $minStart   = '2004-01-01';
         $maxStart   = '2013-01-01';
         $minRunTime = 86400*100;
         $today      = time();
-        
+
         $minStart = DateTime::createFromFormat(Varien_Date::DATE_PHP_FORMAT, $minStart)->getTimestamp();
         $maxStart = DateTime::createFromFormat(Varien_Date::DATE_PHP_FORMAT, $maxStart)->getTimestamp();
-        
+
         if (!$this->_campaigns) {
             for($i = 1; $i <= self::NUMBER_OF_CAMPAIGNS; $i++) {
                 $start = mt_rand($minStart, $maxStart);
                 $end   = mt_rand($start + $minRunTime, $today);
-                
+
                 $this->_campaigns[$i] = array(
                     date(Varien_Date::DATE_PHP_FORMAT, $start),
                     date(Varien_Date::DATE_PHP_FORMAT, $end),
@@ -810,20 +810,20 @@ UA;
         }
         return $this->_campaigns;
     }
-    
-    
-    
-    
+
+
+
+
     public function getVariations($start, $end, $minRunTime)
     {
         $count = rand(1,2);
-        
+
         $variations = array();
-        
+
         for($i = 0; $i <= $count; $i++) {
             $start = mt_rand($start, $start+$minRunTime);
             $end   = mt_rand($end - $minRunTime, $end);
-        
+
             $variations[$i] = array(
                 date(Varien_Date::DATE_PHP_FORMAT, $start),
                 date(Varien_Date::DATE_PHP_FORMAT, $end),
@@ -831,27 +831,27 @@ UA;
         }
         return $variations;
     }
-    
-    
-    
-    
-    
-    
-    public function getTrackers() 
+
+
+
+
+
+
+    public function getTrackers()
     {
         return array(4,5,7,8,9,12,14,18,20);
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     public function insertDimensionEnum()
     {
         $adapter = $this->getWriteAdapter();
         $table = $this->getResourceHelper()->getTable('mzax_emarketing/report_enum');
         $adapter->truncateTable($table);
-        
+
         $inserts = array();
         foreach ($this->_dimensionsEnum as $dimension) {
             foreach ($dimension['values'] as $value) {
@@ -863,19 +863,19 @@ UA;
                 $inserts[] = '(' . implode(', ', $cells) . ')';
             }
         }
-        
+
         $columns = "`dimension_id`, `value_id`, `dimension`, `value`";
-        
+
         $sql = implode(",\n", $inserts);
         $sql = "INSERT INTO `$table` ($columns) VALUES\n$sql";
         $adapter->query($sql);
     }
-    
-    
+
+
     public function aggregateDimensionReport()
     {
         $this->log(5)->log('Aggregate dimensions');
-        
+
         $dimensions = array(
             'Hour'   => array('00', '01', '02', '05', '07', '08', '09', '10', '11', '12', '13', '19', '21', '23'),
             'Mail Client' => array('Apple Mail', 'KMail', 'Windows Live Mail', 'Microsoft Office Outlook', 'Opera Mail', 'Yahoo Mail'),
@@ -884,33 +884,33 @@ UA;
             'Country' => array('DE', 'AU', 'US', 'GB', 'IT', 'ES'),
             'Region-AU' => array('AU-NSW', 'AU-ACT', 'AU-NT' ,'AU-QLD', 'AU-SA', 'AU-VIC','AU-WA', 'AU-TAS'),
             'Region-DE' => array('DE-BW', 'DE-BY', 'DE-BE' ,'DE-BB', 'DE-HB', 'DE-HH','DE-HE', 'DE-RP'),
-                
+
         );
-        
-        
+
+
         $this->beginnTempTable('mzax_emarketing/report_dimension');
-        
+
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
         foreach ($this->getCampaigns() as $campaignId => $campaign) {
-            
-            
+
+
             $this->log("Aggregate dimensions for campaign: $campaignId", 1);
-            
+
             foreach ($dimensions as $dimension => $values) {
-            
+
                 $this->log("Aggregate dimension: $dimension", 2);
-                
+
                 $sendings = rand(50, 100);
                 $views    = rand(20, 30);
                 $clicks   = rand(5, 15);
                 $bounces  = rand(1, 2);
                 $optouts  = rand(2, 6);
-                
-                
+
+
                 foreach ($values as $value) {
-                    
+
                     list($dimensionId, $valueId) = $this->registerDimensionValue($dimension, $value);
-                    
+
                     $this->_insertData($campaign[0], $campaign[1], array(
                         'campaign_id'  => $campaignId,
                         'dimension_id' => $dimensionId,
@@ -923,15 +923,15 @@ UA;
                         'bounces'      => "RANGE(0,$bounces)",
                         'optouts'      => "RANGE(0,$optouts)"
                     ));
-                    
+
                     $m = 1/rand(2, 4);
-                    
+
                     $sendings = (int) ($sendings * $m);
                     $views    = (int) ($views * $m);
                     $clicks   = (int) ($clicks * $m);
                     $bounces  = (int) ($bounces * $m);
                     $optouts  = (int) ($optouts * $m);
-                    
+
                     foreach ($campaign[2] as $variationId => $range) {
                         $this->_insertData($range[0], $range[1], array(
                             'campaign_id'  => $campaignId,
@@ -949,27 +949,27 @@ UA;
                 }
             }
         }
-        
+
         $this->commitTempTable();
-        
-        
-        
-        
+
+
+
+
         $this->beginnTempTable('mzax_emarketing/report_dimension_conversion');
-        
+
         foreach ($this->getTrackers() as $trackerId)
         {
             $this->log("Tracker: $trackerId", 1);
-            foreach ($this->getCampaigns() as $campaignId => $campaign) 
+            foreach ($this->getCampaigns() as $campaignId => $campaign)
             {
                 $this->log("Aggregate dimensions convertion for campaign: $campaignId", 2);
-                foreach ($dimensions as $dimension => $values) 
+                foreach ($dimensions as $dimension => $values)
                 {
                     $this->log("Aggregate dimension: $dimension", 3);
-                    foreach ($values as $value) 
+                    foreach ($values as $value)
                     {
                         list($dimensionId, $valueId) = $this->registerDimensionValue($dimension, $value);
-            
+
                         $this->_insertData($campaign[0], $campaign[1], array(
                             'campaign_id'  => $campaignId,
                             'variation_id' => -1,
@@ -980,7 +980,7 @@ UA;
                             'hits'         => 'RANGE(0,10)',
                             'revenue'      => 'RANGE(1000,20000,100)',
                         ));
-            
+
                         foreach ($campaign[2] as $variationId => $range) {
                             $this->_insertData($range[0], $range[1], array(
                                 'campaign_id'  => $campaignId,
@@ -998,22 +998,22 @@ UA;
             }
         }
         $this->commitTempTable();
-        
-        
+
+
         $this->insertDimensionEnum();
-        
+
     }
-    
-    
-    
+
+
+
     protected $_dimensionsEnum = array();
-    
+
     public function registerDimensionValue($dimension, $value)
     {
         $dkey = trim(strtolower($dimension));
         $vkey = trim(strtolower($value));
-        
-        
+
+
         if (!isset($this->_dimensionsEnum[$dkey])) {
             $this->_dimensionsEnum[$dkey] = array(
                 'id'     => count($this->_dimensionsEnum)+1,
@@ -1021,16 +1021,16 @@ UA;
                 'values' => array()
             );
         }
-        
+
         $values = &$this->_dimensionsEnum[$dkey]['values'];
-        
+
         if (!isset($values[$vkey])) {
             $values[$vkey] = array(
                 'id'    => count($values)+1,
                 'label' => $value
             );
         }
-        
+
         return array($this->_dimensionsEnum[$dkey]['id'], $values[$vkey]['id']);
     }
 
@@ -1040,10 +1040,10 @@ UA;
     {
         $adapter = $this->getWriteAdapter();
         $table = $this->getResourceHelper()->getTable('mzax_emarketing/report_dimension');
-        
+
         list($dimensionId, $valueId) = $this->registerDimensionValue($dimension, $value);
-        
-        
+
+
         $sql = array();
         foreach ($data as $row) {
             $insert = array();
@@ -1056,52 +1056,52 @@ UA;
             }
             $insert[] = (int) $dimensionId;
             $insert[] = (int) $valueId;
-            
+
             foreach ($row as $col => $val) {
                 $insert[] = $adapter->quote($val);
             }
             $sql[] = '(' . implode(', ', $insert) . ')';
         }
-    
+
         $columns = "`campaign_id`, `variation_id`, `dimension_id`, `value_id`, `date`, `sendings`, `views`, `clicks`, `bounces`, `optouts`";
-    
+
         $sql = implode(",\n", $sql);
         $sql = "INSERT INTO `$table` ($columns) VALUES\n$sql";
        // $adapter->query($sql);
-    
+
         return;
     }
-    
+
     */
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
     protected function aggregateReport()
     {
         $this->beginnTempTable('mzax_emarketing/report');
-        
+
         $this->log("Aggregate Report Data");
-        
+
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
-        foreach ($this->getCampaigns() as $campaignId => $campaign) 
+        foreach ($this->getCampaigns() as $campaignId => $campaign)
         {
             $this->log("Campaign: $campaignId", 1);
             $this->_insertData($campaign[0], $campaign[1], array(
                 'campaign_id'  => $campaignId,
                 'variation_id' => -1,
-                'date'         => 'DATE()', 
+                'date'         => 'DATE()',
                 'sendings'     => 'RANGE(0,80)',
                 'views'        => 'RANGE(0,30)',
                 'clicks'       => 'RANGE(0,10)',
                 'bounces'      => 'RANGE(0,2)',
                 'optouts'      => 'RANGE(0,5)'
             ));
-            
-            foreach ($campaign[2] as $variationId => $range) 
+
+            foreach ($campaign[2] as $variationId => $range)
             {
                 $this->_insertData($range[0], $range[1], array(
                     'campaign_id'  => $campaignId,
@@ -1116,14 +1116,14 @@ UA;
             }
         }
         $this->commitTempTable();
-        
-        
+
+
         $this->beginnTempTable('mzax_emarketing/report_conversion');
-        
-        foreach ($this->getTrackers() as $trackerId) 
+
+        foreach ($this->getTrackers() as $trackerId)
         {
             $this->log("Tracker: $trackerId", 1);
-            foreach ($this->getCampaigns() as $campaignId => $campaign) 
+            foreach ($this->getCampaigns() as $campaignId => $campaign)
             {
                 $this->log("Campaign: $campaignId", 2);
                 $this->_insertData($campaign[0], $campaign[1], array(
@@ -1133,8 +1133,8 @@ UA;
                     'date'         => 'DATE()',
                     'hits'         => 'RANGE(0,10)',
                     'revenue'      => 'RANGE(1000,20000,100)',
-                ));  
-                foreach ($campaign[2] as $variationId => $range) 
+                ));
+                foreach ($campaign[2] as $variationId => $range)
                 {
                     $this->_insertData($range[0], $range[1], array(
                         'campaign_id'  => $campaignId,
@@ -1147,81 +1147,81 @@ UA;
                 }
             }
         }
-        
-        $this->commitTempTable();
-        
-        
-        $this->calculateConversionRates();
-        
-    }
-    
-    
-    
 
-    
-    
-    
+        $this->commitTempTable();
+
+
+        $this->calculateConversionRates();
+
+    }
+
+
+
+
+
+
+
     protected function calculateConversionRates()
     {
         $adapter = $this->getWriteAdapter();
         $table = $this->getResourceHelper()->getTable('mzax_emarketing/report');
-        
+
         $totalColumn = 'sendings';
         $rateColumns = array('view', 'click', 'bounce', 'optout');
-        
-        
-        
+
+
+
         $columns = array(
             'campaign_id'  => 'result.campaign_id',
             'variation_id' => 'result.variation_id',
             'date'         => 'result.date',
         );
-        
+
         foreach ($rateColumns as $key) {
             $columns[$key.'_rate'] = new Zend_Db_Expr("(SUM(`calc`.`{$key}s`)/SUM(`calc`.`$totalColumn`))*100");
         }
-        
+
         $cond = array();
         $cond[] = '(`calc`.`date` <= `result`.`date`)';
         $cond[] = '(`calc`.`campaign_id` = `result`.`campaign_id`)';
         $cond[] = '(`calc`.`variation_id` = `result`.`variation_id`)';
         $cond = implode(' AND ', $cond);
-                
+
         $select = $adapter->select();
         $select->from(array('result' => $table), null);
         $select->join(array('calc'   => $adapter->select()->from($table, '*')), $cond, $columns);
         $select->group(array('result.date', 'result.campaign_id' ,'result.variation_id'));
-        
+
         $cond = array();
         $cond[] = '(`rate`.`date` = `report`.`date`)';
         $cond[] = '(`rate`.`campaign_id` = `report`.`campaign_id`)';
         $cond[] = '(`rate`.`variation_id` IS NULL AND `report`.`variation_id` IS NULL OR `rate`.`variation_id` = `report`.`variation_id`)';
         $cond = implode(' AND ', $cond);
-        
-        
+
+
         $assignments = array();
         foreach ($rateColumns as $key) {
             $assignments[] = "\t`report`.`{$key}_rate` = CONVERT(`rate`.`{$key}_rate`, DECIMAL(5,2))";
         }
-        
+
         $updateSql = "UPDATE `$table` AS `report`\n";
         $updateSql.= "INNER JOIN($select) AS `rate` ON $cond\n";
         $updateSql.= "SET\n";
         $updateSql.= implode(", \n", $assignments);
-        
-        
+
+
         $start =  microtime(true);
         $adapter->query($updateSql);
         $duration =  microtime(true) - $start;
-        
+
         $this->log(sprintf('calculateConversionRates() %01.4fsec', $duration), '0');
     }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     protected function _prepareDateRange(&$startDate, &$endDate)
     {
         if (!$endDate) {
@@ -1235,8 +1235,8 @@ UA;
         }
     }
 
-    
-    
+
+
     /**
      *
      * @return Mzax_Emarketing_Model_Resource_Helper
@@ -1245,9 +1245,9 @@ UA;
     {
         return Mage::getResourceSingleton('mzax_emarketing/helper');
     }
-    
-    
-    
+
+
+
     /**
      * Retrieve connection for read data
      *
@@ -1257,10 +1257,10 @@ UA;
     {
         return $this->getResourceHelper()->getWriteAdapter();
     }
-    
-    
+
+
     protected $_currentIndent = 0;
-    
+
     protected function log($message, $indent = 0)
     {
         if (is_int($message)) {
@@ -1276,19 +1276,19 @@ UA;
         flush();
         return $this;
     }
-    
-    
-    
 
-    
-    
-    
+
+
+
+
+
+
     protected $_destinationTable;
-    
-    protected $_tempTableName = 'mzax_report_tmp';
-    
 
-    
+    protected $_tempTableName = 'mzax_report_tmp';
+
+
+
 
     /**
      * Generate Temporary Timeline table
@@ -1301,104 +1301,104 @@ UA;
         $adapter = $this->getWriteAdapter();
         $adapter->query("DROP TABLE IF EXISTS `temp_entities`");
         $adapter->query("CREATE TABLE `temp_entities` (`entity_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY) /*ENGINE MEMORY*/");
-        
-        
-        
+
+
+
         $inserts = array();
         while(--$count > -1) {
             $inserts[] = "(NULL)";
         }
-        
+
         $inserts = implode(",\n", $inserts);
         $sql = "INSERT INTO `temp_entities` (`entity_id`) VALUES\n$inserts";
         $adapter->query($sql);
-        
+
         $start =  microtime(true);
         $adapter->query($sql);
         $duration =  microtime(true) - $start;
-        
+
         $this->log(sprintf("Insert start entites (%ssec)", $duration));
-        
-        
+
+
         while(--$limit > -1) {
             $sql = "INSERT INTO `temp_entities` (`entity_id`)\nSELECT NULL AS `entity_id` FROM `temp_entities`";
             $start =  microtime(true);
             $adapter->query($sql);
             $duration =  microtime(true) - $start;
-            
+
             $this->log(sprintf("Insert select entites (%ssec)", $duration));
         }
-        
-        
-        
+
+
+
     }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     /**
      * Generate Temporary Timeline table
-     * 
+     *
      * @param string $startDate
      * @param string $endDate
      */
     protected function _generateTimeline($startDate = '2006-01-01', $endDate = null)
     {
         $this->_prepareDateRange($startDate, $endDate);
-    
+
         $adapter = $this->getWriteAdapter();
         $adapter->query("DROP TABLE IF EXISTS `temp_range`");
         $adapter->query("CREATE TEMPORARY TABLE `temp_range` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `date` DATE NOT NULL UNIQUE KEY) ENGINE MEMORY");
-    
+
         $data = array();
         $date = clone $startDate;
         $day  = new DateInterval('P1D');
-    
+
         $inserts = array();
         do {
             $inserts[] = "('{$date->format("Y-m-d")}')";
         }
         while($date->add($day) <= $endDate);
-    
+
         $inserts = implode(",\n", $inserts);
         $sql = "INSERT INTO `temp_range` (`date`) VALUES\n$inserts";
         $adapter->query($sql);
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
     /**
      * Create Temp Table from specified Table
-     * 
+     *
      * @param string $fromTable
      */
     protected function beginnTempTable($fromTable)
     {
         $adapter = $this->getWriteAdapter();
         $table = $this->getResourceHelper()->getTable($fromTable);
-    
+
         $this->_destinationTable = $table;
-    
+
         $adapter->query("DROP TEMPORARY TABLE IF EXISTS `$this->_tempTableName`");
         $adapter->query("CREATE TEMPORARY TABLE `$this->_tempTableName` SELECT * FROM `$table` WHERE 1=0");
-    
+
         $this->log(4)->log("\n\n\nStart Preparing Data for $fromTable");
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Commit all insert data from temp table to destination table
-     * 
+     *
      * @return void
      */
     protected function commitTempTable()
@@ -1412,23 +1412,23 @@ UA;
             $adapter->query("INSERT INTO `$this->_destinationTable` SELECT * FROM `$this->_tempTableName`");
             $adapter->query("UNLOCK TABLES;");
             $adapter->query("DROP TEMPORARY TABLE IF EXISTS `$this->_tempTableName`");
-        
+
             $duration = microtime(true) - $start;
             $this->log(sprintf('Commit table `%s` took %01.4fsec', $this->_destinationTable, $duration), '+0');
-            
+
             $this->_destinationTable = null;
         }
     }
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
     /**
      * Generate temporary data for the current destination table
-     * 
+     *
      * @param string $start
      * @param string $end
      * @param array $values
@@ -1436,14 +1436,14 @@ UA;
     protected function _insertData($start, $end, array $values)
     {
         $adapter = $this->getWriteAdapter();
-    
+
         $select = $adapter->select();
         $select->from('temp_range' , null);
         $select->where('`date` >= ?', $start);
         $select->where('`date` <= ?', $end);
-    
+
         $null = new Zend_Db_Expr('NULL');
-    
+
         $columns = array();
         foreach ($values as $key => $value) {
             if ($value instanceof Zend_Db_Expr) {
@@ -1455,12 +1455,12 @@ UA;
             else if (preg_match('/RANGE\(\s*([0-9]+)\s*,\s*([0-9]+)\s*(?:,\s*([0-9]+))?\)/i', $value, $match)) {
                 $min = $match[1];
                 $scale = $match[2] - $min;
-                
+
                 if (isset($match[3])) {
                     $min /= $match[3];
                     $scale /= $match[3];
                 }
-                
+
                 $columns[$key] = new Zend_Db_Expr("FLOOR({$min} + (RAND() * $scale))");
             }
             else if ($value === 'DATE()') {
@@ -1470,19 +1470,19 @@ UA;
                 $columns[$key] = new Zend_Db_Expr($value);
             }
         }
-    
+
         $select->columns($columns);
-        
+
         $sql = $adapter->insertFromSelect($select, $this->_tempTableName, array_keys($columns));
-         
+
         $start =  microtime(true);
         $stmt = $adapter->query($sql);
         $duration =  microtime(true) - $start;
-        
+
         $this->log(sprintf('Generation of %s values took %01.4fsec', $stmt->rowCount(), $duration), '+1');
     }
-    
-    
+
+
 
     /**
      * Retrieve table name
@@ -1502,6 +1502,6 @@ UA;
         }
         return $table;
     }
-    
-    
+
+
 }

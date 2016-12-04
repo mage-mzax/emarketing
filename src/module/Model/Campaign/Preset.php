@@ -17,22 +17,21 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
-
 /**
+ * Class Mzax_Emarketing_Model_Campaign_Preset
  *
  * @method string getName()
+ * @method string getVersion()
  * @method string getDescription()
  * @method string getFile()
  * @method string getFilename()
+ * @method string getFilterExport()
  *
  * @author Jacob Siefer
  *
  */
 class Mzax_Emarketing_Model_Campaign_Preset extends Varien_Object
 {
-
-
     /**
      * Validate the version of the preset
      * against the installed extension version
@@ -41,13 +40,14 @@ class Mzax_Emarketing_Model_Campaign_Preset extends Varien_Object
      */
     public function validateVersion()
     {
+        /** @var Mzax_Emarketing_Helper_Data $helper */
+        $helper = Mage::helper('mzax_emarketing');
+
         if ($version = $this->getVersion()) {
-            return (version_compare($version, Mage::helper('mzax_emarketing')->getVersion()) < 0);
+            return (version_compare($version, $helper->getVersion()) < 0);
         }
         return true;
     }
-
-
 
     /**
      * Make new campaign from this preset
@@ -59,10 +59,10 @@ class Mzax_Emarketing_Model_Campaign_Preset extends Varien_Object
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
         $campaign = Mage::getModel('mzax_emarketing/campaign');
         $campaign->addData($this->getData());
-        $campaign->setPreset($this);
+        $campaign->setData('preset', $this);
         $campaign->setName(null);
 
-        if ( $provider = $campaign->getRecipientProvider() ) {
+        if ($provider = $campaign->getRecipientProvider()) {
             $provider->load($this->getFilterExport());
         }
 
@@ -74,8 +74,6 @@ class Mzax_Emarketing_Model_Campaign_Preset extends Varien_Object
         return $campaign;
     }
 
-
-
     /**
      * Load by file
      *
@@ -85,10 +83,9 @@ class Mzax_Emarketing_Model_Campaign_Preset extends Varien_Object
     public function loadByFile($file)
     {
         $this->_getResource()->loadByFile($this, $file);
+
         return $this;
-
     }
-
 
     /**
      * Load by filename
@@ -102,9 +99,6 @@ class Mzax_Emarketing_Model_Campaign_Preset extends Varien_Object
         return $this;
     }
 
-
-
-
     /**
      * Retrieve resource model
      *
@@ -114,5 +108,4 @@ class Mzax_Emarketing_Model_Campaign_Preset extends Varien_Object
     {
         return Mage::getResourceSingleton('mzax_emarketing/campaign_preset');
     }
-
 }

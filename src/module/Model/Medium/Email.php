@@ -17,19 +17,11 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Model_Medium_Email
  */
 class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Abstract
 {
-
-
     /**
      * Retrieve medium id
      *
@@ -40,13 +32,11 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
         return 'email';
     }
 
-
-
-
-
     /**
+     * Prepare snippets
      *
      * @param Mzax_Emarketing_Model_Medium_Email_Snippets $snippets
+     *
      * @return void
      */
     public function prepareSnippets(Mzax_Emarketing_Model_Medium_Email_Snippets $snippets)
@@ -65,15 +55,10 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
                 'mage.coupon',
                 '{{coupon rule="${1:1}" length="${2:8}" expire="${3:120}" prefix="${4:ABC-}" }}',
                 $hlp->__('Coupon Code'),
-                $hlp->__('Generates a coupon code for the specifed shopping cart price rule.'));
+                $hlp->__('Generates a coupon code for the specifed shopping cart price rule.')
+            );
         }
-
-
     }
-
-
-
-
 
     /**
      * Prepare recipient
@@ -82,25 +67,24 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
      */
     public function prepareRecipient(Mzax_Emarketing_Model_Recipient $recipient)
     {
-        $recipient->setAddress( $recipient->getEmail() );
+        $recipient->setAddress($recipient->getEmail());
 
-        $recipient->addUrl('unsubscribe',  'mzax_emarketing/unsubscribe');
+        $recipient->addUrl('unsubscribe', 'mzax_emarketing/unsubscribe');
         $recipient->addUrl('browser_view', 'mzax_emarketing/email');
     }
 
-
-
     /**
-     *
+     * Prepare campaign tabs
      *
      * @see Mzax_Emarketing_Model_Medium_Abstract::prepareCampaignTabs()
      * @param Mzax_Emarketing_Block_Campaign_Edit_Tabs $tabs
+     *
+     * @return void
      */
     public function prepareCampaignTabs(Mzax_Emarketing_Block_Campaign_Edit_Tabs $tabs)
     {
         /* @var $campaign  Mzax_Emarketing_Model_Campaign */
         $campaign = Mage::registry('current_campaign');
-
 
         if ($count = $campaign->countInbox()) {
             $tabs->addTab('inbox', array(
@@ -119,8 +103,6 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
         }
     }
 
-
-
     /**
      * Init settings form
      *
@@ -131,11 +113,9 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
     {
         $helper = Mage::helper('mzax_emarketing');
 
-
         $fieldset = $form->addFieldset('email_options', array(
             'legend'   => $helper->__('Email Specific Options')
         ), 'base_fieldset');
-
 
         $fieldset->addField('prerender', 'select', array(
             'label'     => $helper->__('Pre-Render'),
@@ -148,17 +128,12 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
             'value' => 0
         ));
 
-
         $fieldset->addField('forward_emails', 'text', array(
             'name'      => 'medium_data[forward_emails]',
             'label'     => $helper->__('Forward Email'),
             'note'      => $helper->__("All non-auto email replies will get forward to this email address.")
         ));
-
     }
-
-
-
 
     /**
      * Prepare Recipient Grid
@@ -195,8 +170,7 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
             'caption' => $grid->__('Send Test Email')
         );
 
-        if ($campaign->hasVariations())
-        {
+        if ($campaign->hasVariations()) {
             $sendAction['caption'] = $previewAction['caption'] = $grid->__('[Orignal]');
 
             $previewAction = array(
@@ -209,8 +183,7 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
             );
 
             /* @var $variation Mzax_Emarketing_Model_Campaign_Variation */
-            foreach ($campaign->getVariations() as $variation)
-            {
+            foreach ($campaign->getVariations() as $variation) {
                 $params = array(
                     'id'        => $campaign->getId(),
                     'variation' => $variation->getId()
@@ -240,23 +213,18 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
 
         $grid->addColumn('action', array(
             'header'    => $grid->__('Action'),
-            'index'     =>'id',
-            'getter'	=> 'getId',
+            'index'     => 'id',
+            'getter'    => 'getId',
             'renderer'  => 'mzax_emarketing/grid_column_renderer_action',
-            'type'		=> 'action',
+            'type'      => 'action',
             'sortable'  => false,
             'filter'    => false,
             'no_link'   => true,
             'is_system' => true,
-            'width'	    => '80px',
+            'width'     => '80px',
             'actions'   => array($previewAction, $sendAction)
         ));
     }
-
-
-
-
-
 
     /**
      * Send email to recipient
@@ -285,35 +253,30 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
 
         if (!$recipient->isMock()) {
             $data = $recipient->getContent()->getMediumData();
-            $dayFilter  = $data->getDayFilter();
-            $timeFilter = $data->getTimeFilter();
+            $dayFilter  = $data->getData('day_filter');
+            $timeFilter = $data->getData('time_filter');
 
             // apply day filter
             if (is_array($dayFilter) && count($dayFilter) && count($dayFilter) < 7) {
-                $email->setDayFilter(implode(',', $dayFilter));
+                $email->setDayFilter($dayFilter);
             }
 
             // apply time filter
             if (is_array($timeFilter) && count($timeFilter) && count($timeFilter) < 24) {
-                $email->setTimeFilter(implode(',', $timeFilter));
+                $email->setTimeFilter($timeFilter);
             }
         }
 
         $email->save();
 
         // if mock, send out email straight away
-        if ($recipient->isMock() && !$recipient->getSkipSend()) {
+        if ($recipient->isMock() && !$recipient->getData('skip_send')) {
             $email->send();
         }
     }
 
-
-
-
-
     /**
-     * Unsubscibe email from all stores for any given reason
-     *
+     * Unsubscribe email from all stores for any given reason
      *
      * @todo Can be done better...
      * @param string $email
@@ -328,14 +291,18 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
         foreach (Mage::app()->getStores() as $store) {
             $subscriber = $helper->unsubscribe($email, $store->getId(), false);
             if ($subscriber->getIsStatusChanged()) {
-                Mage::log(sprintf("unsubscribe '%s' from store '%s': %s", $email, $store->getName(), $reason), null, 'mzax_email_unsubscribe.log');
+                Mage::log(
+                    sprintf(
+                        "unsubscribe '%s' from store '%s': %s",
+                        $email,
+                        $store->getName(),
+                        $reason
+                    ),
+                    null,
+                    'mzax_email_unsubscribe.log'
+                );
             }
         }
-
-
     }
-
-
-
 }
 

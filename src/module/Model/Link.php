@@ -18,15 +18,14 @@
  */
 
 
-
-
 /**
+ * Class Mzax_Emarketing_Model_Link
  *
- * @method Mzax_Emarketing_Model_Link setLinkGroupId(string)
- * @method Mzax_Emarketing_Model_Link setLinkHash(string)
- * @method Mzax_Emarketing_Model_Link setUrl(string)
- * @method Mzax_Emarketing_Model_Link setAnchor(string)
- * @method Mzax_Emarketing_Model_Link setOptout(boolean)
+ * @method $this setLinkGroupId(string $value)
+ * @method $this setLinkHash(string $value)
+ * @method $this setUrl(string $value)
+ * @method $this setAnchor(string $value)
+ * @method $this setOptout(bool $value)
  *
  * @method string getLinkGroupId()
  * @method string getLinkHash()
@@ -34,16 +33,10 @@
  * @method string getAnchor()
  * @method string getOptout()
  *
- *
  * @method Mzax_Emarketing_Model_Resource_Link getResource()
- *
- * @author Jacob Siefer
- *
  */
 class Mzax_Emarketing_Model_Link extends Mage_Core_Model_Abstract
 {
-
-
     /**
      * Prefix of model events names
      *
@@ -60,37 +53,38 @@ class Mzax_Emarketing_Model_Link extends Mage_Core_Model_Abstract
      */
     protected $_eventObject = 'link';
 
-
-
-
+    /**
+     * Model Constructor
+     *
+     * @return void
+     */
     protected function _construct()
     {
         $this->_init('mzax_emarketing/link');
     }
-
-
-
-
 
     /**
      * Try loading url model by url
      *
      * @param string $url
      * @param string $anchor
-     * @return Mzax_Emarketing_Model_Url
+     *
+     * @return $this
      */
     public function loadByUrl($url, $anchor)
     {
         $this->getResource()->loadByUrl($this, $url, $anchor);
+
         return $this;
     }
-
 
     /**
      * Load or initialize new link instance
      *
      * @param string $url
      * @param string $anchor
+     *
+     * @return $this
      */
     public function init($url, $anchor)
     {
@@ -102,8 +96,7 @@ class Mzax_Emarketing_Model_Link extends Mage_Core_Model_Abstract
             }
             $this->save();
         }
+
         return $this;
     }
-
-
 }

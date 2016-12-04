@@ -18,13 +18,16 @@
  */
 
 
-
+/**
+ * Class Mzax_Emarketing_Model_Conversion_Goal_Abstract
+ */
 abstract class Mzax_Emarketing_Model_Conversion_Goal_Abstract
     extends Mzax_Emarketing_Model_Object_Filter_Main
 {
-
+    /**
+     * @var string
+     */
     protected $_type;
-
 
     /**
      *
@@ -32,21 +35,12 @@ abstract class Mzax_Emarketing_Model_Conversion_Goal_Abstract
      */
     protected $_tracker;
 
-
-
-    abstract public function getAggregationSelect($campaign);
-
-
     /**
-     * Set default filters when newly created
+     * Mzax_Emarketing_Model_Conversion_Goal_Abstract constructor.
      *
-     * @return void
+     * @param Mage_Core_Model_Config_Element $config
      */
-    public function setDefaultFilters()
-    {}
-
-
-    public function __construct($config)
+    public function __construct($config = null)
     {
         parent::__construct();
 
@@ -55,7 +49,29 @@ abstract class Mzax_Emarketing_Model_Conversion_Goal_Abstract
         }
     }
 
+    /**
+     * Retrieve aggregate select for goal
+     *
+     * @param Mzax_Emarketing_Model_Campaign $campaign
+     *
+     * @return Mzax_Emarketing_Db_Select
+     */
+    abstract public function getAggregationSelect($campaign);
 
+    /**
+     * Set default filters when newly created
+     *
+     * @return void
+     */
+    public function setDefaultFilters()
+    {
+    }
+
+    /**
+     * Setup goal
+     *
+     * @param Mage_Core_Model_Config_Element $config
+     */
     protected function _setup(Mage_Core_Model_Config_Element $config)
     {
         $this->_type = $config->getName();
@@ -64,13 +80,15 @@ abstract class Mzax_Emarketing_Model_Conversion_Goal_Abstract
         Mage::dispatchEvent("mzax_emarketing_conversion_goal_setup_" . $this->_type, array('goal' => $this));
     }
 
-
+    /**
+     * Retrieve type
+     *
+     * @return string
+     */
     public function getType()
     {
         return $this->_type;
     }
-
-
 
     /**
      * Set Tracker
@@ -88,8 +106,6 @@ abstract class Mzax_Emarketing_Model_Conversion_Goal_Abstract
         return $this;
     }
 
-
-
     /**
      * Retrieve Tracker
      *
@@ -100,18 +116,21 @@ abstract class Mzax_Emarketing_Model_Conversion_Goal_Abstract
         return $this->_tracker;
     }
 
-
+    /**
+     * Retrieve form prefix for form filter rendering
+     *
+     * @return string
+     */
     public function getFormPrefix()
     {
         return 'conditions';
     }
 
-
-
-
-
-
-
+    /**
+     * Retrieve sql select query
+     *
+     * @return Mzax_Emarketing_Db_Select
+     */
     public function getQuery()
     {
         $query = parent::getQuery();
@@ -121,8 +140,11 @@ abstract class Mzax_Emarketing_Model_Conversion_Goal_Abstract
     }
 
     /**
+     * Prepare sql select query
      *
-     * @return Zend_Db_Select
+     * @param Mzax_Emarketing_Db_Select $query
+     *
+     * @return void
      */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
@@ -131,8 +153,13 @@ abstract class Mzax_Emarketing_Model_Conversion_Goal_Abstract
         $query->setColumn('recipient_id');
     }
 
-
-
+    /**
+     * Prepare grid columns
+     *
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
+     */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
         parent::prepareGridColumns($grid);
@@ -142,7 +169,4 @@ abstract class Mzax_Emarketing_Model_Conversion_Goal_Abstract
             'index'     => 'recipient_id'
         ));
     }
-
-
-
 }

@@ -19,10 +19,6 @@
 
 /**
  * Class Mzax_Emarketing_Model_Medium_Email_FullCache
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Emarketing_Model_Medium_Email_FullCache
     implements Mzax_Emarketing_Model_Campaign_Content

@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -18,38 +18,29 @@
  */
 
 
-
-
 /**
- * 
- * @method Mzax_Emarketing_Model_Link setObjectId(string)
- * @method Mzax_Emarketing_Model_Link setObjectType(string)
- * @method Mzax_Emarketing_Model_Link setRecipientId(string)
- * @method Mzax_Emarketing_Model_Link setClickId(string)
- * 
+ * Class Mzax_Emarketing_Model_Goal
+ *
+ * @method $this setObjectId(string)
+ * @method $this setObjectType(string)
+ * @method $this setRecipientId(string)
+ * @method $this setClickId(string)
+ *
  * @method string getObjectId()
  * @method string getObjectType()
  * @method string getRecipientId()
  * @method string getClickId()
- * 
+ *
  * @method Mzax_Emarketing_Model_Resource_Goal getResource()
- * 
- * 
- * If you plan on implmenting custom events, use a type id greater than 100
- * 
- * 
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ *
+ *
+ * If you plan on implementing custom events, use a type id greater than 100
  */
-class Mzax_Emarketing_Model_Goal extends Mage_Core_Model_Abstract 
+class Mzax_Emarketing_Model_Goal extends Mage_Core_Model_Abstract
 {
-    
     const TYPE_ORDER  = 1;
     const TYPE_SIGNUP = 2;
-    
-    
-    
+
     /**
      * Prefix of model events names
      *
@@ -65,17 +56,14 @@ class Mzax_Emarketing_Model_Goal extends Mage_Core_Model_Abstract
      * @var string
      */
     protected $_eventObject = 'goal';
-    
-    
-    
-    
+
+    /**
+     * Model Construct
+     *
+     * @return void
+     */
     protected function _construct()
     {
         $this->_init('mzax_emarketing/goal');
     }
-    
-    
-    
-    
-    
 }

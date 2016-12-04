@@ -18,13 +18,8 @@
  */
 
 
-
-
 /**
- *
- *
- * @author Jacob Siefer
- *
+ * Class Mzax_Emarketing_Model_Object_Abstract
  */
 abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
 {

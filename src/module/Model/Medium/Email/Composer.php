@@ -18,19 +18,13 @@
  */
 
 
-
 /**
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Model_Medium_Email_Composer
  */
 class Mzax_Emarketing_Model_Medium_Email_Composer
     extends Mage_Core_Model_Template
     implements Mzax_Emarketing_Model_SalesRule_ICouponManager
 {
-
     const PRERENDER_CACHE_PREFIX = 'MZAX_EMARKETING_PRERENDER_CACHE_';
 
     const BEACON_PLACEHOLDER ='{BEACON}';
@@ -41,7 +35,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
 
     const LINK_AREA_TAG = "!<area [^>]*href=\"(.*?)\"[^>]*/>!i";
 
-
+    const STYLE_TAGS = '!<style\s+type="text/css">(.+?)</style>!is';
 
     /**
      *
@@ -49,34 +43,61 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
      */
     protected $_recipient;
 
-
+    /**
+     * @var string
+     */
     protected $_bodyText;
 
+    /**
+     * @var string
+     */
     protected $_bodyHtml;
 
+    /**
+     * @var string
+     */
     protected $_subject;
 
-
+    /**
+     * @var Mzax_Emarketing_Model_Link_Reference[]
+     */
     protected $_linkReferences;
 
+    /**
+     * @var Mage_SalesRule_Model_Coupon[]
+     */
     protected $_coupons = array();
 
-
+    /**
+     * Render and cache
+     *
+     * @var bool
+     */
     protected $_prerender = true;
 
+    /**
+     * @var int
+     */
     protected $_renderTime;
 
-
-
-
+    /**
+     * Set recipient
+     *
+     * @param Mzax_Emarketing_Model_Recipient $recipient
+     *
+     * @return $this
+     */
     public function setRecipient(Mzax_Emarketing_Model_Recipient $recipient)
     {
         $this->_recipient = $recipient;
         $this->reset();
+
         return $this;
     }
 
-
+    /**
+     * Reset composer
+     */
     public function reset()
     {
         $this->_linkReferences = array();
@@ -86,20 +107,20 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         $this->_subject = null;
     }
 
-
-
+    /**
+     * Get type
+     *
+     * @return int
+     */
     public function getType()
     {
         return self::TYPE_HTML;
     }
 
-
-
-
     /**
      * Retrieve all created link references
      *
-     * @return array
+     * @return Mzax_Emarketing_Model_Link_Reference[]
      */
     public function getLinkReferences()
     {
@@ -115,31 +136,41 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         return $this->_recipient;
     }
 
-
+    /**
+     * @return string
+     */
     public function getBodyHtml()
     {
         return $this->_bodyHtml;
     }
 
-
+    /**
+     * @return string
+     */
     public function getBodyText()
     {
         return $this->_bodyText;
     }
 
-
+    /**
+     * @return string
+     */
     public function getSubject()
     {
         return $this->_subject;
     }
 
-
+    /**
+     * @return int
+     */
     public function getRenderTime()
     {
         return $this->_renderTime;
     }
 
-
+    /**
+     * @return bool
+     */
     public function allowPrerender()
     {
         $data = $this->getRecipient()->getContent()->getMediumData();
@@ -149,35 +180,32 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         return false;
     }
 
-
-
     /**
      * Add coupon
      *
-     * @see Mzax_Emarketing_Model_SalesRule_ICouponManager
      * @param Mage_SalesRule_Model_Coupon $coupon
-     * @return Mzax_Emarketing_Model_Medium_Email_Composer
+     *
+     * @return $this
      */
     public function addCoupon(Mage_SalesRule_Model_Coupon $coupon)
     {
         $this->_coupons[] = $coupon;
+
         return $this;
     }
 
-
     /**
+     * Retrieve coupons
      *
-     * @see Mzax_Emarketing_Model_SalesRule_ICouponManager
-     * @return array
+     * @return Mage_SalesRule_Model_Coupon[]
      */
     public function getCoupons()
     {
         return $this->_coupons;
     }
 
-
-
     /**
+     * Retrieve template processor
      *
      * @return Mzax_Emarketing_Model_Medium_Email_Processor
      */
@@ -188,7 +216,6 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         $recipient = $this->getRecipient();
         $recipient->prepare();
 
-
         /* @var $processor Mzax_Emarketing_Model_Medium_Email_Processor */
         $processor = Mage::getModel('mzax_emarketing/medium_email_processor');
         $processor->setCouponManager($this);
@@ -196,20 +223,23 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         $processor->setStoreId($recipient->getStoreId());
         $processor->setContent($this->getContent());
         $processor->setVariables($recipient->getData());
-        $processor->setVariables(array(
-            'current_year' => date('Y'),
-            'date'         => Mage::app()->getLocale()->storeDate($store),
-            'store'        => $recipient->getCampaign()->getStore(),
-            'url'          => $recipient->getUrls()
-        ));
+        $processor->setVariables(
+            array(
+                'current_year' => date('Y'),
+                'date'         => Mage::app()->getLocale()->storeDate($store),
+                'store'        => $recipient->getCampaign()->getStore(),
+                'url'          => $recipient->getUrls()
+            )
+        );
 
         return $processor;
     }
 
-
-
-
-
+    /**
+     * Retrieve content
+     *
+     * @return Mzax_Emarketing_Model_Campaign_Content
+     */
     public function getContent()
     {
         $content = $this->getRecipient()->getContent();
@@ -251,9 +281,9 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
                 }
 
                 $data = new Varien_Object;
-                $data->setSubject($subject);
-                $data->setBodyHtml($bodyHtml);
-                $data->setBodyText($bodyText);
+                $data->setData('subject', $subject);
+                $data->setData('body_html', $bodyHtml);
+                $data->setData('body_text', $bodyText);
 
                 Mage::app()->saveCache(serialize($data), $cacheId, array(Mzax_Emarketing_Model_Campaign::CACHE_TAG));
             }
@@ -268,18 +298,10 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         return $content;
     }
 
-
-
-
-
-
-
-
-
     /**
      * Compose Email
      *
-     * Parse all mage expresions and prepare html for sending
+     * Parse all mage expressions and prepare html for sending
      *
      * @throws Exception
      * @param boolean $previewMode
@@ -311,8 +333,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
 
             // make links trackable
             $this->parseLinks($this->_bodyHtml);
-        }
-        else {
+        } else {
             $this->emulateDesign($recipient->getStoreId());
             $this->_subject  = $processor->getSubject();
             $processor->setVariables(array('subject' => $this->_subject));
@@ -335,29 +356,40 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
                 $this->removeComments($this->_bodyHtml);
             }
         }
-
         $this->_renderTime = microtime(true) - $start;
 
         return $this;
     }
 
-
-
+    /**
+     * Inline CSS
+     *
+     * @param string $html
+     *
+     * @return void
+     */
     protected function inlineCss(&$html)
     {
-        Mage::helper('mzax_emarketing')->encodeMageExpr($html);
+        /** @var Mzax_Emarketing_Helper_Data $helper */
+        $helper = Mage::helper('mzax_emarketing');
+
+        $helper->encodeMageExpr($html);
 
         // @todo Maybe use Pelago_Emogrifier (but only available in later versionsof Magento)
         $cssInliner = new TijsVerkoyen_CssToInlineStyles_CssToInlineStyles($html);
         $cssInliner->setUseInlineStylesBlock(true);
         $html = $cssInliner->convert();
 
-        Mage::helper('mzax_emarketing')->decodeMageExpr($html);
+        $helper->decodeMageExpr($html);
     }
 
-
-    const STYLE_TAGS = '!<style\s+type="text/css">(.+?)</style>!is';
-
+    /**
+     * Remove comments
+     *
+     * @param string $html
+     *
+     * @return void
+     */
     protected function removeComments(&$html)
     {
         // remove leading & trailing spaces
@@ -373,8 +405,13 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         $html = preg_replace_callback(self::STYLE_TAGS, array($this, 'cleanUpCss'), $html);
     }
 
-
-
+    /**
+     * Clean up CSS
+     *
+     * @param string[] $match
+     *
+     * @return string
+     */
     protected function cleanUpCss($match)
     {
         $css = $match[1];
@@ -395,28 +432,29 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         // allow extra line for @media queries
         $css = preg_replace("/^@(.*?){/m", "\n@$1{\n", $css);
 
-
-
         return "<style type=\"text/css\">\n$css</style>\n";
-
     }
 
-
-
-
-
+    /**
+     * Parse links
+     *
+     * @param string $html
+     *
+     * @return void
+     */
     protected function parseLinks(&$html)
     {
         // replace all links with trackable links
-        $html = preg_replace_callback(self::LINK_A_TAG,   array($this, '__replaceLinkCallback'), $html);
-        $html = preg_replace_callback(self::LINK_MAP_TAG, array($this, '__replaceMapCallback'),  $html);
+        $html = preg_replace_callback(self::LINK_A_TAG, array($this, '__replaceLinkCallback'), $html);
+        $html = preg_replace_callback(self::LINK_MAP_TAG, array($this, '__replaceMapCallback'), $html);
     }
 
 
     /**
      * PregReplace callback for <a> tag links
      *
-     * @param array $matches
+     * @param string[] $matches
+     *
      * @return string
      */
     public function __replaceLinkCallback($matches)
@@ -428,20 +466,17 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         }
 
         $link = $this->createLinkReference($url, $anchor);
-
         $linkHtml = str_replace("href=\"{$url}\"", "href=\"{$link}\"", $linkHtml);
+
         return preg_replace("!\s+!", ' ', $linkHtml);
     }
-
-
-
-
 
     /**
      * Create new link reference
      *
      * @param string $url
      * @param string $anchor
+     *
      * @return Mzax_Emarketing_Model_Link_Reference
      */
     public function createLinkReference($url, $anchor)
@@ -449,7 +484,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         // normalize anchor text
         $anchor = trim(preg_replace("!\s+!s", ' ', $anchor));
 
-        // unqiue key
+        // unique key
         $key = md5(strtolower($url.$anchor));
 
         // if not yet created, create new one
@@ -461,13 +496,9 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
 
             $this->_linkReferences[$key] = $reference;
         }
+
         return $this->_linkReferences[$key];
-
     }
-
-
-
-
 
     /**
      * Get url to beacon image
@@ -476,13 +507,11 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
      */
     public function getBeaconImage()
     {
-        $baseUrl = $this->_recipient->getCampaign()->getStore()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB, false);
+        $store = $this->_recipient->getCampaign()->getStore();
+        $baseUrl = $store->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB, false);
+
         return $baseUrl . "emarketing-media/{$this->_recipient->getBeaconHash()}/logo.gif";
     }
-
-
-
-
 
     /**
      * Insert tracking beacon
@@ -497,28 +526,21 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         // if beacon placeholder exist replace it
         if (strpos($html, self::BEACON_PLACEHOLDER) !== false) {
             $html = str_replace(self::BEACON_PLACEHOLDER, $beaconHtml, $html);
-        }
-        // if not try to append it just before the body tag closes
-        else if (strpos($html, "</body>") !== false) {
+        } elseif (strpos($html, "</body>") !== false) {
+            // if not try to append it just before the body tag closes
             $html = str_replace("</body>", "{$beaconHtml}\n</body>", $html);
-        }
-        // if everything fails add it to the end
-        else {
+        } else {
+            // if everything fails add it to the end
             $html .= $beaconHtml;
         }
 
         return $this;
     }
 
-
-
-
-
-
+    /**
+     * @var string[]
+     */
     protected $_currentMapName;
-
-
-
 
     /**
      * PregReplace callback for <map> tag links
@@ -537,15 +559,13 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         return $mapHtml;
     }
 
-
-
-
     /**
-     * Retrieve orginal tag that binds to the given usemap
+     * Retrieve original tag that binds to the given usemap
      *
-     * Helpfull to retrieve the image that was used for a <area> tag
+     * Helpful to retrieve the image that was used for a <area> tag
      *
      * @param string $usemap
+     *
      * @return string
      */
     public function _getTagByUsemap($usemap)
@@ -553,13 +573,15 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         if (preg_match("!<[^>]*usemap=\"#{$usemap}\"[^>]*>!is", $this->_bodyHtml, $matches)) {
             return $matches[0];
         }
+
         return '';
     }
 
-
-
-
-
+    /**
+     * @param string[] $matches
+     *
+     * @return string
+     */
     public function __replaceMapLinkCallback($matches)
     {
         list($area, $url) = $matches;
@@ -583,8 +605,6 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         return str_replace("href=\"{$url}\"", "href=\"{$link}\"", $area);
     }
 
-
-
     /**
      * Extract attribute from a html tag
      *
@@ -600,10 +620,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
         if (preg_match("!{$attribute}=\"(.*?)\"!i", $htmlTag, $match)) {
             return $match[1];
         }
+
         return null;
     }
-
-
-
-
 }

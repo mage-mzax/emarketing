@@ -18,29 +18,39 @@
  */
 
 
-
 /**
  * Emarketing Sales Rule Condition
- * 
- * 
- * @method string getUnit()
- * @method string getCampaign()
- * @method string getValue()
  *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * @method string getUnit()
+ * @method $this setUnit(string $value)
+ *
+ * @method string getCampaign()
+ * @method $this setCampaign(string $value)
+ *
+ * @method string getValue()
+ * @method $this setValue(string $value)
+ *
+ * @method string getType()
+ * @method $this setType(string $value)
+ *
+ * @method string getPrefix()
+ * @method $this setPrefix(string $value)
+ *
+ * @method string[] getAttributeOption()
+ * @method $this setAttributeOption(string[] $value)
+ *
+ * @method Varien_Data_Form getForm()
+ * @method Varien_Data_Form_Element_Hidden getTypeElement()
+ * @method Varien_Data_Form_Element_Abstract getValueElement()
  */
 class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Model_Condition_Abstract
 {
     const DEFAULT_UNIT = 'day';
-    
-    
+
     /**
-     * 
-     * (non-PHPdoc)
-     * @see Mage_Rule_Model_Condition_Abstract::loadAttributeOptions()
-     * @return Mzax_Emarketing_Model_SalesRule_Condition_Emarketing
+     * Load attribute options
+     *
+     * @return $this
      */
     public function loadAttributeOptions()
     {
@@ -52,13 +62,14 @@ class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Mod
 
         return $this;
     }
-    
-    
-    
+
     /**
      * As array
-     * 
+     *
      * @see Mage_Rule_Model_Condition_Abstract::asArray()
+     *
+     * @param array $arrAttributes
+     *
      * @return array
      */
     public function asArray(array $arrAttributes = array())
@@ -69,31 +80,30 @@ class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Mod
             'unit'     => $this->getUnit(),
             'value'    => $this->getValue()
         );
+
         return $out;
     }
-    
-    
-    
+
     /**
      * Load from array
-     * 
+     *
      * @see Mage_Rule_Model_Condition_Abstract::loadArray()
      * @param array $arr
-     * @return Mzax_Emarketing_Model_SalesRule_Condition_Emarketing
+     *
+     * @return $this
      */
     public function loadArray($arr)
     {
         $this->setCampaign($arr['campaign']);
         $this->setUnit($arr['unit']);
         parent::loadArray($arr);
+
         return $this;
     }
 
-    
-    
     /**
      * As XML
-     * 
+     *
      * @see Mage_Rule_Model_Condition_Abstract::asXml()
      * @return string
      */
@@ -102,33 +112,33 @@ class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Mod
         $xml = '<campaign>' . $this->getCampaign() . '</campaign>'
              . '<unit>' .     $this->getUnit() .     '</unit>'
              . parent::asXml();
+
         return $xml;
     }
 
-    
-    
     /**
      * As html
-     * 
+     *
      * @see Mage_Rule_Model_Condition_Abstract::asHtml()
+     *
      * @return string
      */
     public function asHtml()
     {
-        $html = $this->getTypeElement()->getHtml()
-              . Mage::helper('mzax_emarketing')->__("If user came via campaign %s which was sent no later than %s %s ago.", 
-                    $this->getCampaignElement()->getHtml(),
-                    $this->getValueElement()->getHtml(), 
-                    $this->getUnitElement()->getHtml());
-        
+        $html = $this->getTypeElement()->getHtml();
+        $html .= Mage::helper('mzax_emarketing')->__(
+            "If user came via campaign %s which was sent no later than %s %s ago.",
+            $this->getCampaignElement()->getHtml(),
+            $this->getValueElement()->getHtml(),
+            $this->getUnitElement()->getHtml()
+        );
+
         return $html . $this->getRemoveLinkHtml();
     }
-    
-    
-    
+
     /**
      * Retrieve campaign form element
-     * 
+     *
      * @return Varien_Data_Form_Element_Abstract
      */
     public function getCampaignElement()
@@ -136,10 +146,10 @@ class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Mod
         /* @var $collection Mzax_Emarketing_Model_Resource_Campaign_Collection */
         $collection = Mage::getResourceModel('mzax_emarketing/campaign_collection');
         $collection->addArchiveFilter(false);
-        
+
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
         $campaign = $collection->getItemById($this->getCampaign());
-        
+
         $elementId   = sprintf('%s__%s__campaign', $this->getPrefix(), $this->getId());
         $elementName = sprintf('rule[%s][%s][campaign]', $this->getPrefix(), $this->getId());
         $element     = $this->getForm()->addField($elementId, 'select', array(
@@ -152,30 +162,26 @@ class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Mod
 
         return $element;
     }
-    
-    
-    
-    
+
     /**
      * Retrieve time unit form element
-     * 
+     *
      * @return Varien_Data_Form_Element_Abstract
      */
     public function getUnitElement()
     {
         $h = Mage::helper('mzax_emarketing');
-        
+
         $options = array();
         $options[] = array('value' => 'hour',  'label' => $h->__("hour(s)"));
         $options[] = array('value' => 'day',   'label' => $h->__("day(s)"));
         $options[] = array('value' => 'week',  'label' => $h->__("week(s)"));
         $options[] = array('value' => 'month', 'label' => $h->__("month(s)"));
-        
-        
+
         if (!($unit = $this->getUnit())) {
              $unit = self::DEFAULT_UNIT;
         }
-        
+
         $name = '';
         foreach ($options as $option) {
             if ($unit === $option['value']) {
@@ -183,7 +189,7 @@ class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Mod
                 break;
             }
         }
-        
+
         $elementId   = sprintf('%s__%s__unit', $this->getPrefix(), $this->getId());
         $elementName = sprintf('rule[%s][%s][unit]', $this->getPrefix(), $this->getId());
         $element     = $this->getForm()->addField($elementId, 'select', array(
@@ -196,56 +202,49 @@ class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Mod
 
         return $element;
     }
-    
-    
-    
+
     /**
      * Retrieve time limit from value and unit
-     * 
+     *
      * @return number
      */
     public function getTimeLimit()
     {
         $value = max(0, (int) $this->getValue());
         $unit  = $this->getUnit();
-        
+
         if (!in_array($unit, array('day', 'hour', 'week', 'month'))) {
             $unit = self::DEFAULT_UNIT;
         }
-        
+
         return strtotime(sprintf('-%s %s', $value, $unit));
     }
-    
-    
-    
-    
+
     /**
      * Validate condition
-     * 
-     * 
+     *
      * @see Mage_Rule_Model_Condition_Abstract::validate()
-     * @return boolean
+     *
+     * @param Varien_Object $object
+     *
+     * @return bool
      */
     public function validate(Varien_Object $object)
     {
         $recipient = $this->getSession()->getLastRecipient();
-        
+
         // check if we have a recipient
         if (!$recipient) {
             return false;
         }
-        
+
         // check if he came from the campaign
         if ($this->getCampaign() != $recipient->getCampaignId()) {
             return false;
         }
-        
+
         return (strtotime($recipient->getSentAt()) > $this->getTimeLimit());
     }
-
-    
-    
-    
 
     /**
      * Retrieve session object model

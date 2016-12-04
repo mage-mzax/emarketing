@@ -58,9 +58,6 @@
  * @method $this setCancelEmail(bool $value)
  *
  * @method Mzax_Emarketing_Model_Resource_Outbox_Email getResource()
- *
- *
- * @author Jacob Siefer
  */
 class Mzax_Emarketing_Model_Outbox_Email extends Mzax_Emarketing_Model_Email
 {

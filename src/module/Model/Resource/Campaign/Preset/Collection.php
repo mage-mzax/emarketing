@@ -19,24 +19,28 @@
 
 
 /**
- * Campagin Preset Collection
+ * Campaign Preset Collection
  *
  * @method Mzax_Emarketing_Model_Campaign_Preset getNewEmptyItem()
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Emarketing_Model_Resource_Campaign_Preset_Collection extends Varien_Data_Collection
 {
-
+    /**
+     * Mzax_Emarketing_Model_Resource_Campaign_Preset_Collection constructor.
+     */
     public function __construct()
     {
         parent::__construct();
+
         $this->setItemObjectClass('mzax_emarketing/campaign_preset');
     }
 
-
+    /**
+     * @param bool $printQuery
+     * @param bool $logQuery
+     *
+     * @return $this
+     */
     public function loadData($printQuery = false, $logQuery = false)
     {
         $files = $this->_getResource()->getAllPresetFiles();
@@ -46,13 +50,8 @@ class Mzax_Emarketing_Model_Resource_Campaign_Preset_Collection extends Varien_D
             $this->addItem($item);
         }
 
-
         return $this;
     }
-
-
-
-
 
     /**
      * Retrieve resource model
@@ -63,7 +62,4 @@ class Mzax_Emarketing_Model_Resource_Campaign_Preset_Collection extends Varien_D
     {
         return Mage::getResourceSingleton('mzax_emarketing/campaign_preset');
     }
-
-
-
 }

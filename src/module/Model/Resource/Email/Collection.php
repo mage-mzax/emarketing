@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -18,45 +18,35 @@
  */
 
 
-
-
 /**
  * Email Collection abstract
- * 
- * Used by inbox and outbox
- * Allow to assign the correct campaing/recipient models to each email item
- * 
  *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Used by inbox and outbox
+ * Allow to assign the correct campaign/recipient models to each email item
  */
 abstract class Mzax_Emarketing_Model_Resource_Email_Collection extends Mage_Core_Model_Resource_Db_Collection_Abstract
 {
-    
-    
     /**
      * Filter by ids
-     * 
+     *
      * @param array $ids
-     * @return Mzax_Emarketing_Model_Resource_Inbox_Email_Collection
+     *
+     * @return $this
      */
     public function addIdFilter(array $ids)
     {
         $this->addFieldToFilter('email_id', array('IN' => $ids));
+
         return $this;
     }
-    
-    
-    
-    
-    
+
     /**
      * Assign any model instance using the provided id
-     * 
+     *
      * @param string $model
      * @param string $idField Optional id field, default is $mode . '_id'
-     * @return Mzax_Emarketing_Model_Resource_Email_Collection
+     *
+     * @return $this
      */
     protected function _assignModel($model, $idField = null)
     {
@@ -64,17 +54,17 @@ abstract class Mzax_Emarketing_Model_Resource_Email_Collection extends Mage_Core
         if ($this->getFlag($model . '_assigned')) {
             return $this;
         }
-        
+
         if (!$idField) {
             $idField = $model . '_id';
         }
-        
+
         $ids = array_unique($this->getColumnValues($idField));
-        
+
         /* @var $collection Mage_Core_Model_Resource_Db_Collection_Abstract */
         $collection = Mage::getModel('mzax_emarketing/'.$model)->getCollection();
         $collection->addFieldToFilter($idField, array('in' => $ids));
-        
+
         /* @var $email Mzax_Emarketing_Model_Email */
         foreach ($this as $email) {
             if ($id = $email->getData($idField)) {
@@ -83,19 +73,18 @@ abstract class Mzax_Emarketing_Model_Resource_Email_Collection extends Mage_Core
                 }
             }
         }
-        
+
         $this->setFlag($model . '_assigned', true);
+
         return $this;
     }
-    
-    
-    
-    
+
     /**
      * Assign recipients module on each email item
-     * 
+     *
      * @param boolean $flag
-     * @return Mzax_Emarketing_Model_Resource_Email_Collection
+     *
+     * @return $this
      */
     public function assignRecipients($flag = true)
     {
@@ -104,15 +93,13 @@ abstract class Mzax_Emarketing_Model_Resource_Email_Collection extends Mage_Core
         }
         return $this->_assignModel('recipient');
     }
-    
-    
 
-    
     /**
      * Assign campaign module on each email item
      *
      * @param boolean $flag
-     * @return Mzax_Emarketing_Model_Resource_Email_Collection
+     *
+     * @return $this
      */
     public function assignCampaigns($flag = true)
     {
@@ -121,14 +108,10 @@ abstract class Mzax_Emarketing_Model_Resource_Email_Collection extends Mage_Core
         }
         return $this->_assignModel('campaign');
     }
-    
-    
-    
-    
-    
+
     /**
-     * Check for assigments after load
-     * 
+     * Check for assignments after load
+     *
      * @see Mage_Core_Model_Resource_Db_Collection_Abstract::_afterLoad()
      */
     protected function _afterLoad()
@@ -141,27 +124,20 @@ abstract class Mzax_Emarketing_Model_Resource_Email_Collection extends Mage_Core
             $this->assignCampaigns();
         }
     }
-    
 
-    
-    
     /**
-     * 
-     * 
      * @see Varien_Data_Collection::toOptionArray()
+     *
      * @return array
      */
     public function toOptionArray()
     {
         return $this->_toOptionArray('email_id', 'message_id');
     }
-    
-    
-    
+
     /**
-     * 
-     * 
-     * @see Varien_Data_Collection::toOptionHash()
+     *@see Varien_Data_Collection::toOptionHash()
+     *
      * @return array
      */
     public function toOptionHash()

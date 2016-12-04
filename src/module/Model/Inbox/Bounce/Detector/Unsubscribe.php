@@ -19,21 +19,15 @@
 
 
 /**
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Unsubscribe
  */
 class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Unsubscribe
     extends Mzax_Emarketing_Model_Inbox_Bounce_Detector_Abstract
 {
-
-
     /**
+     * @param Mzax_Bounce_Message $message
      *
-     * (non-PHPdoc)
-     * @see Mzax_Bounce_Detector_Abstract::inspect()
+     * @return bool
      */
     public function inspect(Mzax_Bounce_Message $message)
     {
@@ -49,8 +43,8 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Unsubscribe
                 $recipient->prepare();
                 if (strtolower($recipient->getAddress()) == strtolower($email)) {
                     $message->info('recipient_id', $recipient->getId(), 200);
-                    $message->info('campaign_id',  $recipient->getCampaignId(), 200);
-                    $message->info('recipient',    $email, 200);
+                    $message->info('campaign_id', $recipient->getCampaignId(), 200);
+                    $message->info('recipient', $email, 200);
                     $message->info(Mzax_Bounce::TYPE_UNSUBSCRIBE, true);
                     $message->info('type', Mzax_Bounce::TYPE_UNSUBSCRIBE);
 
@@ -59,13 +53,9 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Unsubscribe
                         $message->info('store_id', $storeId, 100);
                     }
 
-                    return true; // stop
+                    return true;
                 }
             }
-
         }
     }
-
-
-
 }

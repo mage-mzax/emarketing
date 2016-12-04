@@ -1,28 +1,31 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
  * @copyright   Copyright (c) 2015 Jacob Siefer
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- */ 
+ */
 
 
-
+/**
+ * Class Mzax_Emarketing_Model_Resource_Useragent
+ */
 class Mzax_Emarketing_Model_Resource_Useragent extends Mage_Core_Model_Resource_Db_Abstract
 {
-    
-    
+    /**
+     * @var array
+     */
     protected $_deviceTypes = array(
 
         'useragent' => array(
@@ -43,47 +46,49 @@ class Mzax_Emarketing_Model_Resource_Useragent extends Mage_Core_Model_Resource_
             'Desktop' => '/Firefox|Chrome|IE|Opera|Safari/i',
         ),
     );
-    
-    
-    
+
     /**
      * Initiate resources
      *
+     * @return void
      */
     public function _construct()
     {
         $this->_init('mzax_emarketing/useragent', 'useragent_id');
     }
-    
-    
-    
+
+    /**
+     * @param bool $all
+     *
+     * @return $this
+     *
+     * @throws Exception
+     */
     public function parse($all = false)
     {
         $lock = Mage::helper('mzax_emarketing')->lock('parse_user_agent');
         if (!$lock) {
-            return;
+            return $this;
         }
-        
-        
+
         $adapter = $this->_getWriteAdapter();
-        
+
         $select = $adapter->select();
         $select->from($this->getMainTable(), array('useragent_id', 'useragent'));
         if (!$all) {
             $select->where('parsed = 0');
         }
-        
-        
+
         $useragents = $adapter->fetchPairs($select);
-        
+
         $regexFile = Mage::getModuleDir('data', 'Mzax_Emarketing') . DS . 'useragent_regexes.php';
         if (!file_exists($regexFile)) {
             throw new Exception("Regex file for UAParser not found ($regexFile)");
         }
-        
-        
+
+
         $parser = UAParser_Parser::create($regexFile);
-        
+
         foreach ($useragents as $id => $ua) {
             try {
                 $result = $parser->parse($ua);
@@ -97,7 +102,7 @@ class Mzax_Emarketing_Model_Resource_Useragent extends Mage_Core_Model_Resource_
                     'device_type'  => 'Unknown',
                     'parsed'       => 1
                 );
-                
+
                 foreach ($this->_deviceTypes as $key => $types) {
                     foreach ($types as $type => $regex) {
                         if (isset($bind[$key])) {
@@ -108,11 +113,10 @@ class Mzax_Emarketing_Model_Resource_Useragent extends Mage_Core_Model_Resource_
                         }
                     }
                 }
-                
+
                 $adapter->update($this->getMainTable(), $bind, $adapter->quoteInto('useragent_id = ?', $id));
                 $lock->touch();
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 Mage::logException($e);
                 if (Mage::getIsDeveloperMode()) {
                     $lock->unlock();
@@ -120,52 +124,42 @@ class Mzax_Emarketing_Model_Resource_Useragent extends Mage_Core_Model_Resource_
                 }
             }
         }
-        
+
         $lock->unlock();
+
         return $this;
     }
-    
-    
-    
-    
 
-    
-    
     /**
-     * Retreive useragent id from useragent
-     * 
+     * Retrieve user-agent id from user-agent
+     *
      * This will insert a new record if none was found
-     * 
-     * @param string $useragent
-     * @return number
+     *
+     * @param string $userAgent
+     *
+     * @return int
      */
-    public function getUserAgentId($useragent)
+    public function getUserAgentId($userAgent)
     {
         $adapter = $this->_getWriteAdapter();
         $table  = $this->getMainTable();
-        
+
         $select = $adapter->select()
             ->from($table, $this->getIdFieldName())
-            ->where('hash = ?', md5($useragent));
-        
+            ->where('hash = ?', md5($userAgent));
+
         $id = (int) $adapter->fetchOne($select);
-        
+
         if (!$id) {
             $stmt = $adapter->insert($table, array(
-                'hash'      => md5($useragent),
-                'useragent' => $useragent,
+                'hash'      => md5($userAgent),
+                'useragent' => $userAgent,
                 'parsed'    => 0
             ));
-            
+
             $id = (int) $adapter->lastInsertId($table);
         }
+
         return $id;
     }
-    
-    
-    
-    
-    
-
-    
 }

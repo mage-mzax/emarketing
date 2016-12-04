@@ -29,8 +29,6 @@
 class Mzax_Emarketing_Model_Resource_Newsletter_Subscriber
     extends Mage_Newsletter_Model_Resource_Subscriber
 {
-
-
     /**
      * Check if fix is enabled
      *
@@ -40,8 +38,6 @@ class Mzax_Emarketing_Model_Resource_Newsletter_Subscriber
     {
         return Mage::getStoreConfigFlag('mzax_emarketing/general/newsletter_multistore');
     }
-
-    
 
     /**
      * Load subscriber from DB by email
@@ -73,19 +69,18 @@ class Mzax_Emarketing_Model_Resource_Newsletter_Subscriber
         return $result;
     }
 
-
-
     /**
      * Load subscriber by customer
      *
      * @param Mage_Customer_Model_Customer $customer
      * @param mixed $storeId
+     *
      * @return array
      */
     public function loadByCustomer(Mage_Customer_Model_Customer $customer, $storeId = null)
     {
         if (!$this->allowMultiStoreSupport() && is_null($storeId)) {
-            return parent::loadByEmail($subscriberEmail);
+            return parent::loadByCustomer($customer);
         }
 
         $select = $this->_read->select()
@@ -104,9 +99,8 @@ class Mzax_Emarketing_Model_Resource_Newsletter_Subscriber
             return $result;
         }
 
+        $result = $this->loadByEmail($customer->getEmail(), $storeId);
 
-        return $this->loadByEmail($customer->getEmail(), $storeId);
+        return $result;
     }
-
-
 }

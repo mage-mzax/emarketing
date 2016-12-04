@@ -19,24 +19,20 @@
 
 
 /**
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Model_Conversion_Goal_Orders
  */
 class Mzax_Emarketing_Model_Conversion_Goal_Orders
     extends Mzax_Emarketing_Model_Conversion_Goal_Abstract
 {
-
-
-
+    /**
+     * Retrieve goal title
+     *
+     * @return string
+     */
     public function getTitle()
     {
         return "Magento Orders";
     }
-
-
 
     /**
      * Set default filters when newly created
@@ -45,20 +41,19 @@ class Mzax_Emarketing_Model_Conversion_Goal_Orders
      */
     public function setDefaultFilters()
     {
-        /* @var $campaginFilter Mzax_Emarketing_Model_Object_Filter_Order_Campaign */
-        $campaginFilter = $this->addFilter('order_campaign');
-        if ($campaginFilter) {
-            $campaginFilter->setCampaign($campaginFilter::DEFAULT_CAMPAIGN);
-            $campaginFilter->setJoin($campaginFilter::DEFAULT_JOIN);
+        /* @var $campaignFilter Mzax_Emarketing_Model_Object_Filter_Order_Campaign */
+        $campaignFilter = $this->addFilter('order_campaign');
+        if ($campaignFilter) {
+            $campaignFilter->setCampaign($campaignFilter::DEFAULT_CAMPAIGN);
+            $campaignFilter->setJoin($campaignFilter::DEFAULT_JOIN);
 
             /* @var $goalFilter Mzax_Emarketing_Model_Object_Filter_Campaign_Goal */
-            $goalFilter = $campaginFilter->addFilter('campaign_goal');
+            $goalFilter = $campaignFilter->addFilter('campaign_goal');
             if ($goalFilter) {
                 $goalFilter->setAction($goalFilter::ACTION_CLICKED);
                 $goalFilter->setOffsetValue(5);
                 $goalFilter->setOffsetUnit('days');
             }
-
         }
 
         /* @var $tableFilter Mzax_Emarketing_Model_Object_Filter_Order_Table */
@@ -68,14 +63,10 @@ class Mzax_Emarketing_Model_Conversion_Goal_Orders
             $tableFilter->setOperator('()');
             $tableFilter->setValue(Mage_Sales_Model_Order::STATE_COMPLETE);
         }
-
-
     }
 
-
-
-
     /**
+     * Retrieve object
      *
      * @return Mzax_Emarketing_Model_Object_Order
      */
@@ -84,8 +75,10 @@ class Mzax_Emarketing_Model_Conversion_Goal_Orders
         return Mage::getSingleton('mzax_emarketing/object_order');
     }
 
-
     /**
+     * Retrieve aggregation select statement
+     *
+     * @param Mzax_Emarketing_Model_Campaign $campaign
      *
      * @return Mzax_Emarketing_Db_Select
      */
@@ -110,15 +103,13 @@ class Mzax_Emarketing_Model_Conversion_Goal_Orders
         return $query;
     }
 
-
-
-
     /**
      * Get goal <-> recipient binder
      *
      * @param Mzax_Emarketing_Model_Campaign $campaign
      * @param boolean $direct
-     * @param integer|false $variation
+     * @param integer|bool $variation
+     *
      * @return Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder
      */
     public function getRecipientBinder($campaign, $direct = false, $variation = false)
@@ -144,38 +135,40 @@ class Mzax_Emarketing_Model_Conversion_Goal_Orders
             $select->where('{variation_id} = ?', $variation);
         }
 
-
         /* @var $binder Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder */
         $binder = Mage::getResourceModel('mzax_emarketing/recipient_goal_binder');
         $binder->setSelect($select);
 
-
         // create a direct binding using the goal table
-        $binder->createBinding()
-            ->joinTable(array(
-                    'object_type' => Mzax_Emarketing_Model_Goal::TYPE_ORDER,
-                    'object_id'   => '{order_id}'
-            ), 'goal')
-            ->joinTable(array('recipient_id' => '{recipient_id}'), 'recipient')
-            ->addBinding('recipient_id', 'goal.recipient_id')
-            ->addBinding('sent_at',      'recipient.sent_at')
-            ->addBinding('variation_id', 'recipient.variation_id')
-            ->addBinding('campaign_id',  'recipient.campaign_id')
-            ->addBinding('is_mock',      'recipient.is_mock');
+        $sql = $binder->createBinding();
+        $sql->joinTable(
+            array(
+                'object_type' => Mzax_Emarketing_Model_Goal::TYPE_ORDER,
+                'object_id'   => '{order_id}'
+            ),
+            'goal'
+        );
+        $sql->joinTable(array('recipient_id' => '{recipient_id}'), 'recipient');
+        $sql->addBinding('recipient_id', 'goal.recipient_id');
+        $sql->addBinding('sent_at', 'recipient.sent_at');
+        $sql->addBinding('variation_id', 'recipient.variation_id');
+        $sql->addBinding('campaign_id', 'recipient.campaign_id');
+        $sql->addBinding('is_mock', 'recipient.is_mock');
 
         if (!$direct) {
             // see if we can get any indirect bindings via email etc
             $campaign->bindRecipients($binder);
         }
 
-        Mage::dispatchEvent('mzax_emarketing_order_recipient_binder', array(
-            'binder'   => $binder,
-            'direct'   => $direct,
-            'campaign' => $campaign
-        ));
+        Mage::dispatchEvent(
+            'mzax_emarketing_order_recipient_binder',
+            array(
+                'binder'   => $binder,
+                'direct'   => $direct,
+                'campaign' => $campaign
+            )
+        );
 
         return $binder;
     }
-
-
 }

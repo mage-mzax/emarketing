@@ -23,23 +23,16 @@
  *
  * if no recipient was found we may can still find the right
  * store id by using the To email address
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Store
     extends Mzax_Emarketing_Model_Inbox_Bounce_Detector_Abstract
 {
-
-
-
     /**
-     * Try to detect the original recipiet id and campaign id
+     * Try to detect the original sender store id by email
      *
-     *
-     * (non-PHPdoc)
      * @see Mzax_Bounce_Detector_Abstract::inspect()
+     *
+     * @return void
      */
     public function inspect(Mzax_Bounce_Message $message)
     {
@@ -50,13 +43,17 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Store
         }
     }
 
-
-
+    /**
+     * Try to retrieve store from email
+     *
+     * @param string $email
+     *
+     * @return Mage_Core_Model_Store|null
+     */
     public function getStoreByEmail($email)
     {
         $email = strtolower($email);
         /* @var $store Mage_Core_Model_Store */
-
 
         /*
          * try to retrieve store by using the email
@@ -85,7 +82,4 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Store
 
         return null;
     }
-
-
-
 }

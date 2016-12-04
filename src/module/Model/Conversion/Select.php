@@ -18,25 +18,28 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Model_Conversion_Select
+ */
 class Mzax_Emarketing_Model_Conversion_Select
 {
-
-
-
-
+    /**
+     * @var array[]
+     */
     protected $_bindings = array();
 
-
+    /**
+     * @var Zend_Db_Select[]
+     */
     protected $_unionSelects = array();
-
-
 
     /**
      *
      * @param string $name
      * @param Zend_Db_Select $select
      * @param string $field
-     * @return Mzax_Emarketing_Model_Conversion_Select
+     *
+     * @return $this
      */
     public function addIndirectBinding($name, Zend_Db_Select $select, $field)
     {
@@ -44,10 +47,9 @@ class Mzax_Emarketing_Model_Conversion_Select
             'select' => $select,
             'field'  => $field
         );
+
         return $this;
     }
-
-
 
     /**
      * Check if we can bind
@@ -60,15 +62,15 @@ class Mzax_Emarketing_Model_Conversion_Select
         if (isset($this->_bindings[$name])) {
             return $this->_bindings[$name]['field'];
         }
+
         return false;
     }
-
-
 
     /**
      * Bind using binging select
      *
      * @param string $name
+     *
      * @return Zend_Db_Select
      */
     public function bind($name)
@@ -78,10 +80,4 @@ class Mzax_Emarketing_Model_Conversion_Select
 
         return $select;
     }
-
-
-
-
-
-
 }

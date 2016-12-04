@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -24,13 +24,17 @@
 class Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
     extends Mage_Core_Model_Resource_Db_Collection_Abstract
 {
-    
+    /**
+     * @return void
+     */
     protected function _construct()
     {
         $this->_init('mzax_emarketing/newsletter_list');
     }
 
-
+    /**
+     * @return $this
+     */
     public function addSubscriberCount()
     {
         $expr = new Zend_Db_Expr('COUNT(`s`.`subscriber_id`)');
@@ -50,13 +54,13 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
         return $this;
     }
 
-
     /**
      * Add filter to show only visible lists for a given subscriber
      *
      * Private lists are only visible if subscribed to list
      *
-     * @param $subscriberId
+     * @param $subscriber
+     *
      * @return $this
      */
     public function addSubscriberToFilter($subscriber)
@@ -64,7 +68,6 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
         if ($subscriber instanceof Varien_Object) {
             $subscriber = $subscriber->getId();
         }
-
 
         $adapter = $this->getResource()->getReadConnection();
 
@@ -79,12 +82,15 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
         if (!empty($listIds)) {
             $this->getSelect()->where('is_private = 0 OR list_id IN(?)', $listIds);
 
-            $this->getSelect()->columns(array(
-                'is_subscribed_to' => $adapter->quoteInto(
-                    $adapter->getCheckSql('FIND_IN_SET(list_id, ?)', 1, 0), implode(',', $listIds))
-            ));
-        }
-        else {
+            $this->getSelect()->columns(
+                array(
+                    'is_subscribed_to' => $adapter->quoteInto(
+                        $adapter->getCheckSql('FIND_IN_SET(list_id, ?)', 1, 0),
+                        implode(',', $listIds)
+                    )
+                )
+            );
+        } else {
             $this->getSelect()->where('is_private = 0');
         }
 
@@ -104,17 +110,21 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
         $this->getSelect()->where('FIND_IN_SET(0, `store_ids`) OR FIND_IN_SET(?, `store_ids`)', $store);
         return $this;
     }
-    
-    
+
+    /**
+     * @return array
+     */
     public function toOptionArray()
     {
-        return $this->_toOptionArray('list_id','name');
+        return $this->_toOptionArray('list_id', 'name');
     }
-    
-    
+
+    /**
+     * @return array
+     */
     public function toOptionHash()
     {
-        return $this->_toOptionHash('list_id','name');
+        return $this->_toOptionHash('list_id', 'name');
     }
-    
+
 }

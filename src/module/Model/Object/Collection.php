@@ -18,23 +18,15 @@
  */
 
 
-
-
 /**
- *
- *
- * @author Jacob Siefer
- *
+ * Class Mzax_Emarketing_Model_Object_Collection
  */
 class Mzax_Emarketing_Model_Object_Collection extends Varien_Data_Collection_Db
 {
-
     /**
-     *
-     * @var Mzax_Emarketing_Db_Select
+     * @var
      */
     protected $_query;
-
 
     /**
      *
@@ -42,31 +34,28 @@ class Mzax_Emarketing_Model_Object_Collection extends Varien_Data_Collection_Db
      */
     protected $_object;
 
-
-
+    /**
+     * Mzax_Emarketing_Model_Object_Collection constructor.
+     */
     public function __construct()
     {
         parent::__construct();
         $this->setItemObjectClass('mzax_emarketing/object_collection_item');
     }
 
-
-
-
-
     /**
      * Set Object
      *
      * @param Mzax_Emarketing_Model_Object_Abstract $object
-     * @return Mzax_Emarketing_Model_Object_Collection
+     *
+     * @return $this
      */
     public function setObject($object)
     {
         $this->_object = $object;
+
         return $this;
     }
-
-
 
     /**
      * Retrieve Object
@@ -78,24 +67,19 @@ class Mzax_Emarketing_Model_Object_Collection extends Varien_Data_Collection_Db
         return $this->_object;
     }
 
-
-
-
     /**
      * Set Query
      *
      * @param Mzax_Emarketing_Db_Select $query
-     * @return Mzax_Emarketing_Model_Object_Collection
+     * @return $this
      */
     public function setQuery(Mzax_Emarketing_Db_Select $query)
     {
         $this->_conn   = $query->getAdapter();
         $this->_select = $query;
+
         return $this;
     }
-
-
-
 
     /**
      * Retrieve Query
@@ -107,21 +91,13 @@ class Mzax_Emarketing_Model_Object_Collection extends Varien_Data_Collection_Db
         return $this->_select;
     }
 
-
-
-
     /**
-     * (non-PHPdoc)
-     * @see Varien_Data_Collection_Db::getIdFieldName()
      * @return string
      */
     public function getIdFieldName()
     {
         return 'id';
     }
-
-
-
 
     /**
      * Retrieve collection empty item
@@ -137,21 +113,28 @@ class Mzax_Emarketing_Model_Object_Collection extends Varien_Data_Collection_Db
         return $item;
     }
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Filter_Abstract $filter
+     *
+     * @return $this
+     * @throws Exception
+     */
     public function applyFilter(Mzax_Emarketing_Model_Object_Filter_Abstract $filter)
     {
         if ($this->getObject() !== $filter->getObject()) {
             throw new Exception("You can not apply filters for different objects");
         }
         $this->getQuery()->joinSelect('id', $filter->getSelect(), 'filter');
+
         return $this;
     }
 
-
-
-
+    /**
+     * @param $alias
+     * @param null $expr
+     *
+     * @return $this
+     */
     public function addField($alias, $expr = null)
     {
         if (!$expr) {
@@ -166,19 +149,24 @@ class Mzax_Emarketing_Model_Object_Collection extends Varien_Data_Collection_Db
                     $query->addBinding($expr, $expr);
                 }
                 $expr = $query->getBinding($expr);
-            }
-            else {
+            } else {
                 $expr = new Zend_Db_Expr($expr);
             }
         }
 
         $this->addFilterToMap($alias, $expr);
         $this->getQuery()->setColumn($alias, $expr);
+
         return $this;
     }
 
-
-
+    /**
+     * @param $alias
+     * @param $binding
+     * @param $attribute
+     *
+     * @return Zend_Db_Expr
+     */
     public function joinAttribute($alias, $binding, $attribute)
     {
         $expr = $this->getQuery()->joinAttribute($binding, $attribute);
@@ -188,15 +176,15 @@ class Mzax_Emarketing_Model_Object_Collection extends Varien_Data_Collection_Db
         return $expr;
     }
 
-
-
+    /**
+     * @param $name
+     *
+     * @return bool
+     */
     public function hasBinding($name)
     {
         return $this->getQuery()->hasBinding($name);
     }
-
-
-
 
     /**
      * Get SQL for get record count
@@ -218,14 +206,10 @@ class Mzax_Emarketing_Model_Object_Collection extends Varien_Data_Collection_Db
             $select->columns('COUNT(*)');
 
             return $select;
-        }
-        else {
+        } else {
             $countSelect->reset(Zend_Db_Select::COLUMNS);
             $countSelect->columns('COUNT(*)');
         }
         return $countSelect;
-
-
     }
-
 }

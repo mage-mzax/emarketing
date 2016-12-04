@@ -18,29 +18,21 @@
  */
 
 
-
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Helper_Newsletter
  */
 class Mzax_Emarketing_Helper_Newsletter extends Mage_Core_Helper_Abstract
 {
-
-
-
     /**
      * Unsubscribe email from newsletter
      *
      * @param string $email
      * @param integer $storeId
-     * @param boolean $sendUnsubscriptionEmail
+     * @param boolean $sendUnSubscriptionEmail
+     *
      * @return Mage_Newsletter_Model_Subscriber
      */
-    public function unsubscribe($email, $storeId, $sendUnsubscriptionEmail = false)
+    public function unsubscribe($email, $storeId, $sendUnSubscriptionEmail = false)
     {
         if (!$storeId) {
             $storeId = Mage::app()->getStore()->getId();
@@ -61,15 +53,11 @@ class Mzax_Emarketing_Helper_Newsletter extends Mage_Core_Helper_Abstract
             $subscriber->setChangeStatusAt(now());
             $subscriber->setSubscriberStatus($subscriber::STATUS_UNSUBSCRIBED)->save();
 
-            if ($sendUnsubscriptionEmail) {
+            if ($sendUnSubscriptionEmail) {
                 $subscriber->sendUnsubscriptionEmail();
             }
         }
 
         return $subscriber;
     }
-
-
-
-
 }

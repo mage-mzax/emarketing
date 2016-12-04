@@ -18,12 +18,12 @@
  */
 
 
-
+/**
+ * Class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
+ */
 class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
     extends Mzax_Emarketing_Model_Inbox_Bounce_Detector_Abstract
 {
-
-
     /**
      * try to find our beacon from mime boundary
      *
@@ -32,7 +32,6 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
      */
     const BOUNDARY_REGEX = '!\=\_MZAX\_\=([a-zA-Z0-9]{30})\_\=!';
 
-
     /**
      *
      * @see Mzax_Emarketing_Model_Recipient::getBeaconImage()
@@ -40,22 +39,18 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
      */
     const IMAGE_REGEX = '!\/emarketing-media\/([a-zA-Z0-9]{16})\/logo\.gif!i';
 
-
-
     /**
      *
      * @var string
      */
     const LINK_REGEX = '!\/link-goto\/([a-zA-Z0-9]{16})!';
 
-
-
-
     /**
      * Try to detect unique beacon hash
      *
      * @param Mzax_Bounce_Message $message
-     * @return Ambigous <string, boolean>|unknown|boolean
+     *
+     * @return string|boolean
      */
     public function detectBeaconHash(Mzax_Bounce_Message $message)
     {
@@ -63,7 +58,6 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
         if ($beacon) {
             return $beacon;
         }
-
 
         $content = $message->getContent();
 
@@ -77,14 +71,12 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
         return false;
     }
 
-
-
-
     /**
      * Try to detect unique link hash
      *
      * @param Mzax_Bounce_Message $message
-     * @return unknown|boolean
+     *
+     * @return string|boolean
      */
     public function detectLinkHash(Mzax_Bounce_Message $message)
     {
@@ -96,14 +88,13 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
         return false;
     }
 
-
-
     /**
      * Detect original email by references headers
      *
      * @see http://th-h.de/faq/headerfaq.php#technisches
      * @param Mzax_Bounce_Message $message
-     * @return Mzax_Emarketing_Model_Outbox_Email|NULL
+     *
+     * @return Mzax_Emarketing_Model_Outbox_Email|null
      */
     public function detectReferenceEmail(Mzax_Bounce_Message $message)
     {
@@ -126,10 +117,9 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
                 return $email;
             }
         }
+
         return null;
     }
-
-
 
     /**
      * Try to find an email that has been recently sent
@@ -149,19 +139,16 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
         if ($emailId) {
             return Mage::getModel('mzax_emarketing/outbox_email')->load($emailId);
         }
+
         return null;
     }
 
-
-
-
-
-
-
     /**
-     * Try to find orignal recipient
+     * Try to find original recipient
      *
-     * @return Mzax_Emarketing_Model_Recipient|NULL
+     * @param Mzax_Bounce_Message $message
+     *
+     * @return Mzax_Emarketing_Model_Recipient|null
      */
     public function findRecipient(Mzax_Bounce_Message $message)
     {
@@ -191,26 +178,22 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
             }
         }
 
-
         // last try, check if we have send anything to the sender email recently
         $email = $this->detectRecientlySentEmail($message);
         if ($email) {
             return $email->getRecipient();
         }
 
-
         return null;
     }
-
-
-
 
     /**
      * Try to detect the original recipiet id and campaign id
      *
-     *
      * (non-PHPdoc)
      * @see Mzax_Bounce_Detector_Abstract::inspect()
+     *
+     * @return void
      */
     public function inspect(Mzax_Bounce_Message $message)
     {
@@ -218,17 +201,13 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
         if ($recipient) {
             $recipient->prepare();
             $message->info('recipient_id', $recipient->getId());
-            $message->info('campaign_id',  $recipient->getCampaignId());
-            $message->info('recipient',    $recipient->getEmail(), 100);
+            $message->info('campaign_id', $recipient->getCampaignId());
+            $message->info('recipient', $recipient->getEmail(), 100);
 
             $storeId = Mage::getResourceSingleton('mzax_emarketing/recipient')->getStoreId($recipient->getId());
             if ($storeId) {
                 $message->info('store_id', $storeId, 100);
             }
-
         }
     }
-
-
-
 }

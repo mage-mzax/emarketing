@@ -19,34 +19,28 @@
 
 
 /**
- * Email Inbox Facade
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Model_Inbox
  */
 class Mzax_Emarketing_Model_Inbox
 {
-
-
-
     /**
      * Retrieve new email messages
      *
-     * @return Mzax_Emarketing_Model_Inbox
+     * @return $this
      */
     public function downloadEmails()
     {
         if (!Mage::getStoreConfigFlag('mzax_emarketing/inbox/enable')) {
-            return;
-        }
-
-        $lock = Mage::helper('mzax_emarketing')->lock('download_emails');
-        if (!$lock) {
             return $this;
         }
 
+        /** @var Mzax_Emarketing_Helper_Data $helper */
+        $helper = Mage::helper('mzax_emarketing');
 
+        $lock = $helper->lock('download_emails');
+        if (!$lock) {
+            return $this;
+        }
 
         /* @var $collector Mzax_Emarketing_Model_Inbox_Email_Collector */
         $collector = Mage::getModel('mzax_emarketing/inbox_email_collector');
@@ -57,17 +51,17 @@ class Mzax_Emarketing_Model_Inbox
         return $this;
     }
 
-
-
-
     /**
      * Parse email messages
      *
-     * @return Mzax_Emarketing_Model_Inbox
+     * @return $this
      */
     public function parseEmails()
     {
-        $lock = Mage::helper('mzax_emarketing')->lock('parse_emails');
+        /** @var Mzax_Emarketing_Helper_Data $helper */
+        $helper = Mage::helper('mzax_emarketing');
+
+        $lock = $helper->lock('parse_emails');
         if (!$lock) {
             return $this;
         }
@@ -83,11 +77,7 @@ class Mzax_Emarketing_Model_Inbox
         }
 
         $lock->unlock();
+
         return $this;
     }
-
-
-
-
-
 }

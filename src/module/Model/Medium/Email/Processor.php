@@ -169,17 +169,17 @@ class Mzax_Emarketing_Model_Medium_Email_Processor
         return $this;
     }
 
-
-
     /**
      * Set coupon manager
      *
-     * @param unknown $manager
+     * @param Mzax_Emarketing_Model_SalesRule_ICouponManager $manager
+     *
      * @return Mzax_Emarketing_Model_Medium_Email_Processor
      */
-    public function setCouponManager($manager)
+    public function setCouponManager(Mzax_Emarketing_Model_SalesRule_ICouponManager $manager)
     {
         $this->filter->setCouponManager($manager);
+
         return $this;
     }
 

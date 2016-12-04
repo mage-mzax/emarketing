@@ -19,10 +19,7 @@
 
 
 /**
- *
- *
- * @author Jacob Siefer
- *
+ * Class Mzax_Emarketing_Model_Object_QuoteItem
  */
 class Mzax_Emarketing_Model_Object_QuoteItem extends Mzax_Emarketing_Model_Object_Abstract
 {

@@ -23,17 +23,13 @@
  *
  * This aggregator calculates the *_rate fields for both
  * report & report_conversion table
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
  */
 class Mzax_Emarketing_Model_Report_Aggregator_Rates
     extends Mzax_Emarketing_Model_Report_Aggregator_Abstract
 {
-
-
-
+    /**
+     * @return void
+     */
     protected function _aggregate()
     {
         $this->syncDateEntires();
@@ -41,10 +37,6 @@ class Mzax_Emarketing_Model_Report_Aggregator_Rates
         $this->calculateDefaultRates();
         $this->calculateConversionRates();
     }
-
-
-
-
 
     /**
      * Since mysql does not support full outer joints, and to mimic those with left/right
@@ -64,25 +56,25 @@ class Mzax_Emarketing_Model_Report_Aggregator_Rates
 
         foreach ($campaigns as $campaignId) {
             $cols = array('date', 'campaign_id', 'variation_id');
-            $select = $this->_select()->union(array(
-                $this->_select('report', null, $cols)->where('campaign_id = ?', $campaignId),
-                $this->_select('report_conversion', null,$cols)->where('campaign_id = ?', $campaignId)
-            ));
+            $select = $this->_select()->union(
+                array(
+                    $this->_select('report', null, $cols)->where('campaign_id = ?', $campaignId),
+                    $this->_select('report_conversion', null, $cols)->where('campaign_id = ?', $campaignId)
+                )
+            );
 
             $select = $this->_select($select, 'base', $cols);
             $this->insertSelect($select, 'report');
 
-            $select->joinCross($this->_select('report_conversion', null, 'tracker_id')->where('campaign_id = ?', $campaignId)->distinct(), 'tracker_id');
+            $select->joinCross(
+                $this->_select('report_conversion', null, 'tracker_id')
+                    ->where('campaign_id = ?', $campaignId)
+                    ->distinct(),
+                'tracker_id'
+            );
             $this->insertSelect($select, 'report_conversion');
         }
-
     }
-
-
-
-
-
-
 
     /**
      * Calculate the default rate fields
@@ -122,10 +114,6 @@ class Mzax_Emarketing_Model_Report_Aggregator_Rates
         $this->insertSelect($select, 'report');
     }
 
-
-
-
-
     /**
      * Calculate the rate fields for each conversion tracker
      *
@@ -148,7 +136,6 @@ class Mzax_Emarketing_Model_Report_Aggregator_Rates
             'hit_revenue'  => 'conversion.hit_revenue',
             'hits'         => 'conversion.hits'
         ));
-
 
         $select = $this->_select('report_conversion', 'result');
         $select->addBinding('date_filter', 'result.date');
@@ -176,8 +163,6 @@ class Mzax_Emarketing_Model_Report_Aggregator_Rates
         $this->insertSelect($select, 'report_conversion');
     }
 
-
-
     /**
      * Fetch last record time
      *
@@ -192,10 +177,4 @@ class Mzax_Emarketing_Model_Report_Aggregator_Rates
 
         return (string) $adapter->fetchOne($select);
     }
-
-
-
-
-
-
 }

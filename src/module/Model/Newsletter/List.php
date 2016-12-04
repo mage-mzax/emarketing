@@ -18,23 +18,31 @@
  */
 
 /**
+ * Class Mzax_Emarketing_Model_Newsletter_List
  *
  * @method string getCreatedAt()
+ * @method $this setCreatedAt(string $value)
+ *
  * @method string getUpdatedAt()
+ * @method $this setUpdatedAt(string $value)
+ *
  * @method string getName()
+ * @method $this setName(string $value)
+ *
  * @method string getDescription()
+ * @method $this setDescription(string $value)
+ *
  * @method string getIsPrivate()
+ * @method $this setIsPrivate(string $value)
+ *
  * @method string getAutoSubscribe()
+ * @method $this setAutoSubscribe(string $value)
  *
  * @method Mzax_Emarketing_Model_Resource_Newsletter_List getResource()
- *
- * @author Jacob Siefer
- *
  */
 class Mzax_Emarketing_Model_Newsletter_List
     extends Mage_Core_Model_Abstract
 {
-
     /**
      * Prefix of model events names
      *
@@ -51,18 +59,21 @@ class Mzax_Emarketing_Model_Newsletter_List
      */
     protected $_eventObject = 'list';
 
-
-
-
-
+    /**
+     * Model Constructor
+     *
+     * @return void
+     */
     protected function _construct()
     {
         $this->_init('mzax_emarketing/newsletter_list');
     }
 
-
-
-
+    /**
+     * Before save
+     *
+     * @return $this
+     */
     protected function _beforeSave()
     {
         // serialize store id
@@ -76,22 +87,25 @@ class Mzax_Emarketing_Model_Newsletter_List
         }
         $this->setData('store_ids', $storeIds);
 
-        return parent::_beforeSave();
+        parent::_beforeSave();
+
+        return $this;
     }
 
-
     /**
-     * @return Mzax_Emarketing_Model_Newsletter_List
+     * After save
+     *
+     * @return $this
      */
     protected function _afterSave()
     {
         if ($this->isAutoSubscribe() && $this->isObjectNew()) {
             $this->addAllSubscribers();
         }
+        parent::_afterSave();
 
-        return parent::_afterSave();
+        return $this;
     }
-
 
     /**
      * Add all current subscribers to this list
@@ -103,7 +117,6 @@ class Mzax_Emarketing_Model_Newsletter_List
         return $this->getResource()->addAllSubscribers($this);
     }
 
-
     /**
      * Remove all subscribers from this list
      *
@@ -114,7 +127,6 @@ class Mzax_Emarketing_Model_Newsletter_List
         return $this->getResource()->removeAllSubscribers($this);
     }
 
-
     /**
      * Add subscribers to list
      *
@@ -123,10 +135,10 @@ class Mzax_Emarketing_Model_Newsletter_List
      */
     public function addSubscribers($subscribers)
     {
-        $subscribers = (array) $subscribers;
+        $subscribers = (array)$subscribers;
+
         return $this->getResource()->addSubscribers($this, $subscribers);
     }
-
 
     /**
      * Remove subscribers from list
@@ -136,11 +148,10 @@ class Mzax_Emarketing_Model_Newsletter_List
      */
     public function removeSubscribers($subscribers)
     {
-        $subscribers = (array) $subscribers;
+        $subscribers = (array)$subscribers;
+
         return $this->getResource()->removeSubscribers($this, $subscribers);
     }
-
-
 
     /**
      * Check if list is private
@@ -158,10 +169,9 @@ class Mzax_Emarketing_Model_Newsletter_List
         if (is_bool($value)) {
             $this->setIsPrivate($value ? 1 : 0);
         }
-        return (bool) $this->getIsPrivate();
+
+        return (bool)$this->getIsPrivate();
     }
-
-
 
     /**
      * If auto subscribed all new subscribers will get added
@@ -178,15 +188,15 @@ class Mzax_Emarketing_Model_Newsletter_List
         if (is_bool($value)) {
             $this->setAutoSubscribe($value ? 1 : 0);
         }
+
         return (bool) $this->getAutoSubscribe();
     }
-
-
 
     /**
      * Set store ids
      *
      * @param array $storeIds
+     *
      * @return $this
      */
     public function setStoreIds(array $storeIds)
@@ -197,11 +207,10 @@ class Mzax_Emarketing_Model_Newsletter_List
         return $this;
     }
 
-
     /**
      * Retrieve all store ids
      *
-     * @return array
+     * @return string[]
      */
     public function getStoreIds()
     {
@@ -211,7 +220,6 @@ class Mzax_Emarketing_Model_Newsletter_List
         }
         return explode(',', $ids);
     }
-
 
     /**
      * Check if list is allowed for specified store
@@ -234,20 +242,18 @@ class Mzax_Emarketing_Model_Newsletter_List
         return in_array(Mage_Core_Model_App::ADMIN_STORE_ID, $storeIds);
     }
 
-
     /**
-     *
      *
      * @param string $key
      * @param null $index
+     *
      * @return mixed
      */
-    public function getData($key='', $index=null)
+    public function getData($key = '', $index = null)
     {
         if ($key === 'allowed_stores') {
             return $this->getStoreIds();
         }
         return parent::getData($key, $index);
     }
-
 }

@@ -22,26 +22,27 @@
 /**
  * Campaign
  *
- * @method Mzax_Emarketing_Model_Campaign setCreatedAt(string $value)
- * @method Mzax_Emarketing_Model_Campaign setUpdatedAt(string $value)
- * @method Mzax_Emarketing_Model_Campaign setStartAt(string $value)
- * @method Mzax_Emarketing_Model_Campaign setEndAt(string $value)
- * @method Mzax_Emarketing_Model_Campaign setRunning(string $value)
- * @method Mzax_Emarketing_Model_Campaign setAutologin(string $value)
- * @method Mzax_Emarketing_Model_Campaign setCheckFrequency(string $value)
- * @method Mzax_Emarketing_Model_Campaign setLastCheck(string $value)
- * @method Mzax_Emarketing_Model_Campaign setMinResendInterval(string $value)
- * @method Mzax_Emarketing_Model_Campaign setExpireTime(string $value)
- * @method Mzax_Emarketing_Model_Campaign setAbtestEnable(string $value)
- * @method Mzax_Emarketing_Model_Campaign setAbtestTraffic(string $value)
- * @method Mzax_Emarketing_Model_Campaign setStoreId(string $value)
- * @method Mzax_Emarketing_Model_Campaign setTemplateId(string $value)
- * @method Mzax_Emarketing_Model_Campaign setDefaultTrackerId(string $value)
- * @method Mzax_Emarketing_Model_Campaign setName(string $value)
- * @method Mzax_Emarketing_Model_Campaign setIdentity(string $value)
- * @method Mzax_Emarketing_Model_Campaign setProvider(string $value)
- * @method Mzax_Emarketing_Model_Campaign setFilterData(string $value)
- * @method Mzax_Emarketing_Model_Campaign setMediumJson(string $value)
+ * @method $this setCreatedAt(string $value)
+ * @method $this setUpdatedAt(string $value)
+ * @method $this setStartAt(string $value)
+ * @method $this setEndAt(string $value)
+ * @method $this setRunning(string $value)
+ * @method $this setAutologin(string $value)
+ * @method $this setCheckFrequency(string $value)
+ * @method $this setLastCheck(string $value)
+ * @method $this setMinResendInterval(string $value)
+ * @method $this setExpireTime(string $value)
+ * @method $this setAbtestEnable(string $value)
+ * @method $this setAbtestTraffic(string $value)
+ * @method $this setStoreId(string $value)
+ * @method $this setTemplateId(string $value)
+ * @method $this setDefaultTrackerId(string $value)
+ * @method $this setName(string $value)
+ * @method $this setIdentity(string $value)
+ * @method $this setProvider(string $value)
+ * @method $this setFilterData(string $value)
+ * @method $this setMediumJson(string $value)
+ * @method $this setVariationId(string $value)
  *
  * @method Mzax_Emarketing_Model_Resource_Campaign getResource()
  *
@@ -72,26 +73,15 @@
  * @method string getConversionStats()
  * @method string getFailStats()
  * @method string getRevenueStats()
- *
- *
- * @author Jacob Siefer
- *
+ * @method string getVariationId()
  */
 class Mzax_Emarketing_Model_Campaign
     extends Mage_Core_Model_Abstract
     implements Mzax_Emarketing_Model_Campaign_Content
 {
 
-
-
     const DEFAULT_EMAIL_PROVIDER = 'customers';
-
-
     const CACHE_TAG = 'MZAX_EMARKETING_CAMPAIGN';
-
-
-    //protected $_cacheTag = self::CACHE_TAG;
-
 
     /**
      * Recipient provider
@@ -100,8 +90,6 @@ class Mzax_Emarketing_Model_Campaign
      */
     protected $_provider;
 
-
-
     /**
      * Medium provider
      *
@@ -109,13 +97,11 @@ class Mzax_Emarketing_Model_Campaign
      */
     protected $_medium;
 
-
     /**
      *
      * @var Varien_Object
      */
     protected $_mediumData;
-
 
     /**
      * Available variations
@@ -123,7 +109,6 @@ class Mzax_Emarketing_Model_Campaign
      * @var Mzax_Emarketing_Model_Resource_Campaign_Variation_Collection
      */
     protected $_variations;
-
 
     /**
      * Prefix of model events names
@@ -141,30 +126,25 @@ class Mzax_Emarketing_Model_Campaign
      */
     protected $_eventObject = 'campaign';
 
-
-
     /**
      *
      * @var Mzax_Emarketing_Model_Resource_Recipient_Collection
      */
     protected $_recipients;
 
-
-
     /**
+     * Available trackers for this campaign
      *
      * @var Mzax_Emarketing_Model_Resource_Conversion_Tracker_Collection
      */
     protected $_trackers;
 
-
     /**
+     * Default campaign tracker
      *
      * @var Mzax_Emarketing_Model_Conversion_Tracker
      */
     protected $_defaultTracker;
-
-
 
     /**
      * Store url model
@@ -173,10 +153,11 @@ class Mzax_Emarketing_Model_Campaign
      */
     protected $_urlModel;
 
-
-
-
-
+    /**
+     * Construct.
+     *
+     * @return void
+     */
     protected function _construct()
     {
         $this->_init('mzax_emarketing/campaign');
@@ -186,11 +167,8 @@ class Mzax_Emarketing_Model_Campaign
         $this->setIdentity('emarketing');
     }
 
-
-
-
-
     /**
+     * Retrieve cache id
      *
      * @return string
      */
@@ -199,9 +177,12 @@ class Mzax_Emarketing_Model_Campaign
         return $this->_eventObject . '_' . $this->getId();
     }
 
-
-
-
+    /**
+     * Before campaign save
+     *
+     * @return void
+     * @throws Exception
+     */
     protected function _beforeSave()
     {
 
@@ -222,46 +203,45 @@ class Mzax_Emarketing_Model_Campaign
         if (!$this->getData('provider')) {
             throw new Exception("Campaign must define a recipient provider");
         }
-
     }
 
-
-
+    /**
+     * After campaign save
+     *
+     * @return void
+     */
     protected function _afterSave()
     {
         parent::_afterSave();
 
         // save all variations if loaded
-        if ( $this->_variations ) {
+        if ($this->_variations) {
             $this->_variations->save();
         }
 
-        if ( $variations = $this->getClonedVariations() ) {
+        /** @var Mzax_Emarketing_Model_Campaign_Variation[] $variations */
+        $variations = $this->getData('cloned_variations');
+
+        if ($variations) {
             foreach ($variations as $variation) {
                 $variation->save();
             }
-            $this->setClonedVariations(false);
+            $this->unsetData('cloned_variations');
         }
     }
-
 
     /**
      * Processing object after load data
      *
-     * @return Mage_Core_Model_Abstract
+     * @return void
      */
     protected function _afterLoad()
     {
         if ($filters = $this->getData('filters')) {
+            // @todo what does this do?
             $this->setFilters($filters);
         }
     }
-
-
-
-
-
-
 
     /**
      * Retrieve store object
@@ -273,8 +253,6 @@ class Mzax_Emarketing_Model_Campaign
         return Mage::app()->getStore($this->getStoreId());
     }
 
-
-
     /**
      * Retrieve URL model
      *
@@ -283,59 +261,61 @@ class Mzax_Emarketing_Model_Campaign
     public function getUrlModel()
     {
         if (!$this->_urlModel) {
-            $this->_urlModel = Mage::getModel('core/url')->setStore($this->getStore());
+            $this->_urlModel = Mage::getModel('core/url');
+            $this->_urlModel->setStore($this->getStore());
         }
         return $this->_urlModel;
     }
 
-
-
-
-
     /**
      * Is campaign archived
      *
-     * @return boolean
+     * @param null|bool $flag
+     *
+     * @return bool
      */
     public function isArchived($flag = null)
     {
         if (is_bool($flag)) {
             $this->setData('archived', $flag ? 1 : 0);
         }
-        return (boolean) $this->getData('archived');
+
+        return (boolean)$this->getData('archived');
     }
-
-
-
 
     /**
      * Is campaign currently running
      *
-     * @return boolean
+     * @param null|bool $flag
+     *
+     * @return bool
      */
     public function isRunning($flag = null)
     {
         if (is_bool($flag)) {
             $this->setData('running', $flag ? 1 : 0);
         }
-        return (boolean) $this->getData('running');
+
+        return (boolean)$this->getData('running');
     }
 
-
-
-
+    /**
+     * Start campaign
+     *
+     * @return $this
+     */
     public function start()
     {
         $this->isRunning(true);
+
         return $this;
     }
-
 
     /**
      * Will not just stop but also remove any
      * already queued recipients
      *
-     * @return Mzax_Emarketing_Model_Campaign
+     * @return $this
      */
     public function stop()
     {
@@ -346,9 +326,6 @@ class Mzax_Emarketing_Model_Campaign
 
         return $this;
     }
-
-
-
 
     /**
      * check if the campaign is valid for sending
@@ -361,8 +338,6 @@ class Mzax_Emarketing_Model_Campaign
         return true;
     }
 
-
-
     /**
      * Is a plain text email campaign
      *
@@ -374,26 +349,24 @@ class Mzax_Emarketing_Model_Campaign
         return false;
     }
 
-
-
-
     /**
      * Retrieve tags
      *
-     * @return array
+     * @return string[]
      */
     public function getTags()
     {
         $data = $this->getData('tags');
+
         return preg_split('/[\s,]+/', $data, -1, PREG_SPLIT_NO_EMPTY);
     }
-
 
     /**
      * Set tags
      *
-     * @param string|array $value
-     * @return Mzax_Emarketing_Model_Campaign
+     * @param string|string[] $value
+     *
+     * @return $this
      */
     public function setTags($value)
     {
@@ -401,9 +374,10 @@ class Mzax_Emarketing_Model_Campaign
             $value = array_unique($value);
             $value = implode(',', $value);
         }
-        return $this->setData('tags', $value);
-    }
+        $this->setData('tags', $value);
 
+        return $this;
+    }
 
     /**
      * Add tags to campaign
@@ -423,7 +397,6 @@ class Mzax_Emarketing_Model_Campaign
         return $this;
     }
 
-
     /**
      * Remove tags from campaign
      *
@@ -442,16 +415,11 @@ class Mzax_Emarketing_Model_Campaign
         return $this;
     }
 
-
-
     //--------------------------------------------------------------------------
     //
     //  Medium
     //
     //--------------------------------------------------------------------------
-
-
-
 
     /**
      * Retrieve medium
@@ -461,13 +429,13 @@ class Mzax_Emarketing_Model_Campaign
     public function getMedium()
     {
         if (!$this->_medium && $this->getData('medium')) {
-            $this->_medium = Mage::getSingleton('mzax_emarketing/medium')->factory($this->getData('medium'));
+            /** @var Mzax_Emarketing_Model_Medium $factory */
+            $factory = Mage::getSingleton('mzax_emarketing/medium');
+            $this->_medium = $factory->factory($this->getData('medium'));
         }
+
         return $this->_medium;
     }
-
-
-
 
     /**
      * Retrieve content data
@@ -480,25 +448,20 @@ class Mzax_Emarketing_Model_Campaign
             if ($data = $this->getMediumJson()) {
                 $data = Zend_Json::decode($data);
                 $this->_mediumData = new Varien_Object($data);
-            }
-            else {
+            } else {
                 $this->_mediumData = new Varien_Object;
             }
             $this->setDataChanges(true);
         }
+
         return $this->_mediumData;
     }
-
-
-
 
     //--------------------------------------------------------------------------
     //
     //  Provider
     //
     //--------------------------------------------------------------------------
-
-
 
     /**
      * Retrieve all available recipient provider options
@@ -510,9 +473,6 @@ class Mzax_Emarketing_Model_Campaign
         return self::getProviderFactory()->getAllOptions(false);
     }
 
-
-
-
     /**
      * Retrieve recipient provider for this campaign
      *
@@ -522,15 +482,13 @@ class Mzax_Emarketing_Model_Campaign
     {
         if (!$this->_provider && $this->getData('provider')) {
             $type = $this->getData('provider');
-            $this->_provider = self::getProviderFactory()
-                ->factory($this->getData('provider'))
-                    ->setCampaign($this);
+
+            $this->_provider = self::getProviderFactory()->factory($type);
+            $this->_provider->setCampaign($this);
         }
+
         return $this->_provider;
     }
-
-
-
 
     /**
      * Retrieve provider factory
@@ -541,10 +499,6 @@ class Mzax_Emarketing_Model_Campaign
     {
         return Mage::getSingleton('mzax_emarketing/recipient_provider');
     }
-
-
-
-
 
     /**
      * Retrieve filter by id
@@ -557,21 +511,11 @@ class Mzax_Emarketing_Model_Campaign
         return $this->getRecipientProvider()->getFilterById($id);
     }
 
-
-
-
-
-
-
-
     //--------------------------------------------------------------------------
     //
     //  Email
     //
     //--------------------------------------------------------------------------
-
-
-
 
     /**
      * Retrieve magento email sender
@@ -587,23 +531,19 @@ class Mzax_Emarketing_Model_Campaign
 
         if (!is_array($sender)) {
             $sender = array(
-                'name'  => Mage::getStoreConfig('trans_email/ident_'.$sender.'/name',  $this->getStore()),
+                'name'  => Mage::getStoreConfig('trans_email/ident_'.$sender.'/name', $this->getStore()),
                 'email' => Mage::getStoreConfig('trans_email/ident_'.$sender.'/email', $this->getStore()),
             );
         }
-        $this->setSender($sender);
+        $this->setData('sender', $sender);
+
         return $sender;
     }
-
-
-
-
-
 
     /**
      * Create a mock recipient instance
      *
-     * @param string $entityId Target entity id
+     * @param string $objectId Target object id
      * @return Mzax_Emarketing_Model_Recipient
      */
     public function createMockRecipient($objectId = null)
@@ -616,9 +556,6 @@ class Mzax_Emarketing_Model_Campaign
 
         return $recipient;
     }
-
-
-
 
     /**
      * Prepare recipient
@@ -634,11 +571,9 @@ class Mzax_Emarketing_Model_Campaign
     {
         $this->getRecipientProvider()->prepareRecipient($recipient);
         $this->getMedium()->prepareRecipient($recipient);
+
         return $this;
     }
-
-
-
 
     /**
      * Retrieve campaign content
@@ -646,12 +581,14 @@ class Mzax_Emarketing_Model_Campaign
      * If ab-testing is enabled we need to retrieve
      * a random variation
      *
+     * @param null|int $variationId
+     *
      * @return Mzax_Emarketing_Model_Campaign_Content
      */
     public function getContent($variationId = null)
     {
         if ($variationId !== null) {
-            // if zero, use orginal campaign
+            // if zero, use original campaign
             if ($variationId == Mzax_Emarketing_Model_Campaign_Variation::ORIGNAL) {
                 return $this;
             }
@@ -671,7 +608,7 @@ class Mzax_Emarketing_Model_Campaign
         }
 
         // include include in test?
-        if (mt_rand(0,999)/10 >= $this->getAbtestTraffic()) {
+        if (mt_rand(0, 999)/10 >= $this->getAbtestTraffic()) {
             return $this;
         }
 
@@ -685,13 +622,9 @@ class Mzax_Emarketing_Model_Campaign
             }
         }
 
-        // pick randrom content
+        // pick random content
         return $active[array_rand($active)];
     }
-
-
-
-
 
     /**
      * Retrieve available snippets for the content manager
@@ -714,19 +647,14 @@ class Mzax_Emarketing_Model_Campaign
         return $snippets;
     }
 
-
-
-
     //--------------------------------------------------------------------------
     //
     //  Variations
     //
     //--------------------------------------------------------------------------
 
-
-
     /**
-     * Check if campagin has any variations
+     * Check if campaign has any variations
      *
      * @return int
      */
@@ -734,11 +662,6 @@ class Mzax_Emarketing_Model_Campaign
     {
         return count($this->getVariations());
     }
-
-
-
-
-
 
     /**
      * Retrieve all variations
@@ -751,31 +674,27 @@ class Mzax_Emarketing_Model_Campaign
             $this->_variations = Mage::getResourceModel('mzax_emarketing/campaign_variation_collection');
             $this->_variations->addCampaignFilter($this);
         }
+
         return $this->_variations;
     }
-
-
-
-
 
     /**
      * Retrieve variation by id
      *
      * @param string $id
+     *
      * @return Mzax_Emarketing_Model_Campaign_Variation
      */
     public function getVariation($id)
     {
-        return $this->getVariations()->getItemById($id);
+        $variation = $this->getVariations()->getItemById($id);
+
+        return $variation;
     }
-
-
-
 
     /**
      * Create new variation
      *
-     * @param bool $save
      * @return Mzax_Emarketing_Model_Campaign_Variation
      */
     public function createVariation()
@@ -791,15 +710,11 @@ class Mzax_Emarketing_Model_Campaign
         return $variation;
     }
 
-
     //--------------------------------------------------------------------------
     //
     //  Trackers
     //
     //--------------------------------------------------------------------------
-
-
-
 
     /**
      * Retrieve all conversion trackers
@@ -813,22 +728,23 @@ class Mzax_Emarketing_Model_Campaign
             $this->_trackers->addCampaignFilter($this);
             $this->_trackers->addActiveFilter();
         }
+
         return $this->_trackers;
     }
-
 
     /**
      * Retrieve tracker by id
      *
      * @param string $id
+     *
      * @return Mzax_Emarketing_Model_Conversion_Tracker
      */
     public function getTracker($id)
     {
-        return $this->getTrackers()->getItemById($id);
+        $tracker = $this->getTrackers()->getItemById($id);
+
+        return $tracker;
     }
-
-
 
     /**
      * Retrieve default tracker for this campaign
@@ -848,19 +764,15 @@ class Mzax_Emarketing_Model_Campaign
             }
             $this->_defaultTracker = $tracker;
         }
+
         return $this->_defaultTracker;
     }
-
-
-
-
 
     //--------------------------------------------------------------------------
     //
     //  Recipients
     //
     //--------------------------------------------------------------------------
-
 
     /**
      * Check number of recipients
@@ -874,11 +786,9 @@ class Mzax_Emarketing_Model_Campaign
             $count = $this->getResource()->countRecipients($this);
             $this->setData('recipients_count', $count);
         }
+
         return $count;
     }
-
-
-
 
     /**
      * Try to bind recipients to goals
@@ -886,39 +796,35 @@ class Mzax_Emarketing_Model_Campaign
      * The recipient provider has to do that
      *
      * @param Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder $binder
-     * @return Mzax_Emarketing_Model_Campaign
+     *
+     * @return $this
      */
     public function bindRecipients(Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder $binder)
     {
         if ($provider = $this->getRecipientProvider()) {
             $provider->bindRecipients($binder);
         }
+
         return $this;
     }
-
-
-
 
     /**
      * Find and queue new recipients for this campaign that
      * match the current filters
      *
-     * @return integer the number of recipients found
+     * @param bool $force
+     *
+     * @return int the number of recipients found
      */
     public function findRecipients($force = false)
     {
         if ($force || $this->getRunning()) {
-            $this->setCurrentTime(null);
+            $this->unsetData('current_time');
             return $this->getResource()->findRecipients($this);
         }
+
         return 0;
     }
-
-
-
-
-
-
 
     /**
      * Retrieve all recipients for this campaign
@@ -933,10 +839,6 @@ class Mzax_Emarketing_Model_Campaign
         }
         return $this->_recipients;
     }
-
-
-
-
 
     /**
      * Retrieve all recipients that have not yet been send
@@ -953,9 +855,6 @@ class Mzax_Emarketing_Model_Campaign
         return $recipients;
     }
 
-
-
-
     /**
      * Prepare pending recipients and move them to
      * the email outbox
@@ -963,7 +862,10 @@ class Mzax_Emarketing_Model_Campaign
      * to get send
      *
      * @see Mzax_Emarketing_Model_Outbox
-     * @return integer Number of prepared recipients
+     *
+     * @param array $options
+     *
+     * @return int Number of prepared recipients
      */
     public function sendRecipients($options = array())
     {
@@ -975,12 +877,9 @@ class Mzax_Emarketing_Model_Campaign
         if ($this->getId() && $this->getRecipientProvider() && $this->getMedium()) {
             return $this->getMedium()->sendRecipients($this, $options);
         }
+
         return 0;
     }
-
-
-
-
 
     /**
      * Retrieve number of recipient errors
@@ -994,11 +893,9 @@ class Mzax_Emarketing_Model_Campaign
             $count = $this->getResource()->countRecipientErrors($this);
             $this->setData('recipient_errors_count', $count);
         }
+
         return $count;
     }
-
-
-
 
     //--------------------------------------------------------------------------
     //
@@ -1018,10 +915,9 @@ class Mzax_Emarketing_Model_Campaign
             $count = $this->getResource()->countInbox($this);
             $this->setData('inbox_count', $count);
         }
+
         return $count;
     }
-
-
 
     /**
      * Check number of messages in outbox
@@ -1035,22 +931,15 @@ class Mzax_Emarketing_Model_Campaign
             $count = $this->getResource()->countOutbox($this);
             $this->setData('outbox_count', $count);
         }
+
         return $count;
     }
-
-
-
-
-
-
 
     //--------------------------------------------------------------------------
     //
     //  Report
     //
     //--------------------------------------------------------------------------
-
-
 
     /**
      * Aggregate data for this campaign
@@ -1065,11 +954,13 @@ class Mzax_Emarketing_Model_Campaign
             'verbose'      => false
         ));
 
-        Mage::dispatchEvent($this->_eventPrefix . '_aggregate',
-            array('options' => $options, 'campaign' => $this));
+        Mage::dispatchEvent(
+            $this->_eventPrefix . '_aggregate',
+            array('options' => $options, 'campaign' => $this)
+        );
 
         if ($incremental) {
-            $options->setIncremental((int) $incremental);
+            $options->setData('incremental', (int)$incremental);
         }
 
         /* @var $report Mzax_Emarketing_Model_Report */
@@ -1079,18 +970,14 @@ class Mzax_Emarketing_Model_Campaign
         return $this;
     }
 
-
-
-
-
-
-
     /**
      * Retrieve a new report query instance
      *
      * @param string $dimension
      * @param array $metrics
-     * @param boolean $variation
+     * @param bool $variations
+     * @param null $order
+     *
      * @return Mzax_Emarketing_Model_Report_Query
      */
     public function queryReport($dimension = 'campaign', $metrics = array('sendings', 'views', 'clicks'), $variations = false, $order = null)
@@ -1099,11 +986,10 @@ class Mzax_Emarketing_Model_Campaign
 
         // replace default tracker id
         foreach ($metrics as $key => $metric) {
-            if ( strpos($metric,'#?') !== false) {
+            if (strpos($metric, '#?') !== false) {
                 if ($tracker = $this->getDefaultTracker()) {
                     $metrics[$key] = str_replace('#?', '#' . $tracker->getId(), $metric);
-                }
-                else {
+                } else {
                     unset($metrics[$key]);
                 }
             }
@@ -1114,31 +1000,20 @@ class Mzax_Emarketing_Model_Campaign
 
         /* @var $query Mzax_Emarketing_Model_Report_Query */
         $query = Mage::getModel('mzax_emarketing/report_query');
-        $query->setParam('campaign',   $this->getId());
-        $query->setParam('dimension',  $dimension);
-        $query->setParam('metrics',    $metrics);
+        $query->setParam('campaign', $this->getId());
+        $query->setParam('dimension', $dimension);
+        $query->setParam('metrics', $metrics);
         $query->setParam('variations', $variations);
-        $query->setParam('order',      $order);
-
+        $query->setParam('order', $order);
 
         return $query;
     }
-
-
-
-
-
-
-
-
 
     //--------------------------------------------------------------------------
     //
     //  Misc
     //
     //--------------------------------------------------------------------------
-
-
 
     /**
      * Convert to campaign to encoded string
@@ -1147,32 +1022,46 @@ class Mzax_Emarketing_Model_Campaign
      */
     public function export()
     {
-        // set current extension version
-        $this->setVersion(Mage::helper('mzax_emarketing')->getVersion());
+        /** @var Mzax_Emarketing_Helper_Data $helper */
+        $helper = Mage::helper('mzax_emarketing');
 
         $filterData = $this->getRecipientProvider()->export();
-        $this->setFilterExport(Zend_Json::encode($filterData));
+        $filterData = Zend_Json::encode($filterData);
 
-        $json = $this->toJson(array(
-            'version',
-            'name',
-            'description',
-            'check_frequency',
-            'min_resend_interval',
-            'autologin',
-            'expire_time',
-            'provider',
-            'filter_export',
-            'medium',
-            'medium_json'));
+        $this->setData('filter_export', $filterData);
+        $this->setData('version', $helper->getVersion());
 
-        return base64_encode($json);
+        $json = $this->toJson(
+            array(
+                'version',
+                'name',
+                'description',
+                'check_frequency',
+                'min_resend_interval',
+                'autologin',
+                'expire_time',
+                'provider',
+                'filter_export',
+                'medium',
+                'medium_json'
+            )
+        );
+        $result = base64_encode($json);
+
+        return $result;
     }
 
-
-
+    /**
+     * Clone campaign
+     *
+     * Deep clone campaign
+     *
+     * @return void
+     */
     public function __clone()
     {
+        $originalId = $this->getId();
+
         $variations = array();
         foreach ($this->getVariations() as $variation) {
             $newVariation = clone $variation;
@@ -1181,21 +1070,18 @@ class Mzax_Emarketing_Model_Campaign
         }
         $this->_variations = null;
 
-        $this->setDuplicateOf($this->getId());
         $this->setId(null);
         $this->setCreatedAt(null);
         $this->setUpdatedAt(null);
-        $this->setClonedVariations($variations);
+        $this->setData('cloned_variations', $variations);
+        $this->setData('duplicate_of', $originalId);
 
         // reset aggregated statistics
-        $this->setSendingStats(null);
-        $this->setViewStats(null);
-        $this->setInteractionStats(null);
-        $this->setConversionStats(null);
-        $this->setFailStats(null);
-        $this->setRevenueStats(null);
-
+        $this->unsetData('sending_stats');
+        $this->unsetData('view_stats');
+        $this->unsetData('interaction_stats');
+        $this->unsetData('conversion_stats');
+        $this->unsetData('fail_stats');
+        $this->unsetData('revenue_stats');
     }
-
-
 }

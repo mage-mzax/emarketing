@@ -18,40 +18,30 @@
  */
 
 
-
 /**
- * Factory class for meidums
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Model_Medium
  */
 class Mzax_Emarketing_Model_Medium implements Mage_Eav_Model_Entity_Attribute_Source_Interface
 {
-
     /**
      *
      * @var Mage_Core_Model_Config_Element
      */
     protected $_config;
 
-
-
     /**
      *
-     * @var array
+     * @var Mzax_Emarketing_Model_Medium_Abstract[]
      */
     protected $_mediums;
-
-
 
     /**
      * Retrieve Medium
      *
      * @param string $name
-     * @throws Exception
+     *
      * @return Mzax_Emarketing_Model_Medium_Abstract
+     * @throws Exception
      */
     public function factory($name)
     {
@@ -59,13 +49,12 @@ class Mzax_Emarketing_Model_Medium implements Mage_Eav_Model_Entity_Attribute_So
         if (!isset($config->$name)) {
             throw new Exception("No such email provider ({$name}) found");
         }
+
         $config = $config->$name;
-
-
         $mediumClass = $config->getClassName();
 
         if (!class_exists($mediumClass)) {
-            throw new Exception("Meidum config found, but model ($mediumClass) was not found");
+            throw new Exception("Medium config found, but model ($mediumClass) was not found");
         }
 
         /* @var $medium Mzax_Emarketing_Model_Medium_Abstract */
@@ -73,8 +62,6 @@ class Mzax_Emarketing_Model_Medium implements Mage_Eav_Model_Entity_Attribute_So
 
         return $medium;
     }
-
-
 
     /**
      * Retrieve All options
@@ -85,7 +72,6 @@ class Mzax_Emarketing_Model_Medium implements Mage_Eav_Model_Entity_Attribute_So
     {
         $options = array();
 
-        /* @var medium Mzax_Emarketing_Model_Medium_Abstract */
         foreach ($this->getMediums() as $medium => $title) {
             $options[] = array(
                 'value' => $medium,
@@ -99,13 +85,10 @@ class Mzax_Emarketing_Model_Medium implements Mage_Eav_Model_Entity_Attribute_So
         return $options;
     }
 
-
-
-
     /**
      * Retrieve all mediums
      *
-     * @return array
+     * @return Mzax_Emarketing_Model_Medium_Abstract[]
      */
     public function getMediums()
     {
@@ -116,19 +99,16 @@ class Mzax_Emarketing_Model_Medium implements Mage_Eav_Model_Entity_Attribute_So
                 $this->_mediums[$name] = (string) $cfg->title;
             }
         }
+
         return $this->_mediums;
     }
-
-
-
-
-
 
     /**
      * Retrieve Option value text
      *
      * @param string $value
-     * @return mixed
+     *
+     * @return string|bool
      */
     public function getOptionText($value)
     {
@@ -136,11 +116,9 @@ class Mzax_Emarketing_Model_Medium implements Mage_Eav_Model_Entity_Attribute_So
         if (isset($options[$value])) {
             return $options[$value];
         }
+
         return false;
     }
-
-
-
 
     /**
      * Retrieve email marketing collection config
@@ -152,9 +130,7 @@ class Mzax_Emarketing_Model_Medium implements Mage_Eav_Model_Entity_Attribute_So
         if (!$this->_config) {
             $this->_config = Mage::getConfig()->getNode('global/mzax_emarketing/mediums');
         }
+
         return $this->_config;
     }
-
-
-
 }

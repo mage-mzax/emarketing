@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -19,16 +19,13 @@
 
 
 /**
- * 
- * 
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Model_Report_Aggregator
  */
 class Mzax_Emarketing_Model_Report_Aggregator extends Mzax_Emarketing_Model_Report_Aggregator_Abstract
 {
-    
+    /**
+     * @var string[]
+     */
     protected $_aggregators = array(
         'events',
         'recipient',
@@ -38,21 +35,18 @@ class Mzax_Emarketing_Model_Report_Aggregator extends Mzax_Emarketing_Model_Repo
         'rates',
         'campaign',
     );
-    
-    
-    
+
     /**
-     * Prepare options an run all aggregators
-     * 
+     * Prepare options an run all aggregator
+     *
      * @param array $options
      */
     public function run(array $options = array())
     {
-        if ($lock = Mage::helper('mzax_emarketing')->lock('report_aggregator')) 
-        {
+        if ($lock = Mage::helper('mzax_emarketing')->lock('report_aggregator')) {
             $options = new Varien_Object($options);
             $options->setLock($lock);
-            
+
             if ($aggregator = $options->getAggregator()) {
                 $options->setAggregator((array) $aggregator);
             }
@@ -62,7 +56,7 @@ class Mzax_Emarketing_Model_Report_Aggregator extends Mzax_Emarketing_Model_Repo
             if ($trackerId = $options->getTrackerId()) {
                 $options->setTrackerId((array) $trackerId);
             }
-            
+
             if ($options->getData('full')) {
                 $options->unsAggregator();
                 $options->unsDimension();
@@ -70,20 +64,19 @@ class Mzax_Emarketing_Model_Report_Aggregator extends Mzax_Emarketing_Model_Repo
                 $options->unsAggregator();
                 $options->unsIncremental();
             }
-            
+
             $this->aggregate($options);
             $lock->unlock();
         }
     }
-    
-    
-    
-    
 
+    /**
+     * @return void
+     */
     protected function _aggregate()
     {
         $filter = $this->getOption('aggregator');
-        
+
         foreach ($this->_aggregators as $type) {
             if (empty($filter) || in_array($type, $filter)) {
                 $aggregator = $this->getAggregator($type);
@@ -92,20 +85,15 @@ class Mzax_Emarketing_Model_Report_Aggregator extends Mzax_Emarketing_Model_Repo
             }
         }
     }
-    
-    
-    
-    
+
     /**
-     * 
+     *
      * @param string $type
+     *
      * @return Mzax_Emarketing_Model_Report_Aggregator_Abstract
      */
     public function getAggregator($type)
     {
         return Mage::getSingleton('mzax_emarketing/report_aggregator_' . $type);
     }
-    
-    
-    
 }

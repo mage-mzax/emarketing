@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -18,18 +18,20 @@
  */
 
 
-
+/**
+ * Class Mzax_Emarketing_Model_Resource_Newsletter_List_Subscriber_Collection
+ */
 class Mzax_Emarketing_Model_Resource_Newsletter_List_Subscriber_Collection
     extends Mage_Newsletter_Model_Resource_Subscriber_Collection
 {
-
     /**
      * @var Mzax_Emarketing_Model_Newsletter_List
      */
     protected $_list;
 
-
-
+    /**
+     * @return void
+     */
     protected function _construct()
     {
         parent::_construct();
@@ -39,9 +41,6 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Subscriber_Collection
         $this->_map['fields']['list_status']     = $this->getResource()->getReadConnection()
             ->getIfNullSql('list.list_status', Mage_Newsletter_Model_Subscriber::STATUS_NOT_ACTIVE);
     }
-
-
-
 
     /**
      * Set newsletter list
@@ -55,8 +54,6 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Subscriber_Collection
         $this->addBindParam('list_id', $this->_list->getId());
         return $this;
     }
-
-
 
     /**
      * Init collection select
@@ -77,8 +74,9 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Subscriber_Collection
         return $this;
     }
 
-
-
+    /**
+     * @throws Exception
+     */
     protected function bindListId()
     {
         if (!$this->_list) {
@@ -92,8 +90,6 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Subscriber_Collection
         $this->addBindParam('list_id', $this->_list->getId());
     }
 
-
-
     /**
      * @return string
      * @throws Exception
@@ -103,8 +99,6 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Subscriber_Collection
         $this->bindListId();
         return parent::getSelectCountSql();
     }
-
-
 
     /**
      * Retrieve all ids for collection
@@ -125,11 +119,9 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Subscriber_Collection
         return $this->getConnection()->fetchCol($idsSelect, $this->_bindParams);
     }
 
-
-
-
     /**
      * @param Varien_Db_Select $select
+     *
      * @return string
      * @throws Exception
      */
@@ -140,28 +132,13 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Subscriber_Collection
 
     }
 
-
+    /**
+     * @return void
+     */
     protected function _afterLoad()
     {
         foreach ($this->_items as $item) {
             $item->setList($this->_list);
         }
     }
-
-
-
-
-
-    /**
-     * Retrieve list resource model
-     *
-     * @return Mzax_Emarketing_Model_Resource_Newsletter_List
-     */
-    /*
-    protected function getResource()
-    {
-        return Mage::getResourceSingleton('mzax_emarketing/newsletter_list');
-    }
-*/
-
 }

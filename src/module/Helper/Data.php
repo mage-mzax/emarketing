@@ -17,13 +17,27 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
+/**
+ * Class Mzax_Emarketing_Helper_Data
+ */
 class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
 {
-
-
+    /**
+     * @var string[][]
+     */
+    protected $_operatorsByType = array(
+        'string'      => array('==', '!=', '>=', '>', '<=', '<', '{}', '!{}', '()', '!()'),
+        'numeric'     => array('==', '!=', '>=', '>', '<=', '<', '()', '!()'),
+        'date'        => array('==', '>=', '<='),
+        'select'      => array('==', '!=', '()', '!()'),
+        'boolean'     => array('==', '!='),
+        'multiselect' => array('()', '!()'),
+        'grid'        => array('()', '!()'),
+    );
 
     /**
-     * Retreive version
+     * Retrieve version
      *
      * @return string
      */
@@ -31,8 +45,6 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
     {
         return (string) Mage::getConfig()->getModuleConfig('Mzax_Emarketing')->version;
     }
-
-
 
     /**
      * Can show credits?
@@ -53,10 +65,10 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
         return true;
     }
 
-
-
     /**
      * Log message
+     *
+     * @param $message
      *
      * @return $this
      */
@@ -65,18 +77,18 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
         $message = call_user_func_array(array($this, '__'), func_get_args());
 
         Mage::log($message, null, 'mzax_emarketing.log', true);
+
         return $this;
     }
-
-
 
     /**
      * Create a lock with the given name
      *
      * @param string $name
-     * @param number $timeout
-     * @param number $maxRunTime
-     * @return Ambigous <boolean, Mzax_Once>|boolean
+     * @param int $timeout
+     * @param int $maxRunTime
+     *
+     * @return Mzax_Once|bool
      */
     public function lock($name, $timeout = 5, $maxRunTime = 3600)
     {
@@ -85,10 +97,9 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
         if ($lock = Mzax_Once::lock($filename, $timeout, $maxRunTime)) {
             return $lock;
         }
+
         return false;
     }
-
-
 
     /**
      * Compress a 32 char hex hash to a 16 char accii hash
@@ -107,11 +118,9 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
         foreach ($parts as $part) {
             $compress .= $base{hexdec($part)%$baseLength};
         }
+
         return $compress;
     }
-
-
-
 
     /**
      * Encode magento expressions
@@ -121,14 +130,15 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * We can encode them and decode them later
      *
-     * @param unknown $html
-     * @return string
+     * @param string $html
+     *
+     * @return void
      */
     public function encodeMageExpr(&$html)
     {
-        $html = preg_replace_callback('/\{\{(.*?)\}\}/', function($match) {
+        $html = preg_replace_callback('/\{\{(.*?)\}\}/', function ($match) {
             return '#MAGE_EXPR(' . base64_encode($match[0]) . ')';
-        },$html);
+        }, $html);
     }
 
 
@@ -136,38 +146,15 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
      * Decode magento expressions that have been encoded
      *
      * @param string $html
-     * @return string
+     *
+     * @return void
      */
     public function decodeMageExpr(&$html)
     {
-        $html = preg_replace_callback('/#MAGE_EXPR\((.*?)\)/', function($match) {
+        $html = preg_replace_callback('/#MAGE_EXPR\((.*?)\)/', function ($match) {
             return base64_decode($match[1]);
-        },$html);
+        }, $html);
     }
-
-
-
-
-
-
-
-
-    protected $_operatorsByType = array(
-        'string'      => array('==', '!=', '>=', '>', '<=', '<', '{}', '!{}', '()', '!()'),
-        'numeric'     => array('==', '!=', '>=', '>', '<=', '<', '()', '!()'),
-        'date'        => array('==', '>=', '<='),
-        'select'      => array('==', '!=', '()', '!()'),
-        'boolean'     => array('==', '!='),
-        'multiselect' => array('()', '!()'),
-        'grid'        => array('()', '!()'),
-    );
-
-
-
-
-
-
-
 
     /**
      * Retrieve Store Options
@@ -180,8 +167,6 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
         return Mage::getModel('adminhtml/system_config_source_store')->toOptionArray();
     }
 
-
-
     /**
      * Retrieve Website Options
      *
@@ -190,27 +175,31 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
     public function getWebsitesOptions()
     {
         /* Mage_Adminhtml_Model_System_Config_Source_Website */
-        returnMage::getModel('adminhtml/system_config_source_website')->toOptionArray();
+        return Mage::getModel('adminhtml/system_config_source_website')->toOptionArray();
     }
 
-
-
-
-
+    /**
+     * @param string $type
+     *
+     * @return string
+     */
     public function getDefaultValueByType($type)
     {
-        switch($type) {
-            case 'numeric': return '1';
+        switch ($type) {
+            case 'numeric':
+                return '1';
         }
         return '';
     }
 
-
-
-
+    /**
+     * @param string $type
+     *
+     * @return string
+     */
     public function getDefaultOperatorByType($type)
     {
-        switch($type) {
+        switch ($type) {
             case 'boolean':
             case 'numeric':
             case 'select':
@@ -221,8 +210,6 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
         }
         return '{}';
     }
-
-
 
     /**
      * Retrieve operators by type
@@ -240,13 +227,10 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
         return $operators;
     }
 
-
-
-
     /**
      * Retrieve operator options
      *
-     * @return array
+     * @return string[]
      */
     public function getOperatorOptions($filter = null)
     {
@@ -272,19 +256,14 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
             }
             return $result;
         }
+
         return $options;
     }
-
-
-
-
-
 
     /**
      * Retrieve time unit options
      *
-     * @param string $value
-     * @return array
+     * @return string[]
      */
     public function getTimeUnitOptions()
     {
@@ -297,15 +276,14 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
         );
     }
 
-
-
-
     /**
      * Calculate date
      *
      * @param number $value
      * @param string $unit
-     * @param number $roundDate
+     * @param int $roundDate
+     * @param string $sign
+     *
      * @return Zend_Date
      */
     public function calcDate($value, $unit, $roundDate = null, $sign = '-')
@@ -317,7 +295,7 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
 
         $timestamp = strtotime("{$sign}{$value} {$unit}");
         if ($timestamp) {
-            // don't calculate with extrem high numbers (preformance)
+            // don't calculate with too high numbers (performance issue)
             $timestamp = min(max($timestamp, 0), 10000000000);
             $date = new Zend_Date;
             $date->setTimestamp($timestamp);
@@ -326,8 +304,7 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
                 $date->setHour(0);
                 $date->setMinute(0);
                 $date->setSecond(0);
-            }
-            else if ($roundDate === self::DAY_END) {
+            } elseif ($roundDate === self::DAY_END) {
                 $date->setHour(23);
                 $date->setMinute(59);
                 $date->setSecond(59);
@@ -338,10 +315,4 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
 
         return null;
     }
-
-
-
-
-
-
 }

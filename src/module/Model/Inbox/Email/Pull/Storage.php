@@ -19,30 +19,21 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * Class Mzax_Emarketing_Model_Inbox_Email_Pull_Storage
  */
 class Mzax_Emarketing_Model_Inbox_Email_Pull_Storage
     extends Mzax_Emarketing_Model_Inbox_Email_Pull_Abstract
 {
-
-
+    /**
+     * @var string
+     */
     protected $_storageAdapter = 'Zend_Mail_Storage_Pop3';
-
-
-
 
     /**
      *
      * @var Zend_Mail_Storage_Abstract
      */
     protected $_storage;
-
-
 
     /**
      * Retrieve storage config settings
@@ -61,29 +52,28 @@ class Mzax_Emarketing_Model_Inbox_Email_Pull_Storage
         return $config;
     }
 
-
-
+    /**
+     * Test connection
+     *
+     * @return bool
+     */
     public function test()
     {
         try {
             $adapter = $this->getStorage();
             $adapter->countMessages();
             return true;
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
-
-
-
-
 
     /**
      * Set storage adapter class
      *
      * @param string $adapter
-     * @return Mzax_Emarketing_Model_Inbox_Bounce_Pull_Storage
+     *
+     * @return $this
      */
     public function setStorageAdapter($adapter)
     {
@@ -91,21 +81,19 @@ class Mzax_Emarketing_Model_Inbox_Email_Pull_Storage
             $this->_storageAdapter = $adapter;
             $this->_storage = null;
         }
+
         return $this;
     }
-
-
 
     /**
      * Retrieve storage adapter
      *
-     * @throws Exception
      * @return Zend_Mail_Storage_Abstract
+     * @throws Exception
      */
     public function getStorage()
     {
         if (!$this->_storage) {
-
             $adapter = Mage::getStoreConfig('mzax_emarketing/inbox/storage_type');
             if (!$adapter) {
                 $adapter = $this->_storageAdapter;
@@ -122,8 +110,6 @@ class Mzax_Emarketing_Model_Inbox_Email_Pull_Storage
         return $this->_storage;
     }
 
-
-
     /**
      * Maximum size of email for retrieving.
      *
@@ -139,19 +125,18 @@ class Mzax_Emarketing_Model_Inbox_Email_Pull_Storage
         return min(1024*1024 * $size, 16777000 /* db limit */);
     }
 
-
-
-
-
     /**
      * Connect to storage and retrieve emails
      *
+     * @param Mzax_Emarketing_Model_Inbox_Email_Collector $collector
+     *
+     * @return int
+     * @throws Exception
      */
     public function pull(Mzax_Emarketing_Model_Inbox_Email_Collector $collector)
     {
         $adapter = $this->getStorage();
         $maxSize = $this->getMaxMessageSize();
-
         $messages = 0;
 
         foreach ($adapter->getUniqueId() as $uid) {
@@ -162,18 +147,20 @@ class Mzax_Emarketing_Model_Inbox_Email_Pull_Storage
                 $header  = $adapter->getRawHeader($id);
 
                 if ($size > $maxSize) {
-                    Mage::helper('mzax_emarketing')
-                        ->log("Email content size (%s) exceeded the maximum content size of %s.", $size, $maxSize);
-                }
-                else {
+                    $content = sprintf(
+                        "Email content size (%s) exceeded the maximum content size of %s.",
+                        $size,
+                        $maxSize
+                    );
+                    Mage::helper('mzax_emarketing')->log($content);
+                } else {
                     $content = $adapter->getRawContent($id);
                 }
 
                 $messages++;
                 $collector->add($header, $content);
                 $adapter->removeMessage($adapter->getNumberByUniqueId($uid));
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 if (Mage::getIsDeveloperMode()) {
                     throw $e;
                 }
@@ -183,24 +170,4 @@ class Mzax_Emarketing_Model_Inbox_Email_Pull_Storage
 
         return $messages;
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

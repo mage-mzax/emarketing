@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -18,26 +18,22 @@
  */
 
 
-
 /**
- * 
- * @author Jacob Siefer
- *
+ * Interface Mzax_Emarketing_Model_Campaign_Content
  */
 interface Mzax_Emarketing_Model_Campaign_Content
 {
-    
-    
+    /**
+     * Retrieve content cache id
+     *
+     * @return string
+     */
     public function getContentCacheId();
-    
-    
+
     /**
      * Retrieve content data
-     * 
+     *
      * @return Varien_Object
      */
     public function getMediumData();
-    
-    
-    
 }

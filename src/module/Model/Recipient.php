@@ -18,26 +18,23 @@
  */
 
 
-
-
-
 /**
- * Recipient
+ * Class Mzax_Emarketing_Model_Recipient
  *
+ * @method $this setCreatedAt(string $value)
+ * @method $this setPreparedAt(string $value)
+ * @method $this setSentAt(string $value)
+ * @method $this setViewedAt(string $value)
+ * @method $this setObjectId(string $value)
+ * @method $this setCampaignId(string $value)
+ * @method $this setVariationId(string $value)
+ * @method $this setIsMock(string $value)
+ * @method $this setAddress(string $value)
+ * @method $this setAddressId(string $value)
+ * @method $this setName(string $value)
+ * @method $this setBeaconHash(string $value)
  *
- * @method Mzax_Emarketing_Model_Recipient setCreatedAt(string $value)
- * @method Mzax_Emarketing_Model_Recipient setSentAt(string $value)
- * @method Mzax_Emarketing_Model_Recipient setViewedAt(string $value)
- * @method Mzax_Emarketing_Model_Recipient setObjectId(string $value)
- * @method Mzax_Emarketing_Model_Recipient setCampaignId(string $value)
- * @method Mzax_Emarketing_Model_Recipient setVariationId(string $value)
- * @method Mzax_Emarketing_Model_Recipient setIsMock(string $value)
- *
- * @method Mzax_Emarketing_Model_Recipient setAddress(string $value)
- * @method Mzax_Emarketing_Model_Recipient setName(string $value)
- *
- * @method Mzax_Emarketing_Model_Resource_Recipient getResource()
- *
+ * @method string getPreparedAt()
  * @method string getCreatedAt()
  * @method string getSentAt()
  * @method string getViewedAt()
@@ -46,27 +43,19 @@
  * @method string getVariationId()
  * @method string getIsMock()
  * @method string getName()
+ * @method string getAddressId()
  *
  * @method string getForceAddress()
  * @method $this setForceAddress(string $value)
  *
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
- * @version {{version}}
+ * @method Mzax_Emarketing_Model_Resource_Recipient getResource()
  */
 class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
 {
-
     const EVENT_TYPE_VIEW  = 1;
     const EVENT_TYPE_CLICK = 2;
 
-
     const BEACON_SECRET_PATH = 'mzax_emarketing/beacon_secret';
-
-
 
     /**
      * Campaign
@@ -75,8 +64,6 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
      */
     protected $_campaign;
 
-
-
     /**
      * Content Provider
      *
@@ -84,15 +71,15 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
      */
     protected $_content;
 
-
-
-
+    /**
+     * Model Constructor
+     *
+     * @return void
+     */
     protected function _construct()
     {
         $this->_init('mzax_emarketing/recipient');
     }
-
-
 
     /**
      * Little helper function to add URLs for the content
@@ -101,21 +88,22 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
      * @param string $key
      * @param string|null $routePath
      * @param array|null $routeParams
-     * @return Mzax_Emarketing_Model_Recipient
+     *
+     * @return $this
      */
     public function addUrl($key, $routePath = null, $routeParams = null)
     {
         $this->getUrls()->setData($key, $this->getUrl($routePath, $routeParams));
+
         return $this;
     }
-
-
 
     /**
      * Retrieve URL in scope of campaign sender store
      *
      * @param string|null $routePath
      * @param array|null $routeParams
+     *
      * @return  string
      */
     public function getUrl($routePath = null, $routeParams = null)
@@ -123,13 +111,9 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
         return $this->getCampaign()->getUrlModel()->getUrl($routePath, $routeParams);
     }
 
-
-
-
     /**
      * A temporary namespace for urls that can be later used
      * in emails
-     *
      *
      * @return Varien_Object
      */
@@ -140,28 +124,26 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
             $urls = new Varien_Object();
             $this->setData('url_namespace', $urls);
         }
+
         return $urls;
     }
-
-
-
-
 
     /**
      * Return true if recipient is a mock used
      * by the preview
      *
-     * @return boolean
+     * @param null|bool $flag
+     *
+     * @return bool
      */
     public function isMock($flag = null)
     {
         if (is_bool($flag)) {
             $this->setData('is_mock', $flag ? 1 : 0);
         }
-        return (boolean) $this->getData('is_mock');
+
+        return (boolean)$this->getData('is_mock');
     }
-
-
 
     /**
      * Retrieve recipient address
@@ -174,30 +156,30 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
     public function getAddress()
     {
         $address = $this->getData('address');
-        if ($address) {
-            return $address;
-        }
-        if ($this->getAddressId()) {
-            $address = Mage::getResourceSingleton('mzax_emarketing/recipient_address')->getAddress($this->getAddressId());
+        if (!$address && $this->getAddressId()) {
+            /** @var Mzax_Emarketing_Model_Resource_Recipient_Address $addressResource */
+            $addressResource = Mage::getResourceSingleton('mzax_emarketing/recipient_address');
+
+            $address = $addressResource->getAddress($this->getAddressId());
             $this->setData('address', $address);
         }
+
         return $address;
     }
 
-
-
-
     /**
+      Load by beacon hash
      *
      * @param string $hash
+     *
+     * @return $this
      */
     public function loadByBeacon($hash)
     {
-        return $this->load($hash, 'beacon_hash');
+        $this->load($hash, 'beacon_hash');
+
+        return $this;
     }
-
-
-
 
     /**
      * Retrieve beacon hash
@@ -208,23 +190,27 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
     {
         $hash = $this->getData('beacon_hash');
         if (!$hash) {
-            $hash = md5($this->getObjectId() .
-                        $this->getAddress() .
-                        $this->getCampaignId() .
-                        mt_rand(0, 99999999) .
-                        microtime());
+            $hash = md5(
+                $this->getObjectId() .
+                $this->getAddress() .
+                $this->getCampaignId() .
+                mt_rand(0, 99999999) .
+                microtime()
+            );
 
-            $hash = Mage::helper('mzax_emarketing')->compressHash($hash);
-            $this->setBeaconHash($hash);
+            /** @var Mzax_Emarketing_Helper_Data $helper */
+            $helper = Mage::helper('mzax_emarketing');
+            $hash = $helper->compressHash($hash);
+
+            $this->setData('beacon_hash', $hash);
         }
+
         return $hash;
     }
 
-
-
-
     /**
      * Get campaign content
+     *
      * This is either a campaign or a variation
      *
      * @return Mzax_Emarketing_Model_Campaign_Content
@@ -241,26 +227,22 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
         return $this->_content;
     }
 
-
-
-
     /**
      * Set content
      *
      * @param Mzax_Emarketing_Model_Campaign_Content $content
-     * @return Mzax_Emarketing_Model_Recipient
+     *
+     * @return $this
      */
     public function setContent(Mzax_Emarketing_Model_Campaign_Content $content)
     {
         $this->_content = $content;
         if ($content) {
-            $this->setVariationId((int) $content->getVariationId());
+            $this->setVariationId((int)$content->getVariationId());
         }
+
         return $this;
     }
-
-
-
 
     /**
      * Retrieve variation
@@ -277,25 +259,22 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
 
         if ($id) {
             $variation = $this->getCampaign()->getVariation($id);
-        }
-        else if ($id == 0) {
-            $variation = $this->getCampaign()->createVaration();
+        } elseif ($id == 0) {
+            $variation = $this->getCampaign()->createVariation();
             $variation->setName('Original');
-        }
-        else {
-            $variation = $this->getCampaign()->createVaration();
+        } else {
+            $variation = $this->getCampaign()->createVariation();
             $variation->setName('No Testing');
         }
 
         return $variation;
     }
 
-
-
-
-
-
-
+    /**
+     * Before model save
+     *
+     * @return void
+     */
     protected function _beforeSave()
     {
         // generate hash
@@ -307,33 +286,35 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
         }
     }
 
-
+    /**
+     * Save model
+     *
+     * @return $this
+     */
     public function save()
     {
         try {
             parent::save();
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             $this->unsetData('beacon_hash');
             $this->save();
         }
+
+        return $this;
     }
 
-
-
     /**
+     * Reload model
      *
      * @deprecated
-     * @return Mzax_Emarketing_Model_Recipient
+     * @return $this
      */
     public function reload()
     {
         $this->load($this->getId());
+
         return $this;
     }
-
-
-
 
     /**
      * Retrieve campaign
@@ -349,22 +330,20 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
         return $this->_campaign;
     }
 
-
-
     /**
      * Set campaign
      *
      * @param Mzax_Emarketing_Model_Campaign $campaign
-     * @return Mzax_Emarketing_Model_Recipient
+     *
+     * @return $this
      */
     public function setCampaign(Mzax_Emarketing_Model_Campaign $campaign)
     {
         $this->_campaign = $campaign;
         $this->setCampaignId($campaign->getId());
+
         return $this;
     }
-
-
 
     /**
      * Retrieve store id from campaign
@@ -376,7 +355,6 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
         return $this->getCampaign()->getStoreId();
     }
 
-
     /**
      * Retrieve store from campaign
      *
@@ -387,33 +365,28 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
         return $this->getCampaign()->getStore();
     }
 
-
-
     /**
      * Prepare recipient
      *
-     * @return Mzax_Emarketing_Model_Recipient
+     * @return $this
      */
     public function prepare()
     {
-        if (!$this->getIsPrepared())
-        {
-            $this->setIsPrepared(true);
+        if (!$this->isPrepared()) {
+            $this->isPrepared(true);
             $this->getCampaign()->prepareRecipient($this);
+
             Mage::dispatchEvent($this->_eventPrefix.'_prepare', $this->_getEventData());
         }
+
         return $this;
     }
-
-
-
-
-
 
     /**
      * Is sent out
      *
      * @param boolean $flag
+     *
      * @return boolean
      */
     public function isSent($flag = null)
@@ -421,15 +394,15 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
         if (is_bool($flag)) {
             $this->setSentAt($flag ? now() : null);
         }
+
         return $this->getSentAt() !== null;
     }
-
-
 
     /**
      * Is prepared
      *
      * @param boolean $flag
+     *
      * @return boolean
      */
     public function isPrepared($flag = null)
@@ -437,10 +410,9 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
         if (is_bool($flag)) {
             $this->setPreparedAt($flag ? now() : null);
         }
+
         return $this->getPreparedAt() !== null;
     }
-
-
 
     /**
      * The expire at time stamp for this recipient
@@ -454,11 +426,9 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
             $expireAt = strtotime($this->getCreatedAt()) + ($expireTime*60);
             return date(Varien_Date::DATETIME_PHP_FORMAT, $expireAt);
         }
+
         return null;
     }
-
-
-
 
     /**
      * Retrieve the number of seconds since the email
@@ -473,10 +443,9 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
             $sentAt = new Zend_Date($sentAt, Zend_Date::DATETIME);
             return Zend_Date::now()->sub($sentAt)->toValue();
         }
+
         return false;
     }
-
-
 
     /**
      * Try to loggin in customer by id
@@ -485,30 +454,34 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
      * on link click.
      *
      * @param string $customerId
+     *
      * @return boolean
      */
     public function autologin($customerId)
     {
         $enabled = Mage::getStoreConfigFlag('mzax_emarketing/autologin/enable', $this->getStoreId());
-        $expire  = (float) Mage::getStoreConfig('mzax_emarketing/autologin/expire', $this->getStoreId());
+        $expire  = (float)Mage::getStoreConfig('mzax_emarketing/autologin/expire', $this->getStoreId());
 
+        if (!$enabled) {
+            return false;
+        }
 
-        if ($enabled && $customerId && $this->getCampaign()->getAutologin()) {
-            $age = $this->getAge();
+        if (!$this->getCampaign()->getAutologin()) {
+            return false;
+        }
 
-            if ($expire <= 0 || ($age && $age < 60*60 * $expire)) {
-                /* @var $session Mage_Customer_Model_Session */
-                $session = Mage::getSingleton('customer/session');
-                if (!$session->isLoggedIn()) {
-                    return $session->loginById($customerId);
-                }
+        $age = $this->getAge();
+
+        if ($expire <= 0 || ($age && $age < 60*60 * $expire)) {
+            /* @var $session Mage_Customer_Model_Session */
+            $session = Mage::getSingleton('customer/session');
+            if (!$session->isLoggedIn()) {
+                return $session->loginById($customerId);
             }
         }
+
         return false;
     }
-
-
-
 
     /**
      * log exception
@@ -520,18 +493,12 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
     {
         /* @var $error Mzax_Emarketing_Model_Recipient_Error */
         $error = Mage::getModel('mzax_emarketing/recipient_error');
-        $error->setRecipient($this)
-              ->setException($exception)
-              ->save();
+        $error->setRecipient($this);
+        $error->setException($exception);
+        $error->save();
 
         return $error;
     }
-
-
-
-
-
-
 
     /**
      * Capture view event
@@ -544,9 +511,6 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
         return $this->_capture(self::EVENT_TYPE_VIEW, $request);
     }
 
-
-
-
     /**
      * Capture click event
      *
@@ -558,15 +522,14 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
         return $this->_capture(self::EVENT_TYPE_CLICK, $request);
     }
 
-
-
     /**
-     * Capture new recipient event and
-     * return event id
+     * Capture new recipient event and return event id
      *
      * @param int $type
      * @param Zend_Controller_Request_Http $request
-     * @return integer EventID
+     *
+     * @return int EventID
+     * @throws Exception
      */
     protected function _capture($type, Zend_Controller_Request_Http $request = null)
     {
@@ -581,22 +544,22 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
             /* @var $session Mzax_Emarketing_Model_Session */
             $session = Mage::getSingleton('mzax_emarketing/session');
 
-            $eventId = $this->getResource()->insertEvent(array(
-                'event_type'   => $type,
-                'recipient_id' => $this->getId(),
-                'ip'           => $request->getServer('REMOTE_ADDR'),
-                'useragent'    => $request->getServer('HTTP_USER_AGENT'),
-                'time_offset'  => $session->getTimeOffset()
-            ));
-
+            $eventId = $this->getResource()->insertEvent(
+                array(
+                    'event_type'   => $type,
+                    'recipient_id' => $this->getId(),
+                    'ip'           => $request->getServer('REMOTE_ADDR'),
+                    'useragent'    => $request->getServer('HTTP_USER_AGENT'),
+                    'time_offset'  => $session->getTimeOffset()
+                )
+            );
 
             if ($session->getTimeOffset() === null) {
-                // try to get the timeoffset using javascript if possible
+                // try to get the time offset using javascript if possible
                 $session->fetchTimeOffset($this->getId());
             }
             return $eventId;
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             if (Mage::getIsDeveloperMode()) {
                 throw $e;
             }
@@ -605,7 +568,4 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
 
         return false;
     }
-
-
-
 }

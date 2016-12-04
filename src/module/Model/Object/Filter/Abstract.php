@@ -18,6 +18,9 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Model_Object_Filter_Abstract
+ */
 abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarketing_Model_Object_Filter_Component
 {
 

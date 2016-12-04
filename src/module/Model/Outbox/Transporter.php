@@ -18,9 +18,14 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Model_Outbox_Transporter
+ */
 class Mzax_Emarketing_Model_Outbox_Transporter
 {
-
+    /**
+     * @var Mage_Core_Model_Config_Element
+     */
     protected $_config;
 
     /**
@@ -39,7 +44,6 @@ class Mzax_Emarketing_Model_Outbox_Transporter
         }
         $config = $config->$name;
 
-
         $transporterClass = $config->getClassName();
 
         if (!class_exists($transporterClass)) {
@@ -56,21 +60,24 @@ class Mzax_Emarketing_Model_Outbox_Transporter
         return $transporter;
     }
 
-
-
+    /**
+     * @param bool $withEmpty
+     *
+     * @return array
+     */
     public function toOptionArray($withEmpty = false)
     {
         return $this->getAllOptions($withEmpty);
     }
 
-
-
     /**
      * Retrieve All options
      *
+     * @param bool $withEmpty
+     *
      * @return array
      */
-    public function getAllOptions($withEmpty = true, $defaultValues = false)
+    public function getAllOptions($withEmpty = true)
     {
         $options = array();
 
@@ -87,11 +94,6 @@ class Mzax_Emarketing_Model_Outbox_Transporter
         return $options;
     }
 
-
-
-
-
-
     /**
      * Retrieve config
      *
@@ -104,6 +106,4 @@ class Mzax_Emarketing_Model_Outbox_Transporter
         }
         return $this->_config;
     }
-
-
 }

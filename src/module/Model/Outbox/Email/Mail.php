@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -18,46 +18,36 @@
  */
 
 
-
 /**
- * 
- * 
- * @author Jacob Siefer
- *
+ * Class Mzax_Emarketing_Model_Outbox_Email_Mail
  */
 class Mzax_Emarketing_Model_Outbox_Email_Mail
-    extends Zend_Mail 
+    extends Zend_Mail
 {
-    
-    
     const UTF8 = 'utf-8';
-    
-    
+
     /**
-     * 
      * @var Mzax_Emarketing_Model_Outbox_Email
      */
     protected $_outboxEmail;
 
-
-
-
+    /**
+     * @var string
+     */
     protected $_rawBodyHtml;
 
-
-
+    /**
+     * @var string
+     */
     protected $_rawBodyText;
 
-    
     /**
-     * 
-     * @param Mzax_Emarketing_Model_Outbox_Email $email
+     * Mzax_Emarketing_Model_Outbox_Email_Mail constructor.
      */
     public function __construct()
     {
         parent::__construct(self::UTF8);
     }
-
 
     /**
      *
@@ -65,15 +55,20 @@ class Mzax_Emarketing_Model_Outbox_Email_Mail
      * @param string $html
      * @param null $charset
      * @param string $encoding
+     *
      * @return $this
      */
     public function setBodyHtml($html, $charset = null, $encoding = Zend_Mime::ENCODING_QUOTEDPRINTABLE)
     {
         $this->_rawBodyHtml = $html;
-        return parent::setBodyHtml($html, $charset, $encoding);
+        parent::setBodyHtml($html, $charset, $encoding);
+
+        return $this;
     }
 
-
+    /**
+     * @return null|string
+     */
     public function getRawBodyHtml()
     {
         if ($this->_rawBodyHtml) {
@@ -85,24 +80,20 @@ class Mzax_Emarketing_Model_Outbox_Email_Mail
         return null;
     }
 
-
-
-
-
-
-
     /**
-     * @param string $html
+     * @param string $txt
      * @param null $charset
      * @param string $encoding
+     *
      * @return $this
      */
     public function setBodyText($txt, $charset = null, $encoding = Zend_Mime::ENCODING_QUOTEDPRINTABLE)
     {
         $this->_rawBodyText = $txt;
-        return parent::setBodyText($txt, $charset, $encoding);
-    }
+        parent::setBodyText($txt, $charset, $encoding);
 
+        return $this;
+    }
 
     /**
      *
@@ -120,38 +111,33 @@ class Mzax_Emarketing_Model_Outbox_Email_Mail
         return null;
     }
 
-
-
-
     /**
      * Set outbox email object
-     * 
+     *
      * @param Mzax_Emarketing_Model_Outbox_Email $email
+     *
      * @return Mzax_Emarketing_Model_Outbox_Email_Mail
      */
     public function setOutboxEmail(Mzax_Emarketing_Model_Outbox_Email $email)
     {
         $this->_outboxEmail = $email;
+
         return $this;
     }
-    
-    
-    
+
     /**
      * Retrieve outbox email object
-     * 
+     *
      * @return Mzax_Emarketing_Model_Outbox_Email
      */
     public function getOutboxEmail()
     {
         return $this->_outboxEmail;
     }
-    
-    
-    
+
     /**
      * Retrieve recipient
-     * 
+     *
      * @return Mzax_Emarketing_Model_Recipient|NULL
      */
     public function getRecipient()
@@ -161,6 +147,4 @@ class Mzax_Emarketing_Model_Outbox_Email_Mail
         }
         return null;
     }
-    
-    
 }

@@ -17,27 +17,26 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
+/**
+ * Class Mzax_Emarketing_Model_Form_Element_Ace
+ */
 class Mzax_Emarketing_Model_Form_Element_Ace extends Varien_Data_Form_Element_Abstract
 {
-
-
-
+    /**
+     * @return string
+     */
     public function getEditorClass()
     {
         return 'mzax.ui.TextEditor';
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getTypeClass()
     {
         return 'mage-ace-editor';
     }
-
-
-
-
 
     /**
      * Retrieve editor options
@@ -58,9 +57,9 @@ class Mzax_Emarketing_Model_Form_Element_Ace extends Varien_Data_Form_Element_Ab
         return $options;
     }
 
-
-
-
+    /**
+     * @return string
+     */
     public function getElementHtml()
     {
         $helper = Mage::helper('core');
@@ -113,7 +112,11 @@ JS;
         return $html;
     }
 
-
+    /**
+     * @param $jsId
+     *
+     * @return string
+     */
     public function getJavaScript($jsId)
     {
         $options = Zend_Json::encode($this->getEditorOptions());
@@ -148,16 +151,17 @@ JS;
 JS;
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getExtaScript()
     {
         return '';
     }
 
-
-
-
+    /**
+     * @return array
+     */
     public function getSnippets()
     {
         $data = $this->getConfig('snippets');
@@ -168,7 +172,6 @@ JS;
         if (!$data instanceof Mzax_Emarketing_Model_Medium_Email_Snippets) {
             $data = new Mzax_Emarketing_Model_Medium_Email_Snippets;
         }
-
 
         /* @var $variable Mage_Core_Model_Variable */
         foreach (Mage::getResourceModel('core/variable_collection') as $variable) {
@@ -182,7 +185,6 @@ JS;
                 'shortcut'    => null
             ));
         }
-
 
         $storeContactVariabls = Mage::getModel('core/source_email_variables')->toOptionArray(false);
         foreach ($storeContactVariabls as $var) {
@@ -227,12 +229,8 @@ JS;
             ));
         }
 
-
         return $data->toArray();
     }
-
-
-
 
     /**
      * Prepare Html buttons for additional WYSIWYG features
@@ -287,12 +285,8 @@ JS;
             }
         }
 
-
         return $buttonsHtml;
     }
-
-
-
 
     /**
      * Return custom button HTML
@@ -314,10 +308,6 @@ JS;
         return $html;
     }
 
-
-
-
-
     /**
      * Editor config retriever
      *
@@ -326,7 +316,7 @@ JS;
      */
     public function getConfig($key = null, $default = null)
     {
-        if ( !($this->_getData('config') instanceof Varien_Object) ) {
+        if (!($this->_getData('config') instanceof Varien_Object)) {
             $config = new Varien_Object();
             $this->setConfig($config);
         }
@@ -345,8 +335,6 @@ JS;
         return $this->_getData('config');
     }
 
-
-
     /**
      * Is ACE editor enabled
      *
@@ -358,9 +346,9 @@ JS;
         if (!$enabled) {
             return 0;
         }
-        return (int) $this->getConfig('enable_ace', 1);
-    }
 
+        return (int)$this->getConfig('enable_ace', 1);
+    }
 
     /**
      * Is CKEditor enabled
@@ -373,15 +361,15 @@ JS;
         if (!$enabled) {
             return 0;
         }
-        return (int) $this->getConfig('enable_ckeditor', 1);
+
+        return (int)$this->getConfig('enable_ckeditor', 1);
     }
-
-
 
     /**
      * Translate string using defined helper
      *
      * @param string $string String to be translated
+     *
      * @return string
      */
     public function translate($string)

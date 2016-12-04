@@ -17,18 +17,17 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
 /**
- *
- * @author Jacob Siefer
- *
+ * Class Mzax_Emarketing_Model_Object_Filter_Address_Country
  */
 class Mzax_Emarketing_Model_Object_Filter_Address_Country
     extends Mzax_Emarketing_Model_Object_Filter_Column
 {
-
-
+    /**
+     * @var string
+     */
     protected $_formText = '%s %s %s.';
-
 
     /**
      *
@@ -36,22 +35,23 @@ class Mzax_Emarketing_Model_Object_Filter_Address_Country
      */
     protected $_requireBinding = 'country_id';
 
-
-
+    /**
+     * @var string
+     */
     protected $_label = 'Country';
 
-
+    /**
+     * @var string
+     */
     protected $_inputType = 'multiselect';
 
-
-
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return "Address | Country";
     }
-
-
-
 
     /**
      * Retrieve all value options as hash
@@ -71,9 +71,4 @@ class Mzax_Emarketing_Model_Object_Filter_Address_Country
 
         return $options;
     }
-
-
-
-
-
 }

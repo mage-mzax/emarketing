@@ -20,6 +20,8 @@
 
 /**
  * Class Mzax_Emarketing_Model_Report_Seeder
+ *
+ * Test class to generated sample data
  */
 class Mzax_Emarketing_Model_Report_Seeder
 {
@@ -1268,8 +1270,7 @@ UA;
         }
         if (is_int($indent)) {
             $this->_currentIndent = $indent;
-        }
-        elseif (is_string($indent)) {
+        } elseif (is_string($indent)) {
             $indent = $this->_currentIndent + $indent;
         }
         echo str_repeat("    ", $indent) . $message . "\n";
@@ -1280,14 +1281,9 @@ UA;
 
 
 
-
-
-
     protected $_destinationTable;
 
     protected $_tempTableName = 'mzax_report_tmp';
-
-
 
 
     /**
@@ -1302,10 +1298,8 @@ UA;
         $adapter->query("DROP TABLE IF EXISTS `temp_entities`");
         $adapter->query("CREATE TABLE `temp_entities` (`entity_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY) /*ENGINE MEMORY*/");
 
-
-
         $inserts = array();
-        while(--$count > -1) {
+        while (--$count > -1) {
             $inserts[] = "(NULL)";
         }
 
@@ -1319,8 +1313,7 @@ UA;
 
         $this->log(sprintf("Insert start entites (%ssec)", $duration));
 
-
-        while(--$limit > -1) {
+        while (--$limit > -1) {
             $sql = "INSERT INTO `temp_entities` (`entity_id`)\nSELECT NULL AS `entity_id` FROM `temp_entities`";
             $start =  microtime(true);
             $adapter->query($sql);
@@ -1328,21 +1321,13 @@ UA;
 
             $this->log(sprintf("Insert select entites (%ssec)", $duration));
         }
-
-
-
     }
-
-
-
-
-
 
     /**
      * Generate Temporary Timeline table
      *
-     * @param string $startDate
-     * @param string $endDate
+     * @param string|DateTime $startDate
+     * @param string|DateTime $endDate
      */
     protected function _generateTimeline($startDate = '2006-01-01', $endDate = null)
     {
@@ -1352,28 +1337,18 @@ UA;
         $adapter->query("DROP TABLE IF EXISTS `temp_range`");
         $adapter->query("CREATE TEMPORARY TABLE `temp_range` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `date` DATE NOT NULL UNIQUE KEY) ENGINE MEMORY");
 
-        $data = array();
         $date = clone $startDate;
         $day  = new DateInterval('P1D');
 
         $inserts = array();
         do {
             $inserts[] = "('{$date->format("Y-m-d")}')";
-        }
-        while($date->add($day) <= $endDate);
+        } while ($date->add($day) <= $endDate);
 
         $inserts = implode(",\n", $inserts);
         $sql = "INSERT INTO `temp_range` (`date`) VALUES\n$inserts";
         $adapter->query($sql);
     }
-
-
-
-
-
-
-
-
 
     /**
      * Create Temp Table from specified Table
@@ -1392,9 +1367,6 @@ UA;
 
         $this->log(4)->log("\n\n\nStart Preparing Data for $fromTable");
     }
-
-
-
 
     /**
      * Commit all insert data from temp table to destination table
@@ -1420,12 +1392,6 @@ UA;
         }
     }
 
-
-
-
-
-
-
     /**
      * Generate temporary data for the current destination table
      *
@@ -1438,7 +1404,7 @@ UA;
         $adapter = $this->getWriteAdapter();
 
         $select = $adapter->select();
-        $select->from('temp_range' , null);
+        $select->from('temp_range', null);
         $select->where('`date` >= ?', $start);
         $select->where('`date` <= ?', $end);
 
@@ -1448,11 +1414,9 @@ UA;
         foreach ($values as $key => $value) {
             if ($value instanceof Zend_Db_Expr) {
                 $columns[$key] = $value;
-            }
-            else if ($value === null) {
+            } elseif ($value === null) {
                 $columns[$key] = $null;
-            }
-            else if (preg_match('/RANGE\(\s*([0-9]+)\s*,\s*([0-9]+)\s*(?:,\s*([0-9]+))?\)/i', $value, $match)) {
+            } elseif (preg_match('/RANGE\(\s*([0-9]+)\s*,\s*([0-9]+)\s*(?:,\s*([0-9]+))?\)/i', $value, $match)) {
                 $min = $match[1];
                 $scale = $match[2] - $min;
 
@@ -1462,11 +1426,9 @@ UA;
                 }
 
                 $columns[$key] = new Zend_Db_Expr("FLOOR({$min} + (RAND() * $scale))");
-            }
-            else if ($value === 'DATE()') {
+            } elseif ($value === 'DATE()') {
                 $columns[$key] = 'temp_range.date';
-            }
-            else {
+            } else {
                 $columns[$key] = new Zend_Db_Expr($value);
             }
         }
@@ -1481,8 +1443,6 @@ UA;
 
         $this->log(sprintf('Generation of %s values took %01.4fsec', $stmt->rowCount(), $duration), '+1');
     }
-
-
 
     /**
      * Retrieve table name
@@ -1500,8 +1460,7 @@ UA;
         if ($alias) {
             return array($alias => $table);
         }
+
         return $table;
     }
-
-
 }

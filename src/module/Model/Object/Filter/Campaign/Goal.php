@@ -27,47 +27,53 @@
 class Mzax_Emarketing_Model_Object_Filter_Campaign_Goal
     extends Mzax_Emarketing_Model_Object_Filter_Abstract
 {
-
-
     const ACTION_CLICKED  = 'clicked';
     const ACTION_VIEWED   = 'viewed';
     const ACTION_RECEIVED = 'recieved';
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Filter_Component $parent
+     *
+     * @return bool
+     */
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
         return $parent->getQuery()->hasAllBindings('recipient_id', 'goal_time', 'recipient_sent_at');
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return "Goal | Occurred after recipient sent/viewed/click campaign";
     }
 
-
+    /**
+     * @param Mzax_Emarketing_Db_Select $query
+     */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
         $action = $this->getDataSetDefault('action');
 
-        switch($action) {
+        switch ($action) {
             case self::ACTION_CLICKED:
             case self::ACTION_VIEWED:
-                switch($action) {
+                switch ($action) {
                     case self::ACTION_CLICKED:
                         $eventType = Mzax_Emarketing_Model_Recipient::EVENT_TYPE_CLICK;
                         break;
                     case self::ACTION_VIEWED:
+                    default:
                         $eventType = Mzax_Emarketing_Model_Recipient::EVENT_TYPE_VIEW;
                         break;
                 }
-
-                $query->joinTable(array('recipient_id', 'event_type' => $eventType), 'recipient_event', 'event')->group();
-
-                //$select->join($this->_getTable('recipient_event', 'event'), "`event`.`recipient_id` = $recipientId AND `event`.`event_type` = $eventType", null);
+                $query->joinTable(
+                    array('recipient_id', 'event_type' => $eventType),
+                    'recipient_event',
+                    'event'
+                );
+                $query->group();
 
                 $eventTime = '`event`.`captured_at`';
                 $timeLimit = $this->getTimeExpr('offset', $eventTime);
@@ -83,19 +89,21 @@ class Mzax_Emarketing_Model_Object_Filter_Campaign_Goal
 
         }
         $query->group();
-        //die($query);
     }
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
+     */
     protected function _prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::_prepareCollection($collection);
+
         $collection->addField('goal_time');
     }
 
-
+    /**
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
         parent::prepareGridColumns($grid);
@@ -107,13 +115,6 @@ class Mzax_Emarketing_Model_Object_Filter_Campaign_Goal
         ));
     }
 
-
-
-
-
-
-
-
     /**
      * html for settings in option form
      *
@@ -121,14 +122,16 @@ class Mzax_Emarketing_Model_Object_Filter_Campaign_Goal
      */
     protected function prepareForm()
     {
-        return $this->__("If goal occurred no later then %s after recipient %s the campaign.",
+        return $this->__(
+            "If goal occurred no later then %s after recipient %s the campaign.",
             $this->getTimeHtml('offset'),
             $this->getSelectElement('action')->toHtml()
         );
     }
 
-
-
+    /**
+     * @return string[]
+     */
     public function getActionOptions()
     {
         return array(
@@ -137,8 +140,4 @@ class Mzax_Emarketing_Model_Object_Filter_Campaign_Goal
             self::ACTION_RECEIVED => $this->__('recieved'),
         );
     }
-
-
-
-
 }

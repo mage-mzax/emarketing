@@ -18,28 +18,33 @@
 
 
 /**
+ * Class Mzax_Emarketing_Block_Editable
  *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * @method string|null getFormat()
+ * @method $this setFormat(string $value)
  */
 class Mzax_Emarketing_Block_Editable extends Mage_Core_Block_Abstract
     implements Varien_Data_Form_Element_Renderer_Interface
 {
+    /**
+     * Render form element
+     *
+     * @param Varien_Data_Form_Element_Abstract $element
+     *
+     * @return string
+     */
     public function render(Varien_Data_Form_Element_Abstract $element)
     {
         $element->addClass('element-value-changer');
 
         $valueName = $element->getValueName();
-        if ($valueName==='') {
+        if ($valueName === '') {
             $valueName = '...';
         }
 
         $valueLabel = htmlspecialchars(Mage::helper('core/string')->truncate($valueName, 150, '...'));
 
-        switch($this->getFormat())
-        {
+        switch ($this->getFormat()) {
             case 'text':
                 $html = $valueLabel;
                 break;
@@ -48,6 +53,7 @@ class Mzax_Emarketing_Block_Editable extends Mage_Core_Block_Abstract
                 $html = '<strong>' . $valueLabel . '</strong>' ;
                 break;
 
+            case 'form':
             default:
                 if ($element->getIsMeta()) {
                     $html = '<input type="hidden" class="hidden" id="'.$element->getHtmlId().'" name="'.$element->getName().'" value="'.$element->getValue().'"/>';

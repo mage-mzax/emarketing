@@ -22,6 +22,9 @@
  */
 class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
 {
+    const DAY_START = 1;
+    const DAY_END = 2;
+
     /**
      * @var string[][]
      */
@@ -92,12 +95,9 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
     public function lock($name, $timeout = 5, $maxRunTime = 3600)
     {
         $filename = Mage::getBaseDir('tmp') . DS . 'mzax_emarketing_' . $name . '.lock';
+        $lock = Mzax_Once::createLock($filename, $timeout, $maxRunTime);
 
-        if ($lock = Mzax_Once::lock($filename, $timeout, $maxRunTime)) {
-            return $lock;
-        }
-
-        return false;
+        return $lock;
     }
 
     /**
@@ -162,8 +162,10 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getStoreOptions()
     {
-        /* Mage_Adminhtml_Model_System_Config_Source_Store */
-        return Mage::getModel('adminhtml/system_config_source_store')->toOptionArray();
+        /** @var Mage_Adminhtml_Model_System_Config_Source_Store $source */
+        $source = Mage::getSingleton('adminhtml/system_config_source_store');
+
+        return $source->toOptionArray();
     }
 
     /**
@@ -173,8 +175,10 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getWebsitesOptions()
     {
-        /* Mage_Adminhtml_Model_System_Config_Source_Website */
-        return Mage::getModel('adminhtml/system_config_source_website')->toOptionArray();
+        /** @var Mage_Adminhtml_Model_System_Config_Source_Website $source */
+        $source = Mage::getSingleton('adminhtml/system_config_source_website');
+
+        return $source->toOptionArray();
     }
 
     /**
@@ -228,6 +232,8 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * Retrieve operator options
+     *
+     * @param string[] $filter
      *
      * @return string[]
      */
@@ -285,7 +291,7 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return Zend_Date
      */
-    public function calcDate($value, $unit, $roundDate = null, $sign = '-')
+    public function calcDate($value, $unit, $roundDate = 0, $sign = '-')
     {
         // validate unit
         if (!key_exists($unit, $this->getTimeUnitOptions())) {

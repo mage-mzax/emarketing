@@ -22,33 +22,29 @@
  */
 class Mzax_Emarketing_Model_Object_Filter implements Mage_Eav_Model_Entity_Attribute_Source_Interface
 {
-
     /**
-     *
      * @var Mage_Core_Model_Config_Element
      */
     protected $_config;
 
-
-
     /**
-     *
-     * @var array
+     * @var Mzax_Emarketing_Model_Object_Filter[]
      */
     protected $_filters;
 
-
     /**
+     * Create filter by name or return null
+     * if filter is not found
      *
      * @param string $name
-     * @return Mzax_Emarketing_Model_Object_Filter_Abstract
+     *
+     * @return Mzax_Emarketing_Model_Object_Filter_Abstract|null
      */
     public function factory($name)
     {
         $config = $this->getConfig();
         if (!isset($config->$name)) {
-        	return null;
-            //throw new Exception("No such  filter ({$name}) found");
+            return null;
         }
         $config = $config->$name;
         $class  = $config->getClassName();
@@ -58,21 +54,16 @@ class Mzax_Emarketing_Model_Object_Filter implements Mage_Eav_Model_Entity_Attri
         return $instance;
     }
 
-
-
-
-
-
     /**
      * Retrieve All options
      *
-     * @return array
+     * @param bool $withEmpty
+     *
+     * @return string[][]
      */
-    public function getAllOptions($withEmpty = true, $defaultValues = false)
+    public function getAllOptions($withEmpty = true)
     {
         $options = array();
-
-        /* @var $filter Mzax_Emarketing_Model_Object_Filter_Abstract */
         foreach ($this->getFilters() as $name => $filter) {
             $options[] = array(
                 'value' => $name,
@@ -86,15 +77,10 @@ class Mzax_Emarketing_Model_Object_Filter implements Mage_Eav_Model_Entity_Attri
         return $options;
     }
 
-
-
-
-
-
     /**
-     * Retrieve all filters
+     * Retrieve all available filters
      *
-     * @return array
+     * @return Mzax_Emarketing_Model_Object_Filter_Abstract[]
      */
     public function getFilters()
     {
@@ -108,15 +94,12 @@ class Mzax_Emarketing_Model_Object_Filter implements Mage_Eav_Model_Entity_Attri
         return $this->_filters;
     }
 
-
-
-
-
     /**
      * Retrieve Option value text
      *
      * @param string $value
-     * @return mixed
+     *
+     * @return string|false
      */
     public function getOptionText($value)
     {
@@ -124,10 +107,9 @@ class Mzax_Emarketing_Model_Object_Filter implements Mage_Eav_Model_Entity_Attri
         if (isset($options[$value])) {
             return $options[$value]->getTitle();
         }
+
         return false;
     }
-
-
 
     /**
      * Retrieve email marketing collection config
@@ -139,9 +121,7 @@ class Mzax_Emarketing_Model_Object_Filter implements Mage_Eav_Model_Entity_Attri
         if (!$this->_config) {
             $this->_config = Mage::getConfig()->getNode('global/mzax_emarketing/filters');
         }
+
         return $this->_config;
     }
-
-
-
 }

@@ -26,7 +26,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Campaign_Recipient_Abstract
     /**
      * @param Mzax_Emarketing_Model_Object_Filter_Component $parent
      *
-     * @return mixed
+     * @return bool
      */
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {

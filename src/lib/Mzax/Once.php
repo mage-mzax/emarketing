@@ -185,6 +185,7 @@ class Mzax_Once
      * @param array $arguments
      *
      * @return mixed
+     * @deprecated
      */
     public function __call($name, $arguments)
     {
@@ -199,6 +200,7 @@ class Mzax_Once
      * @param array $arguments
      *
      * @return mixed
+     * @deprecated
      */
     public static function __callStatic($name, $arguments)
     {

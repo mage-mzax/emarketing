@@ -22,17 +22,12 @@
  */
 abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarketing_Model_Object_Filter_Component
 {
-
-
-
     /**
      * Child Filters
      *
-     * @var array
+     * @var Mzax_Emarketing_Model_Object_Filter_Abstract[]
      */
     protected $_filters = array();
-
-
 
     /**
      *
@@ -40,30 +35,32 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
      */
     protected $_formHtml;
 
-
+    /**
+     * @var Varien_Data_Form
+     */
+    protected $_form;
 
     /**
-     * Unique filter type id
+     * Mzax_Emarketing_Model_Object_Filter_Abstract constructor.
      *
-     * @var string
+     * @param null $config
      */
-    protected $_type;
-
-
-
-
-
     public function __construct($config = null)
     {
-        $this->_construct();
+        parent::__construct();
 
         if ($config instanceof Mage_Core_Model_Config_Element) {
             $this->_prepareFilter($config);
         }
     }
 
-
-
+    /**
+     * Prepare filter
+     *
+     * @param Mage_Core_Model_Config_Element $config
+     *
+     * @return void
+     */
     protected function _prepareFilter(Mage_Core_Model_Config_Element $config)
     {
         $this->_type = $config->getName();
@@ -71,21 +68,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         Mage::dispatchEvent("mzax_emarketing_email_filter_prepare", array('filter' => $this));
         Mage::dispatchEvent("mzax_emarketing_email_filter_prepare_" . $this->_type, array('filter' => $this));
     }
-
-
-    public function setType($type)
-    {
-        $this->_type = $type;
-        return $this;
-    }
-
-
-    public function getType()
-    {
-        return $this->_type;
-    }
-
-
 
     /**
      * Retrieve object
@@ -97,13 +79,12 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return $this->getParentObject();
     }
 
-
-
     /**
      * Set ID
      *
      * @param string $id
-     * @return Mzax_Emarketing_Model_Object_Filter_Component
+     *
+     * @return $this
      */
     public function setId($id)
     {
@@ -113,37 +94,50 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
                 $filter->setId($this->_id . '--' . ($i+1));
             }
         }
+
         return $this;
     }
-
 
     /**
      * Add child filter
      *
-     * @param mixed $param
+     * @param string|array|Mzax_Emarketing_Model_Object_Filter_Abstract $param
+     * @param bool $quite
+     *
      * @return Mzax_Emarketing_Model_Object_Filter_Abstract
+     * @throws Mage_Exception
      */
     public function addFilter($param, $quite = true)
     {
         if (is_string($param)) {
             $filter = self::getFilterFactory()->factory($param);
             if (!$filter) {
-                if (!$quite) {
-                    throw new Mage_Exception(Mage::helper('mzax_emarketing')->__('Failed to initialise filter with type “%s”. This filter might not be installed on your system.', $filter['type']));
+                if ($quite) {
+                    return null;
                 }
-                return null;
+
+                throw new Mage_Exception(
+                    Mage::helper('mzax_emarketing')->__(
+                        'Failed to initialise filter with type “%s”. This filter might not be installed on your system.',
+                        $param
+                    )
+                );
             }
-        }
-        else if (is_array($param) && isset($param['type'])) {
+        } elseif (is_array($param) && isset($param['type'])) {
             $filter = self::getFilterFactory()->factory($param['type']);
             if (!$filter) {
-                if (!$quite) {
-                    throw new Mage_Exception(Mage::helper('mzax_emarketing')->__('Failed to initialise filter with type “%s”. This filter might not be installed on your system.', $filter['type']));
+                if ($quite) {
+                    return null;
                 }
-                return null;
+
+                throw new Mage_Exception(
+                    Mage::helper('mzax_emarketing')->__(
+                        'Failed to initialise filter with type “%s”. This filter might not be installed on your system.',
+                        $param['type']
+                    )
+                );
             }
-        }
-        else {
+        } else {
             $filter = $param;
         }
 
@@ -152,10 +146,16 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         }
 
         if (!$this->acceptFilter($filter)) {
-            if (!$quite) {
-                throw new Mage_Exception(Mage::helper('mzax_emarketing')->__('Filter of type “%s” does not allow child of type %s.', $this->getType(), $filter->getType()));
+            if ($quite) {
+                return null;
             }
-            return null;
+            throw new Mage_Exception(
+                Mage::helper('mzax_emarketing')->__(
+                    'Filter of type “%s” does not allow child of type %s.',
+                    $this->getType(),
+                    $filter->getType()
+                )
+            );
         }
 
         $this->_filters[] = $filter->setParent($this);
@@ -168,22 +168,20 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return $filter;
     }
 
-
-
     /**
-     * Retrieve all filters
+     * Retrieve all child filters
      *
-     * @return array
+     * @return Mzax_Emarketing_Model_Object_Filter_Abstract[]
      */
     public function getFilters()
     {
         return $this->_filters;
     }
 
-
-
     /**
      * Retrieve filter by index
+     *
+     * @param int $index
      *
      * @return Mzax_Emarketing_Model_Object_Filter_Abstract
      */
@@ -192,10 +190,9 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         if (isset($this->_filters[$index])) {
             return $this->_filters[$index];
         }
+
         return null;
     }
-
-
 
     /**
      * Retrieve all filter options for this filter
@@ -207,9 +204,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return array($this->getType() => $this->getTitle());
     }
 
-
-
-
     /**
      * Retrieve Varien Data Form
      *
@@ -217,6 +211,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
      */
     public function getForm()
     {
+        /** @var Mzax_Emarketing_Block_Editable $elementRenderer */
         $elementRenderer = Mage::getBlockSingleton('mzax_emarketing/editable');
 
         $prefix = $this->getRoot()->getFormPrefix();
@@ -225,60 +220,63 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         $form->setHtmlIdPrefix("{$prefix}__{$this->getId()}__");
         $form->setFieldNameSuffix("{$prefix}[{$this->getId()}]");
         $form->setElementRenderer($elementRenderer);
+
         return $form;
     }
 
-
-
-
+    /**
+     * Reset filter
+     *
+     * @return $this
+     */
     public function reset()
     {
         $this->unsetData();
         $this->_filters = array();
         $this->_formHtml = null;
+
         return $this;
     }
-
-
-
-
 
     /**
      * Retrieve data
      *
      * @param string $key
      * @param string $default
+     *
      * @return string
      */
     public function getDataSetDefault($key, $default = null)
     {
-        // check for default constant
+        // check for default class constant
         if ($default === null) {
             $const = get_class($this) . '::DEFAULT_' . strtoupper($key);
             if (defined($const)) {
                 $default = constant($const);
             }
         }
+
         return parent::getDataSetDefault($key, $default);
     }
 
-
-
-
+    /**
+     * Prepare parameters
+     *
+     * @return void
+     */
     public function prepareParams()
-    {}
-
-
-
+    {
+    }
 
     /**
      * Load filters from data
      *
      * @param mixed $data
-     * @param boolean $quite Throw en exception if a filter was not avaialble
-     * @throws Exception
+     * @param boolean $quite Throw en exception if a filter was not available
+     *
+     * @return $this
      * @throws Mage_Exception
-     * @return Mzax_Emarketing_Model_Object_Filter_Abstract
+     * @throws Exception
      */
     public function load($data, $quite = true)
     {
@@ -292,8 +290,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         if (is_string($data)) {
             try {
                 $data = Zend_Json::decode($data);
-            }
-            catch(Zend_Json_Exception $e) {
+            } catch (Zend_Json_Exception $e) {
                 throw new Exception("Failed to decode filter json: {$e->getMessage()}", 0, $e);
             }
         }
@@ -309,10 +306,9 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
             $this->prepareParams();
             $this->setDataChanges(false);
         }
+
         return $this;
     }
-
-
 
     /**
      * Load data from flat post array
@@ -354,19 +350,18 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
      * }
      *
      * @param array $data
-     * @return Mzax_Emarketing_Model_Object_Filter_Abstract
+     *
+     * @return $this
      */
     public function loadFlatArray(array $data)
     {
         $filters = array();
 
-        foreach ($data as $id => $filterData)
-        {
+        foreach ($data as $id => $filterData) {
             $path = explode('--', $id);
             $list =& $filters;
 
-            while(count($path) > 1) {
-
+            while (count($path) > 1) {
                 $id = array_shift($path);
                 if (!isset($list[$id])) {
                     continue 2;
@@ -383,17 +378,13 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
 
         if (!empty($filters)) {
             $this->load(array_shift($filters));
-        }
-        else {
+        } else {
             $this->setData(array());
             $this->prepareParams();
         }
 
         return $this;
     }
-
-
-
 
     /**
      * Retrieve filter data as array
@@ -412,10 +403,9 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
 
         // not required for save
         unset($data['new_child']);
+
         return $data;
     }
-
-
 
     /**
      * Retrieve filter data as json
@@ -427,9 +417,8 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return Zend_Json::encode($this->asArray());
     }
 
-
     /**
-     * Retreive data for export
+     * Retrieve data for export
      *
      * @return array
      */
@@ -438,27 +427,26 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return $this->asArray();
     }
 
-
-
-
     /**
      * Retrieve human readable filter text
      *
-     * @param format
-     * @return mixed
+     * @param string $format
+     *
+     * @return string
      */
     public function asString($format = 'html')
     {
         $form = $this->getForm();
-        $form->getElementRenderer()->setFormat($format);
+        $renderer = $form->getElementRenderer();
+
+        if ($renderer instanceof Mzax_Emarketing_Block_Editable) {
+            $renderer->setFormat($format);
+        }
 
         $html = $this->_getFormHtml($form);
 
         return $html;
     }
-
-
-
 
     /**
      * Retrieve filter as html
@@ -493,10 +481,12 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return $html;
     }
 
-
-
-
-    public final function getFormHtml()
+    /**
+     * Retrieve form html
+     *
+     * @return string
+     */
+    public function getFormHtml()
     {
         $form = $this->getForm();
 
@@ -514,36 +504,53 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return $html;
     }
 
-
-
+    /**
+     * @param Varien_Data_Form $form
+     *
+     * @return string
+     */
     protected function _getFormHtml(Varien_Data_Form $form)
     {
         $this->_form = $form;
+
         return $this->prepareForm();
     }
 
+    /**
+     * Prepare form
+     *
+     * @return string
+     */
     protected function prepareForm()
     {
         return '';
     }
 
-
+    /**
+     * Retrieve chooser container html
+     *
+     * @return string
+     */
     public function getChooserContainerHtml()
     {
-        $url = $this->getChooserUrl();
+        $url = $this->getData('chooser_url');
         if ($url) {
-            $url = Mage::helper('adminhtml')->getUrl($url);
+            /** @var Mage_Adminhtml_Helper_Data $helper */
+            $helper = Mage::helper('adminhtml');
+            $url = $helper->getUrl($url);
+
             return '<div class="rule-chooser" url="' . $url . '"></div>';
         }
+
         return '';
     }
 
-
-
-    abstract function getTitle();
-
-
-
+    /**
+     * Retrieve title
+     *
+     * @return string
+     */
+    abstract public function getTitle();
 
     /**
      * Run filter query and return result
@@ -556,38 +563,45 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
     public function runFilterQuery()
     {
         $select = $this->getSelect();
-        $result = $this->_getReadAdapter()->query($select->assembleAll());
+
+        $sql = $select->assembleAll();
+        $result = $this->_getReadAdapter()->query($sql);
 
         return $result;
     }
 
-
-
+    /**
+     * @param $provider
+     */
     public function beforeLoad($provider)
-    {}
+    {
+    }
 
-
-
+    /**
+     * @param $provider
+     */
     public function afterLoad($provider)
-    {}
+    {
+    }
 
-
-
-
-
-
-
-
-
+    /**
+     * Get add sub-filter link html
+     *
+     * @return string
+     */
     protected function getAddLinkHtml()
     {
         $src = Mage::getDesign()->getSkinUrl('mzax/images/add-tiny.png');
         $html = '<img src="' . $src . '" class="rule-param-add v-middle" alt="" title="' . $this->__('Add Filter') . '"/>';
+
         return $html;
     }
 
-
-
+    /**
+     * Get remove filter link html
+     *
+     * @return string
+     */
     protected function getRemoveLinkHtml()
     {
         $src = Mage::getDesign()->getSkinUrl('mzax/images/delete-tiny.png');
@@ -595,8 +609,11 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return $html;
     }
 
-
-
+    /**
+     * Add choose filter link html
+     *
+     * @return string
+     */
     public function getChooserTriggerHtml()
     {
         $src = Mage::getDesign()->getSkinUrl('images/rule_chooser_trigger.gif');
@@ -604,31 +621,23 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return $html;
     }
 
-
-
-
     /**
      * Prepare recipient collection
+     *
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
      *
      * @return void
      */
     protected function _prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::_prepareCollection($collection);
-        //$collection->applyFilter($this);
     }
-
-
-
 
     //--------------------------------------------------------------------------
     //
     //  Quick Helpers
     //
     //--------------------------------------------------------------------------
-
-
-
 
     /**
      * Helper for new child filter element
@@ -639,15 +648,13 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
     {
         $path    = $this->getTypePath() . '-';
 
-
         $filters = array();
         foreach ($this->getAvailableFilters() as $type => $title) {
-
             $title = $this->_explode($title, '|');
 
             $list =& $filters;
 
-            while(count($title) > 1) {
+            while (count($title) > 1) {
                 $n = array_shift($title);
                 if (!isset($list[$n])) {
                     $list[$n] = array('label' => $n, 'value' => array());
@@ -667,52 +674,55 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         ))->setRenderer(Mage::getBlockSingleton('rule/newchild'));
     }
 
-
-
     /**
      * Helper for simple input element
      *
      * @param string $key
+     * @param null $default
+     *
      * @return Varien_Data_Form_Element_Abstract
      */
     protected function getInputElement($key, $default = null)
     {
         $value = (string) $this->getDataSetDefault($key, $default);
 
-        return $this->getForm()->addField($key, 'text',array(
+        return $this->getForm()->addField($key, 'text', array(
             'name'       => $key,
             'value_name' => $value,
             'value'      => $value
         ));
     }
 
-
-
     /**
      * Add hidden input field
      *
      * @param string $name
      * @param string $value
+     *
      * @return Varien_Data_Form_Element_Abstract
      */
     protected function getHiddenField($name, $value)
     {
-        return $this->getForm()->addField($name, 'hidden', array(
-            'name'    => $name,
-            'class'   => 'hidden',
-            'no_span' => true,
-            'is_meta' => true,
-            'value'   => $value
-        ));
+        return $this->getForm()->addField(
+            $name,
+            'hidden',
+            array(
+                'name'    => $name,
+                'class'   => 'hidden',
+                'no_span' => true,
+                'is_meta' => true,
+                'value'   => $value
+            )
+        );
     }
-
-
 
     /**
      * Helper for simple select element
      *
      * @param string $key
+     * @param null $default
      * @param array $options
+     *
      * @return Varien_Data_Form_Element_Abstract
      */
     protected function getSelectElement($key, $default = null, $options = null)
@@ -730,22 +740,20 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
             $valueName = $options[$value];
         }
 
-        return $this->getForm()->addField($key, 'select',array(
+        return $this->getForm()->addField($key, 'select', array(
             'name'       => $key,
             'value_name' => ($valueName ? $valueName : '...'),
-            'value'		 => $value,
-            'values'	 => $options
+            'value'      => $value,
+            'values'     => $options
         ));
     }
-
-
-
 
     /**
      * Helper for simple select element
      *
      * @param string $key
-     * @param array $options
+     * @param array $default
+     *
      * @return Varien_Data_Form_Element_Abstract
      */
     public function getDateElement($key, $default = null)
@@ -759,10 +767,10 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
 
         $value = Mage::app()->getLocale()->date($value, $format, null, false)->toString($format);
 
-        return $this->getForm()->addField($key, 'date',array(
+        return $this->getForm()->addField($key, 'date', array(
             'name'           => $key,
             'value_name'     => $value,
-            'value'		     => $value,
+            'value'          => $value,
             'explicit_apply' => true,
             'image'          => Mage::getDesign()->getSkinUrl('images/grid-cal.gif'),
             'input_format'   => $format,
@@ -770,17 +778,18 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         ));
     }
 
-
     /**
      * Helper for simple select element
      *
      * @param string $key
-     * @param array $options
+     * @param null $default
+     * @param array $optionHash
+     *
      * @return Varien_Data_Form_Element_Abstract
      */
-    protected function getMultiSelectElement($key, $default = null, $options = null)
+    protected function getMultiSelectElement($key, $default = null, $optionHash = null)
     {
-        if (empty($options)) {
+        if (empty($optionHash)) {
             $optionHash = $this->getDataUsingMethod($key . '_options');
         }
 
@@ -801,25 +810,22 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
             }
         }
 
-        return $this->getForm()->addField($key, 'multiselect',array(
+        return $this->getForm()->addField($key, 'multiselect', array(
             'name'       => $key,
             'value_name' => implode(', ', $valueName),
-            'value'		 => $values,
-            'values'	 => $options
+            'value'      => $values,
+            'values'     => $options
         ));
     }
-
-
-
-
-
-
 
     /**
      * Helper for simple time html
      *
      * The time html consists of two form fields
      * a select for the unit and the value (e.g. 5 days, 6 weeks)
+     *
+     * @param string $key
+     * @param string $html
      *
      * @return string
      */
@@ -831,21 +837,21 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         $unitElement = $this->getSelectElement($unitKey, 'days', $this->helper()->getTimeUnitOptions());
         $valueElement = $this->getInputElement($valueKey);
 
-        return $this->__($html,
+        return $this->__(
+            $html,
             $valueElement->toHtml(),
             $unitElement->toHtml()
         );
     }
-
-
-
-
 
     /**
      * Helper for simple time html
      *
      * The time html consists of two form fields
      * a select for the unit and the value (e.g. 5 days, 6 weeks)
+     *
+     * @param string $key
+     * @param string $html
      *
      * @return string
      */
@@ -859,14 +865,13 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         $fromElement = $this->getInputElement($fromKey, 2);
         $toElement   = $this->getInputElement($toKey, 5);
 
-        return $this->__($html,
+        return $this->__(
+            $html,
             $fromElement->toHtml(),
             $toElement->toHtml(),
             $unitElement->toHtml()
         );
     }
-
-
 
     /**
      * Retrieve time direction as boolean value
@@ -875,24 +880,35 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
      *
      * @param string $key
      * @param string $default
+     *
      * @return boolean
      */
     protected function getTimeDirection($key, $default = null)
     {
         $dir = (string) $this->getDataSetDefault("{$key}_dir", $default);
+
         return ($dir === 'future');
     }
 
-
+    /**
+     * @param string $key
+     *
+     * @return mixed|string
+     */
     protected function getTimeDirectionHtml($key)
     {
         $dirKey = "{$key}_dir";
 
         $unitElement = $this->getSelectElement($dirKey, 'future', $this->getTimeDirectionOptions());
+
         return $unitElement->getHtml();
     }
 
-
+    /**
+     * Time direction options
+     *
+     * @return string[]
+     */
     protected function getTimeDirectionOptions()
     {
         return array(
@@ -901,12 +917,8 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         );
     }
 
-
-
-
-
     /**
-     * Retrieve time range expresion from two time expr values
+     * Retrieve time range expression from two time expr values
      *
      *           value      unit            value      unit
      *             |         |                |         |
@@ -917,10 +929,13 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
      * ...WHERE `field` BETWEEN `from` AND `to`...
      *
      * @param string|Zend_Db_Expr $field
-     * @param string $fromKey
-     * @param string $toKey
+     * @param $key
      * @param boolean $future
+     * @param bool $dateOnly
+     * @param bool $useLocalTime
+     *
      * @return Zend_Db_Expr
+     * @throws Exception
      */
     protected function getTimeRangeExpr($field, $key, $future = null, $dateOnly = false, $useLocalTime = false)
     {
@@ -953,13 +968,11 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
                 $limits[] = "$func($date, INTERVAL $from $unit)";
                 $limits[] = "$func($date, INTERVAL $to $unit)";
             }
-        }
-        else {
+        } else {
             //$now = $gmtOffset ? $this->addGmtOffset($now) : $date;
             $limits[] = "$func($now, INTERVAL $from $unit)";
             $limits[] = "$func($now, INTERVAL $to $unit)";
         }
-
 
         $limits = implode(', ', $limits);
 
@@ -968,10 +981,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         }
 
         return new Zend_Db_Expr("$field BETWEEN LEAST($limits) AND GREATEST($limits)");
-
     }
-
-
 
     /**
      * Retrieve anniversary expression
@@ -979,7 +989,8 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
      * @param string $field
      * @param string $key
      * @param boolean $future
-     * @param boolean $applyGmtOffset
+     * @param boolean $fieldIsLocalTime
+     *
      * @return Zend_Db_Expr
      */
     protected function getAnniversaryTimeExpr($field, $key, $future = false, $fieldIsLocalTime = false)
@@ -987,20 +998,19 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         // if data field is in local time, don't do any conversion
         if (!$fieldIsLocalTime) {
             $localField = $this->toLocalTime($field);
-        }
-        else {
+        } else {
             $localField = $field;
         }
 
         $currentTime = $this->getCurrentTimeExpr(false, '%s', !$future);
 
         $age = "YEAR($currentTime) - YEAR($localField)";
-        // if we look into the future we need to add one year if the day of the year is already past
+
         if ($future) {
+            // if we look into the future we need to add one year if the day of the year is already past
             $age.= "+IF(DAYOFYEAR($currentTime) > DAYOFYEAR($localField),1,0)";
-        }
-        // if we look into the past we need to substract a year if the day of the year is in front
-        else {
+        } else {
+            // if we look into the past we need to substract a year if the day of the year is in front
             $age.= "-IF(DAYOFYEAR($currentTime) < DAYOFYEAR($localField),1,0)";
         }
 
@@ -1017,11 +1027,15 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return new Zend_Db_Expr(implode(' AND ', $expr));
     }
 
-
-
-
-
-
+    /**
+     * Retrieve current time expression
+     *
+     * @param bool $gmt
+     * @param string $format
+     * @param bool $max
+     *
+     * @return mixed|Zend_Db_Expr
+     */
     protected function getCurrentTimeExpr($gmt = true, $format = '%s', $max = false)
     {
         $results = array();
@@ -1034,11 +1048,11 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return $this->getLeastSql($results);
     }
 
-
-
-
-
-
+    /**
+     * @param array $data
+     *
+     * @return mixed|Zend_Db_Expr
+     */
     protected function getLeastSql(array $data)
     {
         if (count($data) > 1) {
@@ -1047,7 +1061,11 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return $data[0];
     }
 
-
+    /**
+     * @param array $data
+     *
+     * @return mixed|Zend_Db_Expr
+     */
     protected function getGreatestSql(array $data)
     {
         if (count($data) > 1) {
@@ -1055,11 +1073,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         }
         return $data[0];
     }
-
-
-
-
-
 
     /**
      * Add gmt offset if available
@@ -1076,92 +1089,57 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return $dateExpr;
     }
 
-
-
-
-    /**
-     * Converts local date expresion to gmt time
-     * gmt offset
-     *
-     * @param string $dateExpr
-     * @return string
-     */
-    protected function toGmtTime($localDateExpr)
-    {
-        $gmtOffset = (int) $this->getParam('gmt_offset', 0);
-        if ($gmtOffset) {
-            $localDateExpr = "DATE_SUB($localDateExpr, INTERVAL $gmtOffset MINUTE)";
-        }
-        return $localDateExpr;
-    }
-
-
-
-
-    /**
-     * Convert database field to local time by appling specified
-     * gmt offset
-     *
-     * @param string $dateExpr
-     * @return string
-     */
-    protected function toLocalTime($gmtDateExpr)
-    {
-        $gmtOffset = (int) $this->getParam('gmt_offset', 0);
-        if ($gmtOffset) {
-            $gmtDateExpr = "DATE_SUB($gmtDateExpr, INTERVAL $gmtOffset MINUTE)";
-        }
-        return $gmtDateExpr;
-    }
-
-
-
-
-
     /**
      * Retrieve date value
      *
      * @param string $key
-     * @param integer $roundDate
+     * @param int $roundDate
+     *
      * @return Zend_Date
      */
-    protected function getTimeValue($key, $roundDate = false)
+    protected function getTimeValue($key, $roundDate = 0)
     {
         return $this->helper()->calcDate(
-            (int)    $this->getData("{$key}_value"),
-            (string) $this->getData("{$key}_unit"),
-            $roundDate);
+            (int)$this->getData("{$key}_value"),
+            (string)$this->getData("{$key}_unit"),
+            $roundDate
+        );
     }
 
-
-
-
-
-
-
-    protected function getTimeExpr($key, $field, $substract = false)
+    /**
+     * @param string $key
+     * @param string $field
+     * @param bool $subtract
+     *
+     * @return Zend_Db_Expr
+     */
+    protected function getTimeExpr($key, $field, $subtract = false)
     {
-        $value = (float)  $this->getData("{$key}_value");
-        $unit  = (string) $this->getData("{$key}_unit");
+        $value = (float)$this->getData("{$key}_value");
+        $unit  = (string)$this->getData("{$key}_unit");
 
         $unit = substr(strtoupper($unit), 0, -1);
 
-        $func = $substract ? 'DATE_SUB' : 'DATE_ADD';
+        $func = $subtract ? 'DATE_SUB' : 'DATE_ADD';
 
         return new Zend_Db_Expr("$func($field, INTERVAL $value $unit)");
     }
 
-
-
-
-
+    /**
+     * @param $key
+     * @param string $type
+     * @param null $default
+     * @param null $html
+     *
+     * @return string
+     */
     protected function getInputHtml($key, $type = "string", $default = null, $html = null)
     {
         $operations = $this->helper()->getOperatorOptionsByType($type);
 
-        $defaultOpertator = '{}';
+        $defaultOperator = '{}';
         if ($type === 'numeric') {
-            $defaultOpertator = '==';
+            $defaultOperator = '==';
             if ($default === null) {
                 $default = '1';
             }
@@ -1174,22 +1152,23 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
             $html = '%s "%s"';
         }
 
-
-        $operatorElment = $this->getSelectElement($key . '_operator', $defaultOpertator, $operations);
+        $operatorElement = $this->getSelectElement($key . '_operator', $defaultOperator, $operations);
         $inputElement = $this->getInputElement($key, $default);
 
-        if ($type === 'numeric') {
-            //$inputElement->addClass(''); numeric validation?
-        }
-
-        return $this->__($html,
-            $operatorElment->toHtml(),
+        return $this->__(
+            $html,
+            $operatorElement->toHtml(),
             $inputElement->toHtml()
         );
     }
 
-
-
+    /**
+     * @param string $key
+     * @param string $field
+     * @param null $quoteField
+     *
+     * @return string
+     */
     protected function getWhereSql($key, $field, $quoteField = null)
     {
         $adapter  = $this->_getReadAdapter();
@@ -1201,20 +1180,25 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         $value    = $this->getData($key);
         $operator = $this->getDataSetDefault($key . '_operator', '{}');
 
-        switch($operator) {
+        switch ($operator) {
             case '!=':
             case '>=':
             case '<=':
             case '>':
-            case '<':   return $adapter->quoteInto("{$field} {$operator} ?", $value);
-            case '{}':  return $adapter->quoteInto("{$field} LIKE ?", "%$value%");
-            case '!{}': return $adapter->quoteInto("{$field} NOT LIKE ?", "%$value%");
-            case '()':  return $adapter->quoteInto("{$field} IN (?)", $this->_explode($value));
-            case '!()': return $adapter->quoteInto("{$field} NOT IN (?)", $this->_explode($value));
-            default:    return $adapter->quoteInto("{$field} = ?", $value);
+            case '<':
+                return $adapter->quoteInto("{$field} {$operator} ?", $value);
+            case '{}':
+                return $adapter->quoteInto("{$field} LIKE ?", "%$value%");
+            case '!{}':
+                return $adapter->quoteInto("{$field} NOT LIKE ?", "%$value%");
+            case '()':
+                return $adapter->quoteInto("{$field} IN (?)", $this->_explode($value));
+            case '!()':
+                return $adapter->quoteInto("{$field} NOT IN (?)", $this->_explode($value));
+            default:
+                return $adapter->quoteInto("{$field} = ?", $value);
         }
     }
-
 
     /**
      * Check if where select would match zero
@@ -1227,7 +1211,12 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return (bool) $this->_getReadAdapter()->fetchOne("SELECT ".$this->getWhereSql($key, '0'));
     }
 
-
+    /**
+     * @param $string
+     * @param string $delimiter
+     *
+     * @return array
+     */
     protected function _explode($string, $delimiter = ',')
     {
         if (is_array($string)) {
@@ -1236,7 +1225,12 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return array_map('trim', explode($delimiter, $string));
     }
 
-
+    /**
+     * @param $string
+     * @param string $glue
+     *
+     * @return string
+     */
     protected function _implode($string, $glue = ',')
     {
         if (is_array($string)) {
@@ -1245,9 +1239,9 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return $string;
     }
 
-
-
-
+    /**
+     * @return string[]
+     */
     protected function getAggregatorOptions()
     {
         return array(
@@ -1256,7 +1250,9 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         );
     }
 
-
+    /**
+     * @return string[]
+     */
     protected function getExpectationOptions()
     {
         return array(
@@ -1265,13 +1261,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         );
     }
 
-
-
-
-
-
-
-
     /**
      * Use SQL UNION to combine all conditions into one
      * Select SQL
@@ -1279,9 +1268,10 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
      * @param array $conditions
      * @param string $aggregator
      * @param string $expectation
+     *
      * @return Mzax_Emarketing_Db_Select
      */
-    protected function _combineConditions($conditions, $aggregator, $expectation, $alias = 'combine')
+    protected function _combineConditions($conditions, $aggregator, $expectation)
     {
         if (empty($conditions)) {
             return $this->getQuery()
@@ -1299,8 +1289,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
 
         if ($conditionCount === 1) {
             $select = $conditions[0];
-        }
-        else {
+        } else {
             $select = $this->_select()->union($conditions, Zend_Db_Select::SQL_UNION_ALL);
         }
 
@@ -1309,36 +1298,26 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
 
         if ($negate) {
             $select->columns(array('matches' => "$conditionCount - COUNT(*)"));
-        }
-        else {
+        } else {
             $select->columns(array('matches' => 'COUNT(*)'));
         }
 
         if ($aggregator === 'all') {
-
             if ($negate) { // ALL ARE FALSE
                 $select->having("COUNT(*) = ?", 1);
-            }
-            else {// ALL ARE TRUE
+            } else {// ALL ARE TRUE
                 $select->having("COUNT(*) = ?", $conditionCount);
             }
-        }
-        else {
+        } else {
             if ($negate) { // ANY ARE FALSE
                 $select->having("COUNT(*) < ?", $conditionCount);
-            }
-            else { // ANY ARE TRUE
+            } else { // ANY ARE TRUE
                 //$select->having("COUNT(*) > ?", 0);
             }
         }
 
         return $select;
     }
-
-
-
-
-
 
     /**
      * Retrieve all filter selects from
@@ -1359,39 +1338,18 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         return $conditions;
     }
 
-
-
-    /**
-     * Negate select
-     *
-     * Return query that selects all ids but the ones from
-     * the given select
-     *
-     * @deprecated
-     * @param Zend_Db_Select $select
-     * @return Zend_Db_Select
-     *//*
-    protected function _negateSql($select)
-    {
-        return $this->getQuery()->where("NOT EXISTS ($select)")->getSelect();
-    }
-    */
-
-
     /**
      * Check database for indexes that the filter requires and
      * if possible create any missing indexes if
      * canCreateIndex() allows to do so.
      *
-     * @param boolean $create Wheather to try to create an index or not
+     * @param boolean $create Whether to try to create an index or not
      * @return true|string
      */
     public function checkIndexes($create = false)
     {
         return true;
     }
-
-
 
     /**
      * Check if filter can create indexes
@@ -1402,8 +1360,5 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
     {
         return Mage::getStoreConfigFlag('mzax_emarketing/general/can_create_indexes');
     }
-
-
-
-
 }
+

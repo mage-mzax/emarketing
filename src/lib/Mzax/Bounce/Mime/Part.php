@@ -16,36 +16,41 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Bounce_Mime_Part
  */
 class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
 {
-
     const REGEX_LINEND = "/\\r\\n|\\r|\\n/";
 
-
-
-
+    /**
+     * @var string[]
+     */
     protected $_headers = array();
 
-
+    /**
+     * @var
+     */
     protected $_contentType;
 
-
+    /**
+     * @var Mzax_Bounce_Mime_Part[]
+     */
     protected $_mimeParts;
 
-
+    /**
+     * Mzax_Bounce_Mime_Part constructor.
+     *
+     * @param array $data
+     */
     public function __construct($data = array())
     {
-        if(is_string($data)) {
+        parent::__construct('');
+
+        if (is_string($data)) {
             Mzax_Bounce_Mime_Decode::splitMessage(ltrim($data), $this->_headers, $this->_content);
-        }
-        else if(is_array($data)) {
+        } elseif (is_array($data)) {
             $this->_headers = $data['header'];
             $this->_content = $data['body'];
         }
@@ -56,44 +61,39 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
         $this->boundary = $this->getContentType('boundary');
     }
 
-
-
     /**
      * Retreive header value
      *
      * @param string $name
      * @param string $default
+     *
      * @return string
      */
     public function getHeader($name, $default = null)
     {
         $name = strtolower($name);
-        if(isset($this->_headers[$name])) {
+        if (isset($this->_headers[$name])) {
             return $this->_headers[$name];
         }
         return $default;
     }
-
-
 
     /**
      * Set header
      *
      * @param string $name
      * @param string $value
+     *
      * @return Mzax_Bounce_Mime_Part
      */
     public function setHeader($name, $value)
     {
-        if($value !== null) {
+        if ($value !== null) {
             $name = strtolower($name);
             $this->_headers[$name] = (string) $value;
         }
         return $this;
     }
-
-
-
 
     /**
      * Is multipart
@@ -105,9 +105,6 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
         return strpos($this->type, 'multipart/') === 0;
     }
 
-
-
-
     /**
      * Retrieve all mime parts
      *
@@ -115,103 +112,101 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
      */
     public function getMimeParts()
     {
-        if(!$this->_mimeParts && $this->isMultipart()) {
+        if (!$this->_mimeParts && $this->isMultipart()) {
             $this->_mimeParts = array();
-            if($boundary = $this->getContentType('boundary')) {
+            if ($boundary = $this->getContentType('boundary')) {
                 $parts = Mzax_Bounce_Mime_Decode::splitMessageStruct($this->_content, $boundary);
-                if(is_array($parts)) {
-                    foreach($parts as $data) {
+                if (is_array($parts)) {
+                    foreach ($parts as $data) {
                         $this->_mimeParts[] = new Mzax_Bounce_Mime_Part($data);
                     }
                 }
             }
         }
+
         return $this->_mimeParts;
     }
-
-
 
     /**
      * Retrieve mime part by content-type or index
      *
-     * @param string $contentType
+     * @param string|int $index
+     *
      * @return Mzax_Bounce_Mime_Part|NULL
      */
     public function getMimePart($index)
     {
-        if($mimeParts = $this->getMimeParts()) {
-            if(is_int($index)) {
-                if(isset($mimeParts[$index])) {
+        if ($mimeParts = $this->getMimeParts()) {
+            if (is_int($index)) {
+                if (isset($mimeParts[$index])) {
                     return $mimeParts[$index];
                 }
-            }
-            else {
+            } else {
                 /* @var $part Mzax_Bounce_Mime_Part */
-                foreach($mimeParts as $part) {
-                    if($part->type === $index) {
+                foreach ($mimeParts as $part) {
+                    if ($part->type === $index) {
                         return $part;
                     }
                 }
             }
         }
+
         return null;
     }
 
-
-
     /**
      * Try to find a mime part by content type within
-     * all multiparts.
+     * all multipart.
      *
      * @param string $type
-     * @return Mzax_Bounce_Mime_Part|NULL
+     *
+     * @return Mzax_Bounce_Mime_Part|null
      */
     public function findMinePart($type)
     {
-        if($mimeParts = $this->getMimeParts()) {
+        if ($mimeParts = $this->getMimeParts()) {
             /* @var $part Mzax_Bounce_Mime_Part */
-            foreach($mimeParts as $part) {
-                if(strpos($part->type, $type) === 0) {
+            foreach ($mimeParts as $part) {
+                if (strpos($part->type, $type) === 0) {
                     return $part;
                 }
             }
-            foreach($mimeParts as $part) {
-                if($part->isMultipart()) {
-                    if($found = $part->findMinePart($type)) {
+            foreach ($mimeParts as $part) {
+                if ($part->isMultipart()) {
+                    if ($found = $part->findMinePart($type)) {
                         return $found;
                     }
                 }
             }
         }
+
         return null;
     }
-
-
 
     /**
      * Retrieve all mime parts matching the given content-type
      *
      * @param string $type
+     *
      * @return array
      */
     public function findMineParts($type)
     {
         $result = array();
-        if($mimeParts = $this->getMimeParts()) {
+        if ($mimeParts = $this->getMimeParts()) {
             /* @var $part Mzax_Bounce_Mime_Part */
-            foreach($mimeParts as $part) {
-                if(strpos($part->type, $type) === 0) {
+            foreach ($mimeParts as $part) {
+                if (strpos($part->type, $type) === 0) {
                     $result[] = $part;
                 }
-                if($part->isMultipart()) {
+                if ($part->isMultipart()) {
                     $result = array_merge($result, $part->findMineParts($type));
                 }
             }
         }
+
         return $result;
     }
-
-
 
     /**
      * Retrieve all text like mime parts as a string
@@ -222,17 +217,15 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
     {
         $parts = array();
         /* @var $part Mzax_Bounce_Mime_Part */
-        foreach($this->findMineParts('text/') as $part) {
+        foreach ($this->findMineParts('text/') as $part) {
             $parts[] = $part->getDecodedContent();
         }
-        if(empty($parts)) {
+        if (empty($parts)) {
             return $this->getDecodedContent();
         }
+
         return implode("\n\n----------\n\n", $parts);
     }
-
-
-
 
     /**
      * Retrieve content type data
@@ -241,17 +234,15 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
      */
     public function getContentType($what = null, $default = null)
     {
-        if(!$this->_contentType) {
-            if($type = $this->getHeader('content-type')) {
+        if (!$this->_contentType) {
+            $this->_contentType = array();
+            if ($type = $this->getHeader('content-type')) {
                 $this->_contentType = Mzax_Bounce_Mime_Decode::splitHeaderField($type, null, '_type');
                 $this->_contentType['type'] = $this->_contentType['_type'];
             }
-            else {
-                $this->_contentType = array();
-            }
         }
-        if($what) {
-            if(isset($this->_contentType[$what])) {
+        if ($what) {
+            if (isset($this->_contentType[$what])) {
                 return $this->_contentType[$what];
             }
             return $default;
@@ -260,28 +251,24 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
         return $this->_contentType;
     }
 
-
-
     /**
-     * Retreive decoded content
+     * Retrieve decoded content
      *
      * @return string
      */
     public function getDecodedContent()
     {
-        switch(strtolower($this->encoding)) {
+        switch (strtolower($this->encoding)) {
             case Zend_Mime::ENCODING_BASE64:
                 $content = base64_decode($this->_content);
                 break;
 
             case Zend_Mime::ENCODING_QUOTEDPRINTABLE:
-                if(function_exists('imap_qprint')) {
+                if (function_exists('imap_qprint')) {
                     $content = imap_qprint($this->_content);
-                }
-                else if(function_exists('quoted_printable_decode')) {
+                } elseif (function_exists('quoted_printable_decode')) {
                     $content = quoted_printable_decode($this->_content);
-                }
-                else {
+                } else {
                     //$content = Zend_Mime_Decode::decodeQuotedPrintable($this->_content);
                     $content = iconv_mime_decode($this->_content, ICONV_MIME_DECODE_CONTINUE_ON_ERROR, $this->charset);
                 }
@@ -291,9 +278,9 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
                 $content = $this->_content;
                 break;
         }
+
         return str_replace("\r\n", "\n", $content);
     }
-
 
     /**
      * Assume hash like content
@@ -306,9 +293,6 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
         return Mzax_Bounce_Mime_Decode::decodeHash($this->_content);
     }
 
-
-
-
     /**
      * Get the Content of the current Mime Part in the given encoding.
      *
@@ -318,8 +302,6 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
     {
         return preg_replace(self::REGEX_LINEND, $EOL, $this->_content);
     }
-
-
 
     /**
      * Create and return the array of headers for this MIME part
@@ -342,24 +324,21 @@ class Mzax_Bounce_Mime_Part extends Zend_Mime_Part
             'content-language',
             'content-transfer-encoding');
 
-        foreach($this->_headers as $key => $value) {
-            if(in_array($key, $headers)) {
-                if(is_array($value)) {
+        foreach ($this->_headers as $key => $value) {
+            if (in_array($key, $headers)) {
+                if (is_array($value)) {
                     $parts = array(array_shift($value));
-                    foreach($value as $v) {
+                    foreach ($value as $v) {
                         $parts[] = ' ' . $v;
                     }
                     $value = implode($EOL, $parts);
-                }
-                else {
+                } else {
                     $value = preg_replace(self::REGEX_LINEND, $EOL, $value);
                 }
                 $result[] = array($key, $value);
             }
         }
+
         return $result;
     }
-
-
-
 }

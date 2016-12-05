@@ -17,24 +17,17 @@
  */
 
 
-
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_GeoIp_Request
  */
 class Mzax_GeoIp_Request
 {
-
     /**
      * IPv4 or IPv6
      *
      * @var string
      */
     public $ip;
-
 
     /**
      * Name of the city if available
@@ -43,14 +36,12 @@ class Mzax_GeoIp_Request
      */
     public $city;
 
-
     /**
      * Name of the region if available
      *
      * @var string|null
      */
     public $region;
-
 
     /**
      * Region ID if available
@@ -60,14 +51,12 @@ class Mzax_GeoIp_Request
      */
     public $regionId;
 
-
     /**
      * Name of the country if available
      *
      * @var string|null
      */
     public $country;
-
 
     /**
      * Country Code if available
@@ -77,14 +66,12 @@ class Mzax_GeoIp_Request
      */
     public $countryId;
 
-
     /**
      * Metro code
      *
      * @var string
      */
     public $metroCode;
-
 
     /**
      * TimeZone if available
@@ -93,7 +80,6 @@ class Mzax_GeoIp_Request
      */
     public $timeZone;
 
-
     /**
      * Zip code if available
      *
@@ -101,31 +87,26 @@ class Mzax_GeoIp_Request
      */
     public $zipCode;
 
-
-
     /**
-     * Array of long and altitud
+     * Array of long and altitude
      *
      * @var array
      */
     public $loc;
 
-
     /**
-     * Original, usally the provider
+     * Original, usually the provider
      *
      * @var string
      */
     public $org;
 
-
     /**
-     * Offset in minutes reltative to GMT
+     * Offset in minutes relative to GMT
      *
      * @var integer
      */
     public $timeOffset;
-
 
     /**
      *
@@ -133,22 +114,27 @@ class Mzax_GeoIp_Request
      */
     public $httpResponse;
 
-
+    /**
+     * Adapter class name
+     *
+     * @var string
+     */
+    public $adapter;
 
     /**
      * IP is required for a request
      *
      * @param string $ip
+     *
+     * @throws Mzax_GeoIp_Exception
      */
     public function __construct($ip)
     {
-        if(@inet_pton($ip) === false) {
+        if (@inet_pton($ip) === false) {
             throw new Mzax_GeoIp_Exception("Invalid IP Address");
         }
         $this->ip = $ip;
     }
-
-
 
     /**
      * Refine data
@@ -161,35 +147,30 @@ class Mzax_GeoIp_Request
     public function refine()
     {
         // try to get region id from string
-        if(!$this->regionId && $this->region && $this->countryId) {
+        if (!$this->regionId && $this->region && $this->countryId) {
             $this->regionId = Mzax_GeoIp_Region::getRegionCode($this->countryId, $this->region);
         }
 
-        if(!$this->regionId && $this->countryId && preg_match('/^[A-Z0-9]{2,3}$/', $this->region)) {
+        if (!$this->regionId && $this->countryId && preg_match('/^[A-Z0-9]{2,3}$/', $this->region)) {
             $this->regionId = $this->region;
             $this->region = Mzax_GeoIp_Region::getRegionCode($this->countryId, $this->regionId);
         }
 
-
-        if(!$this->timeZone) {
+        if (!$this->timeZone) {
             // try to get a time zone from the location, not perfect but will give us a rough idea
             $this->timeZone = Mzax_GeoIp_Region::getTimeZone($this->countryId, $this->regionId, $this->city);
         }
 
 
-        if($this->timeZone && $this->timeOffset === null) {
+        if ($this->timeZone && $this->timeOffset === null) {
             try {
                 $time = new DateTime("now", new DateTimeZone($this->timeZone));
                 $this->timeOffset = $time->getOffset()/-60;
+            } catch (Exception $e) {
+                // ignore
             }
-            catch(Exception $e) {}
         }
 
         return $this;
     }
-
-
-
-
 }
-

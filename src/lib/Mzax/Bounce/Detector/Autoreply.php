@@ -16,33 +16,24 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-/*
- * Usefull links
-* @see https://www.jitbit.com/maxblog/18-detecting-outlook-autoreplyout-of-office-emails-and-x-auto-response-suppress-header/
-* @see http://stackoverflow.com/questions/1027395/detecting-outlook-autoreply-out-of-office-emails/14320010#14320010
-*
-*
-*
-* Credits
-* @see https://github.com/cfortune/PHP-Bounce-Handler/
-* @see Andris [http://stackoverflow.com/a/14320010/413323]
-*/
-
-
-
-
 
 /**
- * Bounce dedector for auto reyplies
+ * Class Mzax_Bounce_Detector_Autoreply
+ *
+ * Bounce detector for auto replies
+ *
+ * Useful links
+ * @see https://www.jitbit.com/maxblog/18-detecting-outlook-autoreplyout-of-office-emails-and-x-auto-response-suppress-header/
+ * @see http://stackoverflow.com/questions/1027395/detecting-outlook-autoreply-out-of-office-emails/14320010#14320010
  *
  *
- * @author Jacob Siefer
- * @license {{license}}
+ * Credits
+ * @see https://github.com/cfortune/PHP-Bounce-Handler/
+ * @see Andris [http://stackoverflow.com/a/14320010/413323]
+ *
  */
 class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
 {
-
-
     /**
      * Typical auto reply headers
      *
@@ -56,8 +47,6 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
         'precedence' => array('auto_reply', 'bulk'),
         'auto-submitted' => 'auto_reply'
     );
-
-
 
     /**
      * Common subject lines
@@ -83,8 +72,6 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
         'Réponse automatique',
     );
 
-
-
     /**
      * Regex expr. for subjects
      *
@@ -101,9 +88,6 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
         "\350\207\252\345\212\250\345\233\236\345\244\215"   #sino.com,  163.com  UTF8 encoded
     );
 
-
-
-
     /**
      * Text phrases for the acctual content,
      *
@@ -119,9 +103,6 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
         'thank you for contacting',
     );
 
-
-
-
     /**
      * Check if message is autoryply
      *
@@ -130,57 +111,52 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
      */
     public function isAutoReply(Mzax_Bounce_Message $message)
     {
-        if($header = $message->searchHeader(self::$headers)) {
+        if ($header = $message->searchHeader(self::$headers)) {
             $message->info('autoreply_header', $header);
             return true;
         }
 
         $subject = trim($message->getSubject());
-        if(!$subject) {
+        if (!$subject) {
             return false;
         }
 
-        foreach(self::$subjects as $needle) {
-            if(stripos($subject, $needle) === 0) {
+        foreach (self::$subjects as $needle) {
+            if (stripos($subject, $needle) === 0) {
                 $message->info('autoreply_subject', $needle);
                 return true;
             }
         }
 
-        foreach(self::$regex as $regex) {
-            if(preg_match("/$regex/i", $subject, $matches)) {
+        foreach (self::$regex as $regex) {
+            if (preg_match("/$regex/i", $subject, $matches)) {
                 $message->info('autoreply_subject', $matches[0]);
                 return true;
             }
         }
 
-
-        // bit more aggressive, check the acctual content
+        // bit more aggressive, check the actual content
         $body = $message->asString();
         $body = preg_replace('/[\s]+/', ' ', $body);
 
-        foreach(self::$body as $needle) {
-            if(stripos($subject, $needle) === 0) {
+        foreach ($body as $needle) {
+            if (stripos($subject, $needle) === 0) {
                 $message->info('autoreply_body', $needle);
                 return true;
             }
         }
 
-
         return false;
     }
 
-
-
-
     /**
+     * @param Mzax_Bounce_Message $message
      *
-     *
-     * @see Mzax_Bounce_Detector_Abstract::inspect()
+     * @return bool
      */
     public function inspect(Mzax_Bounce_Message $message)
     {
-        if(!$this->isAutoReply($message)) {
+        if (!$this->isAutoReply($message)) {
             return false;
         }
         $message->info(Mzax_Bounce::TYPE_AUTOREPLY, true);
@@ -188,11 +164,5 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
         $message->info('recipient', $this->findEmail($message->getFrom()));
 
         return true;
-
     }
-
-
-
-
-
 }

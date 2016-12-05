@@ -18,15 +18,10 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Mail_Transport_Mock
  */
 class Mzax_Mail_Transport_Mock extends Zend_Mail_Transport_Abstract
 {
-
     /**
      * EOL character string used by transport
      * @var string
@@ -34,32 +29,36 @@ class Mzax_Mail_Transport_Mock extends Zend_Mail_Transport_Abstract
      */
     public $EOL = "\r\n";
 
-
-
-
+    /**
+     * Ignore don't send anything
+     *
+     * @return void
+     */
     public function _sendMail()
     {
         // do nothing
     }
 
-
-
+    /**
+     * Retrieve size of email
+     *
+     * @return int
+     */
     public function getSize()
     {
-        if(function_exists('mb_strlen')) {
+        if (function_exists('mb_strlen')) {
             return mb_strlen($this->getRawData(), $this->_mail->getCharset());
         }
         return strlen($this->getRawData());
     }
 
-
-
+    /**
+     * Retrieve raw data
+     *
+     * @return string
+     */
     public function getRawData()
     {
         return $this->header . $this->EOL . $this->body;
     }
-
-
-
-
 }

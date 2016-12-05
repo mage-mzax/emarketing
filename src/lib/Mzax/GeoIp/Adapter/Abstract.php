@@ -22,18 +22,11 @@ if(!defined('ENT_HTML401')) {
     define('ENT_HTML401', 0);
 }
 
-
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_GeoIp_Adapter_Abstract
  */
 abstract class Mzax_GeoIp_Adapter_Abstract
 {
-
-
     const SECONDS_PER_DAY = 86400;
 
     const HOURLY  = 'Y-m-d-h';
@@ -42,18 +35,30 @@ abstract class Mzax_GeoIp_Adapter_Abstract
     const MONTHLY = 'Y-m';
     const YEARLY  = 'Y';
 
-
-
+    /**
+     * @var int
+     */
     public $timeThreshold = 20;
 
+    /**
+     * @var int
+     */
     public $requestThreshold = 10;
 
+    /**
+     * @var int
+     */
     public $restTime = 60;
 
+    /**
+     * @var int
+     */
     public $requestLimit = 4000;
 
+    /**
+     * @var string
+     */
     public $resetPeriode = self::DAILY;
-
 
     /**
      * Retrieve the name of this adapter
@@ -61,8 +66,6 @@ abstract class Mzax_GeoIp_Adapter_Abstract
      * @return string
      */
     abstract public function getName();
-
-
 
     /**
      * Time of last request
@@ -78,14 +81,12 @@ abstract class Mzax_GeoIp_Adapter_Abstract
      */
     protected $_lastRequestPeriode;
 
-
     /**
      * Number of requests within the current periode
      *
      * @var integer
      */
     protected $_requestCount;
-
 
     /**
      * Current threshold count
@@ -94,14 +95,12 @@ abstract class Mzax_GeoIp_Adapter_Abstract
      */
     protected $_requestThresholdCount;
 
-
     /**
      * Current rest time
      *
      * @var integer
      */
     protected $_restTill;
-
 
     /**
      * Number of errors
@@ -110,25 +109,21 @@ abstract class Mzax_GeoIp_Adapter_Abstract
      */
     protected $_errorCount= 0;
 
-
-
-
-
     /**
      *
-     * @param string $ip
-     * @throws Mzax_GeoIp_Excpetion
-     * @return Mzax_GeoIp_Request
+     * @param Mzax_GeoIp_Request $request
+     *
+     * @return bool
+     * @throws Mzax_GeoIp_Exception
      */
     final public function fetch(Mzax_GeoIp_Request $request)
     {
-        if($this->isResting() || $this->reachedLimit()) {
-            throw new Mzax_GeoIp_Excpetion("Max request number reached", Mzax_GeoIp_Adapter_Excpetion::MAX_REQUEST);
+        if ($this->isResting() || $this->reachedLimit()) {
+            throw new Mzax_GeoIp_Exception("Max request number reached", Mzax_GeoIp_Exception::MAX_REQUEST);
         }
 
         $request->adapter = get_class($this);
         $this->_guardThreshold();
-
 
         $this->_lastRequestTime = time();
         $this->_requestCount++;
@@ -137,9 +132,9 @@ abstract class Mzax_GeoIp_Adapter_Abstract
             $this->_fetch($request);
             $this->_errorCount = 0;
             $request->refine();
+
             return true;
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             $this->_handleError($e);
             //throw new Mzax_GeoIp_Exception("Adapter Error:" . $e->getMessage(), $e->getCode(), $e);
         }
@@ -147,15 +142,11 @@ abstract class Mzax_GeoIp_Adapter_Abstract
         return false;
     }
 
-
-
     /**
      *
-     * @param Mzax_GeoIp_Adapter_Request $request
+     * @param Mzax_GeoIp_Request $request
      */
     abstract protected function _fetch(Mzax_GeoIp_Request $request);
-
-
 
     /**
      * Check if adapter is ready
@@ -166,8 +157,6 @@ abstract class Mzax_GeoIp_Adapter_Abstract
     {
         return !$this->isResting() && !$this->reachedLimit();
     }
-
-
 
     /**
      * Number of seconds that this adapter has to rest
@@ -180,36 +169,31 @@ abstract class Mzax_GeoIp_Adapter_Abstract
         return max($this->_restTill - time(), 0);
     }
 
-
-
     /**
      * Check threshold of connections within a short
      * period of time.
      *
      * Don't send too many requests in a short period of time at once.
      *
-     * @return boolean
+     * @return void
     */
     protected function _guardThreshold()
     {
-        if($this->_lastRequestTime) {
+        if ($this->_lastRequestTime) {
             // check if we are pushing over the time threshold
-            if($this->_lastRequestTime >= time() - $this->timeThreshold) {
+            if ($this->_lastRequestTime >= time() - $this->timeThreshold) {
                 $this->_requestThresholdCount++;
-            }
-            // if not, slowly rest out
-            else if($this->_requestThresholdCount > 0) {
+            } elseif ($this->_requestThresholdCount > 0) {
+                // if not, slowly rest out
                 $this->_requestThresholdCount -= max(floor((time() - $this->_lastRequestTime)/$this->timeThreshold), $this->_requestThresholdCount);
             }
             // if we pushed our limits to far, wait for predefined after this request
             // before we try again
-            if($this->_requestThresholdCount > $this->requestThreshold) {
+            if ($this->_requestThresholdCount > $this->requestThreshold) {
                 $this->rest($this->restTime);
             }
         }
     }
-
-
 
     /**
      * Check if periodical limit is reached
@@ -221,20 +205,18 @@ abstract class Mzax_GeoIp_Adapter_Abstract
     public function reachedLimit()
     {
         // reset request count if we start a new periode
-        if($this->_lastRequestPeriode != date($this->resetPeriode)) {
+        if ($this->_lastRequestPeriode != date($this->resetPeriode)) {
             $this->_requestCount = 0;
             $this->_lastRequestPeriode = date($this->resetPeriode);
         }
 
         // if we reached the limit, we need to wait for next periode
-        if($this->_requestCount >= $this->requestLimit) {
+        if ($this->_requestCount >= $this->requestLimit) {
             return true;
         }
 
         return false;
     }
-
-
 
     /**
      * Is adapter easing
@@ -246,35 +228,31 @@ abstract class Mzax_GeoIp_Adapter_Abstract
         return $this->_restTill > time();
     }
 
-
-
     /**
      * Rest for given number of seconds
      *
      * @param integer $seconds
-     * @return Mzax_GeoIp_Adapter_Abstract
+     * @return $this
      */
     protected function rest($seconds)
     {
         $this->_restTill = max($this->_restTill, time() + $seconds);
+
         return $this;
     }
-
-
 
     /**
      * Rest till next day and don't try bother
      * again today
      *
      * @param integer $extra
-     * @return Mzax_GeoIp_Adapter_Abstract
+     *
+     * @return $this
      */
     protected function restTillNextDay($extra = 1800)
     {
         return $this->rest(self::SECONDS_PER_DAY - (time() % self::SECONDS_PER_DAY) + $extra);
     }
-
-
 
     /**
      * Handle errors
@@ -287,45 +265,37 @@ abstract class Mzax_GeoIp_Adapter_Abstract
     protected function _handleError(Exception $e)
     {
         $this->_errorCount++;
-        if($this->_errorCount > 10) {
+        if ($this->_errorCount > 10) {
             // wait till tomorrow
             $this->restTillNextDay();
-        }
-        else {
+        } else {
             // wait number of errors * 5 minutes
             $this->rest(60*5*$this->_errorCount);
         }
     }
 
-
-
-
     /**
      * Retrieve the number of requests that we have left
      * for this adapter for the current time periode
      *
-     * @return interger
+     * @return int
      */
     public function getRemainingRequests()
     {
         $this->reachedLimit(); // check limits
+
         return max($this->requestLimit - $this->_requestCount, 0);
     }
-
-
 
     /**
      * Optional credits
      *
-     * @return NULL|string
+     * @return null|string
      */
     public function getCredits()
     {
         return null;
     }
-
-
-
 
     /**
      *
@@ -333,12 +303,14 @@ abstract class Mzax_GeoIp_Adapter_Abstract
      */
     public function __sleep()
     {
-        return array('_lastRequestTime', '_lastRequestPeriode',
-                '_requestCount', '_requestThresholdCount',
-                '_restTill', '_errorCount', );
+        return array(
+            '_lastRequestTime',
+            '_lastRequestPeriode',
+            '_requestCount',
+            '_requestThresholdCount',
+            '_restTill',
+            '_errorCount'
+        );
     }
-
-
-
 }
 

@@ -18,80 +18,10 @@
 
 
 /**
+ * Class Mzax_Presist
  *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * @deprecated Typo in clase name
  */
-class Mzax_Presist
+class Mzax_Presist extends Mzax_Persist
 {
-
-    /**
-     *
-     * @var resource
-     */
-    protected $_fileHandle;
-
-
-
-    public $data;
-
-
-    /**
-     * Open presistence file and try to get lock
-     *
-     * @return mixed peristence data
-     */
-    public function open($filename)
-    {
-        $this->_fileHandle = fopen($filename, 'c+');
-
-        if($this->_fileHandle) {
-            flock($this->_fileHandle, LOCK_EX);
-            try {
-                $data = fread($this->_fileHandle, 1024*1024*10);
-                $this->data = unserialize($data);
-            }
-            catch(Exception $e) {
-                $this->data = false;
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-
-    /**
-     * Close presistence file
-     *
-     * @param mixed $data
-     * @return Mzax_Presist
-     */
-    public function close()
-    {
-        if($this->_fileHandle) {
-            ftruncate($this->_fileHandle, 0);
-            fseek($this->_fileHandle, 0);
-            fwrite($this->_fileHandle, serialize($this->data));
-            flock($this->_fileHandle, LOCK_UN);
-            fclose($this->_fileHandle);
-            $this->_fileHandle = null;
-        }
-        return $this;
-    }
-
-
-
-    public function __destruct()
-    {
-        try {
-            $this->close();
-        }
-        catch(Exception $e) {}
-    }
-
-
-
 }

@@ -18,29 +18,37 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Mail
  */
 class Mzax_Mail extends Zend_Mail
 {
+    /**
+     * @var string
+     */
+    public $EOL = "\r\n";
 
-
+    /**
+     * @param bool $textOnly
+     *
+     * @return false|null|string|Zend_Mime_Part
+     */
     public function getBodyText($textOnly = false)
     {
-        if($textOnly) {
+        if ($textOnly) {
             return parent::getBodyText(true);
         }
+
         return null;
     }
 
-
-
+    /**
+     * @param bool $htmlOnly
+     *
+     * @return false|string|Zend_Mime_Part
+     */
     public function getBodyHtml($htmlOnly = false)
     {
-        if($htmlOnly) {
+        if ($htmlOnly) {
             return parent::getBodyHtml(true);
         }
 
@@ -72,10 +80,4 @@ class Mzax_Mail extends Zend_Mail
 
         return $mp;
     }
-
-
-
-
-
-
 }

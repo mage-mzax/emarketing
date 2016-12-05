@@ -18,19 +18,10 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_GeoIp_Exception
  */
 class Mzax_GeoIp_Exception extends Zend_Exception
 {
-
     const MAX_REQUEST = 10;
-
     const MANY_REQUEST = 20;
-
-
 }
-

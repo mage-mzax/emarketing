@@ -16,44 +16,39 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Bounce
  */
 class Mzax_Bounce
 {
-
     const TYPE_ARF         = 'arf';
     const TYPE_BOUNCE      = 'bounce';
     const TYPE_AUTOREPLY   = 'autoreply';
     const TYPE_UNSUBSCRIBE = 'unsubscribe';
 
-
-
     /**
-     *
      * @var Mzax_Bounce_Detector
      */
     private static $_detector;
 
+    /**
+     * @param string|Mzax_Bounce_Message $message
+     * @param null $info
+     *
+     * @return Mzax_Bounce_Message
+     */
     public static function detect($message, &$info = null)
     {
-        if(!self::$_detector) {
+        if (!self::$_detector) {
             self::$_detector = new Mzax_Bounce_Detector;
         }
 
-        if(!$message instanceof Mzax_Bounce_Message) {
+        if (!$message instanceof Mzax_Bounce_Message) {
             $message = new Mzax_Bounce_Message($message);
         }
 
         $info = self::$_detector->inspect($message);
+
         return $message;
-
     }
-
-
 }

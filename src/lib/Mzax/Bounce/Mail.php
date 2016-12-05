@@ -18,21 +18,19 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Bounce_Mail
  */
 class Mzax_Bounce_Mail extends Zend_Mail
 {
-
-
+    /**
+     * @param Zend_Mime_Part $part
+     *
+     * @return $this
+     */
     public function setBodyPart(Zend_Mime_Part $part)
     {
         $this->_bodyHtml = $part;
+
         return $this;
     }
-
-
 }

@@ -17,14 +17,10 @@
  */
 
 /**
- *
- *
+ * Class Mzax_GeoIp_Adapter_FreeGeoIp
  *
  * @link https://freegeoip.net/
  * @link http://www.geoplugin.com/webservices/json
- *
- * @author Jacob Siefer
- * @license {{license}}
  */
 class Mzax_GeoIp_Adapter_FreeGeoIp extends Mzax_GeoIp_Adapter_Abstract
 {
@@ -34,10 +30,7 @@ class Mzax_GeoIp_Adapter_FreeGeoIp extends Mzax_GeoIp_Adapter_Abstract
     public $timeThreshold = 30;
     public $requestThreshold = 30;
     public $resetTime = 500;
-
     public $resetPeriode = 'Y-m-d-h-i'; //self::HOURLY;
-
-
 
     /**
      * Retrieve the name of this adapter
@@ -49,13 +42,19 @@ class Mzax_GeoIp_Adapter_FreeGeoIp extends Mzax_GeoIp_Adapter_Abstract
         return 'freegeoip.net';
     }
 
-
+    /**
+     * @return string
+     */
     public function getCredits()
     {
         return '<a href="http://www.freegeoip.net"><strong>freegeoip.net</strong></a> - this product includes GeoLite data created by MaxMind, available from <a href="http://www.maxmind.com">http://www.maxmind.com</a>.';
     }
 
-
+    /**
+     * @param Mzax_GeoIp_Request $request
+     *
+     * @throws Zend_Json_Exception
+     */
     protected function _fetch(Mzax_GeoIp_Request $request)
     {
         $uri = str_replace('{IP}', $request->ip, self::API_URI);
@@ -65,50 +64,43 @@ class Mzax_GeoIp_Adapter_FreeGeoIp extends Mzax_GeoIp_Adapter_Abstract
             $response = $client->request();
             $request->httpResponse = $response;
 
-            if($response->getStatus() == 403) {
-                $this->ease(60*60);
+            if ($response->getStatus() == 403) {
+                $this->rest(60*60);
             }
 
             $data = Zend_Json::decode($response->getBody());
 
-            if(isset($data['city'])) {
+            if (isset($data['city'])) {
                 $request->city = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $data['city']);
             }
-            if(isset($data['region_name'])) {
+            if (isset($data['region_name'])) {
                 $request->region = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $data['region_name']);
             }
-            if(isset($data['country_code'])) {
+            if (isset($data['country_code'])) {
                 $request->countryId = $data['country_code'];
             }
-            if(isset($data['region_code'])) {
+            if (isset($data['region_code'])) {
                 $request->regionId = $data['region_code'];
             }
-            if(isset($data['zip_code'])) {
+            if (isset($data['zip_code'])) {
                 $request->zipCode = $data['zip_code'];
             }
-            if(isset($data['metro_code'])) {
+            if (isset($data['metro_code'])) {
                 $request->metroCode = $data['metro_code'];
             }
-            if(isset($data['time_zone'])) {
-                $request->timeZone = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $data['time_zone']);;
+            if (isset($data['time_zone'])) {
+                $request->timeZone = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $data['time_zone']);
             }
-            if(isset($data['country_name'])) {
-                $request->country = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $data['country_name']);;
+            if (isset($data['country_name'])) {
+                $request->country = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $data['country_name']);
             }
-            if(isset($data['longitude']) && isset($data['latitude'])) {
+            if (isset($data['longitude']) && isset($data['latitude'])) {
                 $request->loc = array($data['longitude'], $data['latitude']);
             }
 
-        }
-        catch(Zend_Json_Exception $e) {
-            $this->easeTillNextDay();
+        } catch (Zend_Json_Exception $e) {
+            $this->restTillNextDay();
             throw $e;
         }
     }
-
-
-
-
-
 }
-

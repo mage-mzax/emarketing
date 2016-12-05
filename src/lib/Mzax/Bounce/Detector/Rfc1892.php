@@ -18,89 +18,76 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Bounce_Detector_Rfc1892
  */
 class Mzax_Bounce_Detector_Rfc1892 extends Mzax_Bounce_Detector_Abstract
 {
-
-
     const REPORT = 'multipart/report';
-
     const DELIVERY_STATUS = 'delivery-status';
-
 
     /**
      * @see http://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml
      * @var string
      */
     const STATUS_REGEX = '/([245]\.[0-7]\.[0-9]{1,3})/';
-
-
     const DEFAULT_STATUS = '5.0.0';
 
-
-
+    /**
+     * @param Mzax_Bounce_Message $message
+     *
+     * @return bool
+     */
     public function inspect(Mzax_Bounce_Message $message)
     {
-        if($message->type !== self::REPORT) {
+        if ($message->type !== self::REPORT) {
             return false;
         }
-        if($message->getContentType('report-type') !== self::DELIVERY_STATUS) {
+        if ($message->getContentType('report-type') !== self::DELIVERY_STATUS) {
             return false;
         }
 
         $part = $message->getMimePart('message/delivery-status');
-        if(!$part) {
+        if (!$part) {
             return false;
         }
 
         $status = $part->getDecodedHash();
-        if(!is_array($status)) {
+        if (!is_array($status)) {
             return false;
         }
 
         $message->info('rfc1892', true);
         $message->info('type', Mzax_Bounce::TYPE_BOUNCE);
 
-
-
         // @see https://ohse.de/uwe/rfc/rfc1894.html#2.3.4
-        if(isset($status['status'])) {
-            if(preg_match(self::STATUS_REGEX, $status['status'], $matches)) {
+        if (isset($status['status'])) {
+            if (preg_match(self::STATUS_REGEX, $status['status'], $matches)) {
                 $message->info('status', $matches[1]);
-            }
-            else {
+            } else {
                 $message->info('status', $status['status']);
             }
-        }
-        else {
+        } else {
             $message->info('status', self::DEFAULT_STATUS);
         }
 
-
         // @see https://ohse.de/uwe/rfc/rfc1894.html#2.3.1
-        if(isset($status['original-recipient'])) {
+        if (isset($status['original-recipient'])) {
             // address-type ; generic-address
             $recipient = $this->findEmail($status['original-recipient']);
             $message->info('recipient', $recipient);
-        }
-        // @see https://ohse.de/uwe/rfc/rfc1894.html#2.3.2
-        else if(isset($status['final-recipient'])) {
+        } elseif (isset($status['final-recipient'])) {
+            // @see https://ohse.de/uwe/rfc/rfc1894.html#2.3.2
             // address-type ; generic-address
             $recipient = $this->findEmail($status['final-recipient']);
             $message->info('recipient', $recipient);
         }
-        // @see https://ohse.de/uwe/rfc/rfc1894.html#2.2.1
-        if(isset($status['original-envelope-id'])) {
+
+        if (isset($status['original-envelope-id'])) {
+            // @see https://ohse.de/uwe/rfc/rfc1894.html#2.2.1
             $envelopeId = $status['original-envelope-id'];
             $message->info('envelope_id', $envelopeId);
         }
 
-
+        return false;
     }
-
 }

@@ -18,19 +18,18 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Bounce_Detector
  */
 class Mzax_Bounce_Detector extends Mzax_Bounce_Detector_Abstract
 {
-
+    /**
+     * @var Mzax_Bounce_Detector_Abstract[]
+     */
     protected $_detectors = array();
 
-
-
+    /**
+     * Mzax_Bounce_Detector constructor.
+     */
     public function __construct()
     {
         $this->_detectors[] = new Mzax_Bounce_Detector_Arf;
@@ -40,41 +39,48 @@ class Mzax_Bounce_Detector extends Mzax_Bounce_Detector_Abstract
         $this->_detectors[] = new Mzax_Bounce_Detector_Autoreply;
     }
 
-
+    /**
+     * @param Mzax_Bounce_Detector_Abstract $detector
+     * @param null $offset
+     *
+     * @return $this
+     */
     public function addDetector(Mzax_Bounce_Detector_Abstract $detector, $offset = null)
     {
-        if($offset === null) {
+        if ($offset === null) {
             $this->_detectors[] = $detector;
-        }
-        else {
+        } else {
             $offset = abs($offset);
             $offset = min($offset, count($this->_detectors));
             array_splice($this->_detectors, $offset, 0, array($detector));
         }
+
         return $this;
     }
 
-
+    /**
+     * @param Mzax_Bounce_Message $message
+     *
+     * @return bool|string
+     */
     public function inspect(Mzax_Bounce_Message $message)
     {
-        /* @var $detector Mzax_Bounce_Detector_Abstract */
-        foreach($this->_detectors as $detector) {
-            if($detector->inspect($message) === true) {
+        foreach ($this->_detectors as $detector) {
+            if ($detector->inspect($message) === true) {
                 break;
             }
         }
 
-        if(!$message->info('recipient')) {
-            if($email = $this->getFromEmail($message)) {
+        if (!$message->info('recipient')) {
+            if ($email = $this->getFromEmail($message)) {
                 $message->info('recipient', $email);
             }
         }
 
-
-        if(!$message->info('sent_at')) {
-            foreach(array('delivery-date', 'date') as $header) {
-                if( $date = $message->getHeader($header)) {
-                    if($date = strtotime($date)) {
+        if (!$message->info('sent_at')) {
+            foreach (array('delivery-date', 'date') as $header) {
+                if ($date = $message->getHeader($header)) {
+                    if ($date = strtotime($date)) {
                         $message->info('sent_at', date('Y-m-d H:i:s', $date));
                         break;
                     }
@@ -83,26 +89,25 @@ class Mzax_Bounce_Detector extends Mzax_Bounce_Detector_Abstract
         }
 
         return $message->info();
-
     }
 
+    /**
+     * @param Mzax_Bounce_Message $message
+     *
+     * @return bool|NULL|string
+     */
     public function getFromEmail(Mzax_Bounce_Message $message)
     {
         $email = $this->findEmail($message->getFrom());
 
         // ingore certain non-user emails
         $skip = array('abuse', 'scomp', 'feedbackloop');
-        foreach($skip as $check) {
-            if(strpos($email, $check) !== false) {
+        foreach ($skip as $check) {
+            if (strpos($email, $check) !== false) {
                 return false;
             }
         }
+
         return $email;
-
-
     }
-
-
-
-
 }

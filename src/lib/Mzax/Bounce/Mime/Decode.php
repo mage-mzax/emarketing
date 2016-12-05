@@ -16,18 +16,12 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Bounce_Mime_Decode
  */
 class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
 {
-
-
-
     /**
      * decodes a mime encoded String and returns a
      * struct of parts with header and body
@@ -35,6 +29,7 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
      * @param  string $message  raw message content
      * @param  string $boundary boundary as found in content-type
      * @param  string $EOL EOL string; defaults to {@link Zend_Mime::LINEEND}
+     *
      * @return array|null parts as array('header' => array(name => value), 'body' => content), null if no parts found
      * @throws Zend_Exception
      */
@@ -53,20 +48,17 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
         return $result;
     }
 
-
-
-
-
     /**
      * Split message struct
      *
      * sometimes messages miss the final two dashes and cause
      * trouble, this is a little fix
      *
-     * @param string $message
+     * @param string $body
      * @param string $boundary
      * @see Zend_Mime_Decode::splitMessageStruct()
-     * @return Ambigous <multitype:, NULL, multitype:multitype:unknown  >
+     *
+     * @return null|array
      */
     public static function splitMime($body, $boundary)
     {
@@ -98,16 +90,12 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
             //expect invalid mime messages, just add everything to the end
             //throw new Zend_Exception('Not a valid Mime Message: End Missing');
             $res[] = substr($body, $start);
-        }
-        else {
+        } else {
             // the remaining part also needs to be parsed:
             $res[] = substr($body, $start, $p-$start);
         }
         return $res;
     }
-
-
-
 
     /**
      * Decode a report message
@@ -121,29 +109,29 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
      * to:
      * array(...);
      *
-     * @param unknown $report
-     * @return NULL|multitype:
+     * @param string $string
+     * @param bool $toLowerCase
+     *
+     * @return null|string[]
      */
-    public static function decodeHash($string, $tolower = true)
+    public static function decodeHash($string, $toLowerCase = true)
     {
         $string = trim($string);
-        if(empty($string)) {
+        if (empty($string)) {
             return null;
         }
         $string = preg_replace("/[\r\n]+/", "\n", $string);
         $hash = iconv_mime_decode_headers($string, ICONV_MIME_DECODE_CONTINUE_ON_ERROR);
-        if(!$hash) {
+        if (!$hash) {
             return null;
         }
-        if($tolower) {
+        if ($toLowerCase) {
             $hash = array_change_key_case($hash);
             //$hash = array_combine(array_map("strtolower", array_keys($hash)), array_values($hash));
         }
+
         return $hash;
     }
-
-
-
 
     /**
      * Parse an RFC-822 message
@@ -152,7 +140,8 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
      * devices may still send it
      *
      * @param string $message
-     * @return array
+     *
+     * @return bool
      */
     public static function decodeRFC822(&$message)
     {
@@ -160,11 +149,11 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
             Zend_Mime_Decode::splitMessage(ltrim($message), $headers, $content);
 
             $contentType = isset($headers['content-type']) ? $headers['content-type'] : '';
-            if($contentType) {
+            if ($contentType) {
                 $contentType = Zend_Mime_Decode::splitContentType($contentType);
             }
 
-            if(isset($contentType['boundary'])) {
+            if (isset($contentType['boundary'])) {
                 $mimeParts = self::splitMessageStruct($content, $contentType['boundary']);
             } else {
                 $mimeParts = array();
@@ -176,13 +165,10 @@ class Mzax_Bounce_Mime_Decode extends Zend_Mime_Decode
                 'mime_parts'   => $mimeParts,
                 'content_type' => $contentType,
             );
+
             return true;
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
-
-
-
 }

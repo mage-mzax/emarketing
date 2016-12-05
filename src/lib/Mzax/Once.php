@@ -21,20 +21,15 @@
  * Use a lock file to make sure a script can only run once at a time
  *
  * @method Mzax_Once|false lock(string $filename, number $timeout, number $maxRunTime)
- *
- * @author Jacob Siefer
- * @license {{license}}
  */
 class Mzax_Once
 {
-
     /**
      * Current lock file resource handle
      *
-     * @var string
+     * @var resource
      */
     protected $_fileHandle;
-
 
     /**
      * The absolute file path
@@ -43,16 +38,12 @@ class Mzax_Once
      */
     protected $_filename;
 
-
     /**
      * Informational data saved in the file
      *
      * @var array
      */
     protected $_data = array();
-
-
-
 
     /**
      * Check for lock file and create new one
@@ -62,37 +53,35 @@ class Mzax_Once
      * or force it if lockRunTime exceeded $maxRunTime
      *
      * @param string $filename Lock file
-     * @param number $timeout In seconds
-     * @param number $maxRunTime In seconds
-     * @throws Exception
+     * @param int $timeout In seconds
+     * @param int $maxRunTime In seconds
+     *
      * @return boolean
+     * @throws Exception
      */
     public function acquireLock($filename, $timeout = 5, $maxRunTime = 3600)
     {
-        if($this->_filename) {
+        if ($this->_filename) {
             throw new Exception('Lock already in place.');
         }
 
-        if(file_exists($filename)) {
+        if (file_exists($filename)) {
             $data = unserialize(file_get_contents($filename));
 
             // kill if process last touch exceeds max run time
-            if($data['last_touch']+$maxRunTime < time()) {
+            if ($data['last_touch']+$maxRunTime < time()) {
                 unlink($filename);
-            }
-            else if($timeout <= 0) {
+            } elseif ($timeout <= 0) {
                 return false;
-            }
-            else {
+            } else {
                 // wait till time out is reached
                 $time = microtime(true);
-                while(1) {
+                while (1) {
                     time_nanosleep(0, 100000);
 
-                    if(!file_exists($filename)) {
+                    if (!file_exists($filename)) {
                         break;
-                    }
-                    else if($timeout < (microtime(true)-$time)) {
+                    } elseif ($timeout < (microtime(true)-$time)) {
                         return false;
                     }
                 }
@@ -109,7 +98,8 @@ class Mzax_Once
         //file_put_contents($filename, $data)
         $this->_fileHandle = fopen($filename, 'c+');
         $this->_filename   = realpath($filename);
-        if(!$this->_filename) {
+
+        if (!$this->_filename) {
             throw new Exception('Failed to create lock, file could not be created.');
         }
 
@@ -117,11 +107,9 @@ class Mzax_Once
         register_shutdown_function(array('Mzax_Once', 'unlinkFile'), $this->_filename);
 
         $this->touch();
+
         return true;
     }
-
-
-
 
     /**
      * Update timestamp to prevent force kill on long processes
@@ -132,7 +120,7 @@ class Mzax_Once
     {
         $this->_data['last_touch'] = time();
 
-        if($this->_fileHandle) {
+        if ($this->_fileHandle) {
             ftruncate($this->_fileHandle, 0);
             fseek($this->_fileHandle, 0);
             fwrite($this->_fileHandle, serialize($this->_data));
@@ -141,8 +129,6 @@ class Mzax_Once
         return false;
     }
 
-
-
     /**
      * Unlock file
      *
@@ -150,7 +136,7 @@ class Mzax_Once
      */
     public function unlock()
     {
-        if($this->_fileHandle) {
+        if ($this->_fileHandle) {
             fclose($this->_fileHandle);
             @unlink($this->_filename);
 
@@ -162,43 +148,44 @@ class Mzax_Once
         return false;
     }
 
-
-
     /**
      * Static call for lock,
      *
      * @param string $filename
-     * @param number $timeout
-     * @param number $maxRunTime
+     * @param int $timeout
+     * @param int $maxRunTime
+     *
      * @return Mzax_Once|boolean
      */
     public static function createLock($filename, $timeout = 5, $maxRunTime = 3600)
     {
         $once = new self;
-        if($once->lock($filename, $timeout, $maxRunTime)) {
+        if ($once->lock($filename, $timeout, $maxRunTime)) {
             return $once;
         }
         return false;
     }
 
-
-
-
     /**
      * Always unlock on destruct
      *
+     * @return void
      */
     public function __destruct()
     {
         try {
             $this->unlock();
+        } catch (Exception $e) {
+            // ignore
         }
-        catch(Exception $e) {}
     }
 
-
-
-
+    /**
+     * @param string $name
+     * @param array $arguments
+     *
+     * @return mixed
+     */
     public function __call($name, $arguments)
     {
         if ($name === 'lock') {
@@ -207,8 +194,12 @@ class Mzax_Once
         throw new BadMethodCallException("Method Mzax_Once::$name() not found");
     }
 
-
-
+    /**
+     * @param string $name
+     * @param array $arguments
+     *
+     * @return mixed
+     */
     public static function __callStatic($name, $arguments)
     {
         if ($name === 'lock') {
@@ -217,13 +208,17 @@ class Mzax_Once
         throw new BadMethodCallException("Method Mzax_Once::$name() not found");
     }
 
-
+    /**
+     * Delete file
+     *
+     * @param string $filename
+     *
+     * @return void
+     */
     public static function unlinkFile($filename)
     {
-        if(file_exists($filename)) {
+        if (file_exists($filename)) {
             @unlink($filename);
         }
     }
-
 }
-

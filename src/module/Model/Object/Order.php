@@ -22,35 +22,45 @@
  */
 class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Abstract
 {
-
+    /**
+     * @return void
+     */
     public function _construct()
     {
         $this->_init('sales/order');
     }
 
-
-
-
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->__('Order');
     }
 
-
+    /**
+     * @param string $id
+     *
+     * @return string
+     */
     public function getAdminUrl($id)
     {
         return $this->getUrl('adminhtml/sales_order/view', array('order_id' => $id));
     }
 
-
-
+    /**
+     * @param Varien_Object $row
+     *
+     * @return mixed
+     */
     public function getRowId(Varien_Object $row)
     {
         return $row->getIncrementId();
     }
 
-
-
+    /**
+     * @return Mzax_Emarketing_Db_Select
+     */
     public function getQuery()
     {
         $query = parent::getQuery();
@@ -65,8 +75,11 @@ class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Ab
         return $query;
     }
 
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
+     */
     public function prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::prepareCollection($collection);
@@ -79,11 +92,13 @@ class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Ab
         $collection->addField('email');
     }
 
-
-
+    /**
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
+     */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
-
         if (!Mage::app()->isSingleStoreMode()) {
             $grid->addColumn('store_id', array(
                 'header'    => $this->__('Purchased From (Store)'),
@@ -101,17 +116,15 @@ class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Ab
             'id_field'    => 'customer_id',
             'label_field' => 'customer_id',
             'is_system'   => true,
-            'width'	      => '50px',
+            'width'       => '50px',
             'renderer'    => 'mzax_emarketing/recipients_column_renderer_object',
             'object'      => Mage::getSingleton('mzax_emarketing/object_customer')
         ));
-
 
         $grid->addColumn('email', array(
             'header' => Mage::helper('sales')->__('Email'),
             'index' => 'email'
         ));
-
 
         $grid->addColumn('created_at', array(
             'header' => $this->__('Purchased On'),
@@ -128,6 +141,4 @@ class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Ab
             'options' => Mage::getSingleton('sales/order_config')->getStatuses(),
         ));
     }
-
-
 }

@@ -191,16 +191,16 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Event
             return $this->__("No such event defined (%s)", $this->getName());
         }
 
-        $aggregatorElment  = $this->getSelectElement('aggregator', self::DEFAULT_AGGREGATOR);
-        $expectationElment = $this->getSelectElement('expectation', self::DEFAULT_EXPECTATION);
+        $aggregatorElement  = $this->getSelectElement('aggregator', self::DEFAULT_AGGREGATOR);
+        $expectationElement = $this->getSelectElement('expectation', self::DEFAULT_EXPECTATION);
 
         $html = $this->getHiddenField('name', $event->name)->toHtml();
 
         return $html . $this->__(
             $event->form,
             $this->getTimeRangeHtml('event_date'),
-            $aggregatorElment->toHtml(),
-            $expectationElment->toHtml()
+            $aggregatorElement->toHtml(),
+            $expectationElement->toHtml()
         );
     }
 

@@ -28,7 +28,6 @@ class Mzax_Emarketing_Model_Object_Collection extends Varien_Data_Collection_Db
     protected $_query;
 
     /**
-     *
      * @var Mzax_Emarketing_Model_Object_Abstract
      */
     protected $_object;
@@ -188,7 +187,7 @@ class Mzax_Emarketing_Model_Object_Collection extends Varien_Data_Collection_Db
     /**
      * Get SQL for get record count
      *
-     * @return Varien_Db_Select
+     * @return Zend_Db_Select
      */
     public function getSelectCountSql()
     {
@@ -205,10 +204,11 @@ class Mzax_Emarketing_Model_Object_Collection extends Varien_Data_Collection_Db
             $select->columns('COUNT(*)');
 
             return $select;
-        } else {
-            $countSelect->reset(Zend_Db_Select::COLUMNS);
-            $countSelect->columns('COUNT(*)');
         }
+
+        $countSelect->reset(Zend_Db_Select::COLUMNS);
+        $countSelect->columns('COUNT(*)');
+
         return $countSelect;
     }
 }

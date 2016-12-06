@@ -17,15 +17,22 @@
  */
 
 
-abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_Model_Object_Filter_Combine
+/**
+ * Class Mzax_Emarketing_Model_Object_Filter_Main
+ */
+abstract class Mzax_Emarketing_Model_Object_Filter_Main
+    extends Mzax_Emarketing_Model_Object_Filter_Combine
 {
 
-
+    /**
+     * Main ID should always be "1"
+     *
+     * @return string
+     */
     public function getId()
     {
         return '1';
     }
-
 
     /**
      * Has any filters been added?
@@ -37,18 +44,13 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
         return !empty($this->_filters);
     }
 
-
-
-
-
-
-
+    /**
+     * @return Mzax_Emarketing_Model_Object_Filter_Abstract[]
+     */
     public function getAvailableFilters()
     {
         return Mzax_Emarketing_Model_Object_Filter_Component::getAvailableFilters();
     }
-
-
 
 
     /**
@@ -57,8 +59,10 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
      * Filters depend on their parent and ancestor, therefor we need
      * to retrieve a new filter using its full type path.
      *
-     * @param array $path
+     * @param string[]|string $path
+     *
      * @return Mzax_Emarketing_Model_Object_Filter_Abstract
+     * @throws Exception
      */
     public function createFilterFromTypePath($path)
     {
@@ -82,7 +86,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
 
         $filter = null;
         $parent = $this;
-        while(count($path)) {
+        while (count($path)) {
             $filterName = array_shift($path);
             $filter = $this->getFilterFactory()->factory($filterName);
             if (!$filter) {
@@ -92,16 +96,15 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
             $parent = $filter;
         }
         $filter->addData($params);
+
         return $filter;
     }
-
-
-
 
     /**
      * Retrieve filter by id
      *
      * @param string $id e.g. 1--1--2--3--1--2
+     *
      * @return Mzax_Emarketing_Model_Object_Filter_Abstract
      */
     public function getFilterById($id)
@@ -111,28 +114,21 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
         $filter = $this->getFilter();
 
         /* @var $filter Mzax_Emarketing_Model_Object_Filter_Abstract */
-        while($filter && $i = (int) array_shift($path)) {
+        while ($filter && $i = (int) array_shift($path)) {
             $filter = $filter->getFilterByIndex($i-1);
         }
         return $filter;
     }
 
-
-
-
-
     /**
-     * (non-PHPdoc)
-     * @see Mzax_Emarketing_Model_Object_Filter_Component::getQuery()
+     * @return Mzax_Emarketing_Db_Select
      */
     public function getQuery()
     {
         $query = $this->getObject()->getQuery();
+
         return $query;
     }
-
-
-
 
     /**
      * The default filter instance
@@ -142,15 +138,5 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Main extends Mzax_Emarketing_
     public function getFilter()
     {
         return $this;
-        if (!$this->_filter) {
-            $this->_filter = Mage::getModel('mzax_emarketing/object_filter_combine')
-                ->load($this->getFilterData())
-                ->setId('1')
-                ->setParent($this);
-        }
-        return $this->_filter;
     }
-
-
-
 }

@@ -153,6 +153,8 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
      * to match the filter settings
      *
      * @param Mzax_Emarketing_Db_Select $query
+     *
+     * @return void
      */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {

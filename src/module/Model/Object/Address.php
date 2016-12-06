@@ -76,7 +76,6 @@ abstract class Mzax_Emarketing_Model_Object_Address extends Mzax_Emarketing_Mode
      */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
-
         $grid->addColumn('name', array(
             'header'    => Mage::helper('mzax_emarketing')->__('Name'),
             'index'     => 'name'

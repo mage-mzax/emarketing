@@ -17,65 +17,59 @@
  */
 
 
-
-
 /**
- * Abstract Attribute filter
+ * Class Mzax_Emarketing_Model_Object_Filter_Attribute
  *
  * Define the entity type code and the required binding
  * and it will generate filters for all attributes
  *
  * use method isAttributeAllowed() for fine tuning
  *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * @method bool getAnniversary()
+ * @method string getDirection()
  */
 abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
     extends Mzax_Emarketing_Model_Object_Filter_Abstract
 {
-
     const VALUE_KEY = 'value';
 
-
-
     /**
-     *
      * @var Mage_Catalog_Model_Resource_Eav_Attribute
      */
     protected $_attribute;
 
-
-
     /**
-     *
      * @var string
      */
     protected $_entity;
 
-
     /**
-     *
      * @var string
      */
     protected $_requireBinding;
 
-
-
+    /**
+     * @var array
+     */
     protected $_attributeConfigs = array();
 
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Filter_Component $parent
+     *
+     * @return bool
+     */
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
         return $parent->hasBinding($this->_requireBinding);
     }
 
-
-
+    /**
+     * @param Mage_Core_Model_Config_Element $config
+     */
     protected function _prepareFilter(Mage_Core_Model_Config_Element $config)
     {
         if (isset($config->attributes)) {
-            /* @var $attrCfg Mage_Core_Model_Config_Element */
+            /* @var $cfg Mage_Core_Model_Config_Element */
             foreach ($config->attributes->children() as $code => $cfg) {
                 $this->_attributeConfigs[$code] = $cfg->asCanonicalArray();
             }
@@ -83,14 +77,13 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         parent::_prepareFilter($config);
     }
 
-
-
     /**
      * Retrieve attribute config value
      *
      * @param string $attribute
      * @param string $key
      * @param mixed $default
+     *
      * @return mixed
      */
     protected function getAttributeConfig($attribute, $key, $default = null)
@@ -104,42 +97,34 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         return $default;
     }
 
-
-
-
-
+    /**
+     * @param Mzax_Emarketing_Db_Select $query
+     *
+     * @return void
+     */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
         $attribute = $this->getAttribute();
-        $adapter   = $query->getAdapter();
-        $field     = $query->joinAttribute($this->_requireBinding, $attribute, true);
+        $adapter = $query->getAdapter();
+        $field = $query->joinAttribute($this->_requireBinding, $attribute, true);
 
         $query->addBinding('attribute_value', $field);
         $query->group();
 
-        $operator  = $this->getDataSetDefault('operator', $this->helper()->getDefaultOperatorByType($this->getInputType()));
-        $value     = $this->getData(self::VALUE_KEY);
+        $operator = $this->getDataSetDefault('operator', $this->helper()->getDefaultOperatorByType($this->getInputType()));
+        $value = $this->getData(self::VALUE_KEY);
 
-
-
-        /*
-         * Relative data attributes
-         */
         if ($this->getData('relative')) {
-
             $future = $this->getDirection() == 'future';
             $usesLocalTime = (bool) $this->getAttributeConfig($attribute, 'uses_local_time', false);
 
             if ($this->getAnniversary()) {
                 $query->where($this->getAnniversaryTimeExpr('{attribute_value}', self::VALUE_KEY, $future, $usesLocalTime));
-            }
-            else {
+            } else {
                 $query->where($this->getTimeRangeExpr('{attribute_value}', self::VALUE_KEY, $future, $usesLocalTime));
             }
             return;
         }
-
-
 
         /*
          * Multi select attributes are saved as list in varchar
@@ -147,8 +132,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
          *
          * @todo can we use an index?
          */
-        if ($attribute->getFrontendInput() === 'multiselect')
-        {
+        if ($attribute->getFrontendInput() === 'multiselect') {
             $value = (array) $value;
             $where = array();
             foreach ($value as $v) {
@@ -156,8 +140,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
             }
             if (strpos($operator, '()') !== false) {
                 $where = implode(' OR ', $where);
-            }
-            else {
+            } else {
                 $where = implode(' AND ', $where);
             }
 
@@ -169,24 +152,36 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
             return;
         }
 
-        switch($operator) {
+        switch ($operator) {
             case '!=':
             case '>=':
             case '<=':
             case '>':
-            case '<':   return $query->where("{attribute_value} {$operator} ?", $this->_implode($value)); break;
-            case '{}':  return $query->where("{attribute_value} LIKE ?", "%$value%"); break;
-            case '!{}': return $query->where("{attribute_value} NOT LIKE ?", "%$value%"); break;
-            case '()':  return $query->where("{attribute_value} IN (?)", $this->_explode($value)); break;
-            case '!()': return $query->where("{attribute_value} NOT IN (?)", $this->_explode($value)); break;
-            default:    return $query->where("{attribute_value} = ?", $this->_implode($value)); break;
+            case '<':
+                $query->where("{attribute_value} {$operator} ?", $this->_implode($value));
+                break;
+            case '{}':
+                $query->where("{attribute_value} LIKE ?", "%$value%");
+                break;
+            case '!{}':
+                $query->where("{attribute_value} NOT LIKE ?", "%$value%");
+                break;
+            case '()':
+                $query->where("{attribute_value} IN (?)", $this->_explode($value));
+                break;
+            case '!()':
+                $query->where("{attribute_value} NOT IN (?)", $this->_explode($value));
+                break;
+            default:
+                $query->where("{attribute_value} = ?", $this->_implode($value));
+                break;
         }
-
     }
-
 
     /**
      * Add attribute value to collection
+     *
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
      *
      * @return void
      */
@@ -196,9 +191,10 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         $collection->addField('attribute_value');
     }
 
-
     /**
      * Add attribute value to grid
+     *
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
      *
      * @return void
      */
@@ -214,9 +210,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         ));
     }
 
-
-
-
     /**
      * Retrieve grid column type
      *
@@ -224,7 +217,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
      */
     public function getColumnType()
     {
-        switch($this->getInputType()) {
+        switch ($this->getInputType()) {
             case 'multiselect':
             case 'select':
             case 'boolean':
@@ -232,8 +225,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         }
         return $this->getInputType();
     }
-
-
 
     /**
      * Retrieve value options for the grid
@@ -244,10 +235,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
     {
         return $this->getValueOptions();
     }
-
-
-
-
 
     /**
      * Retrieve attribute instance
@@ -263,7 +250,11 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         return $this->_attribute;
     }
 
-
+    /**
+     * @param Mage_Catalog_Model_Resource_Eav_Attribute $attribute
+     *
+     * @return string
+     */
     public function getFrontendLabel($attribute = null)
     {
         if (!$attribute) {
@@ -273,10 +264,9 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         if (!$label) {
             return $attribute->getFrontendLabel();
         }
-        return$this->__($label);
+
+        return $this->__($label);
     }
-
-
 
     /**
      * html for settings in option form
@@ -296,14 +286,14 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
             $operatorElement = $this->getOperatorElement();
             $valueElement = $this->getValueElement();
 
-            return $html. $this->__('%s %s %s.',
+            return $html . $this->__(
+                '%s %s %s.',
                 $this->getFrontendLabel(),
                 $operatorElement->toHtml(),
                 $valueElement->toHtml()
             );
-        }
-        // relative date
-        else {
+        } else {
+            // relative date
             $html .= $this->getHiddenField('relative', 1)->toHtml();
             $html .= $this->getHiddenField('anniversary', $this->getAnniversary())->toHtml();
             $html .= $this->getHiddenField('direction', $this->getDirection())->toHtml();
@@ -314,24 +304,20 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
                 $text = $this->getDirection() == 'future'
                     ? '%s anniversary is in %s.'
                     : '%s anniversary was %s ago.';
-            }
-            else {
+            } else {
                 $text = $this->getDirection() == 'future'
                     ? '%s is in %s.'
                     : '%s was %s ago.';
             }
 
-            return $html. $this->__($text,
+            return $html . $this->__(
+                $text,
                 $this->getFrontendLabel(),
                 $timeRangeHtml
             );
 
         }
     }
-
-
-
-
 
     /**
      * Retrieve operator select element
@@ -347,10 +333,8 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         return $this->getSelectElement('operator', $default, $options);
     }
 
-
-
     /**
-     * Retroeve value form element
+     * Retrieve value form element
      *
      * @return Varien_Data_Form_Element_Abstract
      */
@@ -358,8 +342,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
     {
         $type = $this->getInputType();
 
-        switch($type) {
-
+        switch ($type) {
             case 'date':
                 $element = $this->getDateElement(self::VALUE_KEY);
                 break;
@@ -369,7 +352,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
                     $element = $this->getSelectElement(self::VALUE_KEY);
                     break;
                 }
-
+                // fall through
             case 'multiselect':
                 $element = $this->getMultiSelectElement(self::VALUE_KEY);
                 break;
@@ -387,17 +370,12 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         return $element;
     }
 
-
-
-
-
-
     /**
      * Retrieve all value options as hash
      *
      * array(value => label,...)
      *
-     * @return array
+     * @return string[]
      */
     public function getValueOptions()
     {
@@ -408,7 +386,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
             } else {
                 $addEmptyOption = true;
             }
-            $options = $attribute->getSource()->getAllOptions(false);
+            $options = $attribute->getSource()->getAllOptions($addEmptyOption);
             $hash = array();
             foreach ($options as $o) {
                 if (is_array($o['value'])) {
@@ -421,14 +399,12 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         return array();
     }
 
-
-
-
     /**
      * Add hidden input field
      *
      * @param string $name
      * @param string $value
+     *
      * @return Varien_Data_Form_Element_Abstract
      */
     protected function getHiddenField($name, $value)
@@ -442,9 +418,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         ));
     }
 
-
-
-
     /**
      * Retrieve input type
      *
@@ -453,19 +426,26 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
     public function getInputType()
     {
         switch ($this->getAttribute()->getFrontendInput()) {
-            case 'select':      return 'select';
-            case 'multiselect': return 'multiselect';
-            case 'date':        return 'date';
-            case 'boolean':     return 'boolean';
-            case 'price':       return 'numeric';
+            case 'select':
+                return 'select';
+            case 'multiselect':
+                return 'multiselect';
+            case 'date':
+                return 'date';
+            case 'boolean':
+                return 'boolean';
+            case 'price':
+                return 'numeric';
         }
+
         return 'string';
     }
 
-
-
-
-
+    /**
+     * Retrieve all filter options
+     *
+     * @return string[]
+     */
     public function getOptions()
     {
         $title = $this->getTitle();
@@ -479,12 +459,11 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         /* @var $attribute Mage_Eav_Model_Entity_Attribute_Abstract */
         foreach ($attributes as $attribute) {
             if ($this->isAttributeAllowed($attribute)) {
-
                 $label = $this->getFrontendLabel($attribute);
 
                 $options[$type.'?attribute='.$attribute->getAttributeCode()] = "{$title} | {$label}";
 
-                // dates can be filterd by a fixed date or relative to the time when checked
+                // dates can be filtered by a fixed date or relative to the time when checked
                 if ($attribute->getFrontendInput() === 'date') {
                     $options[$type.'?attribute='.$attribute->getAttributeCode().'?relative=1?direction=future'] = $title . ' | ' . $this->__('%s is in...', $label);
                     $options[$type.'?attribute='.$attribute->getAttributeCode().'?relative=1?direction=past']   = $title . ' | ' . $this->__('%s was ... ago', $label);
@@ -496,10 +475,15 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         }
 
         asort($options);
+
         return $options;
     }
 
-
+    /**
+     * @param Mage_Eav_Model_Entity_Attribute_Abstract $attribute
+     *
+     * @return bool
+     */
     protected function isAttributeAllowed(Mage_Eav_Model_Entity_Attribute_Abstract $attribute)
     {
         if ($this->getAttributeConfig($attribute, 'disable', false)) {
@@ -509,9 +493,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
             return true;
         }
 
-
         return false;
     }
-
-
 }

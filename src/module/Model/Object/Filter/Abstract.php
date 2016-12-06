@@ -30,7 +30,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
     protected $_filters = array();
 
     /**
-     *
      * @var string
      */
     protected $_formHtml;
@@ -1344,6 +1343,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
      * canCreateIndex() allows to do so.
      *
      * @param boolean $create Whether to try to create an index or not
+     *
      * @return true|string
      */
     public function checkIndexes($create = false)

@@ -21,52 +21,56 @@
 /**
  * Simple newsletter status filter
  *
- * @method Mzax_Emarketing_Model_Object_Filter_Newsletter setCondition(string $value)
- * @method Mzax_Emarketing_Model_Object_Filter_Newsletter setStatus(string $value)
+ * @method string getCondition()
+ * @method $this setCondition(string $value)
  *
- * @author Jacob Siefer
- * @license {{license}}
+ * @method string getStatus()
+ * @method $this setStatus(string $value)
+ *
+ *
+ * @method int getStore()
+ * @method $this setStore(int $value)
  */
 class Mzax_Emarketing_Model_Object_Filter_Newsletter
     extends Mzax_Emarketing_Model_Object_Filter_Abstract
 {
-
-    const DEFAULT_STATUS    = Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED;
+    const DEFAULT_STATUS = Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED;
     const DEFAULT_CONDITION = 'is';
 
-
-
-
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return "Newsletter | Subscription Status";
     }
 
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Filter_Component $parent
+     *
+     * @return bool
+     */
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
         return $parent->hasBinding('email', 'customer_id', 'subscriber_id', 'subscriber_status');
     }
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Db_Select $query
+     *
+     * @return void
+     */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
         $condition = $this->getDataSetDefault('condition', self::DEFAULT_CONDITION);
-        $status    = $this->getDataSetDefault('status',    self::DEFAULT_STATUS);
+        $status = $this->getDataSetDefault('status', self::DEFAULT_STATUS);
 
-        if (!$query->hasBinding('subscriber_status'))
-        {
+        if (!$query->hasBinding('subscriber_status')) {
             if ($query->hasBinding('subscriber_id')) {
                 $query->joinTableLeft('subscriber_id', 'newsletter/subscriber', 'subscriber');
-            }
-            else if ($query->hasBinding('email')) {
+            } elseif ($query->hasBinding('email')) {
                 $query->joinTableLeft(array('subscriber_email' => 'email'), 'newsletter/subscriber', 'subscriber');
-            }
-
-            else if ($query->hasBinding('customer_id')) {
+            } elseif ($query->hasBinding('customer_id')) {
                 $query->joinTableLeft('customer_id', 'newsletter/subscriber', 'subscriber');
             }
             $query->addBinding('subscriber_status', 'subscriber.subscriber_status');
@@ -76,34 +80,34 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
 
         if ($condition === 'is') {
             $query->where("{subscriber_status} = ?", $status);
-        }
-        else {
+        } else {
             $query->where("{subscriber_status} != ? OR {subscriber_status} IS NULL", $status);
         }
 
-
-        if (Mage::getStoreConfigFlag('mzax_emarketing/general/newsletter_multistore'))
-        {
-            $storeId = (int) $this->getStore();
+        if (Mage::getStoreConfigFlag('mzax_emarketing/general/newsletter_multistore')) {
+            $storeId = (int)$this->getStore();
             if ($storeId && $query->hasBinding('subscriber_store')) {
                 $query->where("{subscriber_store} = ?", $storeId);
             }
         }
-
     }
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
+     */
     protected function _prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::_prepareCollection($collection);
         $collection->addField('newsletter_status', 'subscriber_status');
     }
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
+     */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
         parent::prepareGridColumns($grid);
@@ -116,15 +120,7 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
             'type'      => 'options',
             'options'   => array_map('ucwords', $this->getStatusOptions())
         ));
-
     }
-
-
-
-
-
-
-
 
     /**
      * html for settings in option form
@@ -137,23 +133,29 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
         $subscribeElement = $this->getSelectElement('status', self::DEFAULT_STATUS);
         $storeElement = $this->getSelectElement('store', '0');
 
-        return $this->__('Newsletter subscription status for %s %s %s.',
+        return $this->__(
+            'Newsletter subscription status for %s %s %s.',
             $storeElement->toHtml(),
             $conditionElement->toHtml(),
             $subscribeElement->toHtml()
-         );
+        );
     }
 
-
-
+    /**
+     * Retrieve available stores
+     *
+     * @return string[]
+     */
     protected function getStoreOptions()
     {
         $options = array(
             '0' => $this->__('any store')
         );
 
-        /* @see Mage_Adminhtml_Model_System_Config_Source_Store */
-        $stores = Mage::getSingleton('adminhtml/system_config_source_store')->toOptionArray();
+        /** @var Mage_Adminhtml_Model_System_Config_Source_Store $source */
+        $source = Mage::getSingleton('adminhtml/system_config_source_store');
+        $stores = $source->toOptionArray();
+
         foreach ($stores as $store) {
             $options[$store['value']] = $store['label'];
         }
@@ -161,8 +163,9 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
         return $options;
     }
 
-
-
+    /**
+     * @return string[]
+     */
     protected function getStatusOptions()
     {
         return array(
@@ -173,8 +176,9 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
         );
     }
 
-
-
+    /**
+     * @return string[]
+     */
     protected function getConditionOptions()
     {
         return array(
@@ -183,22 +187,18 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
         );
     }
 
-
-
-
-
-
     /**
      * The newsletter table is missing an index for the email
      *
+     * @param bool $create
+     *
+     * @return bool|string
+     * @throws Exception
      */
     public function checkIndexes($create = false)
     {
         $adapter = $this->_getWriteAdapter();
-
-
         $table = $this->_getTable('newsletter/subscriber');
-
         $indexList = $adapter->getIndexList($table);
 
         // check if we already created an index
@@ -208,7 +208,7 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
 
         // check for other indexes that can work
         foreach ($indexList as $index) {
-            switch(count($index['fields'])) {
+            switch (count($index['fields'])) {
                 case 1:
                     if ($index['fields'][0] === 'subscriber_email') {
                         return true;
@@ -217,28 +217,21 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
             }
         }
 
-
         if ($create && $this->canCreateIndex()) {
             try {
                 $adapter->addIndex($table, 'MZAX_IDX_EMAIL', array('subscriber_email'));
                 return true;
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 if (Mage::getIsDeveloperMode()) {
                     throw $e;
                 }
                 Mage::logException($e);
                 return $this->__('Failed to create an index for the table "%s". Please check logs.', $table);
             }
-        }
-        else if ($this->canCreateIndex()) {
+        } elseif ($this->canCreateIndex()) {
             return true;
         }
 
         return $this->__('It is recommended to set an index on "subscriber_email" for the table "%s" before using this filter.', $table);
     }
-
-
-
-
 }

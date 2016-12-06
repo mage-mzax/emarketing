@@ -37,7 +37,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Name
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
         $firstname = $query->joinAttribute('customer_id', 'customer/firstname');
-        $lastname  = $query->joinAttribute('customer_id', 'customer/lastname');
+        $lastname = $query->joinAttribute('customer_id', 'customer/lastname');
 
         $query->where($this->getWhereSql('name', "CONCAT_WS(' ', $firstname, $lastname)"));
     }

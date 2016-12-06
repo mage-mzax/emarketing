@@ -19,21 +19,31 @@
 
 
 /**
+ * Class Mzax_Emarketing_Model_Object_Filter_Table
  *
- * @method Mzax_Emarketing_Model_Object_Filter_Table setColumn(string $name)
- * @method Mzax_Emarketing_Model_Object_Filter_Table setRelative(boolean $flag)
- * @method Mzax_Emarketing_Model_Object_Filter_Table setValue(mixed $value)
- * @method Mzax_Emarketing_Model_Object_Filter_Table setOperator(string $value)
+ * @method string getColumn()
+ * @method $this setColumn(string $name)
  *
- * @author Jacob Siefer
- * @license {{license}}
+ * @method boolean getRelative()
+ * @method $this setRelative(boolean $flag)
+ *
+ * @method mixed getValue()
+ * @method $this setValue(mixed $value)
+ *
+ * @method string getOperator()
+ * @method $this setOperator(string $value)
+ *
+ * @method string getDirection()
+ * @method $this setDirection(string $value)
+ *
+ * @method boolean getAnniversary()
+ * @method $this setAnniversary(boolean $value)
+ *
  */
 abstract class Mzax_Emarketing_Model_Object_Filter_Table
     extends Mzax_Emarketing_Model_Object_Filter_Abstract
 {
-
     const VALUE_KEY = 'value';
-
 
     /**
      * Name of table e.g. sales/order
@@ -42,7 +52,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      */
     protected $_table;
 
-
     /**
      * Query alias
      *
@@ -50,15 +59,12 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      */
     protected $_tableAlias;
 
-
     /**
      * Id field/column name
      *
      * @var string
      */
     protected $_tableIdFieldName = 'entity_id';
-
-
 
     /**
      * Form text
@@ -70,8 +76,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      * @var string
      */
     protected $_formText = '%s %s %s.';
-
-
 
     /**
      * Form text for boolean checks
@@ -86,8 +90,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      */
     protected $_boolFormText = '%s %s.';
 
-
-
     /**
      * The binding that is required to show this filter.
      * Usally this is the table id field (order_id, quote_id, customer_id,...)
@@ -95,8 +97,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      * @var string
      */
     protected $_requireBinding;
-
-
 
     /**
      * Use _registerColumns() and addColumn()
@@ -108,8 +108,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      */
     protected $_columnOptions = array();
 
-
-
     /**
      * Reference to the selected table column
      *
@@ -119,8 +117,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      */
     protected $_tableColumn;
 
-
-
     /**
      * Abstract method to register all columns
      *
@@ -128,45 +124,40 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      */
     abstract protected function _registerColumns();
 
-
-
     /**
+     * @param Mzax_Emarketing_Model_Object_Filter_Component $parent
      *
-     * (non-PHPdoc)
-     * @see Mzax_Emarketing_Model_Object_Filter_Component::acceptParent()
+     * @return bool
      */
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
         return $parent->hasBinding($this->_requireBinding);
     }
 
-
-
     /**
-     *
-     * (non-PHPdoc)
-     * @see Mzax_Emarketing_Model_Object_Filter_Abstract::_prepareFilter($config)
+     * @param Mage_Core_Model_Config_Element $config
      */
     protected function _prepareFilter(Mage_Core_Model_Config_Element $config)
     {
         parent::_prepareFilter($config);
         $this->_registerColumns();
-        Mage::dispatchEvent("mzax_emarketing_email_filter_prepare_table_" . $this->_tableAlias, array('filter' => $this));
+
+        Mage::dispatchEvent(
+            "mzax_emarketing_email_filter_prepare_table_" . $this->_tableAlias,
+            array('filter' => $this)
+        );
     }
 
-
-
-
     /**
+     * @param Mzax_Emarketing_Db_Select $query
      *
-     * (non-PHPdoc)
-     * @see Mzax_Emarketing_Model_Object_Filter_Component::_prepareQuery()
+     * @return void
+     * @throws Exception
      */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
         /* @var $adapter Zend_Db_Adapter_Abstract */
         $column  = $this->getTableColumn();
-        $adapter = $query->getAdapter();
 
         if (!$column) {
             throw new Exception("No valid table column defined");
@@ -174,8 +165,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
 
         if ($this->_tableIdFieldName) {
             $bind = array($this->_tableIdFieldName => $this->_requireBinding);
-        }
-        else {
+        } else {
             $bind = $this->_requireBinding;
         }
 
@@ -186,15 +176,13 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
         $value     = $this->getData(self::VALUE_KEY);
 
 
-
         // relative date
         if ($this->getData('relative')) {
             $future = $this->getDirection() == 'future';
 
             if ($this->getAnniversary()) {
                 $query->where($this->getAnniversaryTimeExpr('{column_value}', self::VALUE_KEY, $future, $column->applyGmtOffset));
-            }
-            else {
+            } else {
                 $query->where($this->getTimeRangeExpr('{column_value}', self::VALUE_KEY, $future));
             }
             return;
@@ -204,27 +192,36 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
             $value = '1';
         }
 
-        switch($operator) {
+        switch ($operator) {
             case '!=':
             case '>=':
             case '<=':
             case '>':
-            case '<':   return $query->where("{column_value} {$operator} ?", $value); break;
-            case '{}':  return $query->where("{column_value} LIKE ?", "%$value%"); break;
-            case '!{}': return $query->where("{column_value} NOT LIKE ?", "%$value%"); break;
-            case '()':  return $query->where("{column_value} IN (?)", $this->_explode($value)); break;
-            case '!()': return $query->where("{column_value} NOT IN (?)", $this->_explode($value)); break;
-            default:    return $query->where("{column_value} = ?", $value); break;
+            case '<':
+                $query->where("{column_value} {$operator} ?", $value);
+                break;
+            case '{}':
+                $query->where("{column_value} LIKE ?", "%$value%");
+                break;
+            case '!{}':
+                $query->where("{column_value} NOT LIKE ?", "%$value%");
+                break;
+            case '()':
+                $query->where("{column_value} IN (?)", $this->_explode($value));
+                break;
+            case '!()':
+                $query->where("{column_value} NOT IN (?)", $this->_explode($value));
+                break;
+            default:
+                $query->where("{column_value} = ?", $value);
+                break;
         }
     }
 
-
-
-
     /**
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
      *
-     * (non-PHPdoc)
-     * @see Mzax_Emarketing_Model_Object_Filter_Abstract::_prepareCollection($collection)
+     * @return void
      */
     protected function _prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
@@ -232,19 +229,16 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
         $collection->addField('column_value');
     }
 
-
-
     /**
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
      *
-     * (non-PHPdoc)
-     * @see Mzax_Emarketing_Model_Object_Filter_Component::prepareGridColumns()
+     * @return void
      */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
         parent::prepareGridColumns($grid);
 
-        if ($column = $this->getTableColumn())
-        {
+        if ($column = $this->getTableColumn()) {
             $grid->addColumn('column_value', array(
                 'header'    => ucfirst($column->label),
                 'type'      => $this->getColumnType(),
@@ -254,35 +248,27 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
                 'gmtoffset' => true
             ));
         }
-
     }
-
-
-
 
     /**
      * Retrieve table column name
      *
-     * @return array
+     * @return stdClass
      */
     public function getTableColumn()
     {
-        if ( $this->_tableColumn === null) {
+        if ($this->_tableColumn === null) {
             $column = $this->getData('column');
             if (isset($this->_columnOptions[$column])) {
                 $this->_tableColumn = $this->_columnOptions[$column];
-            }
-            else {
+            } else {
                 $this->_tableColumn = false;
             }
 
         }
+
         return $this->_tableColumn;
     }
-
-
-
-
 
     /**
      * html for settings in option form
@@ -302,53 +288,46 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
         $valueElement = $this->getValueElement();
 
 
-        if ($this->getData('relative')) {
-
-            $timeRangeHtml = $this->getTimeRangeHtml(self::VALUE_KEY);
-
+        if ($this->getRelative()) {
             $html .= $this->getHiddenField('relative', 1)->toHtml();
             $html .= $this->getHiddenField('anniversary', $this->getAnniversary())->toHtml();
             $html .= $this->getHiddenField('direction', $this->getDirection())->toHtml();
 
             $timeRangeHtml = $this->getTimeRangeHtml(self::VALUE_KEY);
-            $timeDirHtml   = $this->getTimeDirectionHtml(self::VALUE_KEY);
 
             if ($this->getAnniversary()) {
                 $text = $this->getDirection() == 'future'
                     ? '%s anniversary is in %s.'
                     : '%s anniversary was %s ago.';
-            }
-            else {
+            } else {
                 $text = $this->getDirection() == 'future'
                     ? '%s is in %s.'
                     : '%s was %s ago.';
             }
 
-            return $html. $this->__($text,
+            return $html . $this->__(
+                $text,
                 $column->label,
                 $timeRangeHtml
             );
         }
 
-
-        switch($column->type) {
+        switch ($column->type) {
             case 'boolean':
-                return $html . $this->__($this->_boolFormText,
+                return $html . $this->__(
+                    $this->_boolFormText,
                     $operatorElement->toHtml(),
                     $column->label
                 );
         }
 
-        return $html . $this->__($this->_formText,
+        return $html . $this->__(
+            $this->_formText,
             $column->label,
             $operatorElement->toHtml(),
             $valueElement->toHtml()
         );
     }
-
-
-
-
 
     /**
      * Retrieve operator select element
@@ -357,17 +336,15 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      */
     public function getOperatorElement()
     {
-        $type    = $this->getInputType();
+        $type = $this->getInputType();
         $default = $this->helper()->getDefaultOperatorByType($type);
         $options = $this->helper()->getOperatorOptionsByType($type);
 
         return $this->getSelectElement('operator', $default, $options);
     }
 
-
-
     /**
-     * Retroeve value form element
+     * Retrieve value form element
      *
      * @return Varien_Data_Form_Element_Abstract
      */
@@ -375,8 +352,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
     {
         $type = $this->getInputType();
 
-        switch($type) {
-
+        switch ($type) {
             case 'date':
                 $element = $this->getDateElement(self::VALUE_KEY);
                 break;
@@ -403,22 +379,17 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
         return $element;
     }
 
-
-
-
-
-
     /**
      * Retrieve all value options as hash
      *
      * array(value => label,...)
      *
-     * @return array
+     * @return string[]
      */
     public function getValueOptions()
     {
         if ($column = $this->getTableColumn()) {
-            switch($column->type) {
+            switch ($column->type) {
                 case 'boolean':
                     return array(
                         '1' => $this->__('is'),
@@ -427,20 +398,19 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
             }
             return $column->options;
         }
+
         return array();
     }
-
-
 
     /**
      * Retrieve value options for the grid
      *
-     * @return array
+     * @return string[]
      */
     public function getGridValueOptions()
     {
         if ($column = $this->getTableColumn()) {
-            switch($column->type) {
+            switch ($column->type) {
                 case 'boolean':
                     return array(
                         '1' => $this->__('Yes'),
@@ -454,11 +424,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
         return $this->getValueOptions();
     }
 
-
-
-
-
-
     /**
      * Retrieve input type
      *
@@ -467,7 +432,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
     public function getInputType()
     {
         if ($column = $this->getTableColumn()) {
-            switch($column->type) {
+            switch ($column->type) {
                 case 'price':
                     return 'numeric';
             }
@@ -477,10 +442,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
         return 'string';
     }
 
-
-
-
-
     /**
      * Retrieve input type
      *
@@ -488,9 +449,8 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      */
     public function getColumnType()
     {
-        if ($column = $this->getTableColumn())
-        {
-            switch($column->type) {
+        if ($column = $this->getTableColumn()) {
+            switch ($column->type) {
                 case 'multiselect':
                 case 'select':
                 case 'boolean':
@@ -501,10 +461,6 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
         return 'string';
     }
 
-
-
-
-
     /**
      * Register column to this table filter
      *
@@ -512,6 +468,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
      * @param string $label
      * @param string $type
      * @param array $options
+     *
      * @return stdClass
      */
     public function addColumn($name, $label, $type = 'numeric', $options = array())
@@ -540,11 +497,9 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
         );
 
         $this->_columnOptions[$name] = $column;
+
         return $column;
     }
-
-
-
 
     /**
      * Retrieve all column options available
@@ -556,21 +511,20 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
         return $this->_columnOptions;
     }
 
-
-
-
-
+    /**
+     * Retrieve all filter options
+     *
+     * @return string[]
+     */
     public function getOptions()
     {
         $title = $this->getTitle();
         $type  = $this->getType();
         $options = array();
 
-        foreach ($this->getColumnOptions() as $column)
-        {
+        foreach ($this->getColumnOptions() as $column) {
             $options[$type.'?column=' . $column->name] = "{$title} | {$column->label}";
             if ($column->type === 'date') {
-
                 if ($column->allowFuture) {
                     $options[$type.'?column='.$column->name.'?relative=1?direction=future'] = $title . ' | ' . $this->__('%s is in...', $column->label);
                 }
@@ -583,10 +537,8 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Table
                 }
             }
         }
-
         asort($options);
+
         return $options;
     }
-
-
 }

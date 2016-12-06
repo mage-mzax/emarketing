@@ -33,6 +33,8 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Lastlogin
 
     /**
      * @param Mzax_Emarketing_Db_Select $query
+     *
+     * @return void
      */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
@@ -48,6 +50,8 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Lastlogin
 
     /**
      * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
      */
     protected function _prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
@@ -57,6 +61,8 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Lastlogin
 
     /**
      * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
      */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {

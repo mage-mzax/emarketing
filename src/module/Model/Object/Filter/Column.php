@@ -16,49 +16,52 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
 /**
- *
- * @author Jacob Siefer
- *
+ * Class Mzax_Emarketing_Model_Object_Filter_Column
  */
 abstract class Mzax_Emarketing_Model_Object_Filter_Column
     extends Mzax_Emarketing_Model_Object_Filter_Abstract
 {
-
     const VALUE_KEY = 'value';
 
-
-
+    /**
+     * @var string
+     */
     protected $_formText = '%s %s %s.';
 
-
     /**
-     *
      * @var string
      */
     protected $_requireBinding;
 
+    /**
+     * @var string
+     */
     protected $_label;
 
-
+    /**
+     * @var string
+     */
     protected $_inputType = 'string';
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Filter_Component $parent
+     *
+     * @return bool
+     */
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
         return $parent->hasBinding($this->_requireBinding);
     }
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Db_Select $query
+     *
+     * @return void
+     */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
-        /* @var $adapter Zend_Db_Adapter_Abstract */
-        $adapter = $query->getAdapter();
-
         $operator  = $this->getDataSetDefault('operator', $this->helper()->getDefaultOperatorByType($this->_inputType));
         $value     = $this->getData(self::VALUE_KEY);
 
@@ -66,37 +69,53 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Column
             $value = '1';
         }
 
-        switch($operator) {
+        switch ($operator) {
             case '!=':
             case '>=':
             case '<=':
             case '>':
-            case '<':   return $query->where("{{$this->_requireBinding}} {$operator} ?", $value); break;
-            case '{}':  return $query->where("{{$this->_requireBinding}} LIKE ?", "%$value%"); break;
-            case '!{}': return $query->where("{{$this->_requireBinding}} NOT LIKE ?", "%$value%"); break;
-            case '()':  return $query->where("{{$this->_requireBinding}} IN (?)", $this->_explode($value)); break;
-            case '!()': return $query->where("{{$this->_requireBinding}} NOT IN (?)", $this->_explode($value)); break;
-            default:    return $query->where("{{$this->_requireBinding}} = ?", $value); break;
+            case '<':
+                $query->where("{{$this->_requireBinding}} {$operator} ?", $value);
+                break;
+            case '{}':
+                $query->where("{{$this->_requireBinding}} LIKE ?", "%$value%");
+                break;
+            case '!{}':
+                $query->where("{{$this->_requireBinding}} NOT LIKE ?", "%$value%");
+                break;
+            case '()':
+                $query->where("{{$this->_requireBinding}} IN (?)", $this->_explode($value));
+                break;
+            case '!()':
+                $query->where("{{$this->_requireBinding}} NOT IN (?)", $this->_explode($value));
+                break;
+            default:
+                $query->where("{{$this->_requireBinding}} = ?", $value);
+                break;
         }
     }
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
+     */
     protected function _prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::_prepareCollection($collection);
         $collection->addField($this->_requireBinding);
     }
 
-
+    /**
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
+     */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
         parent::prepareGridColumns($grid);
 
-
-        if (!$grid->getColumn($this->_requireBinding))
-        {
+        if (!$grid->getColumn($this->_requireBinding)) {
             $grid->addColumn($this->_requireBinding, array(
                 'header'   => $this->_label,
                 'type'     => $this->getColumnType(),
@@ -106,13 +125,8 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Column
         }
     }
 
-
-
-
-
-
     /**
-     * html for settings in option form
+     * Prepare option form
      *
      * @return string
      */
@@ -121,24 +135,22 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Column
         $operatorElement = $this->getOperatorElement();
         $valueElement = $this->getValueElement();
 
-        switch($this->_inputType) {
+        switch ($this->_inputType) {
             case 'boolean':
-                return $html . $this->__($this->_formText,
+                return $this->__(
+                    $this->_formText,
                     $operatorElement->toHtml(),
                     $this->_label
                 );
         }
 
-        return $this->__($this->_formText,
+        return $this->__(
+            $this->_formText,
             $this->_label,
             $operatorElement->toHtml(),
             $valueElement->toHtml()
         );
     }
-
-
-
-
 
     /**
      * Retrieve operator select element
@@ -153,17 +165,14 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Column
         return $this->getSelectElement('operator', $default, $options);
     }
 
-
-
     /**
-     * Retroeve value form element
+     * Retrieve value form element
      *
      * @return Varien_Data_Form_Element_Abstract
      */
     public function getValueElement()
     {
-        switch($this->_inputType) {
-
+        switch ($this->_inputType) {
             case 'date':
                 $element = $this->getDateElement(self::VALUE_KEY);
                 break;
@@ -190,55 +199,43 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Column
         return $element;
     }
 
-
-
-
-
-
     /**
      * Retrieve all value options as hash
      *
      * array(value => label,...)
      *
-     * @return array
+     * @return string[]
      */
     public function getValueOptions()
     {
-        switch($this->_inputType) {
+        switch ($this->_inputType) {
             case 'boolean':
                 return array(
                     '1' => $this->__('is'),
                     '0' => $this->__('is not')
                 );
         }
+
         return array();
     }
-
-
 
     /**
      * Retrieve value options for the grid
      *
-     * @return array
+     * @return string[]
      */
     public function getGridValueOptions()
     {
-        switch($this->_inputType) {
+        switch ($this->_inputType) {
             case 'boolean':
                 return array(
                     '1' => $this->__('Yes'),
                     '0' => $this->__('No')
                 );
         }
+
         return $this->getValueOptions();
     }
-
-
-
-
-
-
-
 
     /**
      * Retrieve input type
@@ -247,17 +244,13 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Column
      */
     public function getColumnType()
     {
-        switch($this->_inputType) {
+        switch ($this->_inputType) {
             case 'multiselect':
             case 'select':
             case 'boolean':
                 return 'options';
         }
+
         return 'text';
     }
-
-
-
-
-
 }

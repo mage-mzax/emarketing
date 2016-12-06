@@ -18,23 +18,14 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Model_Object_Filter_Order_Previous
  */
 class Mzax_Emarketing_Model_Object_Filter_Order_Previous
     extends Mzax_Emarketing_Model_Object_Filter_Order_Abstract
 {
-
     const DEFAULT_AGGREGATOR = 'all';
-
     const DEFAULT_EXPECTATION = 'true';
-
     const DEFAULT_DIRECTION = 'preceded';
-
-
 
     /**
      * Can have children
@@ -43,35 +34,35 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Previous
      */
     protected $_allowChildren = true;
 
-
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return "Order | Has preceded or followed orders matching...";
+    }
 
     /**
      * Only works if parent object is the order object
      *
-     * @return boolean
+     * @param Mzax_Emarketing_Model_Object_Filter_Component $parent
+     *
+     * @return bool
      */
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
         return $parent->getObject() === Mage::getSingleton('mzax_emarketing/object_order');
     }
 
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Filter_Component $child
+     *
+     * @return bool
+     */
     public function acceptChild(Mzax_Emarketing_Model_Object_Filter_Component $child)
     {
         return true;
     }
-
-
-
-
-    public function getTitle()
-    {
-        return "Order | Has preceded or followed orders matching...";
-    }
-
-
-
-
 
     /**
      *
@@ -82,12 +73,8 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Previous
         return Mage::getSingleton('mzax_emarketing/object_order');
     }
 
-
-
-
     /**
-     * (non-PHPdoc)
-     * @see Mzax_Emarketing_Model_Object_Filter_Component::getQuery()
+     * @return Mzax_Emarketing_Db_Select
      */
     public function getQuery()
     {
@@ -97,11 +84,15 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Previous
         $query->setColumn('customer_id');
         $query->setColumn('ordered_at');
         $query->setColumn('order_increment_id');
+
         return $query;
     }
 
-
-
+    /**
+     * @param Mzax_Emarketing_Db_Select $query
+     *
+     * @return void
+     */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
         $conditions  = $this->_getConditions();
@@ -114,37 +105,35 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Previous
         $type = $this->getDataSetDefault('direction');
         $cond['customer_id'] = '{customer_id}';
 
-
         if ($type === 'preceded') {
             $cond[] = new Zend_Db_Expr('`prev_orders`.`ordered_at` < ' . '{ordered_at}');
             $cond[] = new Zend_Db_Expr('`prev_orders`.`ordered_at` > ' . $this->getTimeExpr('offset', '{ordered_at}', true));
-        }
-        else {
+        } else {
             $cond[] = new Zend_Db_Expr('`prev_orders`.`ordered_at` > ' . '{ordered_at}');
             $cond[] = new Zend_Db_Expr('`prev_orders`.`ordered_at` < ' . $this->getTimeExpr('offset', '{ordered_at}', true));
         }
-
-
 
         $query->joinSelect($cond, $subFilterSelect, 'prev_orders');
         $query->having($this->getWhereSql('orders', 'COUNT(`order_increment_id`)'));
         $query->group();
     }
 
-
-
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
+     */
     protected function _prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::_prepareCollection($collection);
         $collection->addField('prev_orders', new Zend_Db_Expr('GROUP_CONCAT(`prev_orders`.`order_increment_id` SEPARATOR ", ")'));
     }
 
-
-
-
-
+    /**
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
+     */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
         parent::prepareGridColumns($grid);
@@ -156,14 +145,6 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Previous
         ));
     }
 
-
-
-
-
-
-
-
-
     /**
      * html for settings in option form
      *
@@ -174,7 +155,8 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Previous
         $aggregatorElement  = $this->getSelectElement('aggregator');
         $expectationElement = $this->getSelectElement('expectation');
 
-        return $this->__('If number of %s orders, within %s and with %s of these conditions %s, %s:',
+        return $this->__(
+            'If number of %s orders, within %s and with %s of these conditions %s, %s:',
             $this->getSelectElement('direction')->toHtml(),
             $this->getTimeHtml('offset'),
             $aggregatorElement->toHtml(),
@@ -183,8 +165,9 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Previous
         );
     }
 
-
-
+    /**
+     * @return string[]
+     */
     protected function getDirectionOptions()
     {
         return array(
@@ -192,7 +175,4 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Previous
             'followed' => $this->__('followed'),
         );
     }
-
-
-
 }

@@ -22,44 +22,34 @@
  */
 abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
 {
-
     /**
-     *
      * @var Mage_Core_Model_Resource_Abstract
      */
     protected $_resource;
 
-
-
     /**
-     *
      * @var string
      */
     protected $_entityId;
 
-
-
-
     /**
-     *
      * @return string
      */
-    abstract function getName();
+    abstract public function getName();
 
-
-
-
-
+    /**
+     * @param string $entityId
+     *
+     * @return void
+     */
     protected function _init($entityId)
     {
         $this->_entityId = $entityId;
         $this->_resource = Mage::getResourceSingleton($entityId);
     }
 
-
-
     /**
-     * Retreive resource model
+     * Retrieve resource model
      *
      * Mage_Core_Model_Resource_Db_Abstract
      * Mage_Eav_Model_Entity_Abstract
@@ -69,8 +59,6 @@ abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
     {
         return $this->_resource;
     }
-
-
 
     /**
      * Retrieve object table name
@@ -86,9 +74,9 @@ abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
         if ($resource instanceof Mage_Core_Model_Resource_Db_Abstract) {
             return $resource->getMainTable();
         }
+
         return null;
     }
-
 
     /**
      * Retrieve object id field name
@@ -104,11 +92,9 @@ abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
         if ($resource instanceof Mage_Core_Model_Resource_Db_Abstract) {
             return $resource->getIdFieldName();
         }
+
         return null;
     }
-
-
-
 
     /**
      * Retrieve collection instance from object model
@@ -124,11 +110,8 @@ abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
         return $collection;
     }
 
-
-
-
     /**
-     * Retreive select object for this object
+     * Retrieve select object for this object
      * This method should be extended to add custom bindings
      *
      * @return Mzax_Emarketing_Db_Select
@@ -143,10 +126,6 @@ abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
         return $select;
     }
 
-
-
-
-
     /**
      * Retrieve direct admin url for this model
      * use null of not available
@@ -155,27 +134,25 @@ abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
      * to the object when showing object ids (e.g. customer_id, order_id)
      *
      * @param string $id
-     * @return NULL|string
+     *
+     * @return null|string
      */
     public function getAdminUrl($id)
     {
         return null;
     }
 
-
-
     /**
      * Retrieve row id for an object
      *
      * @param Varien_Object $row
+     *
      * @return mixed
      */
     public function getRowId(Varien_Object $row)
     {
         return $row->getId();
     }
-
-
 
     /**
      * Retrieve form helper
@@ -187,13 +164,12 @@ abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
         return Mage::helper('mzax_emarketing');
     }
 
-
-
     /**
      * Translate
      *
      * @param string $message
      * @param string $args,...
+     *
      * @return string
      */
     protected function __()
@@ -201,14 +177,12 @@ abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
         return call_user_func_array(array($this->helper(), '__'), func_get_args());
     }
 
-
-
-
     /**
      * Get admin url
      *
      * @param string $routePath
      * @param array $routeParams
+     *
      * @return string
      */
     public function getUrl($routePath = null, $routeParams = null)
@@ -216,22 +190,17 @@ abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
         return $this->_getUrlModel()->getUrl($routePath, $routeParams);
     }
 
-
-
-
     /**
      * Retrieve admin url model
      *
      * @see Mzax_Emarketing_Model_Object_Abstract::getUrl()
+     *
      * @return Mage_Adminhtml_Model_Url
      */
     protected function _getUrlModel()
     {
         return Mage::getSingleton('adminhtml/url');
     }
-
-
-
 
     /**
      * Retrieve resource helper
@@ -243,27 +212,19 @@ abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
         return Mage::getResourceSingleton('mzax_emarketing/helper');
     }
 
-
-    //--------------------------------------------------------------------------
-    //
-    //  Recipient Grid Methods
-    //
-    //--------------------------------------------------------------------------
-
-
     /**
      * Prepare collection for use in object grid
      *
-     * @param Mzax_Emarketing_Model_Object_Collection $collection
      * @see Mzax_Emarketing_Model_Object_Abstract::prepareGridColumns()
+     *
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
      * @return void
      */
     public function prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         $collection->setObject($this);
     }
-
-
 
     /**
      * Prepare the magento grid for this object
@@ -278,33 +239,37 @@ abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
      * @return void
      */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
-    {}
-
+    {
+    }
 
     /**
-     *
-     * @deprecated
      * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
+     * @deprecated
      */
     public function afterGridLoadCollection(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
-    {}
-
-
+    {
+    }
 
     /**
+     * @param mixed $collection
      *
+     * @return void
      * @deprecated
-     * @param unknown $collection
      */
     public function afterLoadCollection($collection)
-    {}
+    {
+    }
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Medium_Email_Snippets $snippets
+     *
+     * @return void
+     */
     public function prepareSnippets(Mzax_Emarketing_Model_Medium_Email_Snippets $snippets)
-    {}
-
+    {
+    }
 
     /**
      * Prepare recipient for sending
@@ -313,14 +278,14 @@ abstract class Mzax_Emarketing_Model_Object_Abstract extends Varien_Object
      * inside the templates
      *
      * @param Mzax_Emarketing_Model_Recipient $recipient
+     *
+     * @return void
      */
     public function prepareRecipient(Mzax_Emarketing_Model_Recipient $recipient)
     {
         $object = Mage::getModel($this->_entityId);
         $object->load($recipient->getObjectId());
 
-        $recipient->setObject($object);
+        $recipient->setData('object', $object);
     }
-
-
 }

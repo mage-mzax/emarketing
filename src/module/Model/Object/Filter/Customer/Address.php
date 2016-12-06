@@ -34,8 +34,7 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Address
     protected $_allowChildren = true;
 
     /**
-     * (non-PHPdoc)
-     * @see Mzax_Emarketing_Model_Object_Filter_Abstract::getTitle()
+     * @return string
      */
     public function getTitle()
     {
@@ -76,6 +75,8 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Address
 
     /**
      * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
      */
     protected function _prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
@@ -84,6 +85,8 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Address
 
     /**
      * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
      */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
@@ -91,9 +94,6 @@ class Mzax_Emarketing_Model_Object_Filter_Customer_Address
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Mzax_Emarketing_Model_Object_Filter_Abstract::prepareForm()
-     *
      * @return string
      */
     protected function prepareForm()

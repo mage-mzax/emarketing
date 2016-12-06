@@ -19,39 +19,36 @@
 /**
  * Class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
  *
+ * @method string getJoin()
  * @method $this setJoin(string $value)
- * @method $this setCampaign(Mzax_Emarketing_Model_Campaign|string $value)
  *
+ * @method $this setCampaign(Mzax_Emarketing_Model_Campaign|string $value)
  */
 class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
     extends Mzax_Emarketing_Model_Object_Filter_Order_Abstract
 {
-
     const DEFAULT_JOIN = 'direct';
-
     const DEFAULT_CAMPAIGN = 'current';
-
     const DEFAULT_AGGREGATOR = 'all';
-
     const DEFAULT_EXPECTATION = 'true';
 
-
+    /**
+     * @var bool
+     */
     protected $_allowChildren = true;
 
-
     /**
-     *
      * @var Mzax_Emarketing_Model_Campaign
      */
     protected $_campaign;
 
-
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return "Order | Link directly/indirectly to emarketing campaign";
     }
-
-
 
     /**
      *
@@ -62,9 +59,9 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
         return Mage::getSingleton('mzax_emarketing/object_recipient');
     }
 
-
-
-
+    /**
+     * @return Mzax_Emarketing_Db_Select
+     */
     public function getQuery()
     {
         $campaign = $this->getCampaign();
@@ -84,20 +81,17 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
         }
 
         return $query;
-
     }
 
-
-
-
     /**
+     * @param Mzax_Emarketing_Db_Select $query
      *
-     * @return Zend_Db_Select
+     * @return void
      */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
         $conditions  = $this->_getConditions();
-        $aggregator  = $this->getDataSetDefault('aggregator',  self::DEFAULT_AGGREGATOR);
+        $aggregator  = $this->getDataSetDefault('aggregator', self::DEFAULT_AGGREGATOR);
         $expectation = $this->getDataSetDefault('expectation', self::DEFAULT_EXPECTATION);
 
         $select = $this->_combineConditions($conditions, $aggregator, $expectation);
@@ -108,18 +102,22 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
         $query->provide('recipient_id', new Zend_Db_Expr('MAX(`recipients`.`id`)'));
     }
 
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
+     */
     protected function _prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::_prepareCollection($collection);
         $collection->addField('recipient_ids', new Zend_Db_Expr('GROUP_CONCAT(`recipients`.`id` SEPARATOR ", ")'));
     }
 
-
-
-
-
+    /**
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
+     */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
         parent::prepareGridColumns($grid);
@@ -130,35 +128,23 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
         ));
     }
 
-
-
-
-
-
-
-
-
     /**
      * Retrieve recipients by order select
      *
-     * @return Mzax_Emarketing_Model_Resource_Recipient_Goal_Binder
+     * @return Mzax_Emarketing_Db_Select
      */
     public function getRecipientsByOrder()
     {
         $campaign = $this->getCampaign();
         $type = $this->getDataSetDefault('join');
 
-        $binder = Mage::getSingleton('mzax_emarketing/conversion_goal_orders')->getRecipientBinder($campaign, $type === 'direct');
+        /** @var Mzax_Emarketing_Model_Conversion_Goal_Orders $conversionGoal */
+        $conversionGoal = Mage::getSingleton('mzax_emarketing/conversion_goal_orders');
+
+        $binder = $conversionGoal->getRecipientBinder($campaign, $type === 'direct');
 
         return $binder->getSelect();
     }
-
-
-
-
-
-
-
 
     /**
      * html for settings in option form
@@ -167,15 +153,16 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
      */
     protected function prepareForm()
     {
-        return $this->__('Order is linked %s to emarketing campaign %s',
+        return $this->__(
+            'Order is linked %s to emarketing campaign %s',
             $this->getSelectElement('join')->toHtml(),
             $this->getSelectElement('campaign')->toHtml()
-         );
+        );
     }
 
-
-
-
+    /**
+     * @return string[]
+     */
     public function getJoinOptions()
     {
         return array(
@@ -184,8 +171,9 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
         );
     }
 
-
-
+    /**
+     * @return string[]
+     */
     public function getCampaignOptions()
     {
         /* @var $collection Mzax_Emarketing_Model_Resource_Campaign_Collection */
@@ -201,12 +189,8 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
         return $options;
     }
 
-
-
-
-
     /**
-     * Retreive current campaign
+     * Retrieve current campaign
      *
      * We must always return a campaign object!
      * getQuery() needs to work with no data set
@@ -216,7 +200,6 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
     public function getCampaign()
     {
         if (!$this->_campaign) {
-
             $id = $this->getDataSetDefault('campaign');
 
             if ($id === 'current') {
@@ -230,15 +213,14 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
             if (!$campaign->getId()) {
                 return null;
             }
-
             $this->_campaign = $campaign;
         }
+
         return $this->_campaign;
     }
 
-
     /**
-     * Retreive current campaign variation which we aggregate
+     * Retrieve current campaign variation which we aggregate
      *
      * @return null|integer
      */
@@ -248,12 +230,7 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Campaign
         if ($id !== null && $id > -1) {
             return (int) $id;
         }
+
         return null;
     }
-
-
-
-
-
-
 }

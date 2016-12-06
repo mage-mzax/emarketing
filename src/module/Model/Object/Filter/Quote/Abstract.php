@@ -16,24 +16,19 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Model_Object_Filter_Quote_Abstract
  */
 abstract class Mzax_Emarketing_Model_Object_Filter_Quote_Abstract
     extends Mzax_Emarketing_Model_Object_Filter_Abstract
 {
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Filter_Component $parent
+     *
+     * @return bool
+     */
     public function acceptParent(Mzax_Emarketing_Model_Object_Filter_Component $parent)
     {
         return $parent->hasBinding('quote_id');
     }
-
-
-
 }

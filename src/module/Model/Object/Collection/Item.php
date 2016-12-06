@@ -22,32 +22,27 @@
  * Collection item
  *
  * @see Mzax_Emarketing_Model_Object_Collection::getNewEmptyItem()
- * @author Jacob Siefer
- * @license {{license}}
  */
 class Mzax_Emarketing_Model_Object_Collection_Item extends Varien_Object
 {
-
     /**
-     *
      * @var Mzax_Emarketing_Model_Object_Abstract
      */
     protected $_object;
-
 
     /**
      * Set Object
      *
      * @param Mzax_Emarketing_Model_Object_Abstract $object
-     * @return Mzax_Emarketing_Model_Recipient_Object
+     *
+     * @return $this
      */
     public function setObject($object)
     {
         $this->_object = $object;
+
         return $this;
     }
-
-
 
     /**
      * Retrieve Object
@@ -58,5 +53,4 @@ class Mzax_Emarketing_Model_Object_Collection_Item extends Varien_Object
     {
         return $this->_object;
     }
-
 }

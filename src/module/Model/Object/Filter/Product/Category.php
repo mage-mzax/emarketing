@@ -16,33 +16,32 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
 /**
- *
- * @author Jacob Siefer
- *
+ * Class Mzax_Emarketing_Model_Object_Filter_Product_Category
  */
 class Mzax_Emarketing_Model_Object_Filter_Product_Category
     extends Mzax_Emarketing_Model_Object_Filter_Product_Abstract
 {
-
-
-
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return "Product | Category";
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getChooserUrl()
     {
         return 'adminhtml/promo_widget/chooser/attribute/category_ids/form/filter_conditions_fieldset';
     }
 
-
-
-
-
+    /**
+     * @param Mzax_Emarketing_Db_Select $query
+     */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
         $categoryIds = $this->getData('value');
@@ -59,16 +58,16 @@ class Mzax_Emarketing_Model_Object_Filter_Product_Category
 
         if ($operator === '()') {
             $query->where('`link`.`category_id` IN(?)', $categoryIds);
-        }
-        else {
+        } else {
             $query->where('`link`.`category_id` NOT IN(?)', $categoryIds);
         }
     }
 
-
-
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
+     */
     protected function _prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::_prepareCollection($collection);
@@ -79,7 +78,11 @@ class Mzax_Emarketing_Model_Object_Filter_Product_Category
 
     }
 
-
+    /**
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
+     */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
         parent::prepareGridColumns($grid);
@@ -90,40 +93,23 @@ class Mzax_Emarketing_Model_Object_Filter_Product_Category
         ));
     }
 
-
-
-
-
-
-
-
     /**
-     * html for settings in option form
-     *
      * @return string
      */
     protected function prepareForm()
     {
-
         $operations = $this->helper()->getOperatorOptions(array('()', '!()'));
 
-        $operatorElment = $this->getSelectElement('operator', '()', $operations);
+        $operatorElement = $this->getSelectElement('operator', '()', $operations);
+
         $valueElement = $this->getInputElement('value');
         $valueElement->setExplicitApply(true);
         $valueElement->setAfterElementHtml($this->getChooserTriggerHtml());
 
-        return $this->__('Product category %s %s',
-            $operatorElment->toHtml(),
+        return $this->__(
+            'Product category %s %s',
+            $operatorElement->toHtml(),
             $valueElement->toHtml()
         );
     }
-
-
-
-
-
-
-
-
-
 }

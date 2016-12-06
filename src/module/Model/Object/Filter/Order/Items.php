@@ -17,35 +17,30 @@
  */
 
 /**
+ * Class Mzax_Emarketing_Model_Object_Filter_Order_Items
  *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * @method string getSum()
+ * @method $this setSum(string $value)
  */
 class Mzax_Emarketing_Model_Object_Filter_Order_Items
     extends Mzax_Emarketing_Model_Object_Filter_Order_Abstract
 {
-
     const DEFAULT_AGGREGATOR = 'all';
-
     const DEFAULT_EXPECTATION = 'true';
-
     const DEFAULT_SUM = 'qty_ordered';
 
-
-
+    /**
+     * @var bool
+     */
     protected $_allowChildren = true;
 
-
-
-
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return "Order | Items subselection matches...";
     }
-
-
 
     /**
      * Use order item object
@@ -56,8 +51,6 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Items
     {
         return Mage::getSingleton('mzax_emarketing/object_orderItem');
     }
-
-
 
     /**
      * Setup query for child filters
@@ -77,25 +70,21 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Items
         return $query;
     }
 
-
-
-
-
     /**
+     * @param Mzax_Emarketing_Db_Select $query
      *
-     * @return Zend_Db_Select
+     * @return void
      */
     protected function _prepareQuery(Mzax_Emarketing_Db_Select $query)
     {
-        $conditions  = $this->_getConditions();
-        $aggregator  = $this->getDataSetDefault('aggregator',  self::DEFAULT_AGGREGATOR);
+        $conditions = $this->_getConditions();
+        $aggregator = $this->getDataSetDefault('aggregator', self::DEFAULT_AGGREGATOR);
         $expectation = $this->getDataSetDefault('expectation', self::DEFAULT_EXPECTATION);
 
         $select = $this->_combineConditions($conditions, $aggregator, $expectation);
 
         // if value can match zero include all records
         if ($this->checkIfMatchZero('value')) {
-
             $zeroRecords = $this->getQuery();
             // assume all orders have items, no right join required
             $zeroRecords->setColumn('sum_field', new Zend_Db_Expr('0'));
@@ -111,17 +100,22 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Items
         $query->group();
     }
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
+     */
     protected function _prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::_prepareCollection($collection);
         $collection->addField('value');
     }
 
-
-
+    /**
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
+     */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
         parent::prepareGridColumns($grid);
@@ -129,8 +123,7 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Items
         $sumOptions = $this->getSumOptions();
         if (isset($sumOptions[$this->getSum()])) {
             $title = ucwords($sumOptions[$this->getSum()]);
-        }
-        else {
+        } else {
             $title = $this->__('Total');
         }
 
@@ -142,14 +135,7 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Items
 
         $grid->setDefaultSort('increment_id');
         $grid->setDefaultDir('DESC');
-
     }
-
-
-
-
-
-
 
     /**
      * html for settings in option form
@@ -158,19 +144,18 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Items
      */
     protected function prepareForm()
     {
-        return $this->__('If total %s %s for subselection of items matching %s of these conditions:',
+        return $this->__(
+            'If total %s %s for sub-selection of items matching %s of these conditions:',
             $this->getSelectElement('sum')->toHtml(),
             $this->getInputHtml('value', 'numeric'),
-            $this->getSelectElement('aggregator',  'all')->toHtml()
-         );
+            $this->getSelectElement('aggregator', 'all')->toHtml()
+        );
     }
-
-
 
     /**
      * List of fields to sum up and check against
      *
-     * @return return array
+     * @return string[]
      */
     protected function getSumOptions()
     {
@@ -188,5 +173,4 @@ class Mzax_Emarketing_Model_Object_Filter_Order_Items
             'base_cost'             => $this->__('cost'),
         );
     }
-
 }

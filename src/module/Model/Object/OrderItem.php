@@ -22,38 +22,52 @@
  */
 class Mzax_Emarketing_Model_Object_OrderItem extends Mzax_Emarketing_Model_Object_Abstract
 {
-
+    /**
+     * Model Constructor.
+     *
+     * @return void
+     */
     public function _construct()
     {
         $this->_init('sales/order_item');
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->__('Order Item');
     }
 
-
+    /**
+     * @param string $id
+     *
+     * @return string
+     */
     public function getAdminUrl($id)
     {
         return $this->getUrl('adminhtml/emarketing_shortcut/orderItem', array('id' => $id));
     }
 
-
+    /**
+     * @return Mzax_Emarketing_Db_Select
+     */
     public function getQuery()
     {
         $query = parent::getQuery();
-        $query->addBinding('order_id',      'order_id');
-        $query->addBinding('product_id',    'product_id');
+        $query->addBinding('order_id', 'order_id');
+        $query->addBinding('product_id', 'product_id');
         $query->addBinding('order_item_id', 'item_id');
 
         return $query;
     }
 
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
+     */
     public function prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::prepareCollection($collection);
@@ -66,35 +80,27 @@ class Mzax_Emarketing_Model_Object_OrderItem extends Mzax_Emarketing_Model_Objec
         $collection->addField('qty_invoiced');
     }
 
-
-
-
-
+    /**
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
+     */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
-        foreach (Mage::getSingleton('catalog/product_type')->getOptions() as $option) {
+        /** @var Mage_Catalog_Model_Product_Type $productType */
+        $productType = Mage::getSingleton('catalog/product_type');
+
+        $productTypes = [];
+        foreach ($productType->getOptions() as $option) {
             $productTypes[$option['value']] = $option['label'];
         }
 
         $grid->addColumn('product_type', array(
-            'header'    => $this->__('Product Type'),
-            'index'     => 'product_type',
-            'type'      => 'options',
-            'options'   => $productTypes
+            'header' => $this->__('Product Type'),
+            'index' => 'product_type',
+            'type' => 'options',
+            'options' => $productTypes
         ));
-
-
-        /*
-        $grid->addColumn('product', array(
-            'header'      => $this->__('Product SKU'),
-            'is_system'   => true,
-            'width'	      => '25%',
-            'id_field'    => 'product_id',
-            'label_field' => 'sku',
-            'renderer'    => 'mzax_emarketing/recipients_column_renderer_subject',
-            'object'      => Mage::getSingleton('mzax_emarketing/object_product'),
-        ));
-        */
 
         $grid->addColumn('sku', array(
             'header' => Mage::helper('sales')->__('SKU'),
@@ -107,5 +113,4 @@ class Mzax_Emarketing_Model_Object_OrderItem extends Mzax_Emarketing_Model_Objec
             'index' => 'name',
         ));
     }
-
 }

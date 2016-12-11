@@ -22,28 +22,38 @@
  */
 class Mzax_Emarketing_Model_Object_Subscriber extends Mzax_Emarketing_Model_Object_Abstract
 {
-
-
+    /**
+     * Model Constructor.
+     *
+     * @return void
+     */
     public function _construct()
     {
         $this->_init('newsletter/subscriber');
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->__('Subscriber');
     }
 
-
+    /**
+     * @param string $id
+     *
+     * @return string
+     */
     public function getAdminUrl($id)
     {
         // @todo maybe try setting filter
         return $this->getUrl('adminhtml/newsletter_subscriber/index');
     }
 
-
+    /**
+     * @return Mzax_Emarketing_Db_Select
+     */
     public function getQuery()
     {
         $query = parent::getQuery();
@@ -55,9 +65,6 @@ class Mzax_Emarketing_Model_Object_Subscriber extends Mzax_Emarketing_Model_Obje
 
         return $query;
     }
-
-
-
 
     /**
      *
@@ -82,8 +89,11 @@ class Mzax_Emarketing_Model_Object_Subscriber extends Mzax_Emarketing_Model_Obje
         return $collection;
     }
 
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
+     */
     public function prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::prepareCollection($collection);
@@ -100,15 +110,13 @@ class Mzax_Emarketing_Model_Object_Subscriber extends Mzax_Emarketing_Model_Obje
         $collection->addField('name', $nameExpr);
         $collection->addField('email', 'email');
         $collection->addField('newsletter_status', 'subscriber_status');
-
     }
 
-
-
-
-
-
-
+    /**
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
+     */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
 
@@ -135,36 +143,17 @@ class Mzax_Emarketing_Model_Object_Subscriber extends Mzax_Emarketing_Model_Obje
                 Mage_Newsletter_Model_Subscriber::STATUS_UNCONFIRMED   => $this->__('unconfirmed')
             ))
         ));
-
-
-
     }
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Medium_Email_Snippets $snippets
+     *
+     * @return void
+     */
     public function prepareSnippets(Mzax_Emarketing_Model_Medium_Email_Snippets $snippets)
     {
         $snippets->addVar('customer.firstname', $this->__("Customers Firstname"));
-        $snippets->addVar('customer.lastname',  $this->__("Customers Lastname"));
-        $snippets->addVar('subscriber.status',  $this->__("Subscriber Status"));
+        $snippets->addVar('customer.lastname', $this->__("Customers Lastname"));
+        $snippets->addVar('subscriber.status', $this->__("Subscriber Status"));
     }
-
-
-
-    /**
-     * (non-PHPdoc)
-     * @see Mzax_Emarketing_Model_Object_Abstract::prepareRecipient()
-     *//*
-    public function prepareRecipient(Mzax_Emarketing_Model_Recipient $recipient)
-    {
-        parent::prepareRecipient($recipient);
-
-        /* @var $customer Mage_Customer_Model_Customer * /
-        $customer = $recipient->getObject();
-
-        $recipient->setCustomer($customer);
-        $recipient->setEmail($customer->getEmail());
-        $recipient->setName($customer->getName());
-    }*/
 }

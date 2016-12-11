@@ -83,6 +83,7 @@ class Mzax_Emarketing_Model_Observer_Cron
         if ($this->_testMode) {
             return true;
         }
+
         return Mage::getStoreConfigFlag('mzax_emarketing/general/enable');
     }
 
@@ -97,12 +98,15 @@ class Mzax_Emarketing_Model_Observer_Cron
             return;
         }
 
+        /** @var Mzax_Emarketing_Helper_Campaign $helper */
+        $helper = Mage::helper('mzax_emarketing/campaign');
+
         $options = array(
             'timeout'        => 60*5,
             'break_on_error' => false,
             'verbose'        => $this->_testMode
         );
-        Mage::helper('mzax_emarketing/campaign')->fetchNewRecipients($options);
+        $helper->fetchNewRecipients($options);
     }
 
     /**
@@ -116,13 +120,16 @@ class Mzax_Emarketing_Model_Observer_Cron
             return;
         }
 
+        /** @var Mzax_Emarketing_Helper_Campaign $helper */
+        $helper = Mage::helper('mzax_emarketing/campaign');
+
         $options = array(
             'timeout'        => 60*5,
             'maximum'        => 1000,
             'break_on_error' => false,
             'verbose'        => $this->_testMode
         );
-        Mage::helper('mzax_emarketing/campaign')->sendRecipients($options);
+        $helper->sendRecipients($options);
     }
 
     /**

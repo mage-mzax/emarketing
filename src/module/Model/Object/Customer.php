@@ -130,14 +130,18 @@ class Mzax_Emarketing_Model_Object_Customer extends Mzax_Emarketing_Model_Object
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Mzax_Emarketing_Model_Object_Abstract::prepareRecipient()
+     * Prepare recipient for sending
+     *
+     * @param Mzax_Emarketing_Model_Recipient $recipient
+     *
+     * @return void
      */
     public function prepareRecipient(Mzax_Emarketing_Model_Recipient $recipient)
     {
         parent::prepareRecipient($recipient);
 
         /* @var $customer Mage_Customer_Model_Customer */
+
         $customer = $recipient->getObject();
         $recipient->setCustomer($customer);
         $recipient->setEmail($customer->getEmail());

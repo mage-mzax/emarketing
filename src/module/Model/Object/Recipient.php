@@ -22,24 +22,29 @@
  */
 class Mzax_Emarketing_Model_Object_Recipient extends Mzax_Emarketing_Model_Object_Abstract
 {
-
+    /**
+     * Model Constructor.
+     *
+     * @return void
+     */
     public function _construct()
     {
         $this->_init('mzax_emarketing/recipient');
     }
 
-
-
-
+    /**
+     * Retrieve name
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->__('Recipient');
     }
 
-
-
-
-
+    /**
+     * @return Mzax_Emarketing_Db_Select
+     */
     public function getQuery()
     {
         $query = parent::getQuery();
@@ -51,9 +56,11 @@ class Mzax_Emarketing_Model_Object_Recipient extends Mzax_Emarketing_Model_Objec
         return $query;
     }
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
+     */
     public function prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::prepareCollection($collection);
@@ -64,6 +71,11 @@ class Mzax_Emarketing_Model_Object_Recipient extends Mzax_Emarketing_Model_Objec
         $collection->addField('campaign_id');
     }
 
+    /**
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
+     */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
         $grid->addColumn('sent_at', array(
@@ -90,9 +102,5 @@ class Mzax_Emarketing_Model_Object_Recipient extends Mzax_Emarketing_Model_Objec
             'index'  => 'variation_id',
             'type'   => 'number',
         ));
-
-
     }
-
-
 }

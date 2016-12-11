@@ -22,27 +22,37 @@
  */
 class Mzax_Emarketing_Model_Object_QuoteAddress extends Mzax_Emarketing_Model_Object_Address
 {
-
-
+    /**
+     * Model Constructor.
+     *
+     * @return void
+     */
     public function _construct()
     {
         $this->_init('sales/quote_address');
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->__('Quote Address');
     }
 
-
+    /**
+     * @param string $id
+     *
+     * @return null
+     */
     public function getAdminUrl($id)
     {
         return null;
     }
 
-
+    /**
+     * @return Mzax_Emarketing_Db_Select
+     */
     public function getQuery()
     {
         $query = parent::getQuery();
@@ -50,6 +60,4 @@ class Mzax_Emarketing_Model_Object_QuoteAddress extends Mzax_Emarketing_Model_Ob
 
         return $query;
     }
-
-
 }

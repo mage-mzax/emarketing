@@ -17,26 +17,28 @@
  */
 
 
-
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Filters
  */
 class Mzax_Emarketing_Block_Filters implements Varien_Data_Form_Element_Renderer_Interface
 {
-	public function render(Varien_Data_Form_Element_Abstract $element)
-	{
-	    $provider = $element->getCampaign()->getRecipientProvider();
+    /**
+     * @param Varien_Data_Form_Element_Abstract $element
+     *
+     * @return string
+     */
+    public function render(Varien_Data_Form_Element_Abstract $element)
+    {
+        /** @var Mzax_Emarketing_Model_Recipient_Provider_Abstract $provider */
+        $provider = $element->getCampaign()->getRecipientProvider();
 
-	    if ($provider) {
-	       $html  = '<div class="filters">';
-	       $html .= $provider->getFilter()->asHtml();
-	       $html .= '</div>';
-	       return $html;
-    	}
-	    return '';
-	}
+        if ($provider) {
+            $html  = '<div class="filters">';
+            $html .= $provider->getFilter()->asHtml();
+            $html .= '</div>';
+
+            return $html;
+        }
+        return '';
+    }
 }

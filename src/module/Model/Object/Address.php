@@ -54,6 +54,8 @@ abstract class Mzax_Emarketing_Model_Object_Address extends Mzax_Emarketing_Mode
 
     /**
      * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
      */
     public function prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
@@ -73,6 +75,8 @@ abstract class Mzax_Emarketing_Model_Object_Address extends Mzax_Emarketing_Mode
 
     /**
      * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
      */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {

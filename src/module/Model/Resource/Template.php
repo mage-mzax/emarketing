@@ -36,6 +36,7 @@ class Mzax_Emarketing_Model_Resource_Template extends Mage_Core_Model_Resource_D
      * Prepare data for save
      *
      * @param   Mage_Core_Model_Abstract $object
+     *
      * @return  array
      */
     protected function _prepareDataForSave(Mage_Core_Model_Abstract $object)

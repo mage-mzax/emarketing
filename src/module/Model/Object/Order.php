@@ -99,6 +99,12 @@ class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Ab
      */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
+        /** @var Mage_Sales_Model_Order_Config $orderConfig */
+        $orderConfig = Mage::getSingleton('sales/order_config');
+
+        /** @var Mzax_Emarketing_Model_Object_Customer $customerObject */
+        $customerObject = Mage::getSingleton('mzax_emarketing/object_customer');
+
         if (!Mage::app()->isSingleStoreMode()) {
             $grid->addColumn('store_id', array(
                 'header'    => $this->__('Purchased From (Store)'),
@@ -118,7 +124,7 @@ class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Ab
             'is_system'   => true,
             'width'       => '50px',
             'renderer'    => 'mzax_emarketing/recipients_column_renderer_object',
-            'object'      => Mage::getSingleton('mzax_emarketing/object_customer')
+            'object'      => $customerObject
         ));
 
         $grid->addColumn('email', array(
@@ -138,7 +144,7 @@ class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Ab
             'index' => 'status',
             'type'  => 'options',
             'width' => '70px',
-            'options' => Mage::getSingleton('sales/order_config')->getStatuses(),
+            'options' => $orderConfig->getStatuses(),
         ));
     }
 }

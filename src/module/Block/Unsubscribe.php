@@ -17,19 +17,11 @@
  */
 
 
-
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Unsubscribe
  */
 class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
 {
-
-
-
     /**
      * Retrieve session model
      *
@@ -39,8 +31,6 @@ class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
     {
         return Mage::getSingleton('mzax_emarketing/session');
     }
-
-
 
     /**
      * Retrieve address
@@ -52,14 +42,17 @@ class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
         return $this->getSession()->getLastAddress();
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getFormKey()
     {
         return $this->getSession()->getFormKey();
     }
 
-
+    /**
+     * @return Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
+     */
     public function getCustomerNewsletterLists()
     {
         $customer = Mage::getSingleton('customer/session')->getCustomer();
@@ -76,7 +69,9 @@ class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
         return $collection;
     }
 
-
+    /**
+     * @return Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
+     */
     public function getNewsletterLists()
     {
         /* @var $subscriber Mage_Newsletter_Model_Subscriber */
@@ -91,17 +86,25 @@ class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
         return $collection;
     }
 
+    /**
+     * @return string
+     */
     public function getUpdateUrl()
     {
         return $this->getUrl('*/*/update');
     }
 
-
+    /**
+     * @return string
+     */
     public function getYesUrl()
     {
         return $this->getUrl('*/*/do');
     }
 
+    /**
+     * @return string
+     */
     public function getNoUrl()
     {
         return $this->getUrl('/');

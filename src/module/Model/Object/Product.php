@@ -23,6 +23,8 @@
 class Mzax_Emarketing_Model_Object_Product extends Mzax_Emarketing_Model_Object_Abstract
 {
     /**
+     * Model Constructor.
+     *
      * @return void
      */
     public function _construct()
@@ -31,6 +33,8 @@ class Mzax_Emarketing_Model_Object_Product extends Mzax_Emarketing_Model_Object_
     }
 
     /**
+     * Retrieve object name
+     *
      * @return string
      */
     public function getName()
@@ -51,6 +55,8 @@ class Mzax_Emarketing_Model_Object_Product extends Mzax_Emarketing_Model_Object_
 
     /**
      * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
      */
     public function prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {

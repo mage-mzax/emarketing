@@ -18,24 +18,27 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Conditions
  */
 class Mzax_Emarketing_Block_Conditions implements Varien_Data_Form_Element_Renderer_Interface
 {
-	public function render(Varien_Data_Form_Element_Abstract $element)
-	{
-	    $goal = $element->getTracker()->getGoal();
+    /**
+     * @param Varien_Data_Form_Element_Abstract $element
+     *
+     * @return string
+     */
+    public function render(Varien_Data_Form_Element_Abstract $element)
+    {
+        /** @var Mzax_Emarketing_Model_Conversion_Goal_Abstract $goal */
+        $goal = $element->getTracker()->getGoal();
 
-	    if ($goal) {
-	       $html  = '<div class="filters">';
-	       $html .= $goal->getFilter()->asHtml();
-	       $html .= '</div>';
-	       return $html;
-    	}
-	    return '';
-	}
+        if ($goal) {
+            $html = '<div class="filters">';
+            $html .= $goal->getFilter()->asHtml();
+            $html .= '</div>';
+
+            return $html;
+        }
+        return '';
+    }
 }

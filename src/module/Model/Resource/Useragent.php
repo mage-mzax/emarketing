@@ -65,7 +65,10 @@ class Mzax_Emarketing_Model_Resource_Useragent extends Mage_Core_Model_Resource_
      */
     public function parse($all = false)
     {
-        $lock = Mage::helper('mzax_emarketing')->lock('parse_user_agent');
+        /** @var Mzax_Emarketing_Helper_Data $helper */
+        $helper = Mage::helper('mzax_emarketing');
+
+        $lock = $helper->lock('parse_user_agent');
         if (!$lock) {
             return $this;
         }

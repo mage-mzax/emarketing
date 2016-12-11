@@ -22,21 +22,29 @@
  */
 class Mzax_Emarketing_Model_Object_Quote extends Mzax_Emarketing_Model_Object_Abstract
 {
-
+    /**
+     * Model Constructor.
+     *
+     * @return void
+     */
     public function _construct()
     {
         $this->_init('sales/quote');
     }
 
-
-
+    /**
+     * Retrieve object name
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->__('Quote');
     }
 
-
-
+    /**
+     * @return Mzax_Emarketing_Db_Select
+     */
     public function getQuery()
     {
         $query = parent::getQuery();
@@ -52,8 +60,11 @@ class Mzax_Emarketing_Model_Object_Quote extends Mzax_Emarketing_Model_Object_Ab
         return $query;
     }
 
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Collection $collection
+     *
+     * @return void
+     */
     public function prepareCollection(Mzax_Emarketing_Model_Object_Collection $collection)
     {
         parent::prepareCollection($collection);
@@ -65,8 +76,11 @@ class Mzax_Emarketing_Model_Object_Quote extends Mzax_Emarketing_Model_Object_Ab
         $collection->addField('email');
     }
 
-
-
+    /**
+     * @param Mzax_Emarketing_Block_Filter_Object_Grid $grid
+     *
+     * @return void
+     */
     public function prepareGridColumns(Mzax_Emarketing_Block_Filter_Object_Grid $grid)
     {
 
@@ -80,23 +94,20 @@ class Mzax_Emarketing_Model_Object_Quote extends Mzax_Emarketing_Model_Object_Ab
                 'width' => '20%',
             ));
         }
-
         $grid->addColumn('customer_id', array(
             'header'      => $this->__('Customer ID'),
             'id_field'    => 'customer_id',
             'label_field' => 'customer_id',
             'is_system'   => true,
-            'width'	      => '50px',
+            'width'       => '50px',
             'renderer'    => 'mzax_emarketing/recipients_column_renderer_object',
             'object'      => Mage::getSingleton('mzax_emarketing/object_customer')
         ));
-
 
         $grid->addColumn('email', array(
             'header'     => $this->__('Email'),
             'index'      => 'email'
         ));
-
 
         $grid->addColumn('created_at', array(
             'header' => Mage::helper('sales')->__('Created At'),
@@ -111,8 +122,5 @@ class Mzax_Emarketing_Model_Object_Quote extends Mzax_Emarketing_Model_Object_Ab
             'type' => 'datetime',
             'width' => '120px',
         ));
-
     }
-
-
 }

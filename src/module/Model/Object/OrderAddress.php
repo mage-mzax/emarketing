@@ -22,22 +22,27 @@
  */
 class Mzax_Emarketing_Model_Object_OrderAddress extends Mzax_Emarketing_Model_Object_Address
 {
-
-
+    /**
+     * Model Constructor
+     *
+     * @return void
+     */
     public function _construct()
     {
         $this->_init('sales/order_address');
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->__('Order Address');
     }
 
-
-
+    /**
+     * @return Mzax_Emarketing_Db_Select
+     */
     public function getQuery()
     {
         $query = parent::getQuery();
@@ -45,6 +50,4 @@ class Mzax_Emarketing_Model_Object_OrderAddress extends Mzax_Emarketing_Model_Ob
 
         return $query;
     }
-
-
 }

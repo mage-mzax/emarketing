@@ -18,11 +18,6 @@
 
 
 
-$this->setIsDefault(false);
-$this->setIsAggregated(true);
-$this->setCreatedAt(null);
-$this->setUpdatedAt(null);
-
 /**
  *
  * @method string getCreatedAt()

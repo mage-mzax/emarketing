@@ -1,0 +1,999 @@
+@CHARSET "UTF-8";
+/**
+ * Creates a drop shadow at the top center that curves away to the edges
+ */
+/**
+ * truncate text
+ * 
+ * e.g. this is some long...
+ */
+/**
+ * Use flex box
+ */
+body.mzax-popup #anchor-content {
+  min-height: 0;
+  padding: 0; }
+body.mzax-popup .wrapper-popup {
+  min-width: 0; }
+body.mzax-popup.mzax-emarketing-padding #anchor-content {
+  padding: 20px; }
+body.mzax-popup.admin-mzax-emarketing-admin-campaign-sendtestmail #anchor-content {
+  padding: 30px; }
+
+.mzax-live-preview .mzax-preview-frame {
+  width: 100%;
+  height: 500px; }
+
+#mzax-preview-email #preview-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block; }
+#mzax-preview-email #preview-head {
+  height: 40px;
+  background: url("../images/header_top_bg.gif") repeat-x #425E66;
+  border-bottom: 1px solid #5F767F; }
+  #mzax-preview-email #preview-head .subject {
+    display: inline-block;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 12px;
+    font-size: 1.2em;
+    letter-spacing: 1px; }
+#mzax-preview-email #preview-foot {
+  position: absolute;
+  bottom: 0;
+  height: 21px;
+  left: 0;
+  right: 0;
+  background: #EEE;
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.3);
+  border-top: 1px solid #BBB;
+  padding: 2px 10px;
+  z-index: 1000;
+  white-space: nowrap;
+  overflow: hidden; }
+  #mzax-preview-email #preview-foot .render-time {
+    display: inline-block;
+    padding: 0 10px; }
+  #mzax-preview-email #preview-foot .auto-refresh {
+    float: right; }
+  #mzax-preview-email #preview-foot .toggle-switch {
+    background: url("images/preview-toggle.png") no-repeat;
+    display: inline-block;
+    height: 32px;
+    width: 40px;
+    margin: 5px; }
+#mzax-preview-email #tab-container {
+  position: absolute;
+  border-top: 1px solid #2D444F;
+  top: 41px;
+  left: 0px;
+  right: 0px;
+  bottom: 25px; }
+  #mzax-preview-email #tab-container > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; }
+#mzax-preview-email #email_preview_tabs {
+  position: absolute;
+  top: 4px;
+  right: 10px; }
+  #mzax-preview-email #email_preview_tabs .tab {
+    float: right;
+    background: #453554;
+    margin: 0 5px;
+    background: url("images/preview-tab-icons.png") no-repeat;
+    display: block;
+    text-indent: -10000em;
+    width: 32px;
+    height: 32px;
+    cursor: pointer; }
+  #mzax-preview-email #email_preview_tabs #tab_links {
+    background-position: 0px 0px; }
+    #mzax-preview-email #email_preview_tabs #tab_links:hover {
+      background-position: 0px -40px; }
+    #mzax-preview-email #email_preview_tabs #tab_links.active {
+      background-position: 0px -80px; }
+  #mzax-preview-email #email_preview_tabs #tab_html {
+    background-position: -120px 0px; }
+    #mzax-preview-email #email_preview_tabs #tab_html:hover {
+      background-position: -120px -40px; }
+    #mzax-preview-email #email_preview_tabs #tab_html.active {
+      background-position: -120px -80px; }
+  #mzax-preview-email #email_preview_tabs #tab_text {
+    background-position: -40px 0px; }
+    #mzax-preview-email #email_preview_tabs #tab_text:hover {
+      background-position: -40px -40px; }
+    #mzax-preview-email #email_preview_tabs #tab_text.active {
+      background-position: -40px -80px; }
+  #mzax-preview-email #email_preview_tabs #tab_code {
+    background-position: -80px 0px; }
+    #mzax-preview-email #email_preview_tabs #tab_code:hover {
+      background-position: -80px -40px; }
+    #mzax-preview-email #email_preview_tabs #tab_code.active {
+      background-position: -80px -80px; }
+#mzax-preview-email #tab_links_content {
+  background: #fff;
+  padding: 20px;
+  overflow: scroll;
+  /* shrink big images */ }
+  #mzax-preview-email #tab_links_content td.anchor img {
+    max-width: 200px;
+    max-height: 80px; }
+#mzax-preview-email .ace_editor, #mzax-preview-email .ace-editor {
+  width: 100%;
+  height: 100%;
+  border: none;
+  clear: both; }
+
+.mzax-template-select {
+  display: inline !important; }
+
+.ace_editor .errorHighlight {
+  background: rgba(255, 48, 0, 0.29);
+  position: absolute; }
+
+.mzax-editor {
+  position: relative;
+  border: none; }
+  .mzax-editor .mzax-content, .mzax-editor .mzax-disable-ui {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0; }
+  .mzax-editor .editor-container {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #AAA #C8C8C8 #C8C8C8 #AAA;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 25px;
+    bottom: 0; }
+    .mzax-editor .editor-container .ace_editor {
+      width: 100%;
+      height: 100%; }
+    .mzax-editor .editor-container .mzax-content-editor textarea.text-input {
+      width: 100% !important;
+      height: 100%;
+      border: none;
+      font-family: monospace;
+      min-height: 20px;
+      padding: 0;
+      margin: 0; }
+  .mzax-editor .mzax-editor-frame {
+    width: 100%;
+    height: 100%;
+    background: url("images/block-bg.png") #fff; }
+  .mzax-editor .mzax-editor-toolbar .logo {
+    display: none; }
+  .mzax-editor .mzax-editor-toolbar .ftitle {
+    display: none;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    font-size: 1.1em;
+    letter-spacing: 1px; }
+  .mzax-editor .btn-right {
+    float: right; }
+  .mzax-editor.no-plugin-buttons .editor-container {
+    top: 0; }
+  .mzax-editor.mzax-autosize {
+    top: 0;
+    position: relative; }
+  .mzax-editor.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto !important;
+    height: auto !important;
+    z-index: 120; }
+    .mzax-editor.fullscreen .editor-container {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: auto !important;
+      width: auto !important;
+      z-index: 450;
+      border: none;
+      border-top: 1px solid #2D444F;
+      padding: 0; }
+    .mzax-editor.fullscreen .mzax-editor-toolbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 39px !important;
+      z-index: 460;
+      border: none;
+      background: url("../images/header_top_bg.gif") repeat-x #425E66;
+      border-bottom: 1px solid #5F767F;
+      box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.5); }
+      .mzax-editor.fullscreen .mzax-editor-toolbar .buttons-set {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 12px; }
+      .mzax-editor.fullscreen .mzax-editor-toolbar .ftitle {
+        display: inline-block;
+        padding: 15px; }
+      .mzax-editor.fullscreen .mzax-editor-toolbar .logo {
+        display: inline;
+        margin: 0 10px; }
+
+body.mzax-fullscreen {
+  overflow: hidden; }
+
+.mzax-template-editor .mzax-seperator {
+  position: absolute;
+  margin-top: -2px;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  cursor: ns-resize;
+  z-index: 100;
+  background: url("images/block-bg.png") #E5E5E5;
+  border-top: 1px solid #D0D0D0;
+  border-bottom: 1px solid #D0D0D0; }
+.mzax-template-editor .mzax-content-editor {
+  bottom: 50%;
+  border: none; }
+  .mzax-template-editor .mzax-content-editor .ace_editor {
+    width: 100%;
+    height: 100%; }
+.mzax-template-editor .mzax-content-preview {
+  top: 50%;
+  border: none; }
+.mzax-template-editor.mzax-layout-horz .mzax-seperator {
+  left: 50%;
+  right: auto;
+  height: auto;
+  top: 2px;
+  bottom: 0;
+  width: 4px;
+  cursor: ew-resize;
+  border: none;
+  border-left: 1px solid #D0D0D0;
+  border-right: 1px solid #D0D0D0; }
+.mzax-template-editor.mzax-layout-horz .mzax-content-editor {
+  bottom: 0;
+  right: 50%; }
+.mzax-template-editor.mzax-layout-horz .mzax-content-preview {
+  top: 0;
+  left: 50%; }
+
+.mzax-running {
+  background: url('../images/ajax-loader.gif') no-repeat;
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+  margin-right: 10px;
+  display: inline-block; }
+
+button.mzax-fullscreen span {
+  background-image: url("images/fullscreen.png");
+  padding-left: 20px; }
+
+button.mzax-image span {
+  background-image: url("images/image.png");
+  padding-left: 20px; }
+
+button.mzax-quicksave span {
+  background-image: url("images/save.png");
+  padding-left: 20px; }
+
+button.mzax-widget span {
+  background-image: url("images/widget.png");
+  padding-left: 20px; }
+
+button.mzax-variable span {
+  background-image: url("images/variable.png");
+  padding-left: 20px; }
+
+button.mzax-start {
+  height: 25px;
+  margin: 0px 0 0 20px !important;
+  padding: 0px 20px;
+  background: linear-gradient(#69A02F 0%, #427600 100%);
+  border-color: #85BA1B #1A3C07 #1A3C07 #85BA1B; }
+  button.mzax-start span {
+    background-image: url("images/start.png");
+    padding-left: 20px; }
+  button.mzax-start:hover {
+    background: linear-gradient(#A8DD70 0%, #68A11F 100%); }
+
+button.mzax-stop {
+  height: 25px;
+  margin: 0px 0 0 20px !important;
+  padding: 0px 20px;
+  border-color: #d24403 #a92000 #a92000 #d24403;
+  background: linear-gradient(#DB2B2B 0%, #99320D 100%); }
+  button.mzax-stop span {
+    background-image: url("images/stop.png");
+    padding-left: 20px; }
+  button.mzax-stop:hover {
+    background: linear-gradient(#ED6363 0%, #DA3A00 100%); }
+
+ul.mzax-variation-tabs {
+  padding: 8px 25px 0px 30px;
+  margin: 0px -27px 18px -25px;
+  height: 36px;
+  border-bottom: 1px solid #CFCFCF;
+  background: linear-gradient(transparent 90%, rgba(0, 0, 0, 0.1) 100%) repeat-x; }
+
+ul.mzax-variation-tabs .delete-variation {
+  position: absolute;
+  top: -5px;
+  right: -3px;
+  display: none; }
+
+ul.mzax-variation-tabs .active .delete-variation {
+  display: block; }
+
+ul.mzax-variation-tabs li {
+  margin: 0 6px;
+  float: left; }
+
+ul.mzax-variation-tabs li a.variation-tab {
+  display: block;
+  position: relative;
+  padding: 5px 23px 0 23px;
+  height: 25px;
+  color: #6F8992;
+  text-decoration: none !important;
+  border: 1px dotted #a5a5a5;
+  border-bottom: none;
+  margin-top: 5px;
+  margin-bottom: -1px;
+  background: transparent;
+  transition: height, margin 0.1s ease-out; }
+
+ul.mzax-variation-tabs li a.original {
+  color: #5C5C5C;
+  font-weight: bold; }
+
+ul.mzax-variation-tabs li a.inactive {
+  color: #B0BABD;
+  font-style: italic; }
+
+ul.mzax-variation-tabs li a.variation-tab:hover {
+  border-color: #EB5E00;
+  height: 30px;
+  margin-top: 0px; }
+
+ul.mzax-variation-tabs li a.active.variation-tab.active {
+  background: #FFF;
+  border-style: solid;
+  border-color: #C3C3C3;
+  box-shadow: 0px -2px 2px 0px rgba(0, 0, 0, 0.1);
+  height: 27px;
+  margin-top: 0px;
+  border-top: 2px solid #EA7614;
+  padding-top: 8px;
+  border-bottom: none;
+  color: #333; }
+
+ul.mzax-variation-tabs li a.new-variation {
+  border-color: #6EA845;
+  color: #6EA845;
+  padding: 5px 10px 0; }
+
+ul.mzax-variation-tabs li a.new-variation:hover {
+  border-color: #6EA845; }
+
+ul.mzax-variation-tabs li a.delete-all-variations {
+  border-color: #C06868;
+  color: #C56D6D;
+  padding: 5px 10px 0; }
+
+ul.mzax-variation-tabs li a.delete-all-variations:hover {
+  border-color: #C06868; }
+
+ul.mzax-variation-tabs li.add-variation {
+  margin: 0 10px; }
+
+ul.mzax-variation-tabs li.delete-all-variations {
+  float: right; }
+
+ul.mzax-variation-tabs a span span {
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 16px;
+  display: block;
+  position: absolute; }
+
+ul.mzax-variation-tabs a.error span.error {
+  background-image: url("../images/fam_bullet_error.gif");
+  top: 15px;
+  left: -7px; }
+
+ul.mzax-variation-tabs a.changed span.changed {
+  background-image: url("../images/fam_bullet_disk.gif");
+  top: 0;
+  left: -7px; }
+
+/*****************************************************************
+ * 
+ * Report Tab
+ * 
+ *****************************************************************/
+#mzax-emarketing-report .chart-wrapper {
+  position: relative; }
+#mzax-emarketing-report .overlay {
+  position: absolute;
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto; }
+#mzax-emarketing-report .summary-report {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 10px; }
+  #mzax-emarketing-report .summary-report > .item {
+    flex: 100;
+    text-align: center;
+    position: relative;
+    height: 80px;
+    white-space: nowrap; }
+    #mzax-emarketing-report .summary-report > .item.funnel {
+      flex: 200; }
+      #mzax-emarketing-report .summary-report > .item.funnel:after {
+        display: inline-block;
+        content: ' ';
+        background: url('./images/funnel-arrow.png') no-repeat center right;
+        width: 30px;
+        height: 100%;
+        vertical-align: middle; }
+    #mzax-emarketing-report .summary-report > .item.total {
+      flex: 100; }
+    #mzax-emarketing-report .summary-report > .item.optout {
+      border-left: 1px dotted #888;
+      padding-left: 10px;
+      flex: 120; }
+    #mzax-emarketing-report .summary-report > .item.orders {
+      flex: 140; }
+  #mzax-emarketing-report .summary-report .chart-wrapper {
+    display: inline-block;
+    vertical-align: middle; }
+  #mzax-emarketing-report .summary-report .count {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0; }
+  #mzax-emarketing-report .summary-report .value {
+    display: block;
+    font-size: 1.5em; }
+  #mzax-emarketing-report .summary-report .label {
+    display: block;
+    font-size: 0.8em;
+    color: #666; }
+  #mzax-emarketing-report .summary-report .percentage {
+    width: 100%;
+    height: 16px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #444; }
+#mzax-emarketing-report .chart-tab-container {
+  border: 1px solid #ccc;
+  padding: 0; }
+  #mzax-emarketing-report .chart-tab-container .options {
+    background: #f5f5f5;
+    text-align: right;
+    padding: 0 10px;
+    font-size: 0.9em;
+    color: #444; }
+    #mzax-emarketing-report .chart-tab-container .options .cb {
+      vertical-align: text-top; }
+    #mzax-emarketing-report .chart-tab-container .options label {
+      color: inherit; }
+  #mzax-emarketing-report .chart-tab-container .loading {
+    display: none;
+    float: left;
+    padding-left: 20px;
+    margin: 3px 0;
+    background: url('../images/ajax-loader.gif') no-repeat; }
+  #mzax-emarketing-report .chart-tab-container.loading .loading {
+    display: block; }
+  #mzax-emarketing-report .chart-tab-container.loading .chart {
+    opacity: 0.3; }
+  #mzax-emarketing-report .chart-tab-container .breadcrumbs {
+    float: left;
+    font-size: 1.2em; }
+    #mzax-emarketing-report .chart-tab-container .breadcrumbs li {
+      cursor: pointer;
+      margin-right: 5px;
+      display: inline; }
+      #mzax-emarketing-report .chart-tab-container .breadcrumbs li:before {
+        content: '\00bb';
+        margin-right: 5px; }
+  #mzax-emarketing-report .chart-tab-container .no-data {
+    width: 50%;
+    background: #F5F5F5;
+    min-height: 50px;
+    text-align: center;
+    padding: 50px 25%;
+    font-size: 17px;
+    line-height: 140%;
+    color: #BABABA;
+    letter-spacing: 1px;
+    text-shadow: -1px -1px 1px white;
+    font-style: italic;
+    cursor: default; }
+#mzax-emarketing-report .option-tabs {
+  display: flex;
+  align-items: flex-end;
+  border-bottom: 2px solid #F9F9F9;
+  background: url("../images/sort_row_bg.gif") repeat-x 0 3px;
+  margin: 1px 1px 0; }
+  #mzax-emarketing-report .option-tabs .drop-arrow {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto 0;
+    background: url("images/dd-chart-tab.png") no-repeat; }
+  #mzax-emarketing-report .option-tabs .metric-options {
+    position: absolute;
+    top: 25px;
+    right: 5px;
+    z-index: 200;
+    background: #eee;
+    text-align: left;
+    padding: 0;
+    font-weight: normal;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2), 0 4px 0 2px rgba(0, 0, 0, 0.05); }
+    #mzax-emarketing-report .option-tabs .metric-options .option {
+      padding: 3px 15px;
+      border: 3px soild white;
+      border-bottom: 1px dotted #aaa;
+      margin: 0px; }
+      #mzax-emarketing-report .option-tabs .metric-options .option:hover {
+        background: #fff; }
+      #mzax-emarketing-report .option-tabs .metric-options .option:last-child {
+        border: none; }
+  #mzax-emarketing-report .option-tabs .tab {
+    position: relative;
+    text-align: center;
+    padding: 4px;
+    background: url("../images/sort_row_bg.gif") repeat-x 0px 50%;
+    border-style: solid;
+    border-color: #EEE #D1CFCF #F9F9F9 #F9F9F9;
+    border-width: 2px 0 1px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin: 0;
+    flex: 1;
+    color: #2D444F; }
+    #mzax-emarketing-report .option-tabs .tab .title {
+      display: block;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap; }
+    #mzax-emarketing-report .option-tabs .tab.dropdown {
+      padding-right: 40px; }
+    #mzax-emarketing-report .option-tabs .tab:hover {
+      background-position: 0 100%; }
+    #mzax-emarketing-report .option-tabs .tab.active {
+      box-shadow: inset 0 0 1px 0 rgba(0, 0, 0, 0.5), inset 0 5px 10px 0 rgba(0, 0, 0, 0.1); }
+      #mzax-emarketing-report .option-tabs .tab.active.sendings {
+        background: rgba(137, 157, 168, 0.2);
+        color: black; }
+      #mzax-emarketing-report .option-tabs .tab.active.views {
+        background: rgba(21, 159, 196, 0.2);
+        color: black; }
+      #mzax-emarketing-report .option-tabs .tab.active.clicks {
+        background: rgba(215, 208, 32, 0.2);
+        color: black; }
+      #mzax-emarketing-report .option-tabs .tab.active.trackers {
+        background: rgba(169, 194, 0, 0.2);
+        color: black; }
+      #mzax-emarketing-report .option-tabs .tab.active.optouts {
+        background: rgba(191, 58, 58, 0.2);
+        color: black; }
+      #mzax-emarketing-report .option-tabs .tab.active.bounces {
+        background: rgba(113, 43, 43, 0.2);
+        color: black; }
+    #mzax-emarketing-report .option-tabs .tab.sendings {
+      border-top-color: #899DA8; }
+    #mzax-emarketing-report .option-tabs .tab.views {
+      border-top-color: #159FC4; }
+    #mzax-emarketing-report .option-tabs .tab.clicks {
+      border-top-color: #D7D020; }
+    #mzax-emarketing-report .option-tabs .tab.trackers {
+      border-top-color: #A9C200; }
+    #mzax-emarketing-report .option-tabs .tab.optouts {
+      border-top-color: #BF3A3A; }
+    #mzax-emarketing-report .option-tabs .tab.bounces {
+      border-top-color: #712B2B; }
+  #mzax-emarketing-report .option-tabs.sendings {
+    border-bottom-color: rgba(137, 157, 168, 0.3); }
+  #mzax-emarketing-report .option-tabs.views {
+    border-bottom-color: rgba(21, 159, 196, 0.3); }
+  #mzax-emarketing-report .option-tabs.clicks {
+    border-bottom-color: rgba(215, 208, 32, 0.3); }
+  #mzax-emarketing-report .option-tabs.trackers {
+    border-bottom-color: rgba(169, 194, 0, 0.3); }
+  #mzax-emarketing-report .option-tabs.optouts {
+    border-bottom-color: rgba(191, 58, 58, 0.3); }
+  #mzax-emarketing-report .option-tabs.bounces {
+    border-bottom-color: rgba(113, 43, 43, 0.3); }
+#mzax-emarketing-report hr {
+  margin: 40px -15px 15px;
+  border: none;
+  border-top: 5px solid #E8E8E8; }
+#mzax-emarketing-report .row {
+  display: flex;
+  flex-wrap: wrap; }
+#mzax-emarketing-report .column {
+  flex: 1;
+  overflow: hidden;
+  min-width: 300px; }
+  #mzax-emarketing-report .column.small {
+    min-width: 40%; }
+  #mzax-emarketing-report .column.strech {
+    width: 100%; }
+#mzax-emarketing-report .segments .column {
+  padding: 5px; }
+#mzax-emarketing-report .mzax-geoip-credits {
+  text-align: right;
+  font-size: 0.8em;
+  color: #999;
+  line-height: 140%; }
+  #mzax-emarketing-report .mzax-geoip-credits a {
+    color: inherit; }
+
+/*****
+ * 
+ * 
+ * 
+ * 
+ */
+.mzax-editor {
+  position: relative; }
+  .mzax-editor .mzax-loader {
+    z-index: 50;
+    background: url("../images/ajax-loader-tr.gif") no-repeat center center #fff4e9;
+    color: #d85909;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    cursor: wait; }
+    .mzax-editor .mzax-loader .label {
+      display: block;
+      height: 80px;
+      width: 100px;
+      position: absolute;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center; }
+
+.mzax-editor-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block; }
+
+.mzax-editor-input {
+  background: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden; }
+  .mzax-editor-input .controls {
+    border: none;
+    position: absolute;
+    resize: none;
+    height: 25px;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 5px;
+    background: #EBEBEB url("../images/sort_row_bg.gif") repeat-x;
+    z-index: 10;
+    box-shadow: 0px 1px 2px 0 rgba(0, 0, 0, 0.5); }
+    .mzax-editor-input .controls button {
+      margin-right: 10px; }
+  .mzax-editor-input .input-wrapper {
+    position: absolute;
+    resize: none;
+    top: 35px;
+    bottom: 0;
+    left: 0;
+    right: 0; }
+  .mzax-editor-input .text-input {
+    border: none;
+    position: absolute;
+    resize: none;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: monospace;
+    font-size: 12px; }
+  .mzax-editor-input .ace_editor {
+    height: 100%;
+    width: 100%; }
+
+.mzax-mail-storage-test {
+  padding: 5px; }
+  .mzax-mail-storage-test .inbox-status {
+    border: 1px solid #ddd;
+    background: #fff;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold; }
+    .mzax-mail-storage-test .inbox-status.inbox-success {
+      border-color: #608100;
+      background: #F6FCE8;
+      color: #608100; }
+    .mzax-mail-storage-test .inbox-status.inbox-failure {
+      border-color: #CD0000;
+      background: #FCEBE8;
+      color: #CD0000; }
+
+/**
+ *   Filters
+ * 
+ */
+.mzax-filter-date-range {
+  padding: 5px 10px;
+  background: #f0f0f0;
+  border-radius: 2px;
+  margin: 10px 0;
+  box-shadow: inset 0px 1px 3px 0px #bbb; }
+  .mzax-filter-date-range div {
+    margin: 5px 0; }
+
+/**
+ *   MISC
+ */
+.mzax-credits {
+  font-size: 0.9em;
+  color: #666;
+  cursor: context-menu;
+  letter-spacing: 0.3px;
+  border-bottom: 1px dotted #919191;
+  padding-bottom: 5px; }
+  .mzax-credits a {
+    color: #666; }
+
+.mzax-fieldset-continue {
+  padding: 10px 0; }
+
+.mzax-filter-tree .form-buttons {
+  margin: 0;
+  height: 0; }
+
+.mzax-offer {
+  border-top: 1px solid #D6D6D6;
+  background: #F0F0F0;
+  color: #A6A6A6;
+  padding: 10px;
+  margin-top: 40px;
+  margin: 50px -15px -10px;
+  text-align: center;
+  font-size: 0.9em;
+  cursor: default;
+  position: relative;
+  overflow: hidden; }
+  .mzax-offer:before {
+    position: absolute;
+    content: "";
+    left: 45%;
+    right: 45%;
+    top: -30px;
+    height: 30px;
+    border-radius: 0 0 40px 40px;
+    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.2);
+    transform: scaleX(8); }
+  .mzax-offer a {
+    color: inherit; }
+
+.mzax-left-sponser {
+  margin-top: 50px;
+  padding-right: 10px;
+  text-align: right;
+  font-size: 0.9em;
+  color: #B2C2C2;
+  letter-spacing: 0.5px;
+  line-height: 200%;
+  cursor: default; }
+  .mzax-left-sponser .hl {
+    font-weight: bold; }
+  .mzax-left-sponser a {
+    color: inherit; }
+
+.maax-index-check {
+  color: #B2700C;
+  border: 1px dotted #B2700C;
+  padding: 3px 10px;
+  background: #FAF3D8;
+  margin-left: 15px;
+  font-size: 0.9em;
+  font-style: italic;
+  cursor: help;
+  display: inline-block; }
+
+.mzax-checkboxes ul.checkboxes {
+  -webkit-column-count: 4;
+  /* Chrome, Safari, Opera */
+  -moz-column-count: 4;
+  /* Firefox */
+  column-count: 4;
+  background: white;
+  border: 1px dotted #C0C0C0;
+  padding: 5px; }
+
+.mzax-warn-element {
+  padding: 10px;
+  margin: 10px 0;
+  color: #444;
+  font-size: 1em;
+  cursor: pointer;
+  border: 1px solid #E5B7B7;
+  background: url("images/bg-remove.png") rgba(137, 15, 15, 0.02); }
+
+.mzax-info-element {
+  position: relative;
+  color: #946314;
+  border: 1px dotted #E0C293;
+  padding: 10px;
+  background: #FFFBE6;
+  margin-bottom: 20px;
+  margin: 0 0 10px;
+  border-radius: 2px;
+  font-size: 0.95em;
+  font-style: italic;
+  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
+  cursor: default; }
+  .mzax-info-element:before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    background: url('../images/note_msg_icon.gif') no-repeat; }
+  #page\:left .mzax-info-element {
+    margin: 10px;
+    text-align: center; }
+
+.mzax-grid-stats {
+  position: relative;
+  height: 16px;
+  width: 100%;
+  background: rgba(137, 157, 168, 0.2);
+  margin: 1px 0;
+  border-radius: 5px;
+  overflow: hidden; }
+  .mzax-grid-stats .mzax-grid-stat {
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: -1px;
+    min-width: 1px; }
+    .mzax-grid-stats .mzax-grid-stat.views {
+      background: #CBD7DC;
+      background: linear-gradient(to bottom, #CBD7DC 0%, #adc0c7 100%);
+      border-radius: 0 10px 10px 0;
+      z-index: 1; }
+    .mzax-grid-stats .mzax-grid-stat.interactions {
+      background: #D7D020;
+      background: linear-gradient(to bottom, #FC7A00 0%, #c96100 100%);
+      border-radius: 0 10px 10px 0;
+      z-index: 2;
+      top: 5px; }
+    .mzax-grid-stats .mzax-grid-stat.conversions {
+      background: #A9C200;
+      background: linear-gradient(to bottom, #A9C200 0%, #7d8f00 100%);
+      z-index: 3; }
+    .mzax-grid-stats .mzax-grid-stat.fails {
+      background: #BF3A3A;
+      background: linear-gradient(to bottom, #BF3A3A 0%, #982e2e 100%);
+      z-index: 4;
+      left: auto;
+      right: -1px; }
+
+.mzax-grid-tag {
+  font-size: 0.8em;
+  background: #ea7601;
+  color: white;
+  border-radius: 5px;
+  padding: 2px 3px;
+  vertical-align: baseline;
+  line-height: 120%;
+  margin-left: 4px;
+  letter-spacing: 0.5px; }
+
+.mzax-grid-running {
+  background: url('../images/ajax-loader.gif') no-repeat;
+  float: left;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px; }
+
+.mzax-campaign-presets .campaign-preset-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: stretch; }
+.mzax-campaign-presets .preset {
+  border: 1px solid #ddd;
+  background: #F0F0F0;
+  flex: 1;
+  margin: 0 10px 10px 0;
+  padding: 10px;
+  min-width: 250px;
+  max-width: 50%;
+  display: inline-block;
+  vertical-align: top; }
+  .mzax-campaign-presets .preset .preset-title {
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 5px; }
+    .mzax-campaign-presets .preset .preset-title .version {
+      color: #B60000;
+      font-size: 10px; }
+  .mzax-campaign-presets .preset .preset-author {
+    font-size: 0.8em;
+    color: #999; }
+  .mzax-campaign-presets .preset button.save {
+    display: block; }
+
+/**
+ *   
+ * 
+ * 
+ * SQL TEST 
+ * */
+.filter-test-sql {
+  position: relative;
+  padding: 10px;
+  border: 1px #CBD3D4 solid;
+  background: #F6F6F6; }
+  .filter-test-sql .filter-btn-sql-hide {
+    position: absolute;
+    right: 0;
+    top: 0; }
+  .filter-test-sql hr.mzax-sql-seperator {
+    margin: 30px 0;
+    border: none;
+    border-top: 1px dotted #777; }
+  .filter-test-sql h6 {
+    font-size: 1.2em;
+    float: right;
+    color: #B5B5B5;
+    letter-spacing: 1px;
+    margin: -10px 20px;
+    text-transform: uppercase; }
+
+.mzax-mail-tester {
+  margin-top: 30px; }
+  .mzax-mail-tester a {
+    color: inherit; }
+  .mzax-mail-tester button {
+    margin: 10px 0; }
+  .mzax-mail-tester .privacy {
+    font-size: 0.9em;
+    color: #666; }

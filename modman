@@ -1,0 +1,14 @@
+src/module                              app/code/community/Mzax/Emarketing
+src/design/adminhtml/template/mzax/*    app/design/adminhtml/default/default/template/mzax/
+src/design/adminhtml/layout/mzax/*      app/design/adminhtml/default/default/layout/mzax/
+
+src/lib/*                               lib/
+src/lib_composer/*                      lib/
+
+build/skin/adminhtml/*                  skin/adminhtml/default/default/mzax/
+
+build/js/mzax/*                         js/mzax/
+src/js_3rdparty/ckeditor                js/mzax/ckeditor
+src/js_3rdparty/ace                     js/ace
+
+Mzax_Emarketing.xml                     app/etc/modules/Mzax_Emarketing.xml

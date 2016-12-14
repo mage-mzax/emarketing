@@ -1,13 +1,13 @@
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -25,29 +25,29 @@ window.mzax = window.mzax || {};
 
 
 (function(window, mzax) {
-    
+
     // init namespace
     mzax.ui = mzax.ui || {};
-    
+
     var document = window.document,
         jQueryPlugins = [],
         _uid = 1000;
-    
-    
-    
+
+
+
     ace.require("ace/ext/mage_autocomplete");
-    
-    
+
+
     /*****************************************************************
-     * 
+     *
      * PRIVATE FUNCTIONS
-     * 
+     *
      *****************************************************************/
-    
-    
+
+
     /**
      * Wait for document state complete
-     * 
+     *
      * @param document
      * @param func
      * @return Number Interval id
@@ -61,24 +61,24 @@ window.mzax = window.mzax || {};
         }, 10);
         return id;
     }
-    
-    
+
+
     function isTrue(str) {
         return !!(str||'').toLowerCase().match(/(1|yes|true|y|enabled?)/);
     }
-    
-    
+
+
     function limit(value, min, max)
     {
         return Math.min(Math.max(value, min), max);
     }
-    
-    
-    
+
+
+
     /**
      * Remove text indentation by taking the indentation level
      * from the first line
-     * 
+     *
      * @param string str
      * @return string
      */
@@ -89,7 +89,7 @@ window.mzax = window.mzax || {};
         });
         // replace all empty lines at the beginning
         str = str.replace(/^(\s*)\r?\n(\s+)/, '$2');
-        
+
         // find indentation level & remove it from all lines
         var indent = str.match(/^ +/);
         if(indent) {
@@ -97,13 +97,13 @@ window.mzax = window.mzax || {};
         }
         return str;
     }
-    
-    
-    
+
+
+
     /**
      * Convert to upper case words
      * e.g. HELLO wOrLd => Hello World
-     * 
+     *
      * @param string str
      * @return string
      */
@@ -114,26 +114,26 @@ window.mzax = window.mzax || {};
                 return $1.toUpperCase();
             });
     }
-    
-    
+
+
     /**
      * Normalize label
      * Can take any fancy string as label and converts it to
      * a human friendly readable string.
-     * 
+     *
      * e.g. $_helloWorld_textInput => Hello World Text Input
-     * 
+     *
      * @param string str
      * @return string
      */
     function normalizeLabel(str) {
         return ucwords(str.replace(/(.)([A-Z])/g, "$1 $2").replace(/[\W_-]+/g, ' '));
     }
-    
-    
+
+
     /**
      * Retrieve outer HTML for a given node
-     * 
+     *
      * @param Node node
      * @return string
      */
@@ -145,23 +145,23 @@ window.mzax = window.mzax || {};
             return div.innerHTML;
         })(node);
     }
-    
+
     function decodeHtml(html) {
         var txt = document.createElement("textarea");
         txt.innerHTML = html;
         return txt.value;
     }
-    
-    
-    
+
+
+
     function registerJQueryPlugins(jQuery) {
         var i = jQueryPlugins.length;
         while(--i > -1) {
             jQueryPlugins[i].call(jQuery, jQuery);
         }
     }
-    
-    
+
+
     function walkObject(object, func, scope)
     {
         for(var p in object) {
@@ -173,9 +173,9 @@ window.mzax = window.mzax || {};
         }
         return true;
     }
-    
-    
-    
+
+
+
     function find(array, func, scope)
     {
         scope = scope || array;
@@ -186,11 +186,11 @@ window.mzax = window.mzax || {};
         }
         return undefined;
     }
-    
-    
+
+
     /**
      * Find all editable elements
-     * 
+     *
      * @param element
      * @returns Array
      */
@@ -198,7 +198,7 @@ window.mzax = window.mzax || {};
     {
         var result = [];
         var elements = element.querySelectorAll("[mage\\:editable]");
-        
+
         for (var i = 0, length = elements.length; i < length; i++) {
             switch((elements[i].getAttribute('mage:editable') || '0').toLowerCase()) {
                 case 'yes':
@@ -209,82 +209,82 @@ window.mzax = window.mzax || {};
         }
         return result;
     }
-    
-    
 
-    
+
+
+
     mzax.jQueryPlugin = function(func) {
         jQueryPlugins.push(func);
         return func;
     };
-    
-    
-    
-    
+
+
+
+
     /*****************************************************************
-     * 
+     *
      * CLASSES
-     * 
+     *
      *****************************************************************/
-    
+
     /**
      * Placeholder
      * MageExpr
-     * 
+     *
      * Parses magento expressions and provides access to there properties
-     * 
+     *
      * e.g.
      * p = new mzax.ui.Placeholder('{{block type="core/template" template="example.phml" customer="$customer"}}');
      * p.directive === 'block'
      * p.params['type'] === 'core/template'
-     * 
+     *
      */
     mzax.ui.Placeholder = Class.create({
-        
-        
+
+
         /**
          * regex for searching magento expressions
          */
         REGEX_PLACEHOLDER : /\{\{([^\[\}])+\}\}/g,
-        
-        
+
+
         /**
          * regex for validating a mage expression
-         * 
+         *
          * e.g. {{var customer.firstname}}
          */
         REGEX_VALIDATE : /^\{\{(\/)?([a-z0-9]+)\s*(?:\s([^\}]+?))?\}\}$/i,
-        
-        
+
+
         /**
          * match all parameters for a mage expression
-         * 
+         *
          * e.g. {{block type="core/template" template="example.phml" customer="$customer"}}
          */
         REGEX_PARAMS : /(?:(?:([a-z_-]+)=)?(?:([^\s]+\([^)]*([^)]+\)))|([^\s"']+)|"([^"]*)"|'([^']*)'))/g,
-        
+
         // (?:[^\s]+\([^)]*([^)]+\)))
         /**
          * read a single parameter
-         * 
+         *
          */
         REGEX_PARAM : /^(?:(?:([a-z_-]+)=)?(?:([^\s"']+)|"([^"]*)"|'([^']*)'))$/,
-        
-        
+
+
         /**
          * Constructor
          */
-        initialize: function(code) 
+        initialize: function(code)
         {
             if(code) {
                 this.parse(code);
             }
         },
-        
-        
+
+
         /**
          * Encode placeholder
-         * 
+         *
          * @return string
          */
         encode : function()
@@ -294,15 +294,15 @@ window.mzax = window.mzax || {};
             }
             return null;
         },
-        
-        
+
+
 
 
         /**
          * Parse magento expression
          * e.g.
          * {{directive foo="bar" hello="word"}}
-         * 
+         *
          * @return boolean
          */
         parse : function(expr)
@@ -321,7 +321,7 @@ window.mzax = window.mzax || {};
                 this.params    = {};
                 this.isBlock   = false;
                 this.isLang    = false;
-                
+
                 // parse parameters for known directives
                 switch(this.directive) {
                     case 'depend':
@@ -330,7 +330,7 @@ window.mzax = window.mzax || {};
                         this.input = match[3] || '';
                         this.isLang = true;
                         break;
-                
+
                     case 'block':
                     case 'layout':
                     case 'include':
@@ -341,12 +341,12 @@ window.mzax = window.mzax || {};
                     case 'store':
                     case 'skin':
                     case 'coupon':
-                    case 'media':  
+                    case 'media':
                     case 'customvar':
                     case 'config':
                         this.params = this.parseParams(match[3]);
                         break;
-                    
+
                     // otherwise assume one input
                     default:
                         this.input = match[3];
@@ -358,14 +358,14 @@ window.mzax = window.mzax || {};
                 return false;
             }
         },
-        
-        
-        
+
+
+
         /**
          * Parse parameter string
          * e.g.
          * foo="bar" hello="word"
-         * 
+         *
          * @return void
          */
         parseParams : function(paramStr)
@@ -373,7 +373,7 @@ window.mzax = window.mzax || {};
             var pm,i,
                 result = {},
                 params = paramStr.match(this.REGEX_PARAMS);
-            
+
             if(params) {
                 for(i = 0; i < params.length; i++) {
                     pm = params[i].match(this.REGEX_PARAM);
@@ -387,12 +387,12 @@ window.mzax = window.mzax || {};
             }
             return result;
         },
-        
-        
-        
+
+
+
         /**
          * Render placeholder to magento expression
-         * 
+         *
          * @return String
          */
         render : function()
@@ -401,7 +401,7 @@ window.mzax = window.mzax || {};
             if(this.closing) {
                 return this.expr = '{{/'+this.directive+'}}';
             }
-            
+
             var expr = [this.directive];
             if(this.input) {
                 expr.push(this.input);
@@ -415,8 +415,8 @@ window.mzax = window.mzax || {};
             }
             return this.expr = '{{'+expr.join(' ')+'}}';
         },
-        
-        
+
+
         getPreview : function(data)
         {
             if(!data) {
@@ -427,15 +427,15 @@ window.mzax = window.mzax || {};
             if(match = data.match(/([a-z._-]+)\.get([a-z0-9]+)\(/i)) {
                 return normalizeLabel(match[1] + ' ' + match[2]);
             }
-            
+
             // order.shipping_address.format('html')
             if(match = data.match(/([a-z._-]+)\.[a-z0-9]+\(/i)) {
                 return normalizeLabel(match[1]);
             }
             return normalizeLabel(data);
         },
-        
-        
+
+
         toElement : function(render)
         {
             if(render) {
@@ -444,73 +444,73 @@ window.mzax = window.mzax || {};
             var element = new Element('span', {'class': 'mzax-placeholder'}),
                 params = this.params,
                 directive = this.directive;
-            
+
             element.addClassName(this.isBlock ? 'is-block' : 'is-inline');
             element.addClassName(directive);
-            
-            
+
+
             function getBlockHtml(title, info) {
                 return '<span class="mzax-center">'
                      +   '<span class="mzax-title">' + (title || '') + '</span>'
                      +   '<span class="mzax-info">' + (info || '') + '</span>'
                      + '</span>';
             }
-            
-            
+
+
             switch(directive) {
-            
+
                 case 'include':
                     element.update(getBlockHtml('Include Template', params['template']));
                     break;
-            
+
                 case 'layout':
                     element.update(getBlockHtml('Layout Handle', params['handle']));
                     break;
-                    
+
                 case 'widget':
-                    element.update(getBlockHtml('Widget', params['type'])); break;  
-                    
+                    element.update(getBlockHtml('Widget', params['type'])); break;
+
                 case 'block':
                     element.update(getBlockHtml(
-                        params['type'] || 'Block', 
+                        params['type'] || 'Block',
                         params['id'] || params['template']
-                    )); 
+                    ));
                     break;
-                    
+
                 case 'store':
-                case 'skin':  
+                case 'skin':
                 case 'media':
                     element.update('('+directive+': '+(params['url']||'')+')');
                     break;
-                    
+
                 case 'var':
                     element.update(this.getPreview(this.input));
                     break;
-                    
+
                 case 'config':
                     element.update(params['path']);
                     break;
-                    
+
                 case 'customvar':
                     element.update(this.getPreview(params['code']));
-                    break; 
-                    
+                    break;
+
                 case 'coupon':
                     element.update('COUPON[#'+params['rule']+']');
                     break;
-                    
+
                 case 'htmlescape':
                     element.update(this.getPreview(params['var']));
                     break;
-                    
+
                 case 'if':
                 case 'depend':
                     element.addClassName('is-lang');
-                    element.update(this.closing 
-                        ? '/'+directive.toUpperCase() 
+                    element.update(this.closing
+                        ? '/'+directive.toUpperCase()
                         : directive.toUpperCase() + ' ( ' +this.getPreview(this.input) + ' )' );
                     break;
-                    
+
                 case 'else':
                     element.addClassName('is-lang');
                     element.update('ELSE');
@@ -519,81 +519,81 @@ window.mzax = window.mzax || {};
                     element.update(this.expr);
                     break;
             }
-            
+
             return element;
         },
-        
+
         toText : function(render)
         {
             var params = this.params,
                 directive = this.directive;
-            
+
             switch(directive) {
-            
+
                 case 'include':
                 case 'layout':
                 case 'widget':
                 case 'block':
                     return this.expr;
-                    
+
                 case 'store':
-                case 'skin':  
+                case 'skin':
                 case 'media':
                     return params['url'];
-                    
+
                 case 'var':
                     return this.getPreview(this.input);
-                    
+
                 case 'config':
                     return params['path'];
-                    
+
                 case 'customvar':
                     return this.getPreview(params['code']);
-                    
+
                 case 'htmlescape':
                     return this.getPreview(params['var']);
-                    
-                
+
+
                 case 'if':
                 case 'depend':
                 case 'else':
                     return '';
-                    
+
                 default:
                     return this.expr;
             }
         },
-        
-        
-        
+
+
+
         toHtml : function(render)
         {
             var element = this.toElement(render);
             return outerHTML(element);
         }
-        
+
     });
-    
-    
+
+
     /**
      * Static Placeholder Methods
-     * 
+     *
      */
     (function(Placeholder) {
-    
-        
+
+
         /**
          * Replace all placeholders for a given element
          * in a html friendly way, means only replace text nodes
          * and don't touch attribute values
-         * 
+         *
          * @param DomElement element
          * @param Function func
          * @param Boolean skipEditables
          */
         Placeholder.replaceHtml = function(element, func, skipEditables)
         {
-            
+
             var tempPlaceholder = '@@@!{!{!----!%s!----!}!}!@@@',
                 document = element.ownerDocument,
                 node,
@@ -606,8 +606,8 @@ window.mzax = window.mzax || {};
                     }
                     return NodeFilter.FILTER_ACCEPT;
                 }, false);
-            
-            
+
+
             /*
              * Don't replace any content within any editable if
              * skipEditables is false
@@ -616,14 +616,14 @@ window.mzax = window.mzax || {};
                 for (var i = 0, length = editableElements.length; i < length; i++) {
                     var elm = editableElements[i];
                     var placeholderId = tempPlaceholder.replace('%s', ++uid);
-                    
+
                     placeholders[placeholderId] = elm.innerHTML;
                     elm.innerHTML = placeholderId;
                 }
             }
-            
-            
-            
+
+
+
             while(node = walker.nextNode()) {
                 // we can not direclty add html to text nodes, but we can create unqiue placeholders that we later can replace
                 node.nodeValue = node.nodeValue.replace(Placeholder.prototype.REGEX_PLACEHOLDER, function(match) {
@@ -633,17 +633,17 @@ window.mzax = window.mzax || {};
                     }
                     // some unique string that we can replace later using innerHTML
                     var placeholderId = tempPlaceholder.replace('%s', ++uid);
-                    placeholders[placeholderId] = func ? func.call(node, placeholder, true  /* allow html ?*/ ) : placeholder.toHtml(); 
+                    placeholders[placeholderId] = func ? func.call(node, placeholder, true  /* allow html ?*/ ) : placeholder.toHtml();
                     return placeholderId;
                 });
             }
-            
+
             var html = Placeholder.replace(element.innerHTML, function(placeholder, match) {
                 var placeholderId = tempPlaceholder.replace('%s', ++uid);
-                placeholders[placeholderId] = func ? func.call(node, placeholder, false /* do not allow html */) : placeholder.toText(); 
+                placeholders[placeholderId] = func ? func.call(node, placeholder, false /* do not allow html */) : placeholder.toText();
                 return placeholderId;
             });
-            
+
             // replace our placeholder placeholders with valid html
             element.innerHTML = html.replace(new RegExp(tempPlaceholder.replace('%s', '[0-9]+'), 'g'), function(placeholderId) {
                 if(placeholders[placeholderId]) {
@@ -652,43 +652,43 @@ window.mzax = window.mzax || {};
                 return placeholderId;
             });
         };
-        
-        
+
+
         /**
          * Simple text replacement
-         * 
+         *
          */
         Placeholder.replace = function(text, func)
         {
             return text.replace(Placeholder.prototype.REGEX_PLACEHOLDER, function(match) {
-                
+
                 var placeholder = new Placeholder(match);
                 if(!placeholder.valid) {
                     return;
                 }
-                
+
                 if(func) {
-                    return func.call(placeholder, placeholder, match); 
+                    return func.call(placeholder, placeholder, match);
                 }
                 else {
                     return placeholder.toText();
                 }
             } );
         };
-    
+
     })(mzax.ui.Placeholder);
-    
-    
-    
+
+
+
 
 
 
 
 
     mzax.ui.EditorField = Class.create({
-        
 
-        initialize: function(id, index) 
+
+        initialize: function(id, index)
         {
             this.id = id || '';
             this.value = null;
@@ -701,10 +701,10 @@ window.mzax = window.mzax || {};
             this.children = {};
             this.uid = _uid++;
         },
-        
-        
-        
-        sleep : function() 
+
+
+
+        sleep : function()
         {
             return {
                 remove: this.remove,
@@ -712,7 +712,7 @@ window.mzax = window.mzax || {};
                 value: this.getValue()
             };
         },
-        
+
         load : function(data)
         {
             this.remove = !!data.remove;
@@ -720,9 +720,9 @@ window.mzax = window.mzax || {};
             this.value  = data.value||null;
             return this;
         },
-        
-        
-        
+
+
+
         setElement : function(element)
         {
             if(!this.element) {
@@ -736,8 +736,8 @@ window.mzax = window.mzax || {};
             }
             return this;
         },
-        
-        
+
+
         _walk: function(func)
         {
             var id, children = this.children;
@@ -747,24 +747,24 @@ window.mzax = window.mzax || {};
                 }
             }
         },
-        
-        
+
+
         swap : function(field)
         {
             var index = this.index;
             this.index = field.index;
             field.index = index;
-            
+
             this._walk(function(child, id) {
                 child.swap(field.children[id]);
             });
             return this;
         },
-        
-        
-        
-        
-        
+
+
+
+
+
         flagAsDeleted : function()
         {
             var property;
@@ -776,38 +776,38 @@ window.mzax = window.mzax || {};
                 }
                 this.element.remove();
             }
-            
+
             for(property in this) {
                 if(this.hasOwnProperty(property)) {
-                    if(this[property] 
-                    && typeof this[property] === 'object' 
-                    && this[property].remove 
-                    && this[property].jquery) 
+                    if(this[property]
+                    && typeof this[property] === 'object'
+                    && this[property].remove
+                    && this[property].jquery)
                     {
                         this[property].remove();
                     }
                 }
             }
-            
+
             this._walk(function(child) {
                 child.flagAsDeleted();
             });
         },
-        
-        
-        
-        
+
+
+
+
         clone : function()
         {
             return this._clone.clone();
         },
-        
-        
-        
-        
+
+
+
+
         setValue : function(value)
         {
-            
+
             if(this.cke) {
                 this.value = removeIndentation(value);
                 this.cke.setData(value);
@@ -827,16 +827,16 @@ window.mzax = window.mzax || {};
                     this.onHtmlChange(this.element);
                 }
             }
-            
-            
-            
-            
+
+
+
+
             else {
                 this.value = value;
             }
             return this;
         },
-        
+
         getValue : function()
         {
             if(this.cke) {
@@ -844,8 +844,8 @@ window.mzax = window.mzax || {};
             }
             return this.value;
         },
-        
-        
+
+
         refreshUi : function(func)
         {
             var handlers = this._refresh,
@@ -860,30 +860,30 @@ window.mzax = window.mzax || {};
             }
             return this;
         }
-        
-        
-        
-        
+
+
+
+
     });
-    
-    
+
+
     mzax.ui.EditorField.indexSort = function(a, b) {
         return a.index-b.index;
     };
-    
-    
+
+
     mzax.ui.PreviewFrame = Class.create({
-        
+
         version : 1,
-        
-        initialize: function(div, options) 
+
+        initialize: function(div, options)
         {
             var scope = this;
-            
+
             scope.mediaUrl = '/media/';
             scope.skinUrl = '/skin/';
             scope.storeUrl = '/skin/';
-            
+
             scope.$ = div;
             scope.ckeditorSrc = '/js/mzax/ckeditor/ckeditor.js';
             scope.jquerySrc = 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.js';
@@ -891,22 +891,22 @@ window.mzax = window.mzax || {};
             scope.imageFlag = true;
             scope.enableCKEditor = true;
             scope.enableAce = true;
-            
+
             Object.extend(this, options || {});
-            
+
             scope.init();
-            
+
             if(options.html) {
                 scope.setHtml(options.html);
             }
-            
+
             if(options.startEdit) {
                 scope.editMode();
             }
-            
+
         },
-        
-        
+
+
         init : function()
         {
             var editor = this, element = editor.$;
@@ -918,18 +918,18 @@ window.mzax = window.mzax || {};
                               +     '<div class="input-wrapper"><textarea class="text-input"></textarea></div>'
                               + '</div>'
                               + '<div class="mzax-loader"><div class="label"></div></div>';
-            
+
             element.addClassName('mzax-editor');
             editor.iframe = element.down('.mzax-editor-frame');
             editor.input  = element.down('.mzax-editor-input');
             editor.loader = element.down('.mzax-loader');
-            
-            
+
+
             editor.loader.down('.label').innerHTML = "Loading Editor";
-            
+
             Element.hide(editor.input);
             Element.hide(editor.loader);
-            
+
             if(editor.enableAce && ace) {
                 editor.ace = ace.edit(element.down('.text-input'));
                 editor.ace.setMageSnippets(editor.snippets);
@@ -937,26 +937,26 @@ window.mzax = window.mzax || {};
                 editor.ace.setTheme("ace/theme/mage");
                 editor.ace.getSession().setMode("ace/mode/mage");
                 editor.ace.setOptions({
-                    enableBasicAutocompletion: true, 
-                    enableSnippets: true, 
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true,
                     enableMageLiveAutocompletion:true
                 });
-                
+
                 editor.ace.browserMedia = function() {
                     editor.browserMedia(function(value) {
                         editor.ace.insert(value);
                     }, false);
                 };
-                
+
                 editor.ace.insertWidget = function() {
                     editor.insertWidget(function(value) {
                         editor.ace.insert(value);
                     }, false);
                 };
             }
-            
-            
-            
+
+
+
             var ctrlBar = element.down('.controls');
             editor._createButton({
                 label: 'Apply',
@@ -970,9 +970,9 @@ window.mzax = window.mzax || {};
                 target: ctrlBar,
                 click: editor.discardChanges.bind(editor)
             });
-            
-            
-            
+
+
+
             // those buttons only work with ace
             if(editor.ace) {
                 editor._createButton({
@@ -993,7 +993,7 @@ window.mzax = window.mzax || {};
                         }, false);
                     }
                 });
-                
+
                 editor._createButton({
                     label: 'Insert Widget',
                     cls: 'mzax-widget html-only',
@@ -1004,17 +1004,17 @@ window.mzax = window.mzax || {};
                         }, false);
                     }
                 });
-                
+
             }
-            
-            
+
+
         },
-        
-        
+
+
         /**
          * Generate new magento button
          * <button type="button" class="scalable mzax-widget"><span>{label}</span></button>
-         * 
+         *
          * @param object options
          * @return Element
          */
@@ -1029,13 +1029,13 @@ window.mzax = window.mzax || {};
             }
             return btn;
         },
-        
-        
-        
-        
+
+
+
+
         /**
          * Set html for editor
-         * 
+         *
          * @param string code
          * @return mzax.ui.PreviewFrame
          */
@@ -1049,15 +1049,15 @@ window.mzax = window.mzax || {};
             this.jQuery = null;
             this.CKEDITOR = null;
             this._customStyles = null;
-            
+
             if(this.iframe) {
                 try {
                     this.iframe.src = '';
                 }
                 catch(e) {}
             }
-            
-            
+
+
             if(this.cancelEditorLoad) {
                 this.cancelEditorLoad();
             }
@@ -1074,8 +1074,8 @@ window.mzax = window.mzax || {};
             }).bind(this));
             return this;
         },
-        
-        
+
+
         scrollTop : function(value)
         {
             if(this.html && this.documentLoaded) {
@@ -1086,13 +1086,13 @@ window.mzax = window.mzax || {};
             }
             return 0;
         },
-        
-        
-        
-        
+
+
+
+
         /**
          * Set value that assumes a JSON string
-         * 
+         *
          * @param string value JSON
          * @return boolen Ture on success
          */
@@ -1111,10 +1111,10 @@ window.mzax = window.mzax || {};
             }
             return true;
         },
-        
-        
-        
-        
+
+
+
+
         setData : function(data)
         {
             if(!data) {
@@ -1135,31 +1135,31 @@ window.mzax = window.mzax || {};
                     }
                 }
             }
-            
+
             if(data.customCss) {
                 this.customCss = new mzax.ui.EditorField();
                 this.customCss.load(data.customCss);
                 this.customCss.type = 'css';
             }
-            
-            
+
+
             this.html && this.setHtml(this.html);
             return this;
         },
-        
-        
+
+
 
         getData : function()
         {
             this.refreshUi();
-            
+
             var result = {
                     version: this.version
                 },
-                data = {}, 
-                fields = this.fields, 
+                data = {},
+                fields = this.fields,
                 field, i, id, entries;
-            
+
             if( fields ) {
                 for(id in fields) {
                     if(fields.hasOwnProperty(id)) {
@@ -1172,32 +1172,32 @@ window.mzax = window.mzax || {};
                     }
                 }
             }
-            
+
             if(this.customCss) {
                 result.customCss = this.customCss.sleep();
             }
-            
+
             result.fields = data;
             return result;
         },
-        
-        
-        
+
+
+
         /**
          * Retrieve data as JSON
-         * 
+         *
          * @return string
          */
-        getValue : function() 
+        getValue : function()
         {
             return JSON.stringify(this.getData());
         },
-        
-        
+
+
         /**
          * Render all placeholders
-         * 
-         * 
+         *
+         *
          */
         renderPlaceholders : function(skipEditables)
         {
@@ -1226,10 +1226,10 @@ window.mzax = window.mzax || {};
                 return allowHtml ? placeholder.toHtml() : placeholder.toText();
             }, skipEditables || false);
         },
-        
-        
-        
-        
+
+
+
+
         initDocument : function()
         {
             var editor = this;
@@ -1239,27 +1239,27 @@ window.mzax = window.mzax || {};
                 editor.editorCss && editor.loadStyle(editor.editorCss);
             }
             editor.scrollTop(editor._lastScrollTop || 0);
-            
+
             if(editor.editModeFlag) {
                 editor.loadEditor();
             }
             else {
                 Element.hide(editor.loader);
             }
-            
+
             if(editor._disableLinks) {
                 editor.disableLinks(editor._disableLinks);
             }
         },
-        
-        
-        
+
+
+
         getDocument : function()
         {
             var iframe = this.iframe;
             if (iframe.contentWindow) {
                 this.content = iframe.contentWindow.document;
-             } 
+             }
              else {
                 if (iframe.contentDocument && iframe.contentDocument.document) {
                     this.content = iframe.contentDocument.document;
@@ -1270,11 +1270,11 @@ window.mzax = window.mzax || {};
              }
             return this.content;
         },
-        
-        
+
+
         /**
          * Retrieve window object from frame
-         * 
+         *
          * @return window
          */
         getFrameWindow : function()
@@ -1282,15 +1282,15 @@ window.mzax = window.mzax || {};
             var content = this.getDocument();
             return content.parentWindow || content.defaultView;
         },
-        
-        
-        
+
+
+
         /**
          * CSS query select
-         * 
+         *
          * Uses prototype js, no editor needs to be loaded
          * for this
-         * 
+         *
          * @return Array
          */
         select : function(query)
@@ -1301,9 +1301,9 @@ window.mzax = window.mzax || {};
             }
             return [];
         },
-        
-        
-        
+
+
+
         get : function(query)
         {
             var result = this.select(query);
@@ -1312,13 +1312,13 @@ window.mzax = window.mzax || {};
             }
             return null;
         },
-        
-        
-        
-        
+
+
+
+
         /**
          * Load Script
-         * 
+         *
          * @param string source
          */
         loadScript : function(source)
@@ -1337,15 +1337,15 @@ window.mzax = window.mzax || {};
                 else {
                     alert("todo, no head tag found");
                 }
-                
+
             }, this);
         },
-        
-        
-        
+
+
+
         /**
          * Load Style
-         * 
+         *
          * @param string source
          */
         loadStyle : function(source)
@@ -1363,16 +1363,16 @@ window.mzax = window.mzax || {};
                 else {
                     alert("todo, no head tag found");
                 }
-                
+
             }, this);
         },
-        
-        
-        
-        
+
+
+
+
         /**
          * Load all the required local components for the editor
-         * 
+         *
          * @param callback
          * @return mzax.ui.PreviewFrame
          */
@@ -1382,18 +1382,18 @@ window.mzax = window.mzax || {};
             if(this.editorReady) {
                 return this;
             }
-            
+
             // document needs to be loaded
             if(!this.documentLoaded) {
                 return this;
             }
-                        
+
             var editor = this,
                 timers = [],
                 window = editor.getFrameWindow();
-            
+
             Element.show(editor.loader);
-            
+
             // function to remove all exsting load timers
             editor.cancelEditorLoad = function() {
                 var i = timers.length;
@@ -1402,9 +1402,9 @@ window.mzax = window.mzax || {};
                 }
                 editor.cancelEditorLoad = null;
             };
-            
+
             // quick function to check for required components
-            function loadCheck() 
+            function loadCheck()
             {
                 if(editor.jquerySrc && !editor.jQuery) {
                     return;
@@ -1422,7 +1422,7 @@ window.mzax = window.mzax || {};
                 editor.initEditor();
                 editor.editorReady = true;
             }
-            
+
             // try loading ckeditor into iframe
             if(editor.enableCKEditor && editor.ckeditorSrc) {
                 editor.CKEDITOR = null;
@@ -1438,8 +1438,8 @@ window.mzax = window.mzax || {};
                 },10);
                 timers.push(ckeTimer);
             }
-            
-            
+
+
             if(editor.jquerySrc) {
                 editor.jQuery = null;
                 editor.loadScript(editor.jquerySrc);
@@ -1454,9 +1454,9 @@ window.mzax = window.mzax || {};
                 },10);
                 timers.push(jqueryTimer);
             }
-            
-            
-            
+
+
+
             // load editor CSS into iframe
             if(editor.editorCss) {
                 editor.cssLoaded = false;
@@ -1469,19 +1469,19 @@ window.mzax = window.mzax || {};
                 }, 1000);
                 timers.push(cssTimer);
             }
-            
+
             // check in case nothing is required
             loadCheck();
             return this;
         },
-        
-        
-        
+
+
+
         /**
          * Init editor
-         * 
+         *
          * Called once all components for the editor are loaded
-         * 
+         *
          */
         initEditor: function()
         {
@@ -1490,19 +1490,19 @@ window.mzax = window.mzax || {};
                 win = editor.getFrameWindow(),
                 $ = editor.jQuery,
                 body = $('body');
-            
-            
+
+
             // make sure to refresh the UI after scoll and resize
             $(win).on('resize scroll', function() {
                 editor.refreshUi(10);
             });
-            
+
             // as well as after any image has loaded
             $('img').on('load error', function() {
                 editor.refreshUi(10);
             });
-            
-            
+
+
             // Prevent the backspace key from navigating back.
             $(win).bind('keydown', function (event) {
                 if (event.keyCode === 8 /* BACKSPACE */) {
@@ -1522,25 +1522,25 @@ window.mzax = window.mzax || {};
                     }
                 }
             });
-            
-            
-            
+
+
+
             if(body.length) {
-                
+
                 editor.renderPlaceholders(true);
-                
+
                 function getBodyMargin() {
                     return parseInt($('body').css('margin-top'));
                 }
-                
-                
+
+
                 var removeMarker = $('<div class="mzax-remove-marker mzax-marker" />').appendTo(body),
                     repeatMarker = $('<div class="mzax-repeat-marker mzax-marker" />').appendTo(body),
                     swapMarkerA  = $('<div class="mzax-swap-marker mzax-marker mzax-a" />').appendTo(body),
                     swapMarkerB  = $('<div class="mzax-swap-marker mzax-marker mzax-b" />').appendTo(body);
                     customCss  = $('<div class="mzax-custom-css" />').html('&laquo;CSS&raquo;').appendTo(body);
-                
-                
+
+
 
                 $.fn.highlight = function() {
                     var element = this;
@@ -1549,8 +1549,8 @@ window.mzax = window.mzax || {};
                        repeatMarker.moveOnTop(element).show().fadeOut(1000);
                    },300);
                };
-               
-               
+
+
                if(editor.allowCustomCss !== false) {
                    editor.customCss = editor.customCss || new mzax.ui.EditorField();
                    editor.customCss.type = 'css';
@@ -1562,45 +1562,45 @@ window.mzax = window.mzax || {};
                else {
                    customCss.remove();
                }
-               
-               
+
+
                 /**
                  * EDITABLE WORKER
-                 * 
+                 *
                  */
                 function initWorker()
                 {
                     var field,
                         element = $(this),
                         id = element.mage('id');
-                
+
                     if(!id) {
                         return;
                     }
-                    
+
                     field = editor.getField(id, element.mage('index')).setElement( element );
                 }
-                
-                
-                
-                
+
+
+
+
                 /**
                  * EDITABLE WORKER
-                 * 
+                 *
                  */
-                function editableWorker() 
+                function editableWorker()
                 {
                     var field, ckElement,
                         element = $(this),
                         id = element.mage('id');
-                    
+
                     if(!id || !isTrue(element.mage('editable'))) {
                         return;
                     }
-                    
+
                     field = editor.getField(id, element.mage('index')).setElement( element );
-                    
-                    
+
+
                     // Special treatment for images
                     if(element.is('img')) {
                         field.type = 'image';
@@ -1626,17 +1626,17 @@ window.mzax = window.mzax || {};
                         element.attr('alt', field.alt);
                         return;
                     }
-                    
-                    
+
+
                     if(typeof field.value === 'string' ) {
                         element.html(field.value);
                     }
                     else {
                         field.setValue(element.html());
                     }
-                    
-                    
-                   
+
+
+
                     // CKEDITOR is optional make sure its enabled be for working with it
                     if(CKEDITOR) {
                         // TD tags require a div tag in order to make correctly
@@ -1644,7 +1644,7 @@ window.mzax = window.mzax || {};
                             ckElement = $('<div class="mzax-inline-ckeditor" contenteditable="true" />')
                                 .html(field.value)
                                 .appendTo(element.empty());
-                            
+
                         }
                         // DIV tags can just stay divs
                         else if(element.is('div')) {
@@ -1670,7 +1670,7 @@ window.mzax = window.mzax || {};
                             return;
                         }
                     }
-                    
+
                     // use normal click & edit method
                     element.on({
                         click: function(event) {
@@ -1683,59 +1683,59 @@ window.mzax = window.mzax || {};
                             element.removeClass('mzax-editor-highlight');
                         }
                     });
-                    
+
                 }
-                
-                
-                
+
+
+
                 /**
                  * REMOVABLE WORKER
-                 * 
+                 *
                  */
                 function removableWorker() {
-                    var removeHandle, handleContainer, field, 
+                    var removeHandle, handleContainer, field,
                         ownerDomain = body,
                         element = $(this),
                         isRepeatable = isTrue(element.mage('repeatable')),
                         isRemovable  = isTrue(element.mage('removable')),
                         id = element.mage('id');
-                    
+
                     if(!id || (!isRemovable && !isRepeatable) ) {
                         return;
                     }
-                    
+
                     if(element.is('.mzax-removable-worker')) {
                         return;
                     }
-                    
-                    
+
+
                     removeHandle = $('<div class="mzax-remove-handle"><span>'+normalizeLabel(id)+'</span></div>')
                         .appendTo(body)
                         .hide();
-                    
+
                     if(isRepeatable) {
                         removeHandle.addClass('mzax-repeatable');
                     }
-                    
+
                     field = editor.getField(id, element.mage('index')).setElement(element);
                     field.removable = true;
                     field.removeHandle = removeHandle;
-                    
-                    
-                    
+
+
+
                     if(field.parent) {
                         ownerDomain = field.parent.element;
                         removeHandle.addClass('mzax-field-'+field.parent.uid);
                     }
-                    
-                    
-                    
+
+
+
                     element
                         .addClass('mzax-removable-worker')
                         .on({
                         mouseenter: function(event) {
                             clearTimeout(hideTimeout);
-                            
+
                             if(isRemovable || field.index) {
                                 editor.refreshUi();
                             }
@@ -1757,11 +1757,11 @@ window.mzax = window.mzax || {};
                             else if(field.index) {
                                 removeHandle.show();
                             }
-                            
+
                         }
-                        
+
                     });
-                    
+
                     var hideTimeout;
                     removeHandle.on({
                         mousemove: function(event)
@@ -1777,7 +1777,7 @@ window.mzax = window.mzax || {};
                         },
                         mouseenter: function() {
                             clearTimeout(hideTimeout);
-                                                        
+
                             if(!field.remove) {
                                 removeMarker.moveOnTop(element).show();
                             }
@@ -1799,7 +1799,7 @@ window.mzax = window.mzax || {};
                                 element.toggleClass('mzax-removed', flag)[flag?'fadeOut':'fadeIn']('fast');
                                 removeHandle.toggleClass('mzax-removed', flag).fixedPosition(flag && !field.parent);
                                 removeMarker.hide();
-                                
+
                                 if(!flag /* on insert*/) {
                                     removeHandle.hide();
                                     element.highlight();
@@ -1817,10 +1817,10 @@ window.mzax = window.mzax || {};
                             }
                             editor.refreshUi(1);
                         }
-                        
-                        
+
+
                     });
-                                
+
                     if(field.remove) {
                         element.addClass('mzax-removed');
                         removeHandle.addClass('mzax-removed').fixedPosition(!field.parent);
@@ -1828,9 +1828,9 @@ window.mzax = window.mzax || {};
                         setTimeout(function() {
                             element.hide();
                         }, 500);
-                        
+
                     }
-                    
+
                     field.refreshUi(function(data) {
                         var offset, top, prev, left;
                         if(!isRemovable && !field.index) {
@@ -1855,7 +1855,7 @@ window.mzax = window.mzax || {};
                                 removeHandle.hide();
                             }
                             else {
-                               
+
                                 if(ownerDomain === body) {
                                     top  = data.topOffset + 10;
                                     left = 5;
@@ -1867,9 +1867,9 @@ window.mzax = window.mzax || {};
                                     left = Math.max(offset.left + ownerDomain.width());
                                     prev = removeHandle.prevAll('.mzax-remove-handle.mzax-field-'+field.parent.uid);
                                 }
-                                
+
                                 removeHandle.show().stop(true, false).animate({
-                                    top: top + (prev.length * (removeHandle.height() + 5)), 
+                                    top: top + (prev.length * (removeHandle.height() + 5)),
                                     left: left,
                                     opacity: 1
                                 },{
@@ -1880,56 +1880,56 @@ window.mzax = window.mzax || {};
                                     }
                                 });
                             }
-                            
+
                         }
                     });
                 }
-                
-                
-                
+
+
+
 
                 /**
                  * REPEATABLE WORKER
-                 * 
+                 *
                  */
                 function repeatableWorker() {
-                    
+
                     var repeatHandle, field, swapHandler,
                         highlightClass = 'mzax-editor-highlight-repeat',
                         element = $(this),
                         id = element.mage('id');
-                    
-                    
+
+
                     if(!id || !isTrue(element.mage('repeatable'))) {
                         return;
                     }
-                    
+
                     // repeatable elements shall not have repeatable parents
                     // no need to overcomplicate things here for now
                     if(element.parents('[mage\\:repeatable]').length) {
                         element.removeAttr('mage:repeatable');
                         return;
                     }
-                    
+
                     repeatHandle = $('<div class="mzax-repeat-handle"></div>').appendTo(body).hide();
                     swapHandler = $('<div class="mzax-swap-handle"></div>').appendTo(body).hide();
-                    
-                    
+
+
                     field = editor.getField(id, element.mage('index')).setElement(element);
                     field.repeatable   = true;
                     field.repeatHandle = repeatHandle;
                     field.swapHandler  = swapHandler;
-                    
+
                     var swap, swapDir;
                     element.on({
-                        
+
                         mousemove: function(event)
                         {
                             var offsetY = event.pageY - $(this).offset().top;
                             var offsetX = event.pageX - $(this).offset().left;
                             var visible = swapHandler.is(":visible"), yPos = 0;
                             var threshold = Math.min(element.height()/2-5, 100);
-                            
+
                             if(offsetY < threshold) {
                                 if(!visible && (swap = element.prev('[mage\\:id="'+id+'"]:visible')).length) {
                                     visible = true;
@@ -1946,7 +1946,7 @@ window.mzax = window.mzax || {};
                             else {
                                 visible = false;
                             }
-                            
+
                             if(visible) {
                                 var offset = element.offset();
                                 offset.top  += yPos - swapHandler.height()/2;
@@ -1957,18 +1957,18 @@ window.mzax = window.mzax || {};
                             }
                             $('.mzax-swap-handle').not(swapHandler).hide();
                             swapHandler.toggle(visible);
-                            
-                            
+
+
                             repeatHandle.css({
                                 opacity: 1.1-(element.height()-offsetY)/100
                             });
-                            
-                            
+
+
                         },
-                    
-                        
-                        
-                        
+
+
+
+
                         mouseenter: function() {
                             $('.mzax-repeat-handle').hide();
                             repeatHandle.show();
@@ -1980,42 +1980,42 @@ window.mzax = window.mzax || {};
                             }
                             if(!repeatHandle.hasElement(event.relatedTarget)) {
                                 repeatHandle.hide();
-                                
+
                             }
                         }
                     });
-                    
-                    
-                    
-                    
+
+
+
+
                     swapHandler.on({
-                        
+
                         mouseenter: function()
                         {
                             var bgSize = Math.min(element.height(), swap.height(), 60)+'px';
-                            
+
                             swapMarkerA.moveOnTop(swap)
                                 .toggleClass('mzax-a', swapDown)
                                 .toggleClass('mzax-b', !swapDown)
                                 .css('background-size',bgSize)
                                 .flicker().show();
-                            
+
                             swapMarkerB.moveOnTop(element)
                                 .toggleClass('mzax-b', swapDown)
                                 .toggleClass('mzax-a', !swapDown)
                                 .css('background-size',bgSize)
                                 .flicker().show();
-                            
+
                         },
-                        
-                        mouseleave : function() 
+
+                        mouseleave : function()
                         {
                             swapMarkerA.moveOnTop(swap).flicker(false).hide();
                             swapMarkerB.moveOnTop(element).flicker(false).hide();
                            // swap.flicker(false);
                            // element.flicker(false);
                         },
-                        
+
                         click: function(event) {
                             console.log("SWAP "+swapDown);
                             if(swap.length) {
@@ -2026,43 +2026,43 @@ window.mzax = window.mzax || {};
                             swapHandler.hide();
                         }
                     });
-                    
-                    
-                    
-                    
+
+
+
+
                     repeatHandle.on({
-                        
+
                         mouseenter: function()
                         {
                             repeatMarker.moveOnTop(element).show();
                         },
-                        
-                        mouseleave : function() 
+
+                        mouseleave : function()
                         {
                             repeatMarker.hide();
                         },
-                        
+
                         click: function(event) {
-                            
+
                             var nextIndex = field.index+1;
-                            
+
                             editor.insertField(field.id, nextIndex);
-                            
+
                             var element = field.clone()
                                 // set index for all child items
                                 .find('[mage\\:id]').andSelf().attr('mage:index', nextIndex).end().end()
                                 .insertAfter(field.element)
-                                
+
                                 // run workers on all elements
                                 .each(removableWorker)
                                 .each(repeatableWorker)
                                 .find('[mage\\:editable]').each(editableWorker).end()
                                 .find('[mage\\:removable]').each(removableWorker).end();
-                            
+
                             element.highlight();
                         }
                     });
-                    
+
                     var fields = editor.fields[id];
                     if(fields.length > 1) {
                         for(var i = 1; i < fields.length; i++) {
@@ -2071,7 +2071,7 @@ window.mzax = window.mzax || {};
                                     // set index for all child items
                                     .find('[mage\\:id]').andSelf().attr('mage:index', i).end().end()
                                     .insertAfter(field.element)
-                                    
+
                                     // run workers on all elements
                                     .each(removableWorker)
                                     .each(repeatableWorker)
@@ -2080,56 +2080,56 @@ window.mzax = window.mzax || {};
                             }
                         }
                     }
-                    
-                    
+
+
                     field.refreshUi(function(data) {
                         var offset = element.offset();
                         offset.top  += element.height()  - repeatHandle.height()/2;
                         offset.left += element.width()/2 - repeatHandle.width()/2;
-                        
+
                         repeatHandle.offset(offset);
-                        
+
                         /*
                         var offset = element.offset();
                             offset.top  -= swapHandler.height()/2;
                             offset.left += element.width()/4 - swapHandler.width()/2;
-                            
+
                         swapHandler.offset(offset);*/
                     });
-                    
+
                 }
-                
+
                 $('[mage\\:id]').each(initWorker);
                 $('[mage\\:editable]').each(editableWorker);
                 $('[mage\\:repeatable]').each(repeatableWorker).each(removableWorker);
                 $('[mage\\:removable]').each(removableWorker);
-                
-                
+
+
                 /*
                 setTimeout(function() {
                     $('[mage\\:removable]').each(removableWorker);
                 },1000);*/
-                
+
             }
-            
-            
-            
+
+
+
             this.disableLinks(function(link) {
                 alert("Link ("+link.href+")");
             });
-            
-            
+
+
             this.refreshUi();
             setTimeout(function() {
                 Element.hide(editor.loader);
             }, 500);
         },
-        
-        
-        
+
+
+
         /**
          * Initialize the CKEDITOR object
-         * 
+         *
          * @param CKEDITOR
          * @return void
          */
@@ -2137,9 +2137,9 @@ window.mzax = window.mzax || {};
         {
             var editor = this,
                 $ = editor.jQuery;
-            
+
             editor.CKEDITOR = CKEDITOR;
-            
+
             CKEDITOR.owner = editor;
             CKEDITOR.mzax = mzax;
             CKEDITOR.mageSnippets = editor.snippets || {};
@@ -2151,17 +2151,17 @@ window.mzax = window.mzax || {};
                 editor.browserMedia(setValueFunc, true /* mediaExprOnly */);
             };
             CKEDITOR.getImagePreviewUrl = editor.getImagePreviewUrl.bind(editor);
-            
-            
+
+
             $('body').addClass('mzax-ckeditor-enabled');
             $('<div id="mzax-ckeditor-top" />').prependTo('body');
         },
-        
-        
-        
+
+
+
         /**
          * Initialize jQuery
-         * 
+         *
          * @param jQuery $
          * @return void
          */
@@ -2169,36 +2169,36 @@ window.mzax = window.mzax || {};
         {
             var editor = this,
                 win = $(editor.getFrameWindow());
-            
+
             editor.jQuery = $;
             registerJQueryPlugins($);
-            
-            
+
+
             /**
              * Retrieve a mage:xza attribute
-             * 
+             *
              * @param string attribute mage attribute name
              * @return string
              */
             $.fn.mage = function(attribute) {
                 return this.attr('mage:' + attribute);
             };
-            
-            
-            
+
+
+
             /**
              * Convert element from fixed to absolute
              * without chaingin its position
-             * 
+             *
              * @param boolen flag
              * @return jQuery chaining
              */
-            $.fn.fixedPosition = function(flag) 
+            $.fn.fixedPosition = function(flag)
             {
                 var offset   = this.offset(),
                     position = flag ? 'fixed' : 'absolute',
                     flag     = flag ? -1 : 1;
-                
+
                 if(this.css('position') === position) {
                     return this;
                 }
@@ -2208,26 +2208,26 @@ window.mzax = window.mzax || {};
                     left: offset.left + $('body').scrollLeft()*flag,
                 });
             };
-            
-            
-           
+
+
+
             /**
              * Check if the element contains
              * the given element
-             * 
+             *
              * @param jQuery element The element to look for
              * @return boolean
              */
             $.fn.hasElement = function(element) {
                 return (this.length > 0 && (this.index(element) !== -1 || $.contains(this[0], element)));
             };
-            
-            
-            
+
+
+
             /**
              * Place an absolute element on top of the
              * specified element
-             * 
+             *
              * @param jQuery element The element to look for
              * @return jQuery Chaining
              */
@@ -2240,12 +2240,12 @@ window.mzax = window.mzax || {};
                     width:element.width()
                 });
             };
-            
-            
-            
+
+
+
             /**
              * Scroll element into view
-             * 
+             *
              * at the moment we check only for vertical alignment,
              * shout be good enough for emails
              */
@@ -2255,14 +2255,14 @@ window.mzax = window.mzax || {};
                     margin = parseInt($('body').css('margin-top')),
                     scrollTop = win.scrollTop(),
                     offset = this.offset();
-                
+
                 // don't do anything if it is in view
                 // todo left scroll?
                 if(scrollTop < offset.top && scrollTop + win.height() > offset.top + this.height()) {
                     callback.call(this);
                     return this;
                 }
-                
+
                 $('html, body').animate({
                     scrollTop: offset.top-20-margin
                 },{
@@ -2270,14 +2270,14 @@ window.mzax = window.mzax || {};
                     complete :callback
                 });
             };
-            
-            
-            
+
+
+
             /**
              * Make object flicker by randomly chainging
              * its opacity value until stop.
-             * 
-             * @param boolean flag 
+             *
+             * @param boolean flag
              * @param number speed The duration of the animations
              * @return self
              */
@@ -2298,20 +2298,20 @@ window.mzax = window.mzax || {};
                 }
                 return this;
             };
-            
+
         }, // END initJQuery
-        
-        
-        
-        
+
+
+
+
         /**
          * Take a given src from the editor and try to
          * convert it to an actuall URL
-         * 
+         *
          * Image urls sometimes contain placeholders as src path,
          * with simple reformating we can retrieve the actual image
          * url.
-         * 
+         *
          * @param string src
          * @return string
          */
@@ -2324,16 +2324,16 @@ window.mzax = window.mzax || {};
             }
             return src;
         },
-        
-        
-        
-        
+
+
+
+
         /**
          * Reindex the editor fields.
-         * 
+         *
          * Index can change when inserting, deleting, swaping
          * the elements. Then we should reindex those fields
-         * 
+         *
          * @param func Optional function to call for each field
          * @return void
          */
@@ -2341,7 +2341,7 @@ window.mzax = window.mzax || {};
         {
             var editor = this,
                 fields = editor.fields, field, id, i, reindex;
-            
+
             if( fields ) {
                 for(id in fields) {
                     if(fields.hasOwnProperty(id)) {
@@ -2365,18 +2365,18 @@ window.mzax = window.mzax || {};
                 }
             }
         },
-        
-        
-        
+
+
+
         /**
          * Update all UI elements
-         * 
+         *
          * Refresh all ui elements and give each editor
          * field a chance to update its UI as well.
-         * 
+         *
          * The refresh can be delayed so not to many call get made at once,
          * helpfull for scroll and resize events
-         * 
+         *
          * @param integer delay
          * @return void
          */
@@ -2385,39 +2385,39 @@ window.mzax = window.mzax || {};
             var editor = this,
                 $ = editor.jQuery,
                 window = $ ? $(editor.getFrameWindow()) : null;
-            
+
             if(this._refreshTimer) {
                 clearTimeout(this._refreshTimer);
             }
-            
+
             function refresh() {
                 console.log("refreshUi");
-                
+
                 // resize ace instance
                 if( editor.ace ) {
                     editor.ace.resize();
                 }
-                
+
                 if(!$) {
                     return;
                 }
-                
+
                 var data = {
                     window: window,
                     editor: editor,
                     topOffset: $('#mzax-ckeditor-top').height(),
                     height: window.height()
                 };
-                
+
                 data.bottom = window.scrollTop() + data.height;
                 data.top = window.scrollTop() + data.topOffset;
-                
-                
+
+
                 // add space at top for floating ckeditor
                 if(editor.CKEDITOR) {
                     $('body').css('margin-top', data.topOffset);
                 }
-                
+
                 // reindex and update fields
                 editor.reindexFields(function(field) {
                     field.refreshUi(data);
@@ -2430,12 +2430,12 @@ window.mzax = window.mzax || {};
                 this._refreshTimer = setTimeout(refresh, delay||5);
             }
         },
-        
-        
-        
+
+
+
         /**
          * Retrieve EditorField by its id and index
-         * 
+         *
          * @param string id
          * @param number index
          * @return mzax.ui.EditorField
@@ -2444,9 +2444,9 @@ window.mzax = window.mzax || {};
         {
             var editor = this,
                 fields = editor.fields || (editor.fields = {});
-            
+
             index = index||0;
-            
+
             if(!fields[id]) {
                 fields[id] = [];
             }
@@ -2458,13 +2458,13 @@ window.mzax = window.mzax || {};
             }
             return this.fields[id][index];
         },
-        
-        
-        
+
+
+
         /**
          * If we want to insert a field between two existing fields
          * we need to make some space
-         * 
+         *
          * @param string id
          * @param number index
          * @return void
@@ -2473,10 +2473,10 @@ window.mzax = window.mzax || {};
         {
             var editor = this, field, id, i,
                 fields = editor.fields || (editor.fields = {});
-            
+
             index = index||0;
-            
-            
+
+
             if(fields.hasOwnProperty(id)) {
                 i = fields[id].length;
                 while(--i >= index) {
@@ -2486,7 +2486,7 @@ window.mzax = window.mzax || {};
                         fields[id][field.index] = field;
                     }
                 }
-                
+
                 // do the same for all child elements
                 if( field ) {
                     field._walk(function(child, id) {
@@ -2495,11 +2495,11 @@ window.mzax = window.mzax || {};
                 }
             }
         },
-        
-        
+
+
         /**
          * Method for editing any field
-         * 
+         *
          * @param field field
          * @param Event event Optional event, usally click event
          * @return void
@@ -2508,13 +2508,13 @@ window.mzax = window.mzax || {};
         {
             var editor = this;
             editor.activeField = field;
-            
+
             editor.$.select('.controls .html-only').map(Element.hide);
-            
-            
+
+
             switch(field.type) {
 
-            
+
                 case 'css':
                     if(editor.ace) {
                         editor.ace.getSession().setMode("ace/mode/css");
@@ -2526,8 +2526,8 @@ window.mzax = window.mzax || {};
                     }
                     Element.show(editor.input);
                     break;
-            
-            
+
+
                 case 'html':
                     if(editor.ace) {
                         editor.ace.getSession().setMode("ace/mode/mage");
@@ -2540,7 +2540,7 @@ window.mzax = window.mzax || {};
                     editor.$.select('.controls .html-only').map(Element.show);
                     Element.show(editor.input);
                     break;
-                    
+
                 case 'image':
                     if(event && event.altKey) {
                         field.alt = window.prompt("Please enter a alt text", field.alt);
@@ -2564,18 +2564,18 @@ window.mzax = window.mzax || {};
                     }
                     break;
             }
-            
+
             this.refreshUi();
         },
-        
-        
-        
-        
-        
+
+
+
+
+
         /**
          * Retrieve available style configurations from html code
          * A simple regex css parser for extracting styles
-         * 
+         *
          * @return iFrame.Array
          */
         getCustomStyles : function()
@@ -2583,12 +2583,12 @@ window.mzax = window.mzax || {};
             if(this._customStyles) {
                 return this._customStyles;
             }
-            
+
             var i,j,styles,rules,name,selector,css,
                 // make sure to use array from frame context
                 result = this.getFrameWindow().Array();
             if(this.html) {
-                
+
                 if(css = this.html.match(/<style(\s+type="text\/css")?\s*>([\s\S]*)<\/style>/gmi)) {
                     i = css.length;
                     while(--i > -1) {
@@ -2598,7 +2598,7 @@ window.mzax = window.mzax || {};
                                 name     = rules[j].match(/@name\s+([a-z0-9 _-]+)/i);
                                 selector = rules[j].match(/([a-z0-9]+)\.([a-z0-9]+)\s{/i);
                                 styles   = rules[j].match(/{([^}]+)?}/i);
-                                
+
                                 if(name && selector) {
                                     result.push({
                                         name: name[1],
@@ -2617,14 +2617,14 @@ window.mzax = window.mzax || {};
             }
             return result;
         },
-        
-        
-        
-        
-        
+
+
+
+
+
         /**
          * Apply all changes to the current active element and close editor
-         * 
+         *
          */
         applyChanges : function()
         {
@@ -2643,11 +2643,11 @@ window.mzax = window.mzax || {};
             Element.hide(this.input);
             return this;
         },
-        
-        
+
+
         /**
          * Discard any changes on the current element and close editor
-         * 
+         *
          */
         discardChanges : function()
         {
@@ -2656,23 +2656,23 @@ window.mzax = window.mzax || {};
             Element.hide(this.input);
             return this;
         },
-        
-        
-        
-        
-        
+
+
+
+
+
         editMode : function()
         {
             this.editModeFlag = true;
             this.loadEditor();
         },
-        
-        
-        
+
+
+
         /**
          * Retrieve a list of all elements that have any
          * background image defined with css
-         * 
+         *
          * @return Array
          */
         getBackgroundElements : function()
@@ -2692,18 +2692,18 @@ window.mzax = window.mzax || {};
             }
             return this._bgElements;
         },
-        
-        
-        
+
+
+
         /**
          * Toggle Images
-         * 
+         *
          * This will hide/show all images inside the preview
          */
         toggleImages : function(flag)
         {
             this.imageFlag = flag = flag !== undefined ? !!flag : !this.imageFlag;
-            
+
             /* hide <img> tag images*/
             this.select('img').each(function(img) {
                 if(flag) {
@@ -2714,23 +2714,23 @@ window.mzax = window.mzax || {};
                     img.src = '';
                 }
             });
-            
+
             /* hide css background images */
             this.getBackgroundElements().each(function(item) {
                 Element.setStyle(item.element, {backgroundImage: flag ? item.background : 'none'});
             });
         },
-        
-        
-        
+
+
+
         /**
          * Browse Magento Media
-         * 
+         *
          * Opens if media browser url is defined the magento media
          * browser.
          * Provide a callback set will recive the value once selected.
          */
-        browserMedia : function(callback, mediaExprOnly) 
+        browserMedia : function(callback, mediaExprOnly)
         {
             if(this.mediaBrowserUrl) {
                 MediabrowserUtility.browse(this.mediaBrowserUrl, function(src) {
@@ -2741,8 +2741,8 @@ window.mzax = window.mzax || {};
                 });
             }
         },
-        
-        
+
+
         insertWidget : function(callback)
         {
             if(this.widgetToolsUrl) {
@@ -2753,8 +2753,8 @@ window.mzax = window.mzax || {};
                 });
             }
         },
-        
-        
+
+
         disableLinks : function(onclick)
         {
             var self = this;
@@ -2768,8 +2768,8 @@ window.mzax = window.mzax || {};
                 });
             });
         },
-        
-        
+
+
         loadTemplate : function(templateId)
         {
             if(this.templateLoadUrl) {
@@ -2787,11 +2787,11 @@ window.mzax = window.mzax || {};
                             if(d.error) {
                                 throw (d.message || 'Unknown server error');
                             }
-                            
+
                             if(d.html) {
                                 editor.setHtml(d.html);
                             }
-                            
+
                         } catch(e) {
                             alert(e);
                         }
@@ -2799,23 +2799,23 @@ window.mzax = window.mzax || {};
                 });
             }
         },
-        
-        
+
+
         quicksave : function(url, fieldName)
         {
             var editor = this,
                 extraFields = editor.quicksaveFields;
-            
+
             url = url || editor.quicksaveUrl;
             fieldName = fieldName || editor.fieldName;
-            
+
             if(url && fieldName) {
                 var postBody = ['data[' + fieldName + ']=' + encodeURIComponent(editor.getValue())];
                 if(FORM_KEY) {
                     postBody.push('form_key=' + FORM_KEY);
                 }
                 if(extraFields) {
-                    
+
                     walkObject(extraFields, function(fieldId, fieldName) {
                         var field = $(fieldId);
                         if( field ) {
@@ -2828,7 +2828,7 @@ window.mzax = window.mzax || {};
                             field = extraFields[fieldName]
                         }
                     }
-                    
+
                     this.quicksaveFields.forEach(function(fieldId) {
                         var field = $(fieldId);
                         if(field.name) {
@@ -2848,14 +2848,14 @@ window.mzax = window.mzax || {};
                             if(d.error) {
                                 throw (d.message || 'Unknown server error');
                             }
-                            
+
                             var noitfy = window.previewWindows || [];
                             var i = noitfy.length;
                             while(--i > -1) {
                                 try {noitfy[i] && noitfy[i].call(editor, {id:editor.htmlId, editor:editor});}
                                 catch(e) {/* preview popup has been closed */}
                             }
-                            
+
                             // preview windows would like to now :)
                             if(varienGlobalEvents) {
                                 varienGlobalEvents.fireEvent('quicksave', {id:editor.htmlId, editor:editor});
@@ -2868,82 +2868,82 @@ window.mzax = window.mzax || {};
             }
             return this;
         }
-        
-        
-        
+
+
+
     });
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     /*****************************************************************
-     * 
+     *
      * TEMPLATE EDITOR
-     * 
+     *
      *****************************************************************/
-    
+
     mzax.ui.TemplateEditor = Class.create({
-        
-        initialize: function(div, options) 
+
+        initialize: function(div, options)
         {
             var scope = this;
             options = options || {};
-            
+
             scope.mediaUrl = '/media/';
             scope.skinUrl = '/skin/';
             scope.storeUrl = '/skin/';
-            
+
             scope.$ = div;
             scope.jquerySrc = 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.js';
             scope.editorCss = '/skin/adminhtml/default/default/mzax/editor.css';
             scope.enablePreview = true;
             scope.enableAce = true;
             scope.layout = 1;
-            
+
             scope._options = options;
             Object.extend(this, options);
-            
+
             scope.init();
-            
-            
+
+
         },
-        
-        
+
+
         init : function()
         {
-            var editor = this, 
+            var editor = this,
                 element = editor.$;
             element.innerHTML = '<div class="mzax-content mzax-content-editor"><textarea class="text-input"></textarea></div>'
                               + '<div class="mzax-content mzax-content-preview"></div>'
                               + '<div class="mzax-seperator"></div>'
                               + '<div class="mzax-disable-ui"></div>';
-            
+
             element.addClassName('mzax-template-editor');
             element.addClassName('mzax-editor');
             editor.$editor  = element.down('.mzax-content-editor');
             editor.$preview = element.down('.mzax-content-preview');
             editor.$seperator = element.down('.mzax-seperator');
             editor.$disableUi = element.down('.mzax-disable-ui');
-            
+
             if(editor.enableAce && ace) {
                 ace.require("ace/ext/mage_autocomplete");
-                
+
                 editor.ace = ace.edit(element.down('.text-input'));
                 editor.ace.owner = this;
                 editor.ace.setMageSnippets(editor.snippets);
                 editor.ace.setTheme("ace/theme/mage");
                 editor.ace.getSession().setMode("ace/mode/mage");
                 editor.ace.setOptions({
-                    enableBasicAutocompletion: true, 
-                    enableSnippets: true, 
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true,
                     enableMageLiveAutocompletion:true
                 });
                 editor.ace.getSession().on('change', function(e) {
                     editor.updatePreview(1000);
                 });
-                
+
             }
             else {
                 element.down('.text-input').observe('keyup', function() {
@@ -2951,33 +2951,33 @@ window.mzax = window.mzax || {};
                 });
             }
             if(editor.enablePreview) {
-                editor.preview = new mzax.ui.PreviewFrame(editor.$preview, 
+                editor.preview = new mzax.ui.PreviewFrame(editor.$preview,
                     Object.extend(editor._options, {
                         enableAce: editor.enableAce,
                         enableCKEditor: false
                     })
                 );
             }
-            
-            
-            
+
+
+
             this.switchLayout(this.layout);
-            
-            
+
+
             var editor = this,
-                $seperator = this.$seperator, 
+                $seperator = this.$seperator,
                 document = $(window.document);
-            
+
             if($seperator) {
-                
+
                 var offset, size;
-                
+
                 var mouseup = function(e) {
                     document.stopObserving('mouseup', mouseup);
                     document.stopObserving('mousemove', mousemove);
                     Element.hide(editor.$disableUi);
                 };
-                
+
                 var mousemove = function(e) {
                     e.stop();
                     editor.setSeperatorPosition(editor.layout === 1
@@ -2985,44 +2985,44 @@ window.mzax = window.mzax || {};
                         : (e.pageX - offset.left)/(size.width||1)
                     );
                 };
-                
+
                 $seperator.observe('mousedown', function(e) {
                     offset = editor.$.cumulativeOffset();
                     size = editor.$.getDimensions();
-                    
+
                     document.observe('mouseup', mouseup);
                     document.observe('mousemove', mousemove);
                     Element.show(editor.$disableUi);
                 });
             }
-            
+
             Element.hide(editor.$disableUi);
-            
-            
-            
-            
+
+
+
+
             varienGlobalEvents.attachEventHandler('formValidateAjaxComplete', function(transport) {
                 var errors = transport.responseText.evalJSON().html_template_errors;
                 console.log(errors);
-                
+
                 if(errors && editor.ace) {
                     var Range = ace.require('ace/range').Range,
                         session = editor.ace.session;
-                    
+
                     editor.removeErrorHighlights();
                     var i = errors.length;
                     while(--i > -1) {
                         editor.errorMarkers.push(session.addMarker(
                             new Range(errors[i].line-1, 0, errors[i].line-1, errors[i].column-1), "errorHighlight", "line"));
-                        
+
                     }
                 }
-                
-                
+
+
             });
         },
-        
-        
+
+
         removeErrorHighlights : function()
         {
             if(this.ace && this.errorMarkers) {
@@ -3034,40 +3034,40 @@ window.mzax = window.mzax || {};
             this.errorMarkers = [];
             return this;
         },
-        
-        
-        
+
+
+
         setSeperatorPosition: function(pos)
         {
             var editor = this;
             pos = limit(pos, 0, 1);
-            
+
             editor._sepPos = pos;
-            
+
             editor.$editor.writeAttribute('style', '');
             editor.$preview.writeAttribute('style', '');
             editor.$seperator.writeAttribute('style', '');
-            
+
             var props = editor.layout === 1
                 ? ['bottom', 'top']
                 : ['right', 'left'];
-                
+
             var s1 = {}, s2 ={};
             s1[props[0]] = (100-pos*100)+'%';
             s2[props[1]] = (pos*100)+'%';
-            
+
             editor.$editor.setStyle(s1);
             editor.$preview.setStyle(s2);
             editor.$seperator.setStyle(s2);
-            
+
             editor.refreshUi();
         },
-        
+
         switchLayout : function(layout)
         {
             var element = this.$, ns = 'mzax-layout-';
             this.layout = layout|| (this.layout%2)+1;
-            
+
             element.removeClassName(ns + 'horz');
             element.removeClassName(ns + 'vert');
             switch(this.layout) {
@@ -3076,17 +3076,17 @@ window.mzax = window.mzax || {};
                     break;
                 case 2:
                     element.addClassName(ns + 'horz');
-                    break;  
+                    break;
             }
             this.setSeperatorPosition(this._sepPos||0.5);
             return this;
         },
-        
-        
+
+
         setValue : function(data)
         {
             var editor = this;
-            
+
             if(editor.ace) {
                 editor.ace.setValue(data);
                 editor.ace.clearSelection();
@@ -3097,17 +3097,17 @@ window.mzax = window.mzax || {};
             editor.updatePreview(false);
             return editor;
         },
-        
-        
+
+
         getValue : function()
         {
-            return this.ace 
-                ? this.ace.getValue() 
+            return this.ace
+                ? this.ace.getValue()
                 : this.$editor.down('textarea').value;
         },
-        
-        
-        
+
+
+
         refreshUi : function()
         {
             // resize ace instance
@@ -3118,24 +3118,24 @@ window.mzax = window.mzax || {};
                 this.preview.refreshUi();
             }
         },
-        
-        
+
+
         updatePreview : function(delay)
         {
             var editor = this;
             if(!editor.preview) {
                 return false;
             }
-            
+
             if(editor._updateTimer) {
                 clearTimeout(editor._updateTimer);
             }
-            
+
             function update() {
-                editor.preview.setHtml(editor.ace 
-                    ? editor.ace.getValue() 
+                editor.preview.setHtml(editor.ace
+                    ? editor.ace.getValue()
                     : editor.$editor.down('textarea').value, true);
-                
+
             }
             if(delay === false) {
                 update();
@@ -3144,7 +3144,7 @@ window.mzax = window.mzax || {};
                 editor._updateTimer = setTimeout(update, delay||5);
             }
         },
-        
+
         execCommand : function(cmd)
         {
             if(this.ace) {
@@ -3152,26 +3152,26 @@ window.mzax = window.mzax || {};
             }
             return this;
         },
-        
-        
+
+
         insert : function(text)
         {
             if(this.ace) {
                 this.ace.insert(text);
             }
         },
-        
-        
-        
-        
+
+
+
+
         /**
          * Browse Magento Media
-         * 
+         *
          * Opens if media browser url is defined the magento media
          * browser.
          * Provide a callback set will recive the value once selected.
          */
-        browserMedia : function() 
+        browserMedia : function()
         {
             var editor = this;
             if(this.mediaBrowserUrl) {
@@ -3182,8 +3182,8 @@ window.mzax = window.mzax || {};
                 });
             }
         },
-        
-        
+
+
         insertWidget : function(callback)
         {
             var editor = this;
@@ -3195,52 +3195,52 @@ window.mzax = window.mzax || {};
                 });
             }
         }
-        
-        
-        
-        
+
+
+
+
     });
-    
-    
-    
+
+
+
     /*****************************************************************
-     * 
+     *
      * TEXT EDITOR
-     * 
+     *
      *****************************************************************/
-    
+
     mzax.ui.TextEditor = Class.create({
-        
-        
-        initialize: function(div, options) 
+
+
+        initialize: function(div, options)
         {
             var scope = this;
-            
+
             scope.$ = div;
             scope.enableAce = true;
             scope.readOnly = false;
             scope.autosize = false;
             scope.useWrapMode = false;
             Object.extend(this, options || {});
-            
+
             scope.init();
         },
-        
-        
+
+
         init : function()
         {
             var editor = this, aceInstance,
                 element = editor.$,
                 value = decodeHtml(element.innerHTML);
-            
-            
+
+
             element.innerHTML = '<div class="mzax-content mzax-content-editor"><textarea class="text-input"></textarea></div>';
-            
+
             element.addClassName('mzax-text-editor');
             element.addClassName('mzax-editor');
-            
+
             editor.$editor  = element.down('.mzax-content-editor');
-            
+
             if(editor.enableAce && ace) {
                 aceInstance = editor.ace = ace.edit(element.down('.text-input'));
                 aceInstance.owner = this;
@@ -3248,28 +3248,28 @@ window.mzax = window.mzax || {};
                 aceInstance.getSession().setMode(editor.mode || "ace/mode/mage");
                 aceInstance.getSession().setUseWrapMode(editor.useWrapMode);
                 aceInstance.setOptions({
-                    enableBasicAutocompletion: true, 
-                    enableSnippets: true, 
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true,
                     enableMageLiveAutocompletion:true
                 });
                 aceInstance.setReadOnly(editor.readOnly);
             }
             editor.refreshUi();
-            
-            
+
+
             Event.observe(window, "resize", function() {
                 editor.refreshUi();
             });
-            
+
             editor.setValue(value);
-            
+
         },
-        
-        
+
+
         /**
          * Autosize editor so content fits without vertical scrolling
-         * 
-         * 
+         *
+         *
          * @return void
          */
         doAutosize : function() {
@@ -3280,7 +3280,7 @@ window.mzax = window.mzax || {};
                           * ace.renderer.lineHeight
                           + ace.renderer.scrollBar.getWidth()
                           + 25;
-    
+
                 this.$.setStyle({height: autoHeight.toString() + "px"});
             }
             else {
@@ -3289,9 +3289,9 @@ window.mzax = window.mzax || {};
                 txt.setStyle({height: (25+txt.scrollHeight)+"px"});
             }
         },
-        
-        
-        
+
+
+
 
         execCommand : function(cmd)
         {
@@ -3300,16 +3300,16 @@ window.mzax = window.mzax || {};
             }
             return this;
         },
-        
-        
+
+
         insert : function(text)
         {
             if(this.ace) {
                 this.ace.insert(text);
             }
         },
-        
-        
+
+
         setValue : function(data)
         {
             var editor = this;
@@ -3323,17 +3323,17 @@ window.mzax = window.mzax || {};
             editor.refreshUi();
             return editor;
         },
-        
-        
+
+
         getValue : function()
         {
-            return this.ace 
-                ? this.ace.getValue() 
+            return this.ace
+                ? this.ace.getValue()
                 : this.$editor.down('textarea').value;
         },
-        
-        
-        
+
+
+
         refreshUi : function()
         {
             if(this.autosize) {
@@ -3347,13 +3347,13 @@ window.mzax = window.mzax || {};
                 this.ace.resize();
             }
         }
-        
-        
-        
-        
-        
+
+
+
+
+
     });
-    
+
 })(window, window.mzax);
 
 
@@ -3361,17 +3361,17 @@ window.mzax = window.mzax || {};
 
 
 /*****************************************************************
- * 
+ *
  * MEDIABROWSER OVERWRITE
- * 
+ *
  *****************************************************************/
 
 (function(window, Mediabrowser, MediabrowserUtility) {
-    
+
     if(!Mediabrowser || !MediabrowserUtility) {
         return;
     }
-    
+
     function getSelectedImage(event)
     {
         var div;
@@ -3387,27 +3387,27 @@ window.mzax = window.mzax || {};
         }
         return div.id;
     }
-    
-    
-    
+
+
+
     var orgiInsert = Mediabrowser.prototype.insert,
         orgiClose  = MediabrowserUtility.closeDialog;
-    
-    Mediabrowser.prototype.insert = function(event) 
+
+    Mediabrowser.prototype.insert = function(event)
     {
         // use original if no editor found
         if(!window[this.targetElementId] || !MediabrowserUtility._callback) {
             return orgiInsert.call(this, event);
         }
-        
+
         var params,
             editor = window[this.targetElementId],
             fileId = getSelectedImage(event);
-        
+
         if(!fileId) {
             return false;
         }
-        
+
         params = {filename:fileId, node:this.currentNode.id, store:this.storeId, as_is:1};
 
         new Ajax.Request(this.onInsertUrl, {
@@ -3418,19 +3418,19 @@ window.mzax = window.mzax || {};
                     if (this.getMediaBrowserOpener()) {
                         self.blur();
                     }
-                    
+
                     if( MediabrowserUtility._callback ) {
-                        
+
                         var data = transport.responseText;
                         // we need valid html, so convert double quotes to single quotes in attributes
                         data = data.replace(/"[^"]*\{\{(.*?)\}\}[^"]*"/g, function(match) {
                             return '"' + match.substring(1,match.length-1).replace(/"/g, "'") + '"';
                         });
-                        
+
                         MediabrowserUtility._callback.call(null, data);
                         MediabrowserUtility._callback = null;
                     }
-                    
+
                     Windows.close('browser_window');
                 } catch (e) {
                     alert(e.message);
@@ -3438,12 +3438,12 @@ window.mzax = window.mzax || {};
             }.bind(this)
         });
     };
-    
+
     MediabrowserUtility.browse = function(url, callback, width, height, title) {
         this._callback = callback;
         this.openDialog(url, width, height, title);
     };
-    
+
     MediabrowserUtility.closeDialog = function(window) {
         if( this._callback ) {
             this._callback.call(window, null);
@@ -3451,8 +3451,8 @@ window.mzax = window.mzax || {};
         }
         return orgiClose.call(this, window);
     };
-    
-    
+
+
 
 })(window, Mediabrowser, MediabrowserUtility);
 
@@ -3461,9 +3461,9 @@ window.mzax = window.mzax || {};
 
 
 /*****************************************************************
- * 
+ *
  * WYSIWYG WIDGET OVERWRITE
- * 
+ *
  *****************************************************************/
 
 (function(window, WysiwygWidget, widgetTools) {
@@ -3474,8 +3474,8 @@ window.mzax = window.mzax || {};
         openOrgi = widgetTools.openDialog,
         closeOrgi = widgetTools.closeDialog,
         insertOrgi = Widget.prototype.insertWidget;
-    
-    Widget.prototype.insertWidget = function() 
+
+    Widget.prototype.insertWidget = function()
     {
         // use original if no editor found with target id
         if(!window[this.widgetTargetId] && !widgetTools._callback) {
@@ -3483,7 +3483,7 @@ window.mzax = window.mzax || {};
          }
          var editor = window[this.widgetTargetId];
          var widgetOptionsForm = new varienForm(this.formEl);
-        
+
         if(widgetOptionsForm.validator && widgetOptionsForm.validator.validate() || !widgetOptionsForm.validator){
             var formElements = [];
             var i = 0;
@@ -3493,17 +3493,17 @@ window.mzax = window.mzax || {};
                     i++;
                 }
             });
-            
+
             var params = Form.serializeElements(formElements);
                 params = params + '&as_is=1';
-            
+
             new Ajax.Request($(this.formEl).action,
             {
                 parameters: params,
                 onComplete: function(transport) {
                     try {
                         widgetTools.onAjaxSuccess(transport);
-                        
+
                         if( widgetTools._callback ) {
                             widgetTools._callback.call(widgetTools, transport.responseText);
                             widgetTools._callback = null;
@@ -3516,15 +3516,15 @@ window.mzax = window.mzax || {};
             });
         }
     };
-    
-    
-    
+
+
+
     widgetTools.openDialog = function(widgetUrl, callback) {
         widgetTools._callback = callback;
         return openOrgi.call(widgetTools, widgetUrl);
     };
-    
-    
+
+
     widgetTools.closeDialog = function(window) {
         if( widgetTools._callback ) {
             widgetTools._callback.call(window, null);
@@ -3533,7 +3533,7 @@ window.mzax = window.mzax || {};
         return closeOrgi.call(this, window);
     };
 
-    
+
 })(window, WysiwygWidget, widgetTools);
 
 
@@ -3541,9 +3541,9 @@ window.mzax = window.mzax || {};
 
 
 /*****************************************************************
- * 
+ *
  * jQuery Plugins
- * 
+ *
  *****************************************************************/
 
 

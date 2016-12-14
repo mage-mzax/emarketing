@@ -1,0 +1,213 @@
+@CHARSET "UTF-8";
+.testing {
+  font-weight: bold;
+  color: red; }
+
+.mzax-editor-highlight {
+  cursor: pointer;
+  outline: 1px dotted #E70000;
+  outline-offset: 3px; }
+
+.mzax-editor-highlight-image {
+  opacity: 0.5;
+  cursor: pointer; }
+
+#mzax-ckeditor-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2000;
+  box-shadow: 0px 1px 1px 0 rgba(0, 0, 0, 0.1); }
+  #mzax-ckeditor-top .cke_chrome {
+    border: none; }
+  #mzax-ckeditor-top .cke_toolbox {
+    text-align: center;
+    display: block;
+    white-space: normal; }
+    #mzax-ckeditor-top .cke_toolbox .cke_toolbar {
+      float: none;
+      display: inline-block; }
+
+.mzax-inline-ckeditor {
+  min-height: 15px; }
+
+.mzax-cke-show-source .cke_button_label {
+  display: inline; }
+
+.mzax-cke-mage-expr .cke_button_icon {
+  width: 34px; }
+
+.cke_dialog_body .mzax-placeholder-snippet {
+  padding-bottom: 10px;
+  border-bottom: 3px solid #DBDBDB; }
+  .cke_dialog_body .mzax-placeholder-snippet .cke_dialog_ui_labeled_label {
+    font-size: 14px;
+    font-weight: bold; }
+
+.cke_dialog_body .mzax-placeholder-desc h5.title {
+  font-size: 13px;
+  font-weight: bold; }
+.cke_dialog_body .mzax-placeholder-desc .description {
+  font-size: 12px;
+  margin: 10px 0; }
+.cke_dialog_body .mzax-placeholder-desc code {
+  font-family: monospace;
+  color: #ea7601;
+  display: block;
+  border: 1px dotted #ADADAD;
+  padding: 10px 5px;
+  background: #F4F4F4;
+  white-space: normal; }
+
+.mzax-placeholder.is-inline {
+  display: inline;
+  outline: 1px #ea7601 dotted;
+  background: rgba(234, 118, 1, 0.2); }
+
+.mzax-placeholder.is-lang {
+  display: inline;
+  outline: 1px #ea7601 dotted;
+  background: #ea7601;
+  color: #fff;
+  font-size: 11px;
+  font-family: monospace; }
+
+.mzax-placeholder.is-block {
+  display: block;
+  background: url("images/corner-arrows.png") no-repeat top -10px left -10px, url("images/corner-arrows.png") no-repeat top -10px right -10px, url("images/corner-arrows.png") no-repeat bottom -10px left -10px, url("images/corner-arrows.png") no-repeat bottom -10px right -10px, url("images/block-bg.png"), #efefff;
+  height: 80px;
+  position: relative;
+  outline: 1px solid #ccc;
+  font-weight: normal;
+  color: black; }
+  .mzax-placeholder.is-block .mzax-center {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 90%;
+    max-width: 90%;
+    height: 45px;
+    overflow: hidden;
+    text-align: center;
+    margin: auto;
+    text-shadow: 0 0 5px #fff;
+    color: #5A5A5A;
+    display: block; }
+  .mzax-placeholder.is-block .mzax-title {
+    font-weight: bold;
+    font-size: 16px;
+    display: block; }
+  .mzax-placeholder.is-block .mzax-info {
+    font-style: italic;
+    font-size: 12px;
+    display: block; }
+
+.mzax-swap-handle {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+  height: 30px;
+  width: 40px;
+  cursor: ns-resize;
+  transition: opacity 0.5s ease-out;
+  background: url("images/element-swap.png") no-repeat; }
+
+.mzax-repeat-handle {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1002;
+  height: 21px;
+  width: 70px;
+  cursor: copy;
+  transition: opacity 0.5s ease-out;
+  background: url("images/element-repeat.png") no-repeat; }
+
+.mzax-remove-handle {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  height: 32px;
+  width: 40px;
+  cursor: no-drop;
+  transition: background, opacity 0.5s ease-out;
+  background: url("images/element-remove.png") no-repeat;
+  color: white; }
+  .mzax-remove-handle span {
+    display: none;
+    background: #687746;
+    font-size: 10px;
+    letter-spacing: 1px;
+    font-family: Arial;
+    padding: 2px 4px;
+    top: -2px;
+    left: 19px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 7px;
+    white-space: nowrap; }
+  .mzax-remove-handle.mzax-repeatable {
+    height: 25px;
+    width: 25px;
+    background: url("images/element-remove2.png") no-repeat bottom left; }
+  .mzax-remove-handle.mzax-removed {
+    background: green;
+    background: url("images/element-add.png") no-repeat;
+    height: 25px;
+    width: 25px;
+    display: block;
+    cursor: copy; }
+    .mzax-remove-handle.mzax-removed:hover span {
+      display: inline-block; }
+
+.mzax-marker {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 900;
+  height: 0;
+  width: 0; }
+
+.mzax-swap-marker {
+  background: url("images/swap-up.png") no-repeat top center rgba(255, 255, 255, 0.8); }
+  .mzax-swap-marker.mzax-b {
+    border-bottom: 1px dotted #AE00B8;
+    background: url("images/swap-down.png") no-repeat bottom center rgba(255, 255, 255, 0.8); }
+
+.mzax-remove-marker {
+  background: url("images/bg-remove.png") rgba(137, 15, 15, 0.2);
+  outline: 1px dotted #E70000;
+  outline-offset: 3px; }
+
+.mzax-repeat-marker {
+  background: rgba(141, 179, 53, 0.2);
+  outline: 1px dotted #8DB335;
+  outline-offset: 3px; }
+
+.mzax-custom-css {
+  position: fixed;
+  bottom: 80px;
+  right: 0;
+  transform: rotate(-90deg);
+  transform-origin: 100% 100%;
+  padding: 3px 3px 0;
+  border-radius: 3px 3px 0 0;
+  font-size: 12px;
+  font-family: monospace;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0px 0px 2px 0 rgba(0, 0, 0, 0.5), 0px 0px 10px 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  height: 14px;
+  transition: height 0.1s ease-out; }
+  .mzax-custom-css:hover {
+    height: 25px;
+    color: #ea7601; }

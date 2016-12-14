@@ -38,6 +38,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Medium extends Mage_Adminhtml_Bloc
 
 
 
+
         $renderer = $this->getLayout()->createBlock('adminhtml/widget_form_renderer_fieldset')
             ->setTemplate('mzax/emarketing/campaign/fieldset-offer.phtml');
 

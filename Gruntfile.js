@@ -1,19 +1,79 @@
 module.exports = function(grunt) {
-    
-    
+
+
     var path = require('path');
     var mzax = require("./grunt/mzax.js");
-    
-    
+
+
     var srcPath = './src';
     var DEBUG_NS = 'test';
-    
-    
+
+
+
+
+    var debug = true;
+
+
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         config: {
             version: mzax.getModuleVersion()
         },
+
+        sass: {
+            adminhtml: {
+                options: {
+                    outputStyle: debug ? 'expanded' : 'compressed'
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'src/skin/adminhtml',
+                    src: ['**/*.scss'],
+                    dest: 'build/skin/adminhtml',
+                    ext: '.css'
+                }]
+            }
+        },
+        imagemin: {
+            options: {
+                optimizationLevel: 3
+            },
+            adminhtml: {
+                files: [{
+                    // adminhtml skin images
+                    expand: true,
+                    cwd: 'src/skin/adminhtml/images',
+                    src: ['**/*.{png,jpg,gif}'],
+                    dest: 'build/skin/adminhtml/images'
+                }]
+            }
+        },
+
+        uglify: {
+            options: {
+                banner: "/*TODO*/ \n\n",
+                maxLineLen: 1000,
+                compress: {
+                    drop_console: true,
+                    global_defs: {
+                        "DEBUG": false
+                    }
+                }
+            },
+            adminhtml: {
+                files: [{
+                    expand: true,
+                    cwd: 'src/js',
+                    src: ['**/*.js'],
+                    dest: 'build/js/',
+                    ext: '.js',
+                    extDot: 'last'
+                }]
+            }
+        },
+
+
         /* Convert new PHP namespaces (a/b/c) to old ones (a_b_c)*/
         phpns: {
             options:{
@@ -29,7 +89,7 @@ module.exports = function(grunt) {
                 source: './vendor/tijsverkoyen/css-to-inline-styles',
                 base:  'TijsVerkoyen/CssToInlineStyles',
                 ignore: []
-            },            
+            },
             html2text:{
                 source: './vendor/soundasleep/html2text',
                 base:   'Html2Text',
@@ -41,10 +101,10 @@ module.exports = function(grunt) {
                 ignore: ['tests', 'bin', 'uap-core']
             }
         },
-        
+
         watch: {
             options: {livereload: true, cwd:srcPath},
-            
+
             php: {
                 files: ['module/**', 'lib/**'],
                 tasks: ['newer:string-replace:'+DEBUG_NS],
@@ -85,19 +145,19 @@ module.exports = function(grunt) {
             }
         }
     });
-    
-    
-    
+
+
+
     require("./grunt/local.js").setup(grunt, mzax, DEBUG_NS);
-    
-    
+
+
     mzax.registerBuild(grunt, 'package', './package', {
         debug: false,
         extraFiles: ['package.xml'],
         compress:'./Mzax_Emarketing-<%= config.version %>.tgz'
     });
-    
-    
+
+
     grunt.registerTask('default', ['phpns', DEBUG_NS]);
     grunt.registerTask('pack', ['phpns', 'package']);
 
@@ -112,7 +172,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-ftp-push');
-    
+
     grunt.loadTasks('grunt');
-    
+
 };

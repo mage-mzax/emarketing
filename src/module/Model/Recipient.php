@@ -105,8 +105,10 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
      *
      * @return  string
      */
-    public function getUrl($routePath = null, $routeParams = null)
+    public function getUrl($routePath = null, $routeParams = array())
     {
+        $routeParams['_nosid'] = true;
+
         return $this->getCampaign()->getUrlModel()->getUrl($routePath, $routeParams);
     }
 
@@ -189,17 +191,15 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
     {
         $hash = $this->getData('beacon_hash');
         if (!$hash) {
-            $hash = md5(
-                $this->getObjectId() .
-                $this->getAddress() .
-                $this->getCampaignId() .
-                mt_rand(0, 99999999) .
-                microtime()
-            );
 
             /** @var Mzax_Emarketing_Helper_Data $helper */
             $helper = Mage::helper('mzax_emarketing');
-            $hash = $helper->compressHash($hash);
+
+            $hash = $helper->randomHash(
+                $this->getObjectId() .
+                $this->getAddress() .
+                $this->getCampaignId()
+            );
 
             $this->setData('beacon_hash', $hash);
         }

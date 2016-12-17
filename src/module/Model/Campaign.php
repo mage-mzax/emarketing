@@ -17,6 +17,8 @@
  */
 
 
+use Mzax_Emarketing_Model_Medium_Abstract as Medium;
+use Mzax_Emarketing_Model_Recipient_Provider_Abstract as RecipientProvider;
 
 /**
  * Campaign
@@ -85,14 +87,14 @@ class Mzax_Emarketing_Model_Campaign
     /**
      * Recipient provider
      *
-     * @var Mzax_Emarketing_Model_Recipient_Provider_Abstract
+     * @var RecipientProvider
      */
     protected $_provider;
 
     /**
      * Medium provider
      *
-     * @var Mzax_Emarketing_Model_Medium_Abstract
+     * @var Medium
      */
     protected $_medium;
 
@@ -423,7 +425,7 @@ class Mzax_Emarketing_Model_Campaign
     /**
      * Retrieve medium
      *
-     * @return Mzax_Emarketing_Model_Medium_Abstract
+     * @return Medium
      */
     public function getMedium()
     {
@@ -437,6 +439,25 @@ class Mzax_Emarketing_Model_Campaign
     }
 
     /**
+     * Set medium
+     *
+     * @param Medium|string $medium
+     *
+     * @return $this
+     */
+    public function setMedium($medium)
+    {
+        if ($medium instanceof Medium) {
+            $this->_medium = $medium;
+            $medium = $medium->getMediumId();
+        }
+
+        $this->setData('medium', $medium);
+
+        return $this;
+    }
+
+    /**
      * Retrieve content data
      *
      * @return Varien_Object
@@ -445,7 +466,9 @@ class Mzax_Emarketing_Model_Campaign
     {
         if (!$this->_mediumData) {
             if ($data = $this->getMediumJson()) {
-                $data = Zend_Json::decode($data);
+                if (is_string($data)) {
+                    $data = Zend_Json::decode($data);
+                }
                 $this->_mediumData = new Varien_Object($data);
             } else {
                 $this->_mediumData = new Varien_Object;
@@ -475,7 +498,7 @@ class Mzax_Emarketing_Model_Campaign
     /**
      * Retrieve recipient provider for this campaign
      *
-     * @return Mzax_Emarketing_Model_Recipient_Provider_Abstract
+     * @return RecipientProvider
      */
     public function getRecipientProvider()
     {
@@ -487,6 +510,21 @@ class Mzax_Emarketing_Model_Campaign
         }
 
         return $this->_provider;
+    }
+
+    /**
+     * Set recipient provider
+     *
+     * @param RecipientProvider $provider
+     *
+     * @return $this
+     */
+    public function setRecipientProvider(RecipientProvider $provider)
+    {
+        $this->_provider = $provider;
+        $this->_provider->setCampaign($this);
+
+        return $this;
     }
 
     /**

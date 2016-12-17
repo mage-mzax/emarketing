@@ -18,108 +18,100 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Model_Medium_Email_Processor
  */
 class Mzax_Emarketing_Model_Medium_Email_Processor
 {
-
-
     /**
-     *
      * @var Mzax_Emarketing_Model_Medium_Email_Filter
      */
     protected $filter;
 
-
     /**
-     *
      * @var Mzax_Emarketing_Model_Campaign_Content
      */
     protected $_content;
 
-
     /**
-     *
      * @var string
      */
     protected $_subject;
 
-
     /**
-     *
      * @var string
      */
     protected $_bodyHtml;
 
-
     /**
-     *
      * @var string
      */
     protected $_bodyText;
 
-
     /**
-     *
      * @var boolean
      */
     protected $_enableFullCache = false;
 
-
+    /**
+     * Mzax_Emarketing_Model_Medium_Email_Processor constructor.
+     */
     public function __construct()
     {
         $this->filter = Mage::getModel('mzax_emarketing/medium_email_filter');
         $this->filter->setUseAbsoluteLinks(true);
     }
 
-
     /**
+     * Disable var directive
      *
+     * Allow to disable the var directive to prevent parsing {{$variable}} expressions.
      *
-     * @param string $flag
-     * @return Mzax_Emarketing_Model_Medium_Email_Processor
+     * This is used to pre-cache templates for faster sending.
+     * This only makes sense if other expressions do not render any recipient
+     * specific data.
+     *
+     * @param bool $flag
+     *
+     * @return $this
      */
     public function disableVarDirective($flag = true)
     {
         $this->filter->disableVarDirective($flag);
+
         return $this;
     }
 
-
     /**
+     * @param bool $flag
      *
-     *
-     * @param string $flag
-     * @return Mzax_Emarketing_Model_Medium_Email_Processor
+     * @return $this
      */
     public function isPreview($flag = true)
     {
         $this->filter->isPreview($flag);
+
         return $this;
     }
-
-
 
     /**
      * Add content provider
      *
      * @param Mzax_Emarketing_Model_Campaign_Content $content
-     * @return Mzax_Emarketing_Model_Recipient_Processor
+     *
+     * @return $this
      */
     public function setContent(Mzax_Emarketing_Model_Campaign_Content $content)
     {
         $this->_content = $content;
+
         return $this;
     }
 
-
     /**
+     * Retrieve medium data
      *
      * @param string $key
+     *
      * @return mixed
      */
     public function getMediumData($key)
@@ -127,39 +119,39 @@ class Mzax_Emarketing_Model_Medium_Email_Processor
         return $this->getContent()->getMediumData()->getData($key);
     }
 
-
-
     /**
      * Retrieve content provider
      *
-     * @throws Exception
      * @return Mzax_Emarketing_Model_Campaign_Content
+     * @throws Exception
      */
     public function getContent()
     {
         if (!$this->_content) {
             throw new Exception("No content provider added to processor");
         }
+
         return $this->_content;
     }
-
 
     /**
      *
      * @param array $variables
-     * @return Mzax_Emarketing_Model_Medium_Email_Processor
+     *
+     * @return $this
      */
     public function setVariables($variables)
     {
         $this->filter->setVariables($variables);
+
         return $this;
     }
-
-
+    
     /**
      *
      * @param mixed $storeId
-     * @return Mzax_Emarketing_Model_Medium_Email_Processor
+     *
+     * @return $this
      */
     public function setStoreId($storeId)
     {
@@ -172,7 +164,7 @@ class Mzax_Emarketing_Model_Medium_Email_Processor
      *
      * @param Mzax_Emarketing_Model_SalesRule_ICouponManager $manager
      *
-     * @return Mzax_Emarketing_Model_Medium_Email_Processor
+     * @return $this
      */
     public function setCouponManager(Mzax_Emarketing_Model_SalesRule_ICouponManager $manager)
     {
@@ -180,8 +172,6 @@ class Mzax_Emarketing_Model_Medium_Email_Processor
 
         return $this;
     }
-
-
 
     /**
      * Retrieve processed email subject
@@ -196,29 +186,33 @@ class Mzax_Emarketing_Model_Medium_Email_Processor
             // @TODO prepare template vars?
             $this->_subject = $this->filter->filter($subject);
         }
+
         return $this->_subject;
     }
-
-
 
     /**
      * Retrieve template used by content
      *
-     * @throws Exception
      * @return Mzax_Emarketing_Model_Template
+     * @throws Exception
      */
     public function getTemplate()
     {
+        $template = $this->getMediumData('template');
+        if ($template instanceof Mzax_Emarketing_Model_Template) {
+            return $template;
+        }
+
         $templateId = $this->getMediumData('template_id');
-        $template = Mage::getModel('mzax_emarketing/template')->load($templateId);
+        $template = $this->createTemplateModel();
+        $template->load($templateId);
+
         if (!$template->getId()) {
             throw new Exception("Template not found");
         }
+
         return $template;
     }
-
-
-
 
     /**
      * Retrieve processed email body
@@ -227,70 +221,107 @@ class Mzax_Emarketing_Model_Medium_Email_Processor
      */
     public function getBodyHtml()
     {
-        if (!$this->_bodyHtml) {
+        if ($this->_bodyHtml === null) {
+            $html = $this->composeBodyHtml();
+            $html = $this->filter->filter($html);
 
-            $bodyHtml = $this->getMediumData('body_html');
-            // if no body html is set, render template
-            if (!$bodyHtml) {
-                $cacheKey = 'mzax_email_cache_' . $this->_content->getContentCacheId();
-                $bodyHtml = Mage::app()->loadCache($cacheKey);
-
-                if (!$bodyHtml) {
-                    $template = $this->getTemplate();
-
-                    $data = Zend_Json::decode($this->getMediumData('body'));
-                    $bodyHtml = $template->render($data);
-
-                    Mage::app()->saveCache($bodyHtml, $cacheKey, array(Mzax_Emarketing_Model_Campaign::CACHE_TAG));
-                }
-            }
-
-            // @TODO prepare template vars?
-            $this->_bodyHtml = $this->filter->filter($bodyHtml);
+            $this->_bodyHtml = $html;
         }
         return $this->_bodyHtml;
     }
 
-
     /**
+     * Retrieve body text
      *
      * @return string
      */
     public function getBodyText()
     {
-        if (!$this->_bodyText) {
+        if ($this->_bodyText === null) {
+            $text = $this->composeBodyText();
+            $text = $this->filter->filter($text);
 
-            $bodyText = $this->getMediumData('body_text');
-
-            // if body text is defined, use it
-            if ($bodyText) {
-                $this->_bodyText = $this->filter->filter($bodyText);
-            }
-            // create one using the html
-            else {
-                // @todo Allow custom body text
-                try {
-                    libxml_use_internal_errors(true);
-                    $this->_bodyText = Html2Text_Html2Text::convert($this->getBodyHtml());
-                }
-                catch(Exception $e) {
-                    if (Mage::getIsDeveloperMode()) {
-                        $this->_bodyText = $e->getMessage();
-                    }
-                    else {
-                        $this->_bodyText = '';
-                    }
-
-                }
-            }
+            $this->_bodyText = $text;
         }
+
         return $this->_bodyText;
     }
 
+    /**
+     * Retrieve email body template
+     *
+     * @return string
+     */
+    protected function composeBodyHtml()
+    {
+        // check if medium data provides a body html
+        $bodyHtml = $this->getMediumData('body_html');
+        if ($bodyHtml) {
+            return $bodyHtml;
+        }
 
+        $cacheKey = 'mzax_email_cache_' . $this->_content->getContentCacheId();
 
+        // check if template has already been cached
+        $bodyHtml = Mage::app()->loadCache($cacheKey);
+        if ($bodyHtml) {
+            return $bodyHtml;
+        }
 
+        $template = $this->getTemplate();
+        $contentBody = $this->getMediumData('body');
+        if (is_string($contentBody)) {
+            $contentBody = Zend_Json::decode($contentBody);
+        }
 
+        $bodyHtml = $template->render($contentBody);
 
+        Mage::app()->saveCache($bodyHtml, $cacheKey, array(Mzax_Emarketing_Model_Campaign::CACHE_TAG));
 
+        return $bodyHtml;
+    }
+
+    /**
+     * Compose text version of the email body
+     *
+     * Check if the medium provides a text version, if that the case use it
+     * other wise create a text version from the HTML version using
+     * the Html2Text lib.
+     *
+     * @return string
+     */
+    protected function composeBodyText()
+    {
+        // check if medium data provides a body text
+        $bodyText = $this->getMediumData('body_text');
+        if ($bodyText) {
+            return $bodyText;
+        }
+
+        try {
+            $html = $this->getBodyHtml();
+
+            libxml_use_internal_errors(true);
+            $text = Html2Text_Html2Text::convert($html);
+
+            return $text;
+        }
+        catch(Exception $e) {
+            if (Mage::getIsDeveloperMode()) {
+                return $e->getMessage();
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Create new template model
+     *
+     * @return Mzax_Emarketing_Model_Template
+     */
+    protected function createTemplateModel()
+    {
+        return Mage::getModel('mzax_emarketing/template');
+    }
 }

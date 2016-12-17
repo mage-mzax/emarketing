@@ -101,10 +101,29 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Compress a 32 char hex hash to a 16 char accii hash
-     * without loosing to much of uniqueness
+     * Create a compressed random hash using a extra seed
+     *
+     * @param string $seed
+     *
+     * @return string
+     */
+    public function randomHash($seed)
+    {
+        $hash = md5(
+            $seed .
+            mt_rand(0, 99999999) .
+            microtime()
+        );
+
+        return $this->compressHash($hash);
+    }
+
+    /**
+     * Compress a 32 char hex hash to a 16 char asci hash
+     * without loosing to much of "uniqueness"
      *
      * @param string $hash
+     *
      * @return string
      */
     public function compressHash($hash)

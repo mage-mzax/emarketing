@@ -18,6 +18,8 @@
 
 /**
  * Class Mzax_Emarketing_Model_Resource_Recipient_Collection
+ *
+ * @method Mzax_Emarketing_Model_Recipient[] getIterator()
  */
 class Mzax_Emarketing_Model_Resource_Recipient_Collection extends Mage_Core_Model_Resource_Db_Collection_Abstract
 {

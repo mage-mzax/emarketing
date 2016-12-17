@@ -102,14 +102,10 @@ class Mzax_Emarketing_Model_Link_Reference extends Mage_Core_Model_Abstract
         /** @var Mzax_Emarketing_Helper_Data $helper */
         $helper = Mage::helper('mzax_emarketing');
 
-        $hash = md5(
+        return $helper->randomHash(
             $link->getId() .
-            $link->getLinkHash() .
-            mt_rand(0, 99999999) .
-            microtime()
+            $link->getLinkHash()
         );
-
-        return $helper->compressHash($hash);
     }
 
     /**

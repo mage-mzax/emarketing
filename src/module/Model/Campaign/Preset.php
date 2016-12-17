@@ -55,8 +55,7 @@ class Mzax_Emarketing_Model_Campaign_Preset extends Varien_Object
      */
     public function makeCampaign()
     {
-        /* @var $campaign Mzax_Emarketing_Model_Campaign */
-        $campaign = Mage::getModel('mzax_emarketing/campaign');
+        $campaign = $this->_createCampaignModel();
         $campaign->addData($this->getData());
         $campaign->setData('preset', $this);
         $campaign->setName(null);
@@ -106,5 +105,15 @@ class Mzax_Emarketing_Model_Campaign_Preset extends Varien_Object
     protected function _getResource()
     {
         return Mage::getResourceSingleton('mzax_emarketing/campaign_preset');
+    }
+
+    /**
+     * Create new campaign model
+     *
+     * @return Mzax_Emarketing_Model_Campaign
+     */
+    protected function _createCampaignModel()
+    {
+        return Mage::getModel('mzax_emarketing/campaign');
     }
 }

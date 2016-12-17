@@ -96,7 +96,6 @@ abstract class Mzax_Emarketing_Model_Medium_Abstract
         $prepared = 0;
         $timeout = (int) $options->getTimeout();
 
-        /* @var $recipient Mzax_Emarketing_Model_Recipient */
         foreach ($recipients as $recipient) {
             try {
                 $this->sendRecipient($recipient);

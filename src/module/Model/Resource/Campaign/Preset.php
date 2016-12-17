@@ -169,15 +169,20 @@ class Mzax_Emarketing_Model_Resource_Campaign_Preset
     }
 
     /**
-     * @param $data
+     * @param string $data
      *
-     * @return mixed
+     * @return array
      */
     protected function _decodeData($data)
     {
-        $data = base64_decode($data);
+        try {
+            $json = Zend_Json::decode($data);
+        } catch(Zend_Json_Exception $e) {
+            $data = base64_decode($data);
+            $json = Zend_Json::decode($data);
+        }
 
-        return Zend_Json::decode($data);
+        return $json;
     }
 
     /**

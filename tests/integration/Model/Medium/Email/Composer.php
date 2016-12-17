@@ -37,6 +37,40 @@ class Mzax_Emarketing_Test_Model_Medium_Email_Composer
     extends EcomDev_PHPUnit_Test_Case
 {
     /**
+     * @var Mzax_Emarketing_Model_Campaign
+     */
+    private $campaign;
+
+    /**
+     * Setup test campaign
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        $this->mockRandomHelper();
+
+        $provider = new RecipientProviderCustomer();
+        $medium = new EmailMedium();
+
+        $preset = new CampaignPreset();
+        $preset->loadByFile(__DIR__ . '/_data/campaign.json');
+
+        // prepare test campaign
+        $this->campaign = $preset->makeCampaign();
+        $this->campaign->setMedium($medium);
+        $this->campaign->setRecipientProvider($provider);
+        $this->campaign->setStoreId(1);
+
+        // assign test template
+        $template = new EmailTemplate();
+        $template->setBody(file_get_contents(__DIR__ . '/_data/template.html'));
+
+        $mediumData = $this->campaign->getMediumData();
+        $mediumData->setData('template', $template);
+    }
+
+    /**
      * Compose simple email
      *
      * @return void
@@ -44,27 +78,8 @@ class Mzax_Emarketing_Test_Model_Medium_Email_Composer
      */
     public function testComposeEmail()
     {
-        $this->mockRandomHelper();
-
-        $provider = new RecipientProviderCustomer();
-        $medium = new EmailMedium();
-
-        $template = new EmailTemplate();
-        $template->setBody(file_get_contents(__DIR__ . '/_data/template.html'));
-
-        $preset = new CampaignPreset();
-        $preset->loadByFile(__DIR__ . '/_data/campaign.json');
-
-        $campaign = $preset->makeCampaign();
-        $campaign->setMedium($medium);
-        $campaign->setRecipientProvider($provider);
-        $campaign->setStoreId(1);
-
-        $mediumData = $campaign->getMediumData();
-        $mediumData->setData('template', $template);
-
         $recipient = new Recipient();
-        $recipient->setCampaign($campaign);
+        $recipient->setCampaign($this->campaign);
         $recipient->setObjectId(1);
         $recipient->setData('firstname', "John");
 
@@ -73,6 +88,36 @@ class Mzax_Emarketing_Test_Model_Medium_Email_Composer
         $composer->compose(false);
 
         $this->assertComposedEmail('simple', $composer);
+    }
+
+    /**
+     * Test composing using pre-rendering template option
+     *
+     * @return void
+     * @test
+     */
+    public function testComposePreRenderedEmail()
+    {
+        $mediumData = $this->campaign->getMediumData();
+        $mediumData->setData('prerender', true);
+
+        $recipient = new Recipient();
+        $recipient->setCampaign($this->campaign);
+        $recipient->setObjectId(1);
+        $recipient->setData('firstname', "John");
+
+        $composer = new EmailComposer();
+        $composer->setRecipient($recipient);
+        $composer->compose(false);
+
+        $this->assertComposedEmail('pre-rendered', $composer);
+
+        // Run again
+        $composer = new EmailComposer();
+        $composer->setRecipient($recipient);
+        $composer->compose(false);
+
+        $this->assertComposedEmail('pre-rendered', $composer);
     }
 
     /**

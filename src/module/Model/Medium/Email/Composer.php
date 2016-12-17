@@ -329,6 +329,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
 
             // insert view tacking beacon
             $this->insertBeacon($this->_bodyHtml);
+            $this->_bodyText = str_replace(self::BEACON_PLACEHOLDER, '', $this->_bodyText);
 
             // make links trackable
             $this->parseLinks($this->_bodyHtml);
@@ -343,6 +344,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
 
             // insert view tacking beacon
             $this->insertBeacon($this->_bodyHtml);
+            $this->_bodyText = str_replace(self::BEACON_PLACEHOLDER, '', $this->_bodyText);
 
             // make links trackable
             $this->parseLinks($this->_bodyHtml);

@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>{{var subject}}</title>
+    <style type="text/css">
+
+        /* CSS Comment */
+        body {
+            margin:0;
+            padding:0;
+        }
+
+        h1 {
+            color:#202020;
+            display: block;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 0 0 10px 0;
+        }
+
+        #bodyTable {
+            width: 600px;
+        }
+
+    </style>
+</head>
+<body>
+    <center>
+        <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
+            <tr>
+                <td align="center" valign="top" id="bodyCell">
+                    <!-- BEGIN TEMPLATE // -->
+                    <table border="0" cellpadding="0" cellspacing="0" id="templateContainer">
+                        <tr>
+                            <td align="center" valign="top">
+                                <!-- BEGIN PREHEADER // -->
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templatePreheader">
+                                    <tr>
+                                        <td valign="top" class="preheaderContent" mage:id="short_teaser" mage:editable="yes">
+                                            Use this area to offer a short teaser of your email's content.
+                                            Text here will show in the preview area of some email clients.
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- // END PREHEADER -->
+                            </td>
+                        </tr>
+                        <tr mage:id="Header" mage:removable="1">
+                            <td align="center" valign="top">
+                                <!-- BEGIN HEADER // -->
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader">
+                                    <tr>
+                                        <td valign="top" class="headerContent">
+                                            <img src="http://lorempixel.com/600/200/"
+                                                 id="headerImage"
+                                                 mage:id="header_image"
+                                                 mage:editable="1"  />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- // END HEADER -->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" valign="top">
+                                <!-- BEGIN BODY // -->
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateBody">
+                                    <tr>
+                                        <td valign="top" class="bodyContent" mage:id="main_content" mage:editable="1">
+
+                                            <p><strong>Hello {{var customer.name}},</strong><br/>
+                                                Lorem dfh dipsum dolor sit amet, consectetur adipiscing elit.
+                                                Mau mattis risus vel mauris scelerisque, eget tincidunt nibh fermentum.
+                                                Vestibdfgh dfghd fgh fdghulum eleifend arcu sed quam finibus, quis mollis nulla mattis.
+                                                Nunc ut commodo arcu. Sed sodales lorem justo, ac elementum urna molestie eu.
+                                                Proin placerat, magna vel consectetur dapibus, magna ex vulputate nibh,
+                                                sit amet mattis urna est et elit. Vivamus sed lobortis mi.</p>
+
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- // END BODY -->
+                            </td>
+                        </tr>
+                        <tr mage:id="contentBottom" mage:removable="1">
+                            <td align="center" valign="top">
+                                <!-- BEGIN COLUMNS // -->
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateColumns">
+                                    <tr mage:repeatable="1" mage:id="bottom_row">
+                                        <td align="left" valign="top" mage:id="bottom_content" mage:editable="1">
+                                            Lorem dfh dipsum dolor sit amet, consectetur adipiscing elit.
+                                            Mau mattis risus vel mauris scelerisque, eget tincidunt nibh fermentum.
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- // END COLUMNS -->
+                            </td>
+                        </tr>
+                        <tr mage:id="Footer" mage:removable="1">
+                            <td align="center" valign="top">
+                                <!-- BEGIN FOOTER // -->
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateFooter">
+                                    <tr>
+                                        <td valign="top" class="footerContent">
+                                            <a href="">Follow on Twitter</a>&nbsp;&nbsp;&nbsp;
+                                            <a href="">Friend on Facebook</a>&nbsp;&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" class="footerContent" style="padding-top:0;">
+                                            {{var store.name}}<div style="white-space: pre">{{config path="general/store_information/address"}}</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" class="footerContent" style="padding-top:0;">
+                                            <em>Copyright &copy; {{var current_year}} {{var store.name}}, All rights reserved.</em>
+                                        </td>
+                                    </tr>
+                                    <tr mage:id="Unsubscribe" mage:removable="1">
+                                        <td valign="top" class="footerContent" style="padding-top:0;">
+                                            <a href="{{var url.unsubscribe}}">unsubscribe here</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- // END FOOTER -->
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- // END TEMPLATE -->
+                </td>
+            </tr>
+        </table>
+    </center>
+</body>
+</html>

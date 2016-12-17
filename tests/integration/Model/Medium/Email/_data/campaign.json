@@ -1,0 +1,68 @@
+{
+  "medium_json": {
+    "template_id": "1",
+    "subject": "Hello {{var firstname}}",
+    "body": {
+      "version": 1,
+      "customCss": {
+        "remove": false,
+        "alt": null,
+        "value": null
+      },
+      "fields": {
+        "short_teaser": [
+          {
+            "remove": false,
+            "value": "I am a short teaser at the header"
+          }
+        ],
+        "Header": [
+          {
+            "remove": false
+          }
+        ],
+        "header_image": [
+          {
+            "remove": false,
+            "alt": "My Email Campaign",
+            "value": "http://lorempixel.com/600/150/"
+          }
+        ],
+        "main_content": [
+          {
+            "remove": false,
+            "value": "<p><strong>Hello {{var firstname}},</strong><br /> My main content goes here.</p>"
+          }
+        ],
+        "bottom_row": [
+          {
+            "remove": false
+          },{
+            "remove": false
+          },{
+            "remove": false
+          }
+        ],
+        "bottom_content": [
+          {
+            "value": "First bottom content"
+          },{
+            "value": "Second bottom content"
+          },{
+            "value": "Third bottom content"
+          }
+        ],
+        "Footer": [
+          {
+            "remove": false
+          }
+        ],
+        "Unsubscribe": [
+          {
+            "remove": false
+          }
+        ]
+      }
+    }
+  }
+}

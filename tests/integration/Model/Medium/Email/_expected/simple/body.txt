@@ -1,0 +1,16 @@
+I am a short teaser at the header
+
+[My Email Campaign]
+
+Hello John,
+My main content goes here.
+
+First bottom content
+Second bottom content
+Third bottom content
+
+Follow on Twitter Friend on Facebook
+Default Store View
+
+Copyright © 2016 Default Store View, All rights reserved.
+[unsubscribe here](http://magento.dev/mzax_emarketing/unsubscribe/)

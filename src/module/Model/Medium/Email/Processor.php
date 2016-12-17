@@ -146,7 +146,7 @@ class Mzax_Emarketing_Model_Medium_Email_Processor
 
         return $this;
     }
-    
+
     /**
      *
      * @param mixed $storeId

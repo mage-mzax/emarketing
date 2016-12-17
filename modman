@@ -1,6 +1,8 @@
-src/module                              app/code/community/Mzax/Emarketing
+src/module/*                            app/code/community/Mzax/Emarketing/
 src/design/adminhtml/template/mzax/*    app/design/adminhtml/default/default/template/mzax/
 src/design/adminhtml/layout/mzax/*      app/design/adminhtml/default/default/layout/mzax/
+
+tests/integration/                      app/code/community/Mzax/Emarketing/Test
 
 src/lib/*                               lib/
 src/lib_composer/*                      lib/

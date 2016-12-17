@@ -19,6 +19,13 @@
 
 /**
  * Class Mzax_Emarketing_Model_Object_Filter_Customer_Name
+ *
+ * @method string getName()
+ * @method $this setName(string $value)
+ *
+ * @method string getNameOperator()
+ * @method $this setNameOperator(string $value)
+ *
  */
 class Mzax_Emarketing_Model_Object_Filter_Customer_Name
     extends Mzax_Emarketing_Model_Object_Filter_Customer_Abstract

@@ -22,6 +22,17 @@
  */
 abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarketing_Model_Object_Filter_Component
 {
+    const NOT_EQUAL = '!=';
+    const EQUAL = '=';
+    const GREATER_THAN = '>';
+    const GREATER_OR_EQUAL_THAN = '>=';
+    const LESS_THAN = '<';
+    const LESS_OR_EQUAL_THAN = '<=';
+    const LIKE = '{}';
+    const NOT_LIKE = '!{}';
+    const IN = '()';
+    const NOT_IN = '!()';
+
     /**
      * Child Filters
      *
@@ -1162,6 +1173,10 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
     }
 
     /**
+     * Create where sql string for a given data field
+     *
+     * Field value ($key) and operator ($key_operator) can be defined.
+     *
      * @param string $key
      * @param string $field
      * @param null $quoteField
@@ -1180,19 +1195,20 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
         $operator = $this->getDataSetDefault($key . '_operator', '{}');
 
         switch ($operator) {
-            case '!=':
-            case '>=':
-            case '<=':
-            case '>':
-            case '<':
+            case self::NOT_EQUAL:
+            case self::EQUAL:
+            case self::GREATER_THAN:
+            case self::GREATER_OR_EQUAL_THAN:
+            case self::LESS_THAN:
+            case self::LESS_OR_EQUAL_THAN:
                 return $adapter->quoteInto("{$field} {$operator} ?", $value);
-            case '{}':
+            case self::LIKE:
                 return $adapter->quoteInto("{$field} LIKE ?", "%$value%");
-            case '!{}':
+            case self::NOT_LIKE:
                 return $adapter->quoteInto("{$field} NOT LIKE ?", "%$value%");
-            case '()':
+            case self::IN:
                 return $adapter->quoteInto("{$field} IN (?)", $this->_explode($value));
-            case '!()':
+            case self::NOT_IN:
                 return $adapter->quoteInto("{$field} NOT IN (?)", $this->_explode($value));
             default:
                 return $adapter->quoteInto("{$field} = ?", $value);

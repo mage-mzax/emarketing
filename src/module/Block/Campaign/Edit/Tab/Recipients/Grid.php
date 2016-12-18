@@ -17,16 +17,19 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients_Grid
+ */
 class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients_Grid extends Mzax_Emarketing_Block_Filter_Object_Grid
 {
-
     /**
      * @var Mzax_Emarketing_Model_Campaign
      */
     protected $_campaign;
 
-
-
+    /**
+     * Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients_Grid constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -36,8 +39,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients_Grid extends Mzax_Emark
         $this->addExportType('*/*/exportRecipients', 'CSV');
     }
 
-
-
     /**
      * @return Mzax_Emarketing_Model_Campaign
      */
@@ -46,12 +47,13 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients_Grid extends Mzax_Emark
         if (!$this->_campaign) {
             $this->_campaign = Mage::registry('current_campaign');
         }
+
         return $this->_campaign;
     }
 
-
-
-
+    /**
+     * @return Mzax_Emarketing_Model_Recipient_Provider_Abstract
+     */
     public function getFilter()
     {
         $filter = $this->getCampaign()->getRecipientProvider();
@@ -60,17 +62,17 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients_Grid extends Mzax_Emark
         return $filter;
     }
 
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Filter_Abstract $filter
+     */
     public function prepareEmulation(Mzax_Emarketing_Model_Object_Filter_Abstract $filter)
     {
         $parent = $this->getParentBlock();
+
         if ($parent && method_exists($parent, 'prepareEmulation')) {
             $parent->prepareEmulation($filter);
         }
     }
-
-
 
     /**
      * Prepare grid columns
@@ -89,20 +91,11 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients_Grid extends Mzax_Emark
         return $this;
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getGridUrl()
     {
         return $this->getUrl('*/*/recipientsGrid', array('_current' => true));
     }
-
-
-    /*
-    public function getAdditionalJavaScript()
-    {
-        $object = $this->getMassactionBlock()->getJsObjectName();
-        return "window.{$object} = {$object};";
-    }
-*/
-
 }

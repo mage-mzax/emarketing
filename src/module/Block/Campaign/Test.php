@@ -17,10 +17,11 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Test
+ */
 class Mzax_Emarketing_Block_Campaign_Test extends Mzax_Emarketing_Block_Filter_Test_Recursive
 {
-
-
     /**
      * Retrieve filter
      *
@@ -33,8 +34,13 @@ class Mzax_Emarketing_Block_Campaign_Test extends Mzax_Emarketing_Block_Filter_T
         return $filter;
     }
 
-
-
+    /**
+     * Prepare emulation
+     *
+     * @param Mzax_Emarketing_Model_Object_Filter_Abstract $filter
+     *
+     * @return void
+     */
     public function prepareEmulation(Mzax_Emarketing_Model_Object_Filter_Abstract $filter)
     {
         $child = $this->getChild('emulate');
@@ -43,26 +49,19 @@ class Mzax_Emarketing_Block_Campaign_Test extends Mzax_Emarketing_Block_Filter_T
         }
     }
 
-
-
-
-
-
     /**
      * Generate url by route and parameters
      *
-     * @param   string $route
-     * @param   array $params
-     * @return  string
+     * @param string $route
+     * @param array $params
+     *
+     * @return string
      */
     public function getUrl($route = '', $params = array())
     {
         $params['id'] = $this->getCampaign()->getId();
         return parent::getUrl($route, $params);
     }
-
-
-
 
     /**
      * Retrieve current campaign
@@ -73,7 +72,4 @@ class Mzax_Emarketing_Block_Campaign_Test extends Mzax_Emarketing_Block_Filter_T
     {
         return Mage::registry('current_campaign');
     }
-
-
-
 }

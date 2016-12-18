@@ -17,12 +17,19 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_SendTestMail_Form
+ */
 class Mzax_Emarketing_Block_Campaign_SendTestMail_Form extends Mage_Adminhtml_Block_Widget_Form
 {
-
+    /**
+     * @return Mage_Adminhtml_Block_Widget_Form
+     */
     protected function _prepareForm()
     {
-        $form = new Varien_Data_Form(array('id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post'));
+        $form = new Varien_Data_Form(
+            array('id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post')
+        );
 
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
         $campaign  = Mage::registry('current_campaign');
@@ -55,9 +62,7 @@ class Mzax_Emarketing_Block_Campaign_SendTestMail_Form extends Mage_Adminhtml_Bl
             'value' => $user->getEmail()
         ));
 
-
         if ($campaign->hasVariations()) {
-
             $options = $campaign->getVariations()->toOptionArray();
 
             array_unshift($options, array('value' => '0', 'label' => $this->__('[Orignal]')));
@@ -68,14 +73,11 @@ class Mzax_Emarketing_Block_Campaign_SendTestMail_Form extends Mage_Adminhtml_Bl
                 'value'  => $this->getRequest()->getParam('variation', '0'),
                 'values' => $options
             ));
-
-
-
         }
-
 
         $form->setUseContainer(true);
         $this->setForm($form);
+
         return parent::_prepareForm();
     }
 }

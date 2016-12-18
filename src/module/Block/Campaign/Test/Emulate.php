@@ -17,16 +17,17 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Test_Emulate
+ *
+ * @method $this setGrid($grid)
+ */
 class Mzax_Emarketing_Block_Campaign_Test_Emulate extends Mage_Adminhtml_Block_Template
 {
-
     /**
-     *
      * @var Varien_Data_Form
      */
     protected $_form;
-
-
 
     /**
      * Retrieve Varien Data Form
@@ -41,14 +42,14 @@ class Mzax_Emarketing_Block_Campaign_Test_Emulate extends Mage_Adminhtml_Block_T
             $this->_form->setHtmlIdPrefix("emulate_");
             $this->_form->setFieldNameSuffix("emulate");
         }
+
         return $this->_form;
     }
-
 
     /**
      * Prepare filter
      *
-     * Usally called by parent block class
+     * Usually called by parent block class
      *
      * @param Mzax_Emarketing_Model_Object_Filter_Abstract $filter
      */
@@ -75,8 +76,6 @@ class Mzax_Emarketing_Block_Campaign_Test_Emulate extends Mage_Adminhtml_Block_T
         }
     }
 
-
-
     /**
      * Check if we should emulate the specified key
      *
@@ -90,15 +89,11 @@ class Mzax_Emarketing_Block_Campaign_Test_Emulate extends Mage_Adminhtml_Block_T
         if (isset($emulate[$key])) {
             return ($emulate[$key] == 1);
         }
+
         return false;
     }
 
-
-
-
-
     /**
-     *
      *
      * @return Varien_Data_Form_Element_Abstract
      */
@@ -116,30 +111,26 @@ class Mzax_Emarketing_Block_Campaign_Test_Emulate extends Mage_Adminhtml_Block_T
         }
         $options += $collection->toOptionHash();
 
-        /* @var $campagin Mzax_Emarketing_Model_Campaign */
-        $campagin = Mage::getModel('mzax_emarketing/campaign');
+        /* @var $campaign Mzax_Emarketing_Model_Campaign */
+        $campaign = Mage::getModel('mzax_emarketing/campaign');
 
         if (isset($params['campaign_id'])) {
-            $campagin->load($params['campaign_id']);
+            $campaign->load($params['campaign_id']);
         }
 
         return $this->getForm()->addField('campaign_id', 'select', array(
             'name'           => 'campaign_id',
-            'value_name'     => (string) $campagin->getName(),
-            'value'		     => $campagin->getId(),
+            'value_name'     => (string) $campaign->getName(),
+            'value'          => $campaign->getId(),
             'options'        => $options,
         ));
-
     }
-
-
-
 
     /**
      * Helper for simple select element
      *
      * @param string $key
-     * @param array $options
+     *
      * @return Varien_Data_Form_Element_Abstract
      */
     public function getDateElement($key)
@@ -150,21 +141,18 @@ class Mzax_Emarketing_Block_Campaign_Test_Emulate extends Mage_Adminhtml_Block_T
 
         if (isset($params[$key])) {
             $value = $params[$key];
-        }
-        else {
+        } else {
             $value = Zend_Date::now()->toString($format);
         }
 
-        return $this->getForm()->addField($key, 'date',array(
+        return $this->getForm()->addField($key, 'date', array(
             'name'           => $key,
             'value_name'     => $value,
-            'value'		     => $value,
+            'value'          => $value,
             'explicit_apply' => true,
             'image'          => Mage::getDesign()->getSkinUrl('images/grid-cal.gif'),
             'input_format'   => $format,
             'format'         => $format
         ));
     }
-
-
 }

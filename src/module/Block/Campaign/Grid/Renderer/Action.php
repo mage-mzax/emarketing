@@ -17,8 +17,17 @@
  */
 
 
-class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Action extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Action
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Action
+ */
+class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Action
+    extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Action
 {
+    /**
+     * @param Varien_Object $row
+     *
+     * @return string
+     */
     public function render(Varien_Object $row)
     {
         if ($row->isValidForSend()) {
@@ -28,13 +37,11 @@ class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Action extends Mage_Adminhtml
             );
         }
 
-
         $actions[] = array(
             'url'     => $this->getUrl('*/*/preview', array('campaign'=>$row->getId())),
             'popup'   => true,
             'caption' => Mage::helper('mzax_emarketing')->__('Preview')
         );
-
 
         $this->getColumn()->setActions($actions);
 

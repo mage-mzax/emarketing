@@ -25,8 +25,7 @@ use Mzax_Emarketing_Helper_Data as Helper;
  *
  * @loadFixture customers
  */
-class Mzax_Emarketing_Test_Model_Object_Filter_Customer_Attribute
-    extends Mzax_Emarketing_Test_Case_Object_Filter
+class Mzax_Emarketing_Test_Model_Object_Filter_Customer_Attribute extends Mzax_Emarketing_Test_Case_Object_Filter
 {
     /**
      * Run name filter that should match the test customer
@@ -47,7 +46,6 @@ class Mzax_Emarketing_Test_Model_Object_Filter_Customer_Attribute
 
         $this->assertFilterResult($expected, $result, $filter, "No customer found for attribute query.");
     }
-
 
     /**
      * @return array

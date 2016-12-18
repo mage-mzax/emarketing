@@ -17,16 +17,14 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings
+ */
 class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Block_Widget_Form
 {
-
-    protected function _prepareLayout()
-    {
-        parent::_prepareLayout();
-    }
-
-
-
+    /**
+     * @return $this
+     */
     public function initForm()
     {
         $form = new Varien_Data_Form();
@@ -53,31 +51,26 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
             $fieldset->setRenderer($renderer);
         }
 
-
-        $fieldset->addField('medium','hidden', array(
+        $fieldset->addField('medium', 'hidden', array(
             'name' => 'medium'
         ));
 
-
         if ($campaign->getPreset()) {
-            $fieldset->addField('preset_name','hidden', array(
+            $fieldset->addField('preset_name', 'hidden', array(
                 'name'  => 'preset_name',
                 'value' => $campaign->getPreset()->getName()
             ));
         }
 
-
-
-        $fieldset->addField('name','text', array(
+        $fieldset->addField('name', 'text', array(
             'name'     => 'name',
-        	'required' => true,
+            'required' => true,
             'label'    => $this->__('Campaign Name'),
             'title'    => $this->__('Campaign Name'),
         ));
 
-
         if ($campaign->getId()) {
-            $fieldset->addField('description','textarea', array(
+            $fieldset->addField('description', 'textarea', array(
                 'name'     => 'description',
                 'required' => false,
                 'style'    => 'height:60px;',
@@ -86,7 +79,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'note'     => $this->__("For internal use only"),
             ));
 
-            $fieldset->addField('tags','text', array(
+            $fieldset->addField('tags', 'text', array(
                 'name'     => 'tags',
                 'required' => false,
                 'label'    => $this->__('Tags'),
@@ -98,10 +91,10 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
 
         // don't show when creating by presets
         if (!$campaign->getPreset()) {
-            $fieldset->addField('provider','select', array(
+            $fieldset->addField('provider', 'select', array(
                 'name'      => 'provider',
                 'label'     => $this->__('Campaign Recipient'),
-            	'title'     => $this->__('Campaign Recipient'),
+                'title'     => $this->__('Campaign Recipient'),
                 'values'    => $campaign->getAvailableProviders(false),
                 'note'      => !$campaign->getId()
                     ? $this->__("Who are the recipients of this campaign")
@@ -110,15 +103,13 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                         : $this->__("This can not be changed once a recipient has been created.")
                     ),
                 'disabled'  => $campaign->getId() && $campaign->countRecipients(),
-            	'required'  => true,
+                'required'  => true,
             ));
-        }
-        else {
+        } else {
             $fieldset->addField('provider', 'hidden', array(
                 'name' => 'provider'
             ));
         }
-
 
         $fieldset->addField('store_id', 'select', array(
             'name'     => 'store_id',
@@ -128,10 +119,8 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
             'required' => true,
         ));
 
-
         // don't show when creating by presets
-        if (!$campaign->getPreset())
-        {
+        if (!$campaign->getPreset()) {
             $fieldset->addField('check_frequency', 'select', array(
                 'label'     => $this->__('Check Frequency'),
                 'title'     => $this->__('Check Frequency'),
@@ -175,7 +164,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'note'   => $this->__("The minimum time before a recipient can recieve this campaign again."),
             ));
 
-
             $fieldset->addField('max_per_recipient', 'text', array(
                 'label'     => $this->__('Max Send-outs per Recipient'),
                 'title'     => $this->__('Max Send-outs per Recipient'),
@@ -184,17 +172,10 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'value' => '0',
                 'note'   => $this->__("Maximum send-outs per recipient, zero = unlimited"),
             ));
-
-
         }
 
-
-
-
-
         if ($campaign->getId()) {
-
-            $fieldset->addField('start_at','date',array(
+            $fieldset->addField('start_at', 'date', array(
                 'name'      => 'start_at',
                 'time'      => true,
                 'style'     => 'width:60%;',
@@ -202,7 +183,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'label'     => $this->__('Date Start'),
                 'image'     => $this->getSkinUrl('images/grid-cal.gif')
             ));
-            $fieldset->addField('end_at','date',array(
+            $fieldset->addField('end_at', 'date', array(
                 'name'      => 'end_at',
                 'time'      => true,
                 'style'     => 'width:60%;',
@@ -210,7 +191,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'label'     => $this->__('Date End'),
                 'image'     => $this->getSkinUrl('images/grid-cal.gif')
             ));
-
 
             /**
              * Ab Test
@@ -241,16 +221,13 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 'value'     => '100'
             ));
 
-
-
-
             /**
              * Campaign
              */
-            $advanced = $form->addFieldset('advanced_fieldset',
+            $advanced = $form->addFieldset(
+                'advanced_fieldset',
                 array('legend'=>$this->__('Advanced Settings'))
             );
-
 
             $advanced->addField('autologin', 'select', array(
                 'label'     => $this->__('Autologin'),
@@ -264,8 +241,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
                 ),
                 'value' => '1'
             ));
-
-
 
             $advanced->addField('expire_time', 'select', array(
                 'name'      => 'expire_time',
@@ -292,9 +267,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
             ));
 
 
-
-
-            $advanced->addField('identity','select', array(
+            $advanced->addField('identity', 'select', array(
                 'name'     => 'identity',
                 'label'    => $this->__('Email Sender'),
                 'title'    => $this->__('Email Sender'),
@@ -304,13 +277,12 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
             ));
 
 
-
             $trackers = Mage::getResourceSingleton('mzax_emarketing/conversion_tracker_collection')->toOptionArray();
 
             array_unshift($trackers, array('value' => '0', 'label' => $this->__("Use Config Default Tracker")));
 
 
-            $advanced->addField('default_tracker_id','select', array(
+            $advanced->addField('default_tracker_id', 'select', array(
                 'name'     => 'default_tracker_id',
                 'label'    => $this->__('Default Conversion Tracker'),
                 'title'    => $this->__('Default Conversion Tracker'),
@@ -326,12 +298,9 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
 
         } // has id
 
-
         $form->addValues($campaign->getData());
         $this->setForm($form);
 
         return $this;
-
-
     }
 }

@@ -17,16 +17,12 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Variation
+ */
 class Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Variation
     extends Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Original
 {
-
-    protected function _prepareLayout()
-    {
-        parent::_prepareLayout();
-    }
-
-
     /**
      *
      * @return Mzax_Emarketing_Block_Campaign_Edit_Medium_Abstract
@@ -34,7 +30,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Variation
     public function getContentForm()
     {
         $variation = $this->getContent();
-
 
         $form = new Varien_Data_Form();
         $form->setHtmlIdPrefix("variation_medium_{$variation->getId()}_");
@@ -48,9 +43,9 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Variation
         return $mediumForm;
     }
 
-
-
-
+    /**
+     * @return $this
+     */
     public function initForm()
     {
         parent::initForm();
@@ -64,7 +59,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Variation
         $form->setFieldNameSuffix("variation[{$variation->getId()}]");
 
 
-
         /*
          * Variation
          */
@@ -72,7 +66,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Variation
             'legend' => $this->__('Settings'),
             'class'  => 'fieldset-wide',
         ));
-
 
         $fieldset->addField('is_active', 'select', array(
             'label'     => $this->__('Is Active'),
@@ -86,7 +79,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Variation
             'value' => '1'
         ));
 
-
         $fieldset->addField('name', 'text', array(
             'name'      => 'name',
             'required'  => true,
@@ -97,7 +89,5 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Variation
         $form->addValues($variation->getData());
 
         return $this;
-
-
     }
 }

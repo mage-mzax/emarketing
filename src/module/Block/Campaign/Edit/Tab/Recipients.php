@@ -17,45 +17,50 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients
+ */
 class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients extends Mage_Adminhtml_Block_Template
 {
-
     /**
      * @var Mzax_Emarketing_Model_Campaign
      */
     protected $_campaign;
 
-
     /**
-     * @var Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients_Grid
+     * @return void
      */
-    protected $_grid;
-
-
-
     public function _construct()
     {
         parent::_construct();
+
         $this->setTemplate('mzax/emarketing/campaign/recipients.phtml');
     }
 
-
-
+    /**
+     * @return $this
+     */
     protected function _prepareLayout()
     {
+        /** @var Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients_Grid $grid */
         $grid = $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_recipients_grid');
 
+        /** @var Mzax_Emarketing_Block_Campaign_Test_Emulate $emulate */
         $emulate = $this->getLayout()->createBlock('mzax_emarketing/campaign_test_emulate');
         $emulate->setTemplate('mzax/emarketing/campaign/filters/emulate.phtml');
         $emulate->setGrid($grid);
 
         $this->setChild('emulate', $emulate);
         $this->setChild('grid', $grid);
+
+        return $this;
     }
 
-
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Filter_Abstract $filter
+     *
+     * @return void
+     */
     public function prepareEmulation(Mzax_Emarketing_Model_Object_Filter_Abstract $filter)
     {
         $child = $this->getChild('emulate');
@@ -63,8 +68,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients extends Mage_Adminhtml_
             $child->prepareEmulation($filter);
         }
     }
-
-
 
     /**
      * Retrieve grid
@@ -75,10 +78,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients extends Mage_Adminhtml_
     {
         return $this->getChild('grid');
     }
-
-
-
-
 
     /**
      *
@@ -92,8 +91,9 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients extends Mage_Adminhtml_
         return $this->_campaign;
     }
 
-
-
+    /**
+     * @return string
+     */
     protected function _toHtml()
     {
         if ($this->getRequest()->getParam('emulate')) {
@@ -101,6 +101,4 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients extends Mage_Adminhtml_
         }
         return parent::_toHtml();
     }
-
-
 }

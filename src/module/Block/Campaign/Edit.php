@@ -16,9 +16,14 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Edit
+ */
 class Mzax_Emarketing_Block_Campaign_Edit extends Mage_Adminhtml_Block_Widget_Form_Container
 {
+    /**
+     * Mzax_Emarketing_Block_Campaign_Edit constructor.
+     */
     public function __construct()
     {
         $this->_objectId = 'id';
@@ -30,15 +35,23 @@ class Mzax_Emarketing_Block_Campaign_Edit extends Mage_Adminhtml_Block_Widget_Fo
 
         $this->_updateButton('save', 'label', $this->__('Save Campaign'));
         $this->_updateButton('delete', 'label', $this->__('Delete Campaign'));
-
     }
 
-
+    /**
+     * Retrieve header css classes
+     *
+     * @return string
+     */
     public function getHeaderCssClass()
     {
         return 'head-' . strtr($this->_controller, '_', '-');
     }
 
+    /**
+     * Retrieve header text
+     *
+     * @return string
+     */
     public function getHeaderText()
     {
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
@@ -49,69 +62,73 @@ class Mzax_Emarketing_Block_Campaign_Edit extends Mage_Adminhtml_Block_Widget_Fo
                 return '<span class="mzax-running"></span>' . $text;
             }
             return $text;
-        }
-        else {
+        } else {
             if ($preset = $campaign->getPreset()) {
                 return $this->__('New %s - %s campaign',
                         Mage::getSingleton('mzax_emarketing/medium')->getOptionText($campaign->getData('medium')),
                         $preset->getName());
-            }
-            else {
+            } else {
                 return $this->__('New %s Campaign',
                          Mage::getSingleton('mzax_emarketing/medium')->getOptionText($campaign->getData('medium')));
             }
         }
     }
 
+    /**
+     * Retrieve validation url
+     *
+     * @return string
+     */
     public function getValidationUrl()
     {
         return $this->getUrl('*/*/validate', array('_current'=>true));
     }
 
+    /**
+     * Prepare layout
+     *
+     * @return Mage_Core_Block_Abstract
+     */
     protected function _prepareLayout()
     {
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
         $campaign = Mage::registry('current_campaign');
 
-    	$this->_addButton('save_and_continue', array(
+        $this->_addButton('save_and_continue', array(
             'label'     => $this->__('Save And Continue Edit'),
             'onclick'   => 'saveAndContinueEdit(\''.$this->_getSaveAndContinueUrl().'\')',
             'class' => 'save'
         ), 10);
 
 
-    	if ($campaign->getId() && !$campaign->isArchived()) {
+        if ($campaign->getId() && !$campaign->isArchived()) {
+            if ($campaign->isRunning()) {
+                $this->_removeButton('save');
+                $this->removeButton('delete');
 
-    	    if ($campaign->isRunning()) {
-
-    	        $this->_removeButton('save');
-    	        $this->removeButton('delete');
-
-    	        $this->_addButton('stop', array(
-	                'label'     => $this->__('STOP'),
-	                'onclick'   => "confirmSetLocation('{$this->__('Are you sure you want to stop this campaign?')}', '{$this->getUrl('*/*/stop', array('_current' => true))}')",
-	                'class' => 'mzax-stop'
-    	        ), 100, 0);
+                $this->_addButton('stop', array(
+                    'label'     => $this->__('STOP'),
+                    'onclick'   => "confirmSetLocation('{$this->__('Are you sure you want to stop this campaign?')}', '{$this->getUrl('*/*/stop', array('_current' => true))}')",
+                    'class' => 'mzax-stop'
+                ), 100, 0);
 
 
-    	        $this->_addButton('save_and_continue', array(
-	                'label'     => $this->__('Save Changes'),
-	                'onclick'   => "saveAndContinueEdit('{$this->_getSaveAndContinueUrl()}', '{$this->__('Are you sure you want to apply those changes to this running campaign?')}')",
-	                'class' => 'save'
-    	        ), 10);
-    	    }
-    	    else {
-    	        $this->_addButton('start', array(
-	                'label'     => $this->__('Start'),
-	                'onclick'   => "confirmSetLocation('{$this->__('Are you sure you want to start this campaign?')}', '{$this->getUrl('*/*/start', array('_current' => true))}')",
-	                'class' => 'mzax-start'
-    	        ), 100, 0);
-    	    }
-    	}
+                $this->_addButton('save_and_continue', array(
+                    'label'     => $this->__('Save Changes'),
+                    'onclick'   => "saveAndContinueEdit('{$this->_getSaveAndContinueUrl()}', '{$this->__('Are you sure you want to apply those changes to this running campaign?')}')",
+                    'class' => 'save'
+                ), 10);
+            } else {
+                $this->_addButton('start', array(
+                    'label'     => $this->__('Start'),
+                    'onclick'   => "confirmSetLocation('{$this->__('Are you sure you want to start this campaign?')}', '{$this->getUrl('*/*/start', array('_current' => true))}')",
+                    'class' => 'mzax-start'
+                ), 100, 0);
+            }
+        }
 
-    	return parent::_prepareLayout();
+        return parent::_prepareLayout();
     }
-
 
     /**
      * Get form action URL
@@ -124,17 +141,20 @@ class Mzax_Emarketing_Block_Campaign_Edit extends Mage_Adminhtml_Block_Widget_Fo
             return $this->getData('form_action_url');
         }
 
-
         return $this->getUrl('*/*/save');
     }
 
-
+    /**
+     * Retrieve save and continue url
+     *
+     * @return string
+     */
     protected function _getSaveAndContinueUrl()
     {
-    	return $this->getUrl('*/*/save', array(
+        return $this->getUrl('*/*/save', array(
             '_current'  => true,
             'back'      => 'edit',
-    	    'tab'       => '{{tab_id}}'
+            'tab'       => '{{tab_id}}'
         ));
     }
 }

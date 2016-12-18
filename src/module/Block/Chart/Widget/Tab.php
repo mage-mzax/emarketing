@@ -18,42 +18,36 @@
 
 
 /**
+ * Class Mzax_Emarketing_Block_Chart_Widget_Tab
  *
  * @method Mzax_Emarketing_Model_Campaign getCampaign()
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * @method $this setType(string $value)
  */
 class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstract
 {
-
     /**
-     *
      * @var Mzax_Emarketing_Block_Chart_Abstract
      */
     protected $_chart;
 
-
     /**
-     *
      * @var Mzax_Emarketing_Model_Report_Query
      */
     protected $_query;
 
-
-
-
-
-
-
+    /**
+     * @var array
+     */
     protected $_tabs = array();
 
-
+    /**
+     * @var int
+     */
     protected static $_uid = 1;
 
-
-
-
+    /**
+     * @return mixed|string
+     */
     public function getHtmlId()
     {
         $id = $this->getData('html_id');
@@ -64,29 +58,34 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
         return $id;
     }
 
-
-
-
+    /**
+     * @return void
+     */
     protected function _construct()
     {
         parent::_construct();
         $this->setTemplate('mzax/emarketing/widget/chart-tab.phtml');
     }
 
-
-
+    /**
+     * @param $id
+     * @param $params
+     *
+     * @return $this
+     */
     public function addTab($id, $params)
     {
         $this->_tabs[$id] = $params;
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getTabs()
     {
         return $this->_tabs;
     }
-
-
 
     /**
      * Retrieve query
@@ -97,7 +96,6 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
     {
         return $this->_query;
     }
-
 
     /**
      * Set query
@@ -111,15 +109,13 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
         return $this;
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getType()
     {
         return $this->getDataSetDefault('type', 'line');
     }
-
-
-
 
     /**
      *
@@ -128,8 +124,6 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
     public function getChart()
     {
         if (!$this->_chart) {
-
-
             $block = 'mzax_emarketing/chart_' . $this->getType();
 
             /* @var $chart Mzax_Emarketing_Block_Chart_Abstract */
@@ -170,16 +164,10 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
             ));
             $chart->setLegend('none');
             $chart->setHeight(200);
-
         }
+
         return $this->_chart;
     }
-
-
-
-
-
-
 
     /**
      *
@@ -189,9 +177,6 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
     {
         return $this->getQuery()->getDataTable();
     }
-
-
-
 
     /**
      * Retrieve query params as JSON
@@ -203,8 +188,9 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
         return Zend_Json::encode($this->getQuery()->getParams());
     }
 
-
-
+    /**
+     * @return mixed|string
+     */
     public function getQueryUrl()
     {
         $url = $this->getData('query_url');
@@ -217,11 +203,11 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
         return $url;
     }
 
-
-
-
-
-
+    /**
+     * @param array $tab
+     *
+     * @return string
+     */
     public function getTabMetric(array $tab)
     {
         if (isset($tab['metric'])) {
@@ -236,7 +222,11 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
         return '';
     }
 
-
+    /**
+     * @param array $tab
+     *
+     * @return string
+     */
     public function getTabLabel(array $tab)
     {
         if (isset($tab['label'])) {
@@ -245,7 +235,11 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
         return '';
     }
 
-
+    /**
+     * @param array $tab
+     *
+     * @return string
+     */
     public function getTabClass(array $tab)
     {
         $class = array();
@@ -259,11 +253,6 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
             $class[] = is_string($tab['metric']) ? $tab['metric'] : 'dropdown';
         }
 
-
         return implode(' ', array_unique($class));
     }
-
-
-
-
 }

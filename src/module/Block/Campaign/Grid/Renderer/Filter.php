@@ -17,31 +17,41 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Filter
+ */
 class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Filter extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Abstract
 {
+    /**
+     * @param Varien_Object $row
+     *
+     * @return string
+     */
     public function render(Varien_Object $row)
     {
         if ($row instanceof Mzax_Emarketing_Model_Campaign) {
             return $this->renderFilters($row);
         }
-        return '';
 
+        return '';
     }
 
-
-
-    public function renderFilters(Mzax_Emarketing_Model_Campaign $campagin)
+    /**
+     * @param Mzax_Emarketing_Model_Campaign $campaign
+     *
+     * @return string
+     */
+    public function renderFilters(Mzax_Emarketing_Model_Campaign $campaign)
     {
         $html = array();
 
         $columnFilter = $this->getColumn()->getFilter();
-        if ( $columnFilter ) {
+        if ($columnFilter) {
             $columnFilter = $columnFilter->getValue();
         }
 
-
         /* @var $filter Mzax_Emarketing_Model_Object_Filter_Abstract */
-        foreach ($campagin->getFilters() as $filter) {
+        foreach ($campaign->getFilters() as $filter) {
             $style = '';
             if ($filter->getType() == $columnFilter) {
                 $style = 'background:#FFFFDD; color:#222';
@@ -55,7 +65,4 @@ class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Filter extends Mage_Adminhtml
 
         return $html;
     }
-
-
-
 }

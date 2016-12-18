@@ -17,23 +17,30 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Edit_Tabs
+ */
 class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widget_Tabs
 {
-
+    /**
+     * Mzax_Emarketing_Block_Campaign_Edit_Tabs constructor.
+     */
     public function __construct()
     {
         parent::__construct();
+
         $this->setId('mzax_emarketing_info_tabs');
         $this->setDestElementId('edit_form');
         $this->setTitle($this->__('Setup Campaign'));
     }
 
+    /**
+     * @return Mage_Core_Block_Abstract
+     */
     protected function _beforeToHtml()
     {
         /* @var $campaign  Mzax_Emarketing_Model_Campaign */
         $campaign = Mage::registry('current_campaign');
-
-
 
         if (!$campaign->getMedium()) {
             $this->addTab('medium', array(
@@ -41,24 +48,19 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widg
                 'content'   => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_medium')->initForm()->toHtml(),
                 'active'    => true
             ));
-        }
-        else {
-
+        } else {
             $mediumTitle = Mage::getSingleton('mzax_emarketing/medium')->getOptionText($campaign->getData('medium'));
             if ($campaign->getId()) {
                 $this->setTitle($this->__('%s Campaign', $mediumTitle));
-            }
-            else {
+            } else {
                 $this->setTitle($this->__('New %s Campaign', $mediumTitle));
             }
-
 
             $this->addTab('settings', array(
                 'label'     => $this->__('Settings'),
                 'content'   => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_settings')->initForm()->toHtml(),
                 'active'    => true
             ));
-
 
             $this->addTab('content', array(
                 'label'     => $this->__('Content'),
@@ -67,8 +69,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widg
             ));
 
             // only available if saved
-            if ($campaign->getId())
-            {
+            if ($campaign->getId()) {
                 $this->addTab('filters', array(
                     'label'   => $this->__('Filters / Segmentation'),
                     'content' => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_filters')->initForm()->toHtml(),
@@ -89,7 +90,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widg
                     ));
                 }
 
-
                 $this->addTab('tasks', array(
                     'label'   => $this->__('Tasks'),
                     'content' => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_tasks')->toHtml(),
@@ -105,9 +105,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widg
                         'url'     => $this->getUrl('*/*/errorGrid', array('_current' => true))
                     ));
                 }
-            }
-            else if ($campaign->getPreset())
-            {
+            } elseif ($campaign->getData('preset')) {
                 $this->addTab('filters', array(
                     'label'   => $this->__('Filters / Segmentation'),
                     'content' => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_filters')->initForm()->toHtml(),
@@ -116,19 +114,24 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widg
             }
         }
 
-
         $this->_updateActiveTab();
+
         return parent::_beforeToHtml();
     }
 
+    /**
+     * Update current active tab
+     *
+     * @return void
+     */
     protected function _updateActiveTab()
     {
-    	$tabId = $this->getRequest()->getParam('tab');
-    	if ( $tabId ) {
-    		$tabId = preg_replace("#{$this->getId()}_#", '', $tabId);
-    		if ($tabId) {
-    			$this->setActiveTab($tabId);
-    		}
-    	}
+        $tabId = $this->getRequest()->getParam('tab');
+        if ($tabId) {
+            $tabId = preg_replace("#{$this->getId()}_#", '', $tabId);
+            if ($tabId) {
+                $this->setActiveTab($tabId);
+            }
+        }
     }
 }

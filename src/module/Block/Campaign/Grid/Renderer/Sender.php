@@ -17,8 +17,17 @@
  */
 
 
-class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Sender extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Abstract
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Sender
+ */
+class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Sender
+    extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Abstract
 {
+    /**
+     * @param Varien_Object $row
+     *
+     * @return string
+     */
     public function render(Varien_Object $row)
     {
         $sender = $row->getSender();
@@ -33,6 +42,7 @@ class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Sender extends Mage_Adminhtml
         if ($str == '') {
             $str .= '---';
         }
+
         return $str;
     }
 }

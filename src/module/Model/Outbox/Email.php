@@ -92,7 +92,7 @@ class Mzax_Emarketing_Model_Outbox_Email extends Mzax_Emarketing_Model_Email
     /**
      * List of all generated link references
      *
-     * @var array
+     * @var Mzax_Emarketing_Model_Link_Reference[]
      */
     protected $_linkReferences = array();
 
@@ -158,7 +158,7 @@ class Mzax_Emarketing_Model_Outbox_Email extends Mzax_Emarketing_Model_Email
     /**
      * Retrieve all created link references
      *
-     * @return array
+     * @return Mzax_Emarketing_Model_Link_Reference[]
      */
     public function getLinkReferences()
     {

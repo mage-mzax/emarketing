@@ -17,15 +17,25 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Grid_Filter_Filter
+ *
+ * @method string getValue()
+ */
 class Mzax_Emarketing_Block_Campaign_Grid_Filter_Filter extends Mage_Adminhtml_Block_Widget_Grid_Column_Filter_Select
 {
-
-
+    /**
+     * Retrieve all options
+     *
+     * @return array
+     */
     protected function _getOptions()
     {
-        return Mage::getModel('mzax_emarketing/object_filter')->getAllOptions();
-    }
+        /** @var Mzax_Emarketing_Model_Object_Filter $filter */
+        $filter = Mage::getModel('mzax_emarketing/object_filter');
 
+        return $filter->getAllOptions();
+    }
 
     /**
      * Retrieve condition
@@ -41,10 +51,7 @@ class Mzax_Emarketing_Block_Campaign_Grid_Filter_Filter extends Mage_Adminhtml_B
 
         $helper = Mage::getResourceHelper('core');
         $likeExpression = $helper->addLikeEscape($search, array('position' => 'any'));
+
         return array('like' => $likeExpression);
     }
-
-
-
-
 }

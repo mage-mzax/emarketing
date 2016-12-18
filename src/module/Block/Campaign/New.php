@@ -16,40 +16,41 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
 /**
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Campaign_New
  */
 class Mzax_Emarketing_Block_Campaign_New extends Mzax_Emarketing_Block_Campaign_Edit
 {
-
-
+    /**
+     * @return string
+     */
     public function getHeaderText()
     {
         return $this->__('New Campaign');
     }
 
-
+    /**
+     * @return null
+     */
     public function getValidationUrl()
     {
         return null;
     }
 
-
+    /**
+     * @return $this
+     */
     protected function _prepareLayout()
     {
-    	parent::_prepareLayout();
-
-    	/* @var $campaign  Mzax_Emarketing_Model_Campaign */
-        $campaign = Mage::registry('current_campaign');
+        parent::_prepareLayout();
 
         $this->_removeButton('reset');
         $this->_removeButton('save');
         $this->_removeButton('save_and_continue');
-    }
 
+        return $this;
+    }
 
     /**
      * Get form action URL
@@ -60,5 +61,4 @@ class Mzax_Emarketing_Block_Campaign_New extends Mzax_Emarketing_Block_Campaign_
     {
         return $this->getUrl('*/*/new');
     }
-
 }

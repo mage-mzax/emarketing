@@ -16,15 +16,12 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Edit_Medium_Abstract
+ */
 class Mzax_Emarketing_Block_Campaign_Edit_Medium_Abstract extends Mage_Adminhtml_Block_Widget_Form
 {
-
-    protected function _prepareLayout()
-    {
-        parent::_prepareLayout();
-    }
-
-
     /**
      * Retrieve current campaign
      *
@@ -35,10 +32,9 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Abstract extends Mage_Adminhtml
         return Mage::registry('current_campaign');
     }
 
-
     /**
      * Retrieve campaign content
-     * Usally the campaign it self or a variation object
+     * Usually the campaign it self or a variation object
      *
      * @return Mzax_Emarketing_Model_Campaign_Content
      */
@@ -47,22 +43,17 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Abstract extends Mage_Adminhtml
         return $this->getData('content');
     }
 
-
     /**
      *
      * @param Varien_Data_Form $form
-     * @return Mzax_Emarketing_Block_Campaign_Edit_Medium_Abstract
+     *
+     * @return $this
      */
     public function initForm(Varien_Data_Form $form)
     {
         $this->setForm($form);
         $this->_prepareForm();
+
         return $this;
     }
-
-
-
-
-
-
 }

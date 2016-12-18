@@ -16,19 +16,23 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email
+ */
 class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email extends Mzax_Emarketing_Block_Campaign_Edit_Medium_Abstract
 {
-
-    protected function _prepareLayout()
-    {
-        parent::_prepareLayout();
-    }
-
-
-
+    /**
+     * Retrieve template options
+     *
+     * @return array
+     */
     protected function getTemplateOptions()
     {
-        $templates = Mage::getResourceSingleton('mzax_emarketing/template_collection')->toOptionArray();
+        /** @var Mzax_Emarketing_Model_Resource_Template_Collection $templateCollection */
+        $templateCollection = Mage::getResourceSingleton('mzax_emarketing/template_collection');
+
+        $templates = $templateCollection->toOptionArray();
         array_unshift($templates, array(
             'value' => '',
             'label' => $this->__('Choose a Template...')
@@ -37,12 +41,10 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email extends Mzax_Emarketing_B
         return $templates;
     }
 
-
-
     /**
      * Prepare form before rendering HTML
      *
-     * @return Mage_Adminhtml_Block_Widget_Form
+     * @return $this
      */
     protected function _prepareForm()
     {
@@ -51,12 +53,13 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email extends Mzax_Emarketing_B
         $content  = $this->getContent();
         $data     = $content->getMediumData();
 
-
-
-        $fieldset = $form->addFieldset('email_fieldset', array(
-        	'legend' => $this->__('Email'),
-        	'class'  => 'fieldset-wide',
-        ));
+        $fieldset = $form->addFieldset(
+            'email_fieldset',
+            array(
+                'legend' => $this->__('Email'),
+                'class' => 'fieldset-wide',
+            )
+        );
 
         $fieldset->addType('editor', Mage::getConfig()->getModelClassName('mzax_emarketing/form_element_emailEditor'));
 
@@ -66,16 +69,15 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email extends Mzax_Emarketing_B
 
         /* Stop if no template exist */
         if (count($templateOptions) === 1) {
-
             $fieldset->addField('template_note', 'note', array(
                 'label'     => $this->__('Template'),
                 'class'     => 'mzax-template-select',
                 'text'      => $this->__("Before you can create an email campaign, you need to setup at least one email template."),
                 'after_element_html' => $this->__(' <a href="%s" target="_blank">Edit Templates</a>', $this->getUrl('*/emarketing_template')),
             ));
-            return;
-        }
 
+            return $this;
+        }
 
         $fieldset->addField('designmode', 'select', array(
             'label'     => $this->__('Design Mode'),
@@ -99,7 +101,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email extends Mzax_Emarketing_B
             'after_element_html' => $this->__(' <a href="%s" target="_blank">Edit Templates</a>', $this->getUrl('*/emarketing_template')),
         ));
 
-
         $subject = $fieldset->addField('subject', 'text', array(
             'name'      => 'subject',
             'required'  => true,
@@ -108,20 +109,16 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email extends Mzax_Emarketing_B
         ));
 
 
-
-
         $urlParams = array('id' => $campaign->getId());
         if ($content instanceof Mzax_Emarketing_Model_Campaign_Variation) {
             $contentName  = $content->getName();
             $urlParams['variation'] = $content->getId();
-        }
-        else {
+        } else {
             $contentName  = $this->__('Original');
         }
 
         $quickSaveUrl = $this->getUrl('*/*/quicksave', $urlParams);
         $previewUrl   = $this->getUrl('*/*/preview', $urlParams);
-
 
 
         $editorConfig = new Varien_Object();
@@ -152,7 +149,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email extends Mzax_Emarketing_B
             ));
         }
 
-
         $editorConfig->setSnippets($campaign->getSnippets());
 
 
@@ -175,11 +171,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email extends Mzax_Emarketing_B
         $editor->setRenderer($renderer);
 
 
-
-
-
-
-
         $fieldset = $form->addFieldset('email_delay', array(
             'legend' => $this->__('Only send out emails at certain times'),
             'class'  => 'fieldset-wide mzax-checkboxes',
@@ -187,14 +178,13 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email extends Mzax_Emarketing_B
         $fieldset->addType('info', Mage::getConfig()->getModelClassName('mzax_emarketing/form_element_info'));
 
         $hourOptions = array();
-        for($i = 0; $i < 24; $i++) {
+        for ($i = 0; $i < 24; $i++) {
             $hourOptions[$i] = $this->__("%'.02d:00h", $i);
         }
 
         $fieldset->addField('info', 'info', array(
             'text'      => $this->__('Keep in mind that this option can significantly delay an email from getting send out. Depending on your campaign this may not be a problem, but sometimes it can. You may want to double check the expire time under "Settings" and make sure it is high enough.')
         ))->setRenderer($renderer);
-
 
 
         $fieldset->addField('day_filter_empty', 'hidden', array(
@@ -220,44 +210,8 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email extends Mzax_Emarketing_B
             'note'      => $this->__("If nothing select, this filter is disabled.")
         ));
 
-
-
-
-
-        /*
-
-
-        $fieldset = $form->addFieldset('email_advanced', array(
-            'legend' => $this->__('Advanced Options'),
-            'class'  => 'fieldset-wide',
-        ));
-
-        $fieldset->addField('prerender', 'select', array(
-            'label'     => $this->__('Pre-Render'),
-            'note'      => $this->__("If enabled, email will get pre rendered, cached and then only the basic {{var}} expressions will get parsed. If your content is static or only uses var expressions. Enabling this can increase the render performance by a factor of 10."),
-            'name'      => 'prerender',
-            'options'   => array(
-                '0' => $this->__('Disabled'),
-                '1' => $this->__('Enabled'),
-            ),
-            'value' => '0'
-        ));
-
-
-        if ($campaign === $content) {
-            $subject = $fieldset->addField('forward_emails', 'text', array(
-                'name'      => 'forward_emails',
-                'label'     => $this->__('Forward Email'),
-                'note'      => $this->__("All non-auto email replies will get forward to this email address."),
-            ));
-        }
-
-        */
         $form->addValues($data->getData());
 
         return $this;
-
-
     }
-
 }

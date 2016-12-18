@@ -17,8 +17,14 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_SendTestMail
+ */
 class Mzax_Emarketing_Block_Campaign_SendTestMail extends Mage_Adminhtml_Block_Widget_Form_Container
 {
+    /**
+     * Mzax_Emarketing_Block_Campaign_SendTestMail constructor.
+     */
     public function __construct()
     {
         $this->_objectId = 'id';
@@ -35,21 +41,21 @@ class Mzax_Emarketing_Block_Campaign_SendTestMail extends Mage_Adminhtml_Block_W
         $this->_removeButton('back');
     }
 
-
-
-
+    /**
+     * @return string
+     */
     public function getHeaderText()
     {
         return $this->__('Send Test Mail');
     }
 
+    /**
+     * @return string
+     */
     public function getValidationUrl()
     {
         return $this->getUrl('*/*/validateTestMail', array('_current'=>true));
     }
-
-
-
 
     /**
      * Get form action URL
@@ -58,11 +64,11 @@ class Mzax_Emarketing_Block_Campaign_SendTestMail extends Mage_Adminhtml_Block_W
      */
     public function getFormActionUrl()
     {
-        if ($this->hasFormActionUrl()) {
-            return $this->getData('form_action_url');
+        $url = $this->getData('form_action_url');
+        if ($url) {
+            return $url;
         }
+
         return $this->getUrl('*/*/sendTestMailPost', array('_current' => true));
     }
-
-
 }

@@ -16,16 +16,15 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Original
+ */
 class Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Original extends Mage_Adminhtml_Block_Widget_Form
 {
-
-    protected function _prepareLayout()
-    {
-        parent::_prepareLayout();
-    }
-
-
-
+    /**
+     * @return $this
+     */
     public function initForm()
     {
         $form = new Varien_Data_Form();
@@ -36,8 +35,6 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Original extends Mage_Admi
 
         return $this;
     }
-
-
 
     /**
      *
@@ -57,9 +54,9 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Original extends Mage_Admi
         return $mediumForm;
     }
 
-
-
-
+    /**
+     * @return string
+     */
     public function getFormHtml()
     {
         $html = $this->getContentForm()->getFormHtml();
@@ -67,6 +64,4 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Content_Original extends Mage_Admi
 
         return $html;
     }
-
-
 }

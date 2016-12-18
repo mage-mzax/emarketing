@@ -17,10 +17,11 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Edit_Tab_Test
+ */
 class Mzax_Emarketing_Block_Campaign_Edit_Tab_Test extends Mzax_Emarketing_Block_Filter_Test_Recursive
 {
-
-
     /**
      * Retrieve filter
      *
@@ -30,13 +31,9 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Test extends Mzax_Emarketing_Block
     {
         /* @var $campaign Mzax_Emarketing_Model_Campaign */
         $campaign = Mage::registry('current_campaign');
+
         return $campaign->getRecipientProvider()->getFilter();
     }
-
-
-
-
-
 
     /**
      * Generate url by route and parameters
@@ -48,11 +45,9 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Test extends Mzax_Emarketing_Block
     public function getUrl($route = '', $params = array())
     {
         $params['campaign'] = $this->getCampaign()->getId();
+
         return parent::getUrl($route, $params);
     }
-
-
-
 
     /**
      * Retrieve current campaign
@@ -63,6 +58,4 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Test extends Mzax_Emarketing_Block
     {
         return Mage::registry('current_campaign');
     }
-
-
 }

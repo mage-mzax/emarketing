@@ -17,17 +17,26 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Edit_Tab_Tasks
+ */
 class Mzax_Emarketing_Block_Campaign_Edit_Tab_Tasks extends Mage_Adminhtml_Block_Template
 {
-
+    /**
+     * Prepare layout
+     *
+     * @return $this
+     */
     protected function _prepareLayout()
     {
         parent::_prepareLayout();
         $this->setTemplate('mzax/emarketing/campaign/tasks.phtml');
+
+        return $this;
     }
 
-
     /**
+     * Retrieve campaign
      *
      * @return Mzax_Emarketing_Model_Campaign
      */
@@ -36,10 +45,10 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Tasks extends Mage_Adminhtml_Block
         return Mage::registry('current_campaign');
     }
 
-
-
     /**
      * Retrieve action url
+     *
+     * @param string $action
      *
      * @return string
      */
@@ -49,6 +58,4 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Tasks extends Mage_Adminhtml_Block
             'id' => $this->getCampaign()->getId()
         ));
     }
-
-
 }

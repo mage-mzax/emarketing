@@ -16,29 +16,30 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Campaign_Edit_Tab_Errors
  */
 class Mzax_Emarketing_Block_Campaign_Edit_Tab_Errors extends Mage_Adminhtml_Block_Widget_Grid
 {
-
+    /**
+     * Mzax_Emarketing_Block_Campaign_Edit_Tab_Errors constructor.
+     */
     public function __construct()
     {
         parent::__construct();
+
         $this->setId('recipient_error_grid');
         $this->setUseAjax(true);
         $this->setDefaultSort('created_at');
         $this->setDefaultDir('desc');
     }
 
-
-
-
-
+    /**
+     * Prepare collection
+     *
+     * @return $this
+     */
     protected function _prepareCollection()
     {
         /* @var $collection Mzax_Emarketing_Model_Resource_Recipient_Error_Collection */
@@ -50,12 +51,16 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Errors extends Mage_Adminhtml_Bloc
 
         $this->setCollection($collection);
 
-        return parent::_prepareCollection();
+        parent::_prepareCollection();
+
+        return $this;
     }
 
-
-
-
+    /**
+     * Prepare columns
+     *
+     * @return $this
+     */
     protected function _prepareColumns()
     {
         $this->addColumn('created_at', array(
@@ -65,46 +70,47 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Errors extends Mage_Adminhtml_Bloc
             'type'      =>'datetime'
         ));
 
-
-
         $this->addColumn('recipient', array(
             'header'         => $this->__('Recipient'),
             'index'          => 'recipient_id'
         ));
 
-
         $this->addColumn('message', array(
             'header'    => $this->__('Message'),
             'index'     => 'message',
             'type'      => 'text',
-            'getter'    => function($row) {
+            'getter'    => function ($row) {
                 return nl2br($row->getMessage());
             },
             'truncate'  => 500
         ));
 
+        parent::_prepareColumns();
 
-
-        return parent::_prepareColumns();
+        return $this;
     }
 
-
-
-
-
-
+    /**
+     * @return string
+     */
     public function getGridUrl()
     {
         return $this->getUrl('*/*/errorGrid', array('grid_ajax' => 1, '_current'=> true));
     }
 
+    /**
+     * @param $row
+     *
+     * @return null
+     */
     public function getRowUrl($row)
     {
         return null;
-        //return $this->getUrl('*/emarketing_outbox/email', array('id'=>$row->getId()));
     }
 
-
+    /**
+     * @return bool
+     */
     public function canDisplayContainer()
     {
         if ($this->getRequest()->getParam('grid_ajax')) {

@@ -1013,7 +1013,7 @@ class Mzax_Emarketing_Model_Campaign
      * @param string $dimension
      * @param array $metrics
      * @param bool $variations
-     * @param null $order
+     * @param string $order
      *
      * @return Mzax_Emarketing_Model_Report_Query
      */

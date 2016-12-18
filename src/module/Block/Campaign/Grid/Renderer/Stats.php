@@ -17,8 +17,17 @@
  */
 
 
-class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Stats extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Abstract
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Stats
+ */
+class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Stats
+    extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Abstract
 {
+    /**
+     * @param Varien_Object $row
+     *
+     * @return string
+     */
     public function render(Varien_Object $row)
     {
         if ($row instanceof Mzax_Emarketing_Model_Campaign && $row->getSendingStats() > 0) {
@@ -28,17 +37,20 @@ class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Stats extends Mage_Adminhtml_
 
     }
 
-
-
-    public function renderStats(Mzax_Emarketing_Model_Campaign $campagin)
+    /**
+     * @param Mzax_Emarketing_Model_Campaign $campaign
+     *
+     * @return string
+     */
+    public function renderStats(Mzax_Emarketing_Model_Campaign $campaign)
     {
         $html = array();
 
-        $sendings     = $campagin->getSendingStats();
-        $views        = $campagin->getViewStats();
-        $interactions = $campagin->getInteractionStats();
-        $conversions  = $campagin->getConversionStats();
-        $fails        = $campagin->getFailStats();
+        $sendings     = $campaign->getSendingStats();
+        $views        = $campaign->getViewStats();
+        $interactions = $campaign->getInteractionStats();
+        $conversions  = $campaign->getConversionStats();
+        $fails        = $campaign->getFailStats();
 
         $html[] = sprintf('<div class="mzax-grid-stats" title="%s">', $this->__('%s Sendings', $sendings));
         $html[] = sprintf('<div class="mzax-grid-stat views" style="width:%01.3f%%" title="%s"></div>', (($views)/$sendings)*100, $this->__('%s Views', $views));
@@ -49,7 +61,4 @@ class Mzax_Emarketing_Block_Campaign_Grid_Renderer_Stats extends Mage_Adminhtml_
 
         return implode("\n", $html);
     }
-
-
-
 }

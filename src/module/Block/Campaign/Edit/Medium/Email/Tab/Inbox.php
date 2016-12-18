@@ -17,19 +17,18 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email_Tab_Inbox
+ */
 class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email_Tab_Inbox extends Mzax_Emarketing_Block_Inbox_Grid
 {
-
-
     /**
-     *
      * @var Mzax_Emarketing_Model_Campaign
      */
     protected $_campaign;
 
-
-
     /**
+     * Retrieve campaign
      *
      * @return Mzax_Emarketing_Model_Campaign
      */
@@ -37,11 +36,13 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email_Tab_Inbox extends Mzax_Em
     {
         if (!$this->_campaign) {
             $campaignId = (int) $this->getRequest()->getParam('id');
-            $this->_campaign = Mage::getModel('mzax_emarketing/campaign')->load($campaignId);
+
+            $this->_campaign = Mage::getModel('mzax_emarketing/campaign');
+            $this->_campaign->load($campaignId);
         }
+
         return $this->_campaign;
     }
-
 
     /**
      * Apply campaign id
@@ -51,9 +52,11 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email_Tab_Inbox extends Mzax_Em
     protected function _prepareCollection()
     {
         $this->getCollection()->addFieldToFilter('campaign_id', $this->getCampaign()->getId());
-        parent::_prepareCollection();
-    }
 
+        parent::_prepareCollection();
+
+        return $this;
+    }
 
     /**
      * Remove campaign column
@@ -64,12 +67,9 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email_Tab_Inbox extends Mzax_Em
     {
         parent::_prepareColumns();
         $this->removeColumn('campaign');
-
     }
 
-
     /**
-     *
      * @return string
      */
     public function getGridUrl()
@@ -77,18 +77,16 @@ class Mzax_Emarketing_Block_Campaign_Edit_Medium_Email_Tab_Inbox extends Mzax_Em
         return $this->getUrl('*/emarketing_inbox/campaignGrid', array('_current'=> true));
     }
 
-
     /**
      *
-     * @param $row
+     * @param Mzax_Emarketing_Model_Inbox_Email $row
+     *
      * @return string
      */
     public function getRowUrl($row)
     {
         return $this->getUrl('*/emarketing_inbox/email', array('id'=>$row->getId()));
     }
-
-
 
     /**
      * Make massaction js object public so it works for tabs

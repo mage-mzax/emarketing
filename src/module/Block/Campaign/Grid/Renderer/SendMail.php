@@ -17,8 +17,17 @@
  */
 
 
-class Mzax_Emarketing_Block_Campaign_Grid_Renderer_SendMail extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Text
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Grid_Renderer_SendMail
+ */
+class Mzax_Emarketing_Block_Campaign_Grid_Renderer_SendMail
+    extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Text
 {
+    /**
+     * @param Varien_Object $row
+     *
+     * @return string
+     */
     public function render(Varien_Object $row)
     {
         $url = $this->getUrl('*/*/sendTestMail', array(

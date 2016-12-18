@@ -17,34 +17,45 @@
  */
 
 
-
 /**
- * Campaign Grid
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Campaign_Grid
  */
 class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Grid
 {
+    /**
+     * @var string[]
+     */
+    protected $_tagColors = array(
+        '627379', 'FC7A00', 'BF4848', '87969E', 'D7D020', '00A6D4',
+        'A559BF', '14D277', '627379', 'FC7A00', 'BF4848', '87969E',
+        'D7D020', '00A6D4', 'A559BF', '14D277', '627379', 'FC7A00',
+        'BF4848', '87969E', 'D7D020', '00A6D4', 'A559BF', '14D277',
+        '627379', 'FC7A00', 'BF4848', '87969E', 'D7D020', '00A6D4',
+        'A559BF', '14D277', '627379', 'FC7A00', 'BF4848', '87969E',
+        'D7D020', '00A6D4', 'A559BF', '14D277'
+    );
 
-
-    protected $_tagColors = array('627379', 'FC7A00', 'BF4848', '87969E', 'D7D020', '00A6D4', 'A559BF', '14D277', '627379', 'FC7A00', 'BF4848', '87969E', 'D7D020', '00A6D4', 'A559BF', '14D277','627379', 'FC7A00', 'BF4848', '87969E', 'D7D020', '00A6D4', 'A559BF', '14D277','627379', 'FC7A00', 'BF4848', '87969E', 'D7D020', '00A6D4', 'A559BF', '14D277','627379', 'FC7A00', 'BF4848', '87969E', 'D7D020', '00A6D4', 'A559BF', '14D277');
-
+    /**
+     * @var array
+     */
     protected $_tagColorMap = array();
 
-
+    /**
+     * Mzax_Emarketing_Block_Campaign_Grid constructor.
+     */
     public function __construct()
     {
         parent::__construct();
+
         $this->setId('campaign_grid');
         $this->setUseAjax(true);
         $this->setSaveParametersInSession(true);
         $this->setDefaultSort('campaign_id');
     }
 
-
-
+    /**
+     * @return Mage_Adminhtml_Block_Widget_Grid
+     */
     protected function _prepareCollection()
     {
         /* @var $collection Mzax_Emarketing_Model_Resource_Campaign_Collection */
@@ -59,11 +70,14 @@ class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Gr
         return parent::_prepareCollection();
     }
 
-
-
+    /**
+     * Prepare layout
+     *
+     * @return $this
+     */
     protected function _prepareLayout()
     {
-        if ( $this->getRequest()->getParam('archive') ) {
+        if ($this->getRequest()->getParam('archive')) {
             $this->setChild('archive_button',
                 $this->getLayout()->createBlock('adminhtml/widget_button')->setData(array(
                     'label'   => $this->__('Hide Archived'),
@@ -71,8 +85,7 @@ class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Gr
                     'class'   => 'task'
                 ))
             );
-        }
-        else {
+        } else {
             $this->setChild('archive_button',
                 $this->getLayout()->createBlock('adminhtml/widget_button')->setData(array(
                     'label'   => $this->__('Show Archived'),
@@ -82,12 +95,16 @@ class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Gr
             );
         }
 
-        return parent::_prepareLayout();
+        parent::_prepareLayout();
+
+        return $this;
     }
 
-
-
-
+    /**
+     * Retrieve main buttons html
+     *
+     * @return string
+     */
     public function getMainButtonsHtml()
     {
         $html = parent::getMainButtonsHtml();
@@ -96,9 +113,11 @@ class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Gr
         return $html;
     }
 
-
-
-
+    /**
+     * Prepare columns
+     *
+     * @return $this
+     */
     protected function _prepareColumns()
     {
         $this->addColumn('added_at', array(
@@ -122,7 +141,6 @@ class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Gr
             'index'     => 'name',
             'frame_callback' => array($this, 'renderName')
         ));
-
 
         $this->addColumn('recipients', array(
             'header'    => $this->__('Recipients'),
@@ -166,9 +184,10 @@ class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Gr
             'type'      => 'number'
         ));
 
-        return parent::_prepareColumns();
-    }
+        parent::_prepareColumns();
 
+        return $this;
+    }
 
     /**
      * Name Frame Callback
@@ -177,18 +196,17 @@ class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Gr
      * @param Mzax_Emarketing_Model_Campaign $row
      * @param Mage_Adminhtml_Block_Widget_Grid_Column $column
      * @param boolean $export
+     *
      * @return string
      */
     public function renderName($value, $row, $column, $export)
     {
         if (!$export) {
-
             if ($row->isRunning()) {
                 $value .= ' <span class="mzax-grid-running"></span>';
             }
 
             foreach ($row->getTags() as $tag) {
-
                 $t = strtolower($tag);
                 if (!isset($this->_tagColorMap[$t])) {
                     $this->_tagColorMap[$t] = $this->_tagColors[count($this->_tagColorMap)%count($this->_tagColors)];
@@ -200,9 +218,11 @@ class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Gr
         return $value;
     }
 
-
-
-
+    /**
+     * Prepare mass action options
+     *
+     * @return $this
+     */
     protected function _prepareMassaction()
     {
         $this->setMassactionIdField('campaign_id');
@@ -223,7 +243,6 @@ class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Gr
             'url'     => $this->getUrl('*/*/massArchive'),
             'confirm' => $this->__('Are you sure you want to archive all selected campaigns?')
         ));
-
         $this->getMassactionBlock()->addItem('add_tag', array(
             'label'=> $this->__('Add tag(s)...'),
             'url'  => $this->getUrl('*/*/massAddTag', array('_current'=>true)),
@@ -236,7 +255,6 @@ class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Gr
                 )
             )
         ));
-
         $this->getMassactionBlock()->addItem('remove_tag', array(
             'label'=> $this->__('Remove tag(s)...'),
             'url'  => $this->getUrl('*/*/massRemoveTag', array('_current'=>true)),
@@ -250,19 +268,26 @@ class Mzax_Emarketing_Block_Campaign_Grid extends Mage_Adminhtml_Block_Widget_Gr
             )
         ));
 
-
         return $this;
     }
 
-
-
-
-
+    /**
+     * Retrieve grid url
+     *
+     * @return string
+     */
     public function getGridUrl()
     {
         return $this->getUrl('*/*/grid', array('_current'=> true));
     }
 
+    /**
+     * Retrieve row url
+     *
+     * @param Mzax_Emarketing_Model_Campaign $row
+     *
+     * @return string
+     */
     public function getRowUrl($row)
     {
         return $this->getUrl('*/*/edit', array('id'=>$row->getId()));

@@ -17,19 +17,22 @@
  */
 
 
+
+/**
+ * Class Mzax_Emarketing_Block_Campaign_Edit_Tab_Filters
+ */
 class Mzax_Emarketing_Block_Campaign_Edit_Tab_Filters extends Mage_Adminhtml_Block_Widget_Form
 {
-
-
+    /**
+     * @return $this
+     */
     public function initForm()
     {
         $form = new Varien_Data_Form();
         $form->setHtmlIdPrefix('_mzax_emarketing');
         $form->setFieldNameSuffix('mzax_emarketing');
 
-
         $campaign = Mage::registry('current_campaign');
-
 
         $form->setHtmlIdPrefix('filter_');
 
@@ -39,23 +42,21 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Filters extends Mage_Adminhtml_Blo
             ->setNewFilterUrl($this->getUrl('*/*/newFilterHtml', array('campaign' => $campaign->getId())));
 
         $fieldset = $form->addFieldset('conditions_fieldset', array(
-            'legend'=>Mage::helper('salesrule')->__('Only send campaign to people matching the filters below')
+            'legend' => $this->__('Only send campaign to people matching the filters below')
         ))->setRenderer($renderer);
 
-
-
-    	$fieldset->addField('filters', 'text', array(
+        $field = $fieldset->addField('filters', 'text', array(
             'name' => 'filters',
             'label' => $this->__('Filters'),
             'title' => $this->__('Filters'),
-        ))->setCampaign($campaign)
-    	  ->setRenderer(Mage::getBlockSingleton('mzax_emarketing/filters'));
+        ));
+
+        $field->setCampaign($campaign);
+        $field->setRenderer(Mage::getBlockSingleton('mzax_emarketing/filters'));
 
         $this->setForm($form);
 
         return $this;
-
-
     }
 
     /**
@@ -67,6 +68,4 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Filters extends Mage_Adminhtml_Blo
     {
         return parent::_beforeToHtml();
     }
-
-
 }

@@ -91,7 +91,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
     {
         $adapter = $this->_getReadAdapter();
 
-        // is current specfied time is the local time or not
+        // is current specified time is the local time or not
         $isLocal = (bool)$this->getParam('is_local_time');
 
         // check if we emulate current itme

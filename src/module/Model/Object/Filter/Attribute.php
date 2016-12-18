@@ -27,11 +27,23 @@
  *
  * @method bool getAnniversary()
  * @method string getDirection()
+ *
+ * @method $this setAttribute(string $attributeCode)
+ * @method $this setValue(string $value)
+ * @method $this setValueFrom(int $value)
+ * @method $this setValueTo(int $value)
+ * @method $this setValueUnit(string $value)
+ * @method $this setOperator(string $value)
+ * @method $this setRelative(bool $value)
+ * @method $this setAnniversary(bool $value)
  */
 abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
     extends Mzax_Emarketing_Model_Object_Filter_Abstract
 {
     const VALUE_KEY = 'value';
+
+    const FUTURE = 'future';
+    const PAST = 'past';
 
     /**
      * @var Mage_Catalog_Model_Resource_Eav_Attribute
@@ -115,7 +127,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Attribute
         $value = $this->getData(self::VALUE_KEY);
 
         if ($this->getData('relative')) {
-            $future = $this->getDirection() == 'future';
+            $future = $this->getDirection() == self::FUTURE;
             $usesLocalTime = (bool) $this->getAttributeConfig($attribute, 'uses_local_time', false);
 
             if ($this->getAnniversary()) {

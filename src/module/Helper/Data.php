@@ -25,17 +25,31 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
     const DAY_START = 1;
     const DAY_END = 2;
 
+    const TIME_UNIT_HOURS = 'hours';
+    const TIME_UNIT_DAYS = 'days';
+    const TIME_UNIT_WEEKS = 'weeks';
+    const TIME_UNIT_MONTHS = 'months';
+    const TIME_UNIT_YEARS = 'years';
+
+    const TYPE_STRING = 'string';
+    const TYPE_NUMERIC = 'numeric';
+    const TYPE_DATE = 'date';
+    const TYPE_SELECT = 'select';
+    const TYPE_BOOLEAN = 'boolean';
+    const TYPE_MULTISELECT = 'multiselect';
+    const TYPE_GRID = 'grid';
+
     /**
      * @var string[][]
      */
     protected $_operatorsByType = array(
-        'string'      => array('==', '!=', '>=', '>', '<=', '<', '{}', '!{}', '()', '!()'),
-        'numeric'     => array('==', '!=', '>=', '>', '<=', '<', '()', '!()'),
-        'date'        => array('==', '>=', '<='),
-        'select'      => array('==', '!=', '()', '!()'),
-        'boolean'     => array('==', '!='),
-        'multiselect' => array('()', '!()'),
-        'grid'        => array('()', '!()'),
+        self::TYPE_STRING      => array('==', '!=', '>=', '>', '<=', '<', '{}', '!{}', '()', '!()'),
+        self::TYPE_NUMERIC     => array('==', '!=', '>=', '>', '<=', '<', '()', '!()'),
+        self::TYPE_DATE        => array('==', '>=', '<='),
+        self::TYPE_SELECT      => array('==', '!=', '()', '!()'),
+        self::TYPE_BOOLEAN     => array('==', '!='),
+        self::TYPE_MULTISELECT => array('()', '!()'),
+        self::TYPE_GRID        => array('()', '!()'),
     );
 
     /**
@@ -222,12 +236,12 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
     public function getDefaultOperatorByType($type)
     {
         switch ($type) {
-            case 'boolean':
-            case 'numeric':
-            case 'select':
-            case 'date':
+            case self::TYPE_BOOLEAN:
+            case self::TYPE_NUMERIC:
+            case self::TYPE_SELECT:
+            case self::TYPE_DATE:
                 return '==';
-            case 'multiselect':
+            case self::TYPE_MULTISELECT:
                 return '()';
         }
         return '{}';
@@ -292,11 +306,11 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
     public function getTimeUnitOptions()
     {
         return array(
-            'hours'  => $this->__('hour(s)'),
-            'days'   => $this->__('day(s)'),
-            'weeks'  => $this->__('week(s)'),
-            'months' => $this->__('month(s)'),
-            'years'  => $this->__('year(s)')
+            self::TIME_UNIT_HOURS => $this->__('hour(s)'),
+            self::TIME_UNIT_DAYS => $this->__('day(s)'),
+            self::TIME_UNIT_WEEKS => $this->__('week(s)'),
+            self::TIME_UNIT_MONTHS => $this->__('month(s)'),
+            self::TIME_UNIT_YEARS => $this->__('year(s)')
         );
     }
 

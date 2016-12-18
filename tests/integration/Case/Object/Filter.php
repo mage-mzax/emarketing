@@ -30,17 +30,21 @@ use Mzax_Emarketing_Model_Recipient_Provider_Abstract as RecipientProvider;
 abstract class Mzax_Emarketing_Test_Case_Object_Filter
     extends EcomDev_PHPUnit_Test_Case
 {
+    const CURRENT_TIME = '2001-01-01 01:01:01';
+
     /**
      * Run filter on customer provider
      *
      * @param ObjectFilter $filter
+     * @param string $currentTime
      *
      * @return int[]
      */
-    protected function runCustomerFilter(ObjectFilter $filter)
+    protected function runCustomerFilter(ObjectFilter $filter, $currentTime = self::CURRENT_TIME)
     {
         $provider = new Mzax_Emarketing_Model_Recipient_Provider_Customer();
         $provider->addFilter($filter);
+        $provider->setParam('current_time', $currentTime);
 
         return $this->fetchRecipientIds($provider);
     }
@@ -70,5 +74,29 @@ abstract class Mzax_Emarketing_Test_Case_Object_Filter
     protected function getResourceHelper()
     {
         return Mage::getResourceSingleton('mzax_emarketing/helper');
+    }
+
+    /**
+     * @param array $expected
+     * @param array $result
+     * @param ObjectFilter $filter
+     * @param string $message
+     *
+     * @return void
+     */
+    public static function assertFilterResult($expected, $result, ObjectFilter $filter, $message)
+    {
+        $helper = new Mzax_Emarketing_Helper_SqlFormatter();
+
+        $select = $filter->getSelect();
+        $select = $helper->format($select, false);
+
+        self::assertEquals(
+            $expected,
+            $result,
+            $message . "\n" .
+            "The following select query failed:\n" .
+            "-----------\n$select\n-----------\n"
+        );
     }
 }

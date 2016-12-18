@@ -80,6 +80,23 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
     protected $_renderTime;
 
     /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_config;
+
+    /**
+     * Load dependencies
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+        parent::_construct();
+
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
+    }
+
+    /**
      * Set recipient
      *
      * @param Mzax_Emarketing_Model_Recipient $recipient
@@ -271,11 +288,11 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
                 $bodyText = $processor->getBodyText();
                 $this->revertDesign();
 
-                if (Mage::getStoreConfigFlag('mzax_emarketing/email/css_inliner', $storeId)) {
+                if ($this->_config->flag('mzax_emarketing/email/css_inliner', $storeId)) {
                     $this->inlineCss($bodyHtml);
                 }
 
-                if (Mage::getStoreConfigFlag('mzax_emarketing/email/remove_comments', $storeId)) {
+                if ($this->_config->flag('mzax_emarketing/email/remove_comments', $storeId)) {
                     $this->removeComments($bodyHtml);
                 }
 
@@ -349,11 +366,10 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
             // make links trackable
             $this->parseLinks($this->_bodyHtml);
 
-
-            if (Mage::getStoreConfigFlag('mzax_emarketing/email/css_inliner', $storeId)) {
+            if ($this->_config->flag('mzax_emarketing/email/css_inliner', $storeId)) {
                 $this->inlineCss($this->_bodyHtml);
             }
-            if (Mage::getStoreConfigFlag('mzax_emarketing/email/remove_comments', $storeId)) {
+            if ($this->_config->flag('mzax_emarketing/email/remove_comments', $storeId)) {
                 $this->removeComments($this->_bodyHtml);
             }
         }

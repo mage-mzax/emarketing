@@ -77,7 +77,7 @@ use Mzax_Emarketing_Model_Recipient_Provider_Abstract as RecipientProvider;
  * @method string getVariationId()
  */
 class Mzax_Emarketing_Model_Campaign
-    extends Mage_Core_Model_Abstract
+    extends Mzax_Emarketing_Model_AbstractModel
     implements Mzax_Emarketing_Model_Campaign_Content
 {
 
@@ -161,6 +161,8 @@ class Mzax_Emarketing_Model_Campaign
      */
     protected function _construct()
     {
+        parent::_construct();
+
         $this->_init('mzax_emarketing/campaign');
         $this->setMinResendInterval(0);
         $this->setCheckFrequency(720);
@@ -262,7 +264,7 @@ class Mzax_Emarketing_Model_Campaign
     public function getUrlModel()
     {
         if (!$this->_urlModel) {
-            $this->_urlModel = Mage::getModel('core/url');
+            $this->_urlModel = $this->_factory->createUrl();
             $this->_urlModel->setStore($this->getStore());
         }
         return $this->_urlModel;
@@ -567,9 +569,12 @@ class Mzax_Emarketing_Model_Campaign
         }
 
         if (!is_array($sender)) {
+            /** @var Mzax_Emarketing_Model_Config $config */
+            $config = Mage::getSingleton('mzax_emarketing/config');
+
             $sender = array(
-                'name'  => Mage::getStoreConfig('trans_email/ident_'.$sender.'/name', $this->getStore()),
-                'email' => Mage::getStoreConfig('trans_email/ident_'.$sender.'/email', $this->getStore()),
+                'name'  => $config->get('trans_email/ident_'.$sender.'/name', $this->getStore()),
+                'email' => $config->get('trans_email/ident_'.$sender.'/email', $this->getStore()),
             );
         }
         $this->setData('sender', $sender);
@@ -586,7 +591,7 @@ class Mzax_Emarketing_Model_Campaign
     public function createMockRecipient($objectId = null)
     {
         /* @var $recipient Mzax_Emarketing_Model_Recipient */
-        $recipient = Mage::getModel('mzax_emarketing/recipient');
+        $recipient = $this->_factory->createRecipient();
         $recipient->setCampaign($this);
         $recipient->setObjectId($objectId);
         $recipient->isMock(true);
@@ -670,8 +675,7 @@ class Mzax_Emarketing_Model_Campaign
      */
     public function getSnippets()
     {
-        /* @var $snippets Mzax_Emarketing_Model_Medium_Email_Snippets */
-        $snippets = Mage::getModel('mzax_emarketing/medium_email_snippets');
+        $snippets = $this->_factory->createSnippets();
 
         if ($this->getRecipientProvider()) {
             $this->getRecipientProvider()->prepareSnippets($snippets);
@@ -708,7 +712,7 @@ class Mzax_Emarketing_Model_Campaign
     public function getVariations()
     {
         if (!$this->_variations) {
-            $this->_variations = Mage::getResourceModel('mzax_emarketing/campaign_variation_collection');
+            $this->_variations = $this->_factory->createVariationCollection();
             $this->_variations->addCampaignFilter($this);
         }
 
@@ -738,8 +742,7 @@ class Mzax_Emarketing_Model_Campaign
     {
         $variations = $this->getVariations();
 
-        /* @var $variation Mzax_Emarketing_Model_Campaign_Variation */
-        $variation = Mage::getModel('mzax_emarketing/campaign_variation');
+        $variation = $this->_factory->createVariation();
         $variation->setCampaign($this);
         $variation->setName('Variation ' . (count($variations)+1));
         $variation->setMediumJson($this->getMediumJson());
@@ -761,7 +764,7 @@ class Mzax_Emarketing_Model_Campaign
     public function getTrackers()
     {
         if (!$this->_trackers) {
-            $this->_trackers = Mage::getResourceModel('mzax_emarketing/conversion_tracker_collection');
+            $this->_trackers = $this->_factory->createTrackerCollection();
             $this->_trackers->addCampaignFilter($this);
             $this->_trackers->addActiveFilter();
         }
@@ -871,7 +874,7 @@ class Mzax_Emarketing_Model_Campaign
     public function getRecipients()
     {
         if ($this->_recipients) {
-            $this->_recipients = Mage::getResourceModel('mzax_emarketing/recipient_collection');
+            $this->_recipients = $this->_factory->createRecipientCollection();
             $this->_recipients->setCampaign($this);
         }
         return $this->_recipients;
@@ -884,8 +887,7 @@ class Mzax_Emarketing_Model_Campaign
      */
     public function getPendingRecipients()
     {
-        /* @var $recipients Mzax_Emarketing_Model_Resource_Recipient_Collection */
-        $recipients = Mage::getResourceModel('mzax_emarketing/recipient_collection');
+        $recipients = $this->_factory->createRecipientCollection();
         $recipients->setCampaign($this);
         $recipients->addPrepareFilter(false);
 

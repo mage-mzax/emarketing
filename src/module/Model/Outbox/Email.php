@@ -104,6 +104,11 @@ class Mzax_Emarketing_Model_Outbox_Email extends Mzax_Emarketing_Model_Email
     protected $_coupons = array();
 
     /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_config;
+
+    /**
      * Construct
      *
      * @return void
@@ -111,6 +116,8 @@ class Mzax_Emarketing_Model_Outbox_Email extends Mzax_Emarketing_Model_Email
     protected function _construct()
     {
         $this->_init('mzax_emarketing/outbox_email');
+
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
     }
 
     /**
@@ -385,10 +392,10 @@ class Mzax_Emarketing_Model_Outbox_Email extends Mzax_Emarketing_Model_Email
         $mail->addHeader('X-Originating-IP', Mage::app()->getRequest()->getServer('SERVER_ADDR'));
 
         // Add List-Unsubscribe
-        if (Mage::getStoreConfigFlag('mzax_emarketing/email/list_unsubscribe', $recipient->getStoreId())) {
+        if ($this->_config->flag('mzax_emarketing/email/list_unsubscribe', $recipient->getStoreId())) {
             $unsubscribe = array();
 
-            $address = Mage::getStoreConfig('mzax_emarketing/email/list_unsubscribe_address', $recipient->getStoreId());
+            $address = $this->_config->get('mzax_emarketing/email/list_unsubscribe_address', $recipient->getStoreId());
             if ($address) {
                 $unsubscribe[] = "mailto:{$address}?subject=Unsubscribe%20{$recipient->getAddress()}%20({$recipient->getBeaconHash()})";
             }
@@ -412,8 +419,8 @@ class Mzax_Emarketing_Model_Outbox_Email extends Mzax_Emarketing_Model_Email
             return null;
         }
 
-        if (Mage::getStoreConfigFlag('mzax_emarketing/email/test_mode', $recipient->getStoreId())) {
-            $address = Mage::getStoreConfig('mzax_emarketing/email/test_mode_address', $recipient->getStoreId());
+        if ($this->_config->flag('mzax_emarketing/email/test_mode', $recipient->getStoreId())) {
+            $address = $this->_config->get('mzax_emarketing/email/test_mode_address', $recipient->getStoreId());
 
             if ($recipient->getForceAddress()) {
                 $address = $recipient->getForceAddress();
@@ -572,7 +579,7 @@ class Mzax_Emarketing_Model_Outbox_Email extends Mzax_Emarketing_Model_Email
         /** @var Mzax_Emarketing_Model_Outbox_Transporter $factory */
         $factory = Mage::getSingleton('mzax_emarketing/outbox_transporter');
 
-        $transporter = Mage::getStoreConfig('mzax_emarketing/email/transporter', $store);
+        $transporter = $this->_config->get('mzax_emarketing/email/transporter', $store);
         $transporter = $factory->factory($transporter);
         $transporter->setup($this);
 

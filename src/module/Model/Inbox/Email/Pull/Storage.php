@@ -41,12 +41,15 @@ class Mzax_Emarketing_Model_Inbox_Email_Pull_Storage
      */
     public function getConfig()
     {
+        /** @var Mzax_Emarketing_Model_Config $storeConfig */
+        $storeConfig = Mage::getSingleton('mzax_emarketing/config');
+
         $config = array();
-        $config['host']     = Mage::getStoreConfig('mzax_emarketing/inbox/hostname');
-        $config['user']     = Mage::getStoreConfig('mzax_emarketing/inbox/username');
-        $config['password'] = Mage::getStoreConfig('mzax_emarketing/inbox/password');
-        $config['port']     = Mage::getStoreConfig('mzax_emarketing/inbox/port');
-        $config['ssl']      = Mage::getStoreConfigFlag('mzax_emarketing/inbox/ssl');
+        $config['host']     = $storeConfig->get('mzax_emarketing/inbox/hostname');
+        $config['user']     = $storeConfig->get('mzax_emarketing/inbox/username');
+        $config['password'] = $storeConfig->get('mzax_emarketing/inbox/password');
+        $config['port']     = $storeConfig->get('mzax_emarketing/inbox/port');
+        $config['ssl']      = $storeConfig->flag('mzax_emarketing/inbox/ssl');
 
         return $config;
     }

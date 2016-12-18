@@ -17,32 +17,25 @@
  */
 
 
-
 /**
- * Recipient renderer
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Grid_Column_Renderer_Recipient
  */
 class Mzax_Emarketing_Block_Grid_Column_Renderer_Recipient
     extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Abstract
 {
-
-
     /**
      * Renders grid column
      *
      * @param Varien_Object $row
-     * @return mixed
+     *
+     * @return string
      */
     public function _getValue(Varien_Object $row)
     {
         $value = parent::_getValue($row);
         $recipient = $row->getRecipient();
 
-        if ($recipient instanceof Mzax_Emarketing_Model_Recipient)
-        {
+        if ($recipient instanceof Mzax_Emarketing_Model_Recipient) {
             $campaign = $recipient->getCampaign();
             $subject  = $campaign->getRecipientProvider()->getSubject();
 

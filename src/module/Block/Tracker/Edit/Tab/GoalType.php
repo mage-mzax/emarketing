@@ -18,30 +18,24 @@
 
 
 /**
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Tracker_Edit_Tab_GoalType
  */
 class Mzax_Emarketing_Block_Tracker_Edit_Tab_GoalType extends Mage_Adminhtml_Block_Widget_Form
 {
-
-    protected function _prepareLayout()
-    {
-        parent::_prepareLayout();
-    }
-
-
-
+    /**
+     * @return $this
+     */
     public function initForm()
     {
+        /** @var Mzax_Emarketing_Model_Conversion_Goal $goal */
+        $goal = Mage::getSingleton('mzax_emarketing/conversion_goal');
+
         $form = new Varien_Data_Form();
         $form->setHtmlIdPrefix('tracker_');
         $form->setFieldNameSuffix('tracker');
 
         /* @var $tracker Mzax_Emarketing_Model_Conversion_Tracker */
         $tracker = Mage::registry('current_tracker');
-
 
         $renderer = $this->getLayout()->createBlock('adminhtml/widget_form_renderer_fieldset_element')
             ->setTemplate('cms/page/edit/form/renderer/content.phtml');
@@ -60,7 +54,6 @@ class Mzax_Emarketing_Block_Tracker_Edit_Tab_GoalType extends Mage_Adminhtml_Blo
         $fieldset->addType('wildselect', Mage::getConfig()->getModelClassName('mzax_emarketing/form_element_wildselect'));
 
 
-
         $offerRenderer = $this->getLayout()->createBlock('adminhtml/widget_form_renderer_fieldset')
             ->setTemplate('mzax/emarketing/campaign/fieldset-offer.phtml');
         $fieldset->setRenderer($offerRenderer);
@@ -71,31 +64,26 @@ class Mzax_Emarketing_Block_Tracker_Edit_Tab_GoalType extends Mage_Adminhtml_Blo
         ))->setRenderer($renderer);
 
 
-
-        $fieldset->addField('title','text', array(
+        $fieldset->addField('title', 'text', array(
             'name'     => 'title',
-        	'required' => true,
+            'required' => true,
             'label'    => $this->__('Title'),
             'title'    => $this->__('Title'),
         ));
 
 
         // @todo disable if it has reci
-        $fieldset->addField('goal_type','select', array(
+        $fieldset->addField('goal_type', 'select', array(
             'name'     => 'goal_type',
             'label'    => $this->__('What goals to track?'),
-            'values'   => Mage::getSingleton('mzax_emarketing/conversion_goal')->getAllOptions(false),
+            'values'   => $goal->getAllOptions(false),
             'note'     => $this->__("What conversion goal would you like to track"),
-        	'required' => true
+            'required' => true
         ));
-
-
 
         $form->addValues($tracker->getData());
         $this->setForm($form);
 
         return $this;
-
-
     }
 }

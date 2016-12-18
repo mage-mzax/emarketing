@@ -18,33 +18,29 @@
 
 
 /**
- * Action render that allows option groups
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Grid_Column_Renderer_Action
  */
 class Mzax_Emarketing_Block_Grid_Column_Renderer_Action extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Action
 {
-
     /**
      * Renders column
      *
      * @param Varien_Object $row
+     *
      * @return string
      */
     public function render(Varien_Object $row)
     {
         $actions = $this->getColumn()->getActions();
-        if ( empty($actions) || !is_array($actions) ) {
+        if (empty($actions) || !is_array($actions)) {
             return '&nbsp;';
         }
 
         $out = '<select class="action-select" onchange="varienGridAction.execute(this);">'
              . '<option value=""></option>';
 
-        foreach ($actions as $action){
-            if ( !is_array($action) ) {
+        foreach ($actions as $action) {
+            if (!is_array($action)) {
                 continue;
             }
             if (isset($action['actions']) && is_array($action['actions'])) {
@@ -53,16 +49,12 @@ class Mzax_Emarketing_Block_Grid_Column_Renderer_Action extends Mage_Adminhtml_B
                     $out .= $this->_toOptionHtml($subaction, $row);
                 }
                 $out .='</optgroup>';
-            }
-            else if ( is_array($action) ) {
+            } elseif (is_array($action)) {
                 $out .= $this->_toOptionHtml($action, $row);
             }
         }
         $out .= '</select>';
+
         return $out;
     }
-
-
-
-
 }

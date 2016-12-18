@@ -18,14 +18,13 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Tracker_Upload
  */
 class Mzax_Emarketing_Block_Tracker_Upload extends Mage_Adminhtml_Block_Widget_Form_Container
 {
+    /**
+     * Mzax_Emarketing_Block_Tracker_Upload constructor.
+     */
     public function __construct()
     {
         $this->_objectId = 'id';
@@ -38,17 +37,15 @@ class Mzax_Emarketing_Block_Tracker_Upload extends Mage_Adminhtml_Block_Widget_F
 
         $this->_updateButton('save', 'label', $this->__('Upload Tracker'));
         $this->removeButton('delete');
-
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getHeaderText()
     {
         return $this->__('Upload New Tracker');
     }
-
-
 
     /**
      * Get form action URL
@@ -59,6 +56,4 @@ class Mzax_Emarketing_Block_Tracker_Upload extends Mage_Adminhtml_Block_Widget_F
     {
         return $this->getUrl('*/*/uploadPost');
     }
-
-
 }

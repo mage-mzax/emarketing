@@ -18,21 +18,19 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Tracker_Edit_Tab_Tasks
  */
 class Mzax_Emarketing_Block_Tracker_Edit_Tab_Tasks extends Mage_Adminhtml_Block_Template
 {
-
+    /**
+     * @return void
+     */
     protected function _prepareLayout()
     {
         parent::_prepareLayout();
+
         $this->setTemplate('mzax/emarketing/tracker/tasks.phtml');
     }
-
 
     /**
      * Retrieve Current  Tracker
@@ -44,11 +42,11 @@ class Mzax_Emarketing_Block_Tracker_Edit_Tab_Tasks extends Mage_Adminhtml_Block_
         return Mage::registry('current_tracker');
     }
 
-
-
     /**
-     * (non-PHPdoc)
-     * @see Mage_Core_Block_Abstract::getUrl()
+     * @param string $route
+     * @param array $params
+     *
+     * @return string
      */
     public function getUrl($route = '', $params = array())
     {
@@ -57,8 +55,4 @@ class Mzax_Emarketing_Block_Tracker_Edit_Tab_Tasks extends Mage_Adminhtml_Block_
         }
         return parent::getUrl($route, $params);
     }
-
-
-
-
 }

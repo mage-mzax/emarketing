@@ -17,12 +17,18 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Outbox_Grid
+ */
 class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
 {
-
+    /**
+     * @return void
+     */
     protected function _construct()
     {
         parent::_construct();
+
         $this->setId('outbox_grid');
         $this->setUseAjax(true);
         $this->setSaveParametersInSession(true);
@@ -30,15 +36,18 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
         $this->setDefaultDir('desc');
     }
 
-
+    /**
+     * @return void
+     */
     protected function _beforeToHtml()
     {
         $this->setId('outbox_grid');
         parent::_beforeToHtml();
     }
 
-
-
+    /**
+     * @return Mzax_Emarketing_Model_Resource_Outbox_Email_Collection
+     */
     public function getCollection()
     {
         if (!$this->_collection) {
@@ -50,9 +59,15 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
         return $this->_collection;
     }
 
-
+    /**
+     * @return $this
+     */
     protected function _prepareColumns()
     {
+        /* @var $campaigns Mzax_Emarketing_Model_Resource_Campaign_Collection */
+        $campaigns = Mage::getResourceModel('mzax_emarketing/campaign_collection');
+
+
         $this->addColumn('created_at', array(
             'header'    => $this->__('Created at'),
             'index'     => 'created_at',
@@ -83,31 +98,6 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'type'      =>'datetime'
         ));
 
-
-        /*
-        $this->addColumn('subject', array(
-            'header'    => $this->__('Subject'),
-            'index'     => 'subject',
-            'type'      => 'text',
-            'getter'    => function($row) {
-                return $row->getSubject();
-            },
-            'truncate'  => 50
-        ));
-        $this->addColumn('message', array(
-            'header'    => $this->__('Message'),
-            'index'     => 'message',
-            'type'      => 'text',
-            'getter'    => function($row) {
-                return $row->getMessage();
-            },
-            'truncate'  => 100
-        ));
-        */
-
-        /* @var $campaigns Mzax_Emarketing_Model_Resource_Campaign_Collection */
-        $campaigns = Mage::getResourceModel('mzax_emarketing/campaign_collection');
-
         $this->addColumn('campaign', array(
             'header'    => $this->__('Campaign'),
             'index'     => 'campaign_id',
@@ -115,7 +105,6 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'options'   => $campaigns->toOptionHash(),
             'frame_callback' => array($this, 'addCampaignLink')
         ));
-
 
         $this->addColumn('status', array(
             'header'    => $this->__('Status'),
@@ -128,18 +117,17 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
                 Mzax_Emarketing_Model_Outbox_Email::STATUS_SENT       => $this->__('Sent'),
                 Mzax_Emarketing_Model_Outbox_Email::STATUS_DISCARDED  => $this->__('Discarded'),
             ),
-            'frame_callback' => function($value, $row, $column, $export){
+            'frame_callback' => function ($value, $row, $column, $export) {
                 $status = $row->getData($column->getIndex());
                 return "<span class=\"outbox-status-{$status}\">!!$value!!</span>";
             },
             'width'     => '100px',
         ));
 
-        return parent::_prepareColumns();
+        parent::_prepareColumns();
+
+        return $this;
     }
-
-
-
 
     /**
      * Frame Callback
@@ -148,17 +136,17 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
      *
      *
      * @param string $value
-     * @param Varien_Object $row
+     * @param Mzax_Emarketing_Model_Outbox_Email $row
      * @param Mage_Adminhtml_Block_Widget_Grid_Column $column
      * @param boolean $export
+     *
      * @return string
      */
     public function addObjectLink($value, $row, $column, $export)
     {
         $recipient = $row->getRecipient();
 
-        if ($recipient instanceof Mzax_Emarketing_Model_Recipient && !$export)
-        {
+        if ($recipient instanceof Mzax_Emarketing_Model_Recipient && !$export) {
             $campaign = $recipient->getCampaign();
             if ($campaign->getRecipientProvider()) {
                 $object  = $campaign->getRecipientProvider()->getObject();
@@ -169,10 +157,9 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
                 }
             }
         }
+
         return $value;
     }
-
-
 
     /**
      * Frame Callback
@@ -180,9 +167,10 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
      * Add link to campaign if available
      *
      * @param string $value
-     * @param Varien_Object $row
+     * @param Mzax_Emarketing_Model_Outbox_Email $row
      * @param Mage_Adminhtml_Block_Widget_Grid_Column $column
      * @param boolean $export
+     *
      * @return string
      */
     public function addCampaignLink($value, $row, $column, $export)
@@ -192,21 +180,17 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             $url = $this->getUrl('*/emarketing_campaign/edit', array('id' => $id));
             return sprintf('<a href="%s">%s</a>', $url, $value);
         }
+
         return $value;
     }
 
-
-
-
-
-
-
-
+    /**
+     * @return $this
+     */
     protected function _prepareMassaction()
     {
         $this->setMassactionIdField('email_id');
         $this->getMassactionBlock()->setFormFieldName('messages');
-
 
         $this->getMassactionBlock()->addItem('send', array(
             'label'      => $this->__('Send'),
@@ -226,22 +210,26 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'confirm'    => $this->__('Are you sure?')
         ));
 
-
         return $this;
     }
 
-
-
-
-
-
-
-
+    /**
+     * Retrieve grid url
+     *
+     * @return string
+     */
     public function getGridUrl()
     {
         return $this->getUrl('*/*/grid', array('_current'=> true));
     }
 
+    /**
+     * Retrieve row url
+     *
+     * @param Mzax_Emarketing_Model_Outbox_Email $row
+     *
+     * @return string
+     */
     public function getRowUrl($row)
     {
         return $this->getUrl('*/*/email', array('id'=>$row->getId()));

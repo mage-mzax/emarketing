@@ -17,10 +17,12 @@
  */
 
 
+use Mzax_Emarketing_Model_Campaign as Campaign;
+
 /**
  * Class Mzax_Emarketing_Block_Chart_Widget_Tab
  *
- * @method Mzax_Emarketing_Model_Campaign getCampaign()
+ * @method Campaign getCampaign()
  * @method $this setType(string $value)
  */
 class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstract

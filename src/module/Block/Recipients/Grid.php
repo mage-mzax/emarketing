@@ -17,34 +17,25 @@
  */
 
 
-
-
 /**
- *
- * @method Mzax_Emarketing_Model_Object_Collection getCollection()
- *
- * @author Jacob Siefer
- *
+ * Class Mzax_Emarketing_Block_Recipients_Grid
  */
 class Mzax_Emarketing_Block_Recipients_Grid extends Mage_Adminhtml_Block_Widget_Grid
 {
-
     /**
      * @var Mzax_Emarketing_Model_Object_Filter_Component
      */
     protected $_source;
 
-
-
+    /**
+     * Mzax_Emarketing_Block_Recipients_Grid constructor.
+     */
     public function __construct()
     {
         parent::__construct();
     }
 
-
     /**
-     *
-     *
      * @return Mzax_Emarketing_Model_Object_Filter_Component
      */
     public function getSource()
@@ -52,9 +43,7 @@ class Mzax_Emarketing_Block_Recipients_Grid extends Mage_Adminhtml_Block_Widget_
         return $this->_source;
     }
 
-
     /**
-     *
      * @return Mzax_Emarketing_Model_Object_Abstract
      */
     public function getObject()
@@ -62,23 +51,20 @@ class Mzax_Emarketing_Block_Recipients_Grid extends Mage_Adminhtml_Block_Widget_
         return $this->getCollection()->getObject();
     }
 
-
     /**
      *
      * @param Mzax_Emarketing_Model_Object_Filter_Component $source
-     * @return Mzax_Emarketing_Block_Recipients_Grid
+     *
+     * @return $this
      */
     public function setSource(Mzax_Emarketing_Model_Object_Filter_Component $source)
     {
         $this->_source = $source;
+
         return $this;
     }
 
-
-
     /**
-     * (non-PHPdoc)
-     * @see Mage_Adminhtml_Block_Widget_Grid::getCollection()
      * @return Mzax_Emarketing_Model_Object_Collection
      */
     public function getCollection()
@@ -86,23 +72,19 @@ class Mzax_Emarketing_Block_Recipients_Grid extends Mage_Adminhtml_Block_Widget_
         return $this->getSource()->getCollection();
     }
 
-
-
     /**
      * Allow provider and filters to alter the grid
      *
+     * @return $this
+     * @deprecated
      */
     protected function _afterLoadCollection()
     {
-    	parent::_afterLoadCollection();
-    	$this->getSource()->afterGridLoadCollection($this);
+        parent::_afterLoadCollection();
+        $this->getSource()->afterGridLoadCollection($this);
 
         return $this;
     }
-
-
-
-
 
     /**
      * Prepare grid columns
@@ -110,6 +92,7 @@ class Mzax_Emarketing_Block_Recipients_Grid extends Mage_Adminhtml_Block_Widget_
      * This is done by the email provider. The grid
      * does not know what type of objects it is loading
      *
+     * @return $this
      */
     protected function _prepareColumns()
     {
@@ -122,7 +105,7 @@ class Mzax_Emarketing_Block_Recipients_Grid extends Mage_Adminhtml_Block_Widget_
             'header'    => $this->__($object->getName() .' ID'),
             'index'     => 'id',
             'is_system' => true,
-            'width'	    => '50px',
+            'width'     => '50px',
             'renderer'  => 'mzax_emarketing/recipients_column_renderer_object',
             'object'    => $object,
         ));
@@ -131,24 +114,27 @@ class Mzax_Emarketing_Block_Recipients_Grid extends Mage_Adminhtml_Block_Widget_
         $this->setDefaultDir('DESC');
 
         $this->getSource()->prepareGridColumns($this);
-        return parent::_prepareColumns();
+
+        parent::_prepareColumns();
+
+        return $this;
     }
 
-
-
+    /**
+     * @return mixed
+     */
     public function getGridUrl()
     {
         return $this->getData('grid_url');
     }
 
-
-
+    /**
+     * @param $row
+     *
+     * @return null
+     */
     public function getRowUrl($row)
     {
         return null;
     }
-
-
-
-
 }

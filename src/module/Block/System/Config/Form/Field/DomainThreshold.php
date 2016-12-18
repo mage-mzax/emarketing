@@ -18,13 +18,14 @@
 
 
 /**
- *
- * @author Jacob Siefer
- *
+ * Class Mzax_Emarketing_Block_System_Config_Form_Field_DomainThreshold
  */
 class Mzax_Emarketing_Block_System_Config_Form_Field_DomainThreshold
     extends Mage_Adminhtml_Block_System_Config_Form_Field_Array_Abstract
 {
+    /**
+     * Mzax_Emarketing_Block_System_Config_Form_Field_DomainThreshold constructor.
+     */
     public function __construct()
     {
         $this->addColumn('domain', array(
@@ -50,6 +51,7 @@ class Mzax_Emarketing_Block_System_Config_Form_Field_DomainThreshold
 
         $this->_addAfter = false;
         $this->_addButtonLabel = Mage::helper('adminhtml')->__('Add Domain');
+
         parent::__construct();
     }
 }

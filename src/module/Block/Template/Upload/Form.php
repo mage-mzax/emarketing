@@ -17,21 +17,31 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Template_Upload_Form
+ */
 class Mzax_Emarketing_Block_Template_Upload_Form extends Mage_Adminhtml_Block_Widget_Form
 {
-
+    /**
+     * @return Mage_Adminhtml_Block_Widget_Form
+     */
     protected function _prepareForm()
     {
-        $form = new Varien_Data_Form(array('id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post', 'enctype' => 'multipart/form-data'));
+        $form = new Varien_Data_Form(
+            array(
+                'id' => 'edit_form',
+                'action' => $this->getData('action'),
+                'method' => 'post',
+                'enctype' => 'multipart/form-data'
+            )
+        );
         $form->setHtmlIdPrefix("template");
         $form->setFieldNameSuffix("template");
-
 
         $fieldset = $form->addFieldset('base_fieldset', array(
             'legend' => $this->__('Template'),
             'class'  => 'fieldset-wide',
         ));
-
 
         $fieldset->addField('template', 'file', array(
             'name'      => 'file',
@@ -40,9 +50,9 @@ class Mzax_Emarketing_Block_Template_Upload_Form extends Mage_Adminhtml_Block_Wi
             'title'     => $this->__('Template File'),
         ));
 
-
         $this->setForm($form);
         $form->setUseContainer(true);
+
         return parent::_prepareForm();
     }
 }

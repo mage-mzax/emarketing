@@ -17,29 +17,41 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Tracker_Grid
+ */
 class Mzax_Emarketing_Block_Tracker_Grid extends Mage_Adminhtml_Block_Widget_Grid
 {
-
+    /**
+     * Mzax_Emarketing_Block_Tracker_Grid constructor.
+     */
     public function __construct()
     {
         parent::__construct();
+
         $this->setId('tracker_grid');
         $this->setUseAjax(true);
         $this->setSaveParametersInSession(true);
         $this->setDefaultSort('tracker_id');
     }
 
-
+    /**
+     * @return $this
+     */
     protected function _prepareCollection()
     {
         /* @var $collection Mzax_Emarketing_Model_Resource_Conversion_Tracker_Collection */
         $collection = Mage::getResourceModel('mzax_emarketing/conversion_tracker_collection');
         $this->setCollection($collection);
 
-        return parent::_prepareCollection();
+        parent::_prepareCollection();
+
+        return $this;
     }
 
-
+    /**
+     * @return $this
+     */
     protected function _prepareColumns()
     {
         $this->addColumn('updated_at', array(
@@ -81,12 +93,14 @@ class Mzax_Emarketing_Block_Tracker_Grid extends Mage_Adminhtml_Block_Widget_Gri
             ),
         ));
 
+        parent::_prepareColumns();
 
-
-        return parent::_prepareColumns();
+        return $this;
     }
 
-
+    /**
+     * @return $this
+     */
     protected function _prepareMassaction()
     {
         $this->setMassactionIdField('tracker_id');
@@ -120,20 +134,24 @@ class Mzax_Emarketing_Block_Tracker_Grid extends Mage_Adminhtml_Block_Widget_Gri
             'url'     => $this->getUrl('*/*/massAggregate')
         ));
 
-
-
         return $this;
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getGridUrl()
     {
         return $this->getUrl('*/*/grid', array('_current'=> true));
     }
 
+    /**
+     * @param $row
+     *
+     * @return string
+     */
     public function getRowUrl($row)
     {
-        return $this->getUrl('*/*/edit', array('id'=>$row->getId()));
+        return $this->getUrl('*/*/edit', array('id' => $row->getId()));
     }
 }

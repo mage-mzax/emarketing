@@ -17,20 +17,22 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Outbox_Email_Form
+ */
 class Mzax_Emarketing_Block_Outbox_Email_Form extends Mage_Adminhtml_Block_Widget_Form
 {
-
+    /**
+     * @return Mage_Adminhtml_Block_Widget_Form
+     */
     protected function _prepareForm()
     {
         $form = new Varien_Data_Form(array('id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post'));
         $form->setHtmlIdPrefix("email");
         $form->setFieldNameSuffix("email");
 
-
         /* @var $email Mzax_Emarketing_Model_Outbox_Email */
         $email = Mage::registry('current_email');
-
-
 
         // Setting custom renderer for content field to remove label column
         $rendererWide = $this->getLayout()
@@ -38,7 +40,6 @@ class Mzax_Emarketing_Block_Outbox_Email_Form extends Mage_Adminhtml_Block_Widge
                 ->setTemplate('cms/page/edit/form/renderer/content.phtml');
 
         $aceType = Mage::getConfig()->getModelClassName('mzax_emarketing/form_element_ace');
-
 
         if ($email->getId()) {
             $form->addField('message_id', 'hidden', array(
@@ -51,8 +52,6 @@ class Mzax_Emarketing_Block_Outbox_Email_Form extends Mage_Adminhtml_Block_Widge
             'legend' => $this->__('Details'),
             'class'  => 'fieldset-wide',
         ))->addType('ace', $aceType);
-
-
 
 
         $fieldset->addField('email', 'text', array(
@@ -73,7 +72,6 @@ class Mzax_Emarketing_Block_Outbox_Email_Form extends Mage_Adminhtml_Block_Widge
 
 
         if ($campaign = $email->getCampaign()) {
-
             $fieldset->addField('campaign_name', 'link', array(
                 'label' => $this->__('Campagin'),
                 'value' => $campaign->getName(),
@@ -95,7 +93,6 @@ class Mzax_Emarketing_Block_Outbox_Email_Form extends Mage_Adminhtml_Block_Widge
             }
         }
 
-
         $editor = $fieldset->addField('message', 'ace', array(
             'name'              => 'message',
             'label'             => $this->__('Message'),
@@ -109,8 +106,6 @@ class Mzax_Emarketing_Block_Outbox_Email_Form extends Mage_Adminhtml_Block_Widge
             'note'              => $this->__('The plain text version of this email'),
         ));
 
-
-
         $fieldset->addField('log', 'ace', array(
             'name'              => 'log',
             'label'             => $this->__('Log'),
@@ -122,10 +117,6 @@ class Mzax_Emarketing_Block_Outbox_Email_Form extends Mage_Adminhtml_Block_Widge
             'autosize'          => true,
             'value'             => $this->getData('log')
         ));
-
-
-
-
 
         $fieldset = $form->addFieldset('headers_fieldset', array(
             'legend' => $this->__('Email Headers'),
@@ -147,7 +138,6 @@ class Mzax_Emarketing_Block_Outbox_Email_Form extends Mage_Adminhtml_Block_Widge
         ))->setRenderer($rendererWide);
 
 
-
         $fieldset = $form->addFieldset('html_fieldset', array(
                 'legend' => $this->__('HTML Code'),
                 'class'  => 'fieldset-wide',
@@ -165,8 +155,6 @@ class Mzax_Emarketing_Block_Outbox_Email_Form extends Mage_Adminhtml_Block_Widge
             'readonly'  => true,
             'value'     => $email->getBodyHtml()
         ))->setRenderer($rendererWide);
-
-
 
 
 
@@ -192,6 +180,7 @@ class Mzax_Emarketing_Block_Outbox_Email_Form extends Mage_Adminhtml_Block_Widge
         $form->addValues($email->getData());
         $this->setForm($form);
         $form->setUseContainer(true);
+
         return parent::_prepareForm();
     }
 }

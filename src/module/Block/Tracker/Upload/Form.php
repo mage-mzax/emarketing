@@ -17,23 +17,26 @@
  */
 
 
-
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Tracker_Upload_Form
  */
 class Mzax_Emarketing_Block_Tracker_Upload_Form extends Mage_Adminhtml_Block_Widget_Form
 {
-
+    /**
+     * @return Mage_Adminhtml_Block_Widget_Form
+     */
     protected function _prepareForm()
     {
-        $form = new Varien_Data_Form(array('id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post', 'enctype' => 'multipart/form-data'));
+        $form = new Varien_Data_Form(
+            array(
+                'id' => 'edit_form',
+                'action' => $this->getData('action'),
+                'method' => 'post',
+                'enctype' => 'multipart/form-data'
+            )
+        );
         $form->setHtmlIdPrefix("tracker");
         $form->setFieldNameSuffix("tracker");
-
 
         $fieldset = $form->addFieldset('base_fieldset', array(
             'legend' => $this->__('Upload new conversion tracker'),
@@ -41,7 +44,6 @@ class Mzax_Emarketing_Block_Tracker_Upload_Form extends Mage_Adminhtml_Block_Wid
         ));
 
         $fieldset->addType('info', Mage::getConfig()->getModelClassName('mzax_emarketing/form_element_info'));
-
 
         $noLabel = $this->getLayout()->createBlock('adminhtml/widget_form_renderer_fieldset_element')
             ->setTemplate('cms/page/edit/form/renderer/content.phtml');
@@ -52,8 +54,6 @@ class Mzax_Emarketing_Block_Tracker_Upload_Form extends Mage_Adminhtml_Block_Wid
         ))->setRenderer($noLabel);
 
 
-
-
         $fieldset->addField('template', 'file', array(
             'name'      => 'file',
             'required'  => true,
@@ -62,9 +62,9 @@ class Mzax_Emarketing_Block_Tracker_Upload_Form extends Mage_Adminhtml_Block_Wid
             'note'      => $this->__('Select the tracker file that you want to upload (*.mzax.tracker).'),
         ));
 
-
         $this->setForm($form);
         $form->setUseContainer(true);
+
         return parent::_prepareForm();
     }
 }

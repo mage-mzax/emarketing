@@ -17,17 +17,26 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Newsletter_List_Edit_Tabs
+ */
 class Mzax_Emarketing_Block_Newsletter_List_Edit_Tabs extends Mage_Adminhtml_Block_Widget_Tabs
 {
-
+    /**
+     * Mzax_Emarketing_Block_Newsletter_List_Edit_Tabs constructor.
+     */
     public function __construct()
     {
         parent::__construct();
+
         $this->setId('mzax_emarketing_newsletter_list_tabs');
         $this->setDestElementId('edit_form');
         $this->setTitle($this->__('Newsletter List'));
     }
 
+    /**
+     * @return Mage_Core_Block_Abstract
+     */
     protected function _beforeToHtml()
     {
         /* @var $list  Mzax_Emarketing_Model_Newsletter_List */
@@ -52,17 +61,17 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit_Tabs extends Mage_Adminhtml_Blo
         return parent::_beforeToHtml();
     }
 
-
-
-
+    /**
+     * @return void
+     */
     protected function _updateActiveTab()
     {
-    	$tabId = $this->getRequest()->getParam('tab');
-    	if ( $tabId ) {
-    		$tabId = preg_replace("#{$this->getId()}_#", '', $tabId);
-    		if ($tabId) {
-    			$this->setActiveTab($tabId);
-    		}
-    	}
+        $tabId = $this->getRequest()->getParam('tab');
+        if ($tabId) {
+            $tabId = preg_replace("#{$this->getId()}_#", '', $tabId);
+            if ($tabId) {
+                $this->setActiveTab($tabId);
+            }
+        }
     }
 }

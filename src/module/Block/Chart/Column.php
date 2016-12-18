@@ -16,13 +16,14 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
+/**
+ * Class Mzax_Emarketing_Block_Chart_Column
+ */
 class Mzax_Emarketing_Block_Chart_Column extends Mzax_Emarketing_Block_Chart_Abstract
 {
+    /**
+     * @var string
+     */
     protected $_chartClass = 'ColumnChart';
-
-
-
-
-
-
 }

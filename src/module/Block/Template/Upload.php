@@ -17,8 +17,14 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Template_Upload
+ */
 class Mzax_Emarketing_Block_Template_Upload extends Mage_Adminhtml_Block_Widget_Form_Container
 {
+    /**
+     * Mzax_Emarketing_Block_Template_Upload constructor.
+     */
     public function __construct()
     {
         $this->_objectId = 'id';
@@ -31,18 +37,15 @@ class Mzax_Emarketing_Block_Template_Upload extends Mage_Adminhtml_Block_Widget_
 
         $this->_updateButton('save', 'label', $this->__('Upload Template'));
         $this->removeButton('delete');
-
     }
 
-
-
-
+    /**
+     * @return string
+     */
     public function getHeaderText()
     {
         return $this->__('Upload New Template');
     }
-
-
 
     /**
      * Get form action URL
@@ -53,6 +56,4 @@ class Mzax_Emarketing_Block_Template_Upload extends Mage_Adminhtml_Block_Widget_
     {
         return $this->getUrl('*/*/uploadPost');
     }
-
-
 }

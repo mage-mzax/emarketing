@@ -18,16 +18,14 @@
 
 
 /**
- *
- * @author Jacob Siefer
- *
+ * Class Mzax_Emarketing_Block_System_Config_Form_Field_MandrillApi
  */
 class Mzax_Emarketing_Block_System_Config_Form_Field_MandrillApi
     extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
-
-
-
+    /**
+     * @return string
+     */
     protected function _getHtml()
     {
         $apiKey = Mage::getStoreConfig('mzax_emarketing/email/mandrill_api_key');
@@ -36,8 +34,7 @@ class Mzax_Emarketing_Block_System_Config_Form_Field_MandrillApi
         if (empty($apiKey)) {
             $message = Mage::helper('mzax_emarketing')->__('Please provider a valid Mandrill API key.');
             $class = 'inbox-failure';
-        }
-        else {
+        } else {
             /* @var $transport Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi */
             $transport = Mage::getModel('mzax_emarketing/outbox_transporter_mandrillApi');
 
@@ -46,8 +43,7 @@ class Mzax_Emarketing_Block_System_Config_Form_Field_MandrillApi
             if ($result === true) {
                 $message = Mage::helper('mzax_emarketing')->__('Successfully connected to Mandrill API');
                 $class = 'inbox-success';
-            }
-            else {
+            } else {
                 $message = Mage::helper('mzax_emarketing')->__('Failed to connect to Mandrill API: %s', $result);
                 $class = 'inbox-failure';
             }
@@ -56,8 +52,11 @@ class Mzax_Emarketing_Block_System_Config_Form_Field_MandrillApi
         return '<div class="inbox-status '.$class.'">' . $message . '</div>';
     }
 
-
-
+    /**
+     * @param Varien_Data_Form_Element_Abstract $element
+     *
+     * @return string
+     */
     public function render(Varien_Data_Form_Element_Abstract $element)
     {
         $id = $element->getHtmlId();
@@ -69,6 +68,7 @@ class Mzax_Emarketing_Block_System_Config_Form_Field_MandrillApi
         $html = '<tr id="row_' . $id . '">'
               .   '<td class="mzax-mail-storage-test" colspan="3">' . $this->_getHtml(). '</td>'
               . '</tr>';
+
         return $html;
     }
 }

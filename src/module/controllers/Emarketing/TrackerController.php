@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -17,36 +17,36 @@
  */
 
 
-
 /**
- * Admin Tracker Contorller
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Emarketing_TrackerController
  */
 class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Controller_Action
 {
-	
-	
-
+    /**
+     * Manage tracker action
+     *
+     * @return void
+     */
     public function indexAction()
     {
         $this->_title($this->__('eMarketing'))
              ->_title($this->__('Manage Trackers'));
-        
+
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
-        
+
         $this->_addContent(
             $this->getLayout()->createBlock('mzax_emarketing/tracker_view', 'mzax_emarketing_tracker_view')
         );
-        
+
         $this->renderLayout();
     }
-    
-    
-    
-    
+
+    /**
+     * Edit tracker action
+     *
+     * @return void
+     */
     public function editAction()
     {
         $tracker = $this->_initTracker();
@@ -56,26 +56,23 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
                 $tracker->addData($values['tracker']);
             }
         }
-        
+
         if ($tracker->getId() && $tracker->isActive() && !$tracker->isAggregated()) {
             $this->_getSession()->addWarning($this->__('This tracker has changed and is not yet aggregated. You can do it manually under "Tasks" or wait a while.'));
         }
-        
+
         $this->_title($this->__('eMarketing'))
              ->_title($this->__('Edit Tracker'));
 
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
-                
+
         $this->renderLayout();
     }
-    
-    
-    
-    
+
    /**
      * Queue list Ajax action
-     * 
+     *
      * @return void
      */
     public function gridAction()
@@ -83,58 +80,46 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
         $this->loadLayout();
         $this->getResponse()->setBody($this->getLayout()->createBlock('mzax_emarketing/tracker_grid')->toHtml());
     }
-    
-    
-    
-    
-
 
     /**
      * Create new tracker action
-     * 
+     *
      * @return void
      */
     public function newAction()
     {
         $tracker = $this->_initTracker();
-    
+
         if ($values = $this->_getSession()->getTrackerData(true)) {
             if (isset($values['tracker'])) {
                 $tracker->addData($values['tracker']);
             }
         }
-        
+
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost('tracker');
             if (!empty($data)) {
                 $tracker->addData($data);
             }
         }
-    
+
         if ($tracker->getGoalType()) {
             $tracker->getGoal()->setDefaultFilters();
             return $this->_forward('edit');
         }
-    
+
         $this->_title($this->__('eMarketing'))
              ->_title($this->__('New Tracker'));
-        
+
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
         $this->renderLayout();
-    
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     /**
      * Delete tracker action
+     *
+     * @return void
      */
     public function deleteAction()
     {
@@ -143,45 +128,43 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
             try {
                 $tracker->delete();
                 $this->_getSession()->addSuccess(Mage::helper('mzax_emarketing')->__('Tracker was deleted'));
-            }
-            catch (Exception $e){
+            } catch (Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
             }
         }
         $this->_redirect('*/*');
     }
-    
-    
-    
 
-    
-    
+    /**
+     * Save tracker action
+     *
+     * @return void
+     */
     public function saveAction()
     {
         if ($data = $this->getRequest()->getPost()) {
-            
             $tracker = $this->_initTracker('tracker_id');
             $conditions = $this->getRequest()->getPost('conditions', array());
             try {
                 $redirectBack = $this->getRequest()->getParam('back', false);
                 $redirectBack = $redirectBack || !$tracker->getId();
-                
+
                 if (isset($data['tracker'])) {
                     $tracker->addData($data['tracker']);
                     if (in_array('campaign_ids', (array) $this->getRequest()->getPost('wildcard'))) {
                         $tracker->setCampaignIds('*');
                     }
                 }
-                                
+
                 if (is_array($conditions)) {
                     $goal = $tracker->getGoal();
                     if ($goal) {
                         $goal->getFilter()->loadFlatArray($conditions);
                     }
                 }
-                
+
                 $tracker->save();
-                
+
                 $this->_getSession()->addSuccess($this->__('Tracker was successfully saved'));
 
                 if ($redirectBack) {
@@ -191,23 +174,22 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
                     ));
                     return;
                 }
-            }
-            catch (Exception $e){
+            } catch (Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
                 $this->_getSession()->setTrackernData($data);
                 $this->getResponse()->setRedirect($this->getUrl('*/*/edit', array('id'=>$tracker->getId())));
                 return;
             }
-            
         }
-       
+
         $this->getResponse()->setRedirect($this->getUrl('*/*'));
     }
-    
-    
-    
-    
-    
+
+    /**
+     * Validate tracker
+     *
+     * @return void
+     */
     public function validateAction()
     {
         $response = new Varien_Object();
@@ -215,31 +197,24 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
 
         $this->getResponse()->setBody($response->toJson());
     }
-    
-    
 
-
-
+    /**
+     * New condition html action
+     *
+     * @return void
+     */
     public function newConditionHtmlAction()
     {
         $tracker = $this->_initTracker('tracker');
-    
+
         $type = $this->getRequest()->getPost('type');
-        
+
         $filter = $tracker->getGoal()->createFilterFromTypePath($type);
         $filter->setId($this->getRequest()->getPost('id'));
-    
+
         $this->getResponse()->setBody($filter->asHtml());
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     /**
      * Test Filter Tab Action
      *
@@ -248,47 +223,47 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
     public function testConditionsAction()
     {
         $tracker  = $this->getCurrentTracker();
-        
+
         $this->loadLayout('mzax_popup');
-        
+
         if ($this->getRequest()->getParam('isAjax')) {
             $block = $this->getLayout()->getBlock('condition.test');
             $this->getResponse()->setBody($block->toHtml());
-        }
-        else {
+        } else {
             $this->renderLayout();
         }
     }
-    
 
-    
+    /**
+     *
+     */
     public function filterGridAction()
     {
         $filterId = $this->getRequest()->getParam('filter_id');
-    
+
         $tracker = $this->getCurrentTracker();
         $filter = $tracker->getGoal()->getFilterById($filterId);
-    
+
         if ($filter) {
             /* @var $grid Mzax_Emarketing_Block_Filter_Object_Grid */
             $grid = $this->getLayout()->createBlock('mzax_emarketing/tracker_edit_tab_test')->getFilterGrid($filter);
             $this->getResponse()->setBody($grid->toHtml());
-        }
-        else {
+        } else {
             $this->getResponse()->setBody($this->__("Condition not found"));
         }
     }
-    
-    
-    
+
+    /**
+     *
+     */
     public function filterPreviewAction()
     {
         $filterId = $this->getRequest()->getParam('filter_id');
-    
+
         $tracker = $this->getCurrentTracker();
         $filter = $tracker->getGoal()->getFilterById($filterId);
-        
-        
+
+
         $this->loadLayout('mzax_popup');
         if ($filter) {
             $block = $this->getLayout()->getBlock('filter_test')->setFilter($filter);
@@ -296,14 +271,12 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
         }
         $this->renderLayout();
     }
-    
-    
-    
-    
+
     /**
      * Manually aggregate tracker
-     * 
+     *
      * @return void
+     * @throws Exception
      */
     public function aggregateAction()
     {
@@ -314,8 +287,7 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
                 $tracker->setIsAggregated(true);
                 $tracker->save();
                 $this->_getSession()->addSuccess($this->__('Tracker aggregated successfully'));
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 if (Mage::getIsDeveloperMode()) {
                     throw $e;
                 }
@@ -323,15 +295,15 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
                 $this->_getSession()->addError($e->getMessage());
             }
         }
-        
+
         $this->_redirect('*/*/edit', array('_current' => true));
     }
-    
-    
+
     /**
      * Duplicate tracker
      *
      * @return void
+     * @throws Exception
      */
     public function duplicateAction()
     {
@@ -342,10 +314,10 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
                 $trackerClone->setTitle($trackerClone->getTitle() . $this->__(' (Copy)'));
                 $trackerClone->save();
                 $this->_getSession()->addSuccess($this->__('Tracker was successfully duplicated'));
-                
-                return $this->_redirect('*/*/edit', array('id' => $trackerClone->getId(), '_current' => true));
-            }
-            catch(Exception $e) {
+
+                $this->_redirect('*/*/edit', array('id' => $trackerClone->getId(), '_current' => true));
+                return;
+            } catch (Exception $e) {
                 if (Mage::getIsDeveloperMode()) {
                     throw $e;
                 }
@@ -353,49 +325,41 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
                 $this->_getSession()->addError($e->getMessage());
             }
         }
-    
+
         $this->_redirect('*/*/edit', array('_current' => true));
     }
-    
-    
-    
+
     /**
      * Make tracker default
      *
      * @return void
+     * @throws Exception
      */
     public function makeDefaultAction()
     {
         $tracker = $this->_initTracker();
         if ($tracker->getId()) {
             try {
-                
                 if (!$tracker->isActive()) {
                     $this->_getSession()->addError($this->__('The default tracker must always be active'));
-                }
-                else if (!$tracker->isTrackingAllCampaigns()) {
+                } elseif (!$tracker->isTrackingAllCampaigns()) {
                     $this->_getSession()->addError($this->__('The default tracker must always track all campaigns'));
-                }
-                else {
+                } else {
                     $tracker->setAsDefault();
                     $this->_getSession()->addSuccess($this->__('Tracker "%s" is now the new default conversion tracker.', $tracker->getTitle()));
                 }
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 if (Mage::getIsDeveloperMode()) {
                     throw $e;
                 }
                 Mage::logException($e);
-                $this->_getSession()>addError($e->getMessage());
+                $this->_getSession()->addError($e->getMessage());
             }
         }
-    
+
         $this->_redirect('*/*/edit', array('_current' => true));
     }
-    
-    
 
-    
     /**
      * Download tracker
      *
@@ -407,12 +371,12 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
         if ($tracker->getId()) {
             try {
                 $data = $tracker->export();
-    
+
                 $fileName = preg_replace('/[^a-z0-9]+/', '-', strtolower($tracker->getTitle()));
                 $fileName.= '.mzax.tracker';
-    
+
                 $contentLength = strlen($data);
-    
+
                 $this->getResponse()
                     ->setHttpResponseCode(200)
                     ->setHeader('Pragma', 'public', true)
@@ -422,27 +386,32 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
                     ->setHeader('Content-Disposition', 'attachment; filename="'.$fileName.'"')
                     ->setHeader('Last-Modified', date('r'))
                     ->setBody($data);
-                
+
                 return;
-            }
-            catch (Exception $e){
+            } catch (Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
             }
         }
         $this->_redirect('*/*');
     }
-    
-    
-    
 
+    /**
+     * Upload form action
+     *
+     * @return void
+     */
     public function uploadAction()
     {
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
         $this->renderLayout();
     }
-    
-    
+
+    /**
+     *
+     * @return void
+     * @throws Exception
+     */
     public function uploadPostAction()
     {
         try {
@@ -453,61 +422,57 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
             if ($file['error']['file'] !== UPLOAD_ERR_OK) {
                 throw new Mage_Exception($this->__("Error when uploading template (#%s)", $file['error']['file']));
             }
-    
+
             $tracker = $this->_initTracker();
             $tracker->loadFromFile($file['tmp_name']['file']);
             $tracker->save();
-    
+
             if (version_compare($tracker->getVersion(), Mage::helper('mzax_emarketing')->getVersion()) < 0) {
                 $this->_getSession()->addWarning($this->__("The tracker you just uploaded was made with version %s, you only have version %s of Mzax Emarketing. This may cause problems."));
             }
             $this->_getSession()->addSuccess($this->__("Tracker successfully uploaded."));
             $this->_redirect('*/*/edit', array('id' => $tracker->getId()));
             return;
-        }
-        catch(Mage_Exception $e) {
+        } catch (Mage_Exception $e) {
             $this->_getSession()->addError($e->getMessage());
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             if (Mage::getIsDeveloperMode()) {
                 throw $e;
             }
             Mage::logException($e);
             $this->_getSession()->addError($this->__("There was an error uploading the tracker."));
         }
-    
+
         $this->_redirect('*/*/index');
     }
-    
-    
-    
-    
-    
-    
+
+    /**
+     * @return void
+     */
     public function massAggregateAction()
     {
         $trackerIds = $this->getRequest()->getPost('trackers');
         if (!empty($trackerIds)) {
-            
             $options = array(
                 'aggregator'  => array('tracker', 'dimension'),
                 'tracker_id'  => $trackerIds,
                 'verbos'      => false
             );
-            
+
             /* @var $report Mzax_Emarketing_Model_Report */
             $report = Mage::getSingleton('mzax_emarketing/report');
             $report->aggregate($options);
-            
+
             $this->_getResource()->flagAsAggregated($trackerIds);
-            
         }
         $this->_redirect('*/*/index');
-        
-        
     }
-    
-    
+
+    /**
+     * Mass enable action
+     *
+     * @return void
+     */
     public function massEnableAction()
     {
         $trackerIds = $this->getRequest()->getPost('trackers');
@@ -518,55 +483,46 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
                 $this->_getSession()->addSuccess(
                     $this->__('%d tracker(s) have been enabled.', $rows)
                 );
-                
-            }
-            else {
+            } else {
                 $rows = $this->_getResource()->disable($trackerIds);
                 $this->_getSession()->addSuccess(
-                        $this->__('%d tracker(s) have been disabled.', $rows)
+                    $this->__('%d tracker(s) have been disabled.', $rows)
                 );
             }
         }
         $this->_redirect('*/*/index');
     }
-    
-    
-    
+
+    /**
+     * @return void
+     */
     public function massDeleteAction()
     {
         $trackerIds = $this->getRequest()->getPost('trackers');
-        if (!empty($trackerIds) ) {
+        if (!empty($trackerIds)) {
             $rows = $this->_getResource()->massDelete($trackerIds);
             $this->_getSession()->addSuccess(
                 $this->__('%d tracker(s) have been deleted.', $rows)
             );
-            
         }
         $this->_redirect('*/*/index');
     }
-    
-    
-    
-    
-    
-    
+
     /**
      * Retrieve tracker resource model
-     * 
+     *
      * @return Mzax_Emarketing_Model_Resource_Conversion_Tracker
      */
     protected function _getResource()
     {
         return Mage::getResourceSingleton('mzax_emarketing/conversion_tracker');
     }
-    
-    
-    
-    
+
     /**
      * init tracker
-     * 
+     *
      * @param string $idFieldName
+     *
      * @return Mzax_Emarketing_Model_Conversion_Tracker
      */
     protected function _initTracker($idFieldName = 'id')
@@ -580,25 +536,24 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
             }
             Mage::register('current_tracker', $tracker);
         }
+
         return $tracker;
     }
-    
-    
-    
-    
-    
+
     /**
      * Retrieve current tracker with all post
      * or current session data applied
+     *
+     * @param string $idFieldName
      *
      * @return Mzax_Emarketing_Model_Conversion_Tracker
      */
     public function getCurrentTracker($idFieldName = 'id')
     {
         $tracker  = $this->_initTracker($idFieldName);
-    
+
         $cacheKey = 'mzax_tracker_test_' . $tracker->getId();
-    
+
         // if we have post data, apply those changes first
         // and store them to the session
         if ($data = $this->getRequest()->getPost()) {
@@ -607,12 +562,12 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
             }
         }
         $data = $this->_getSession()->getData($cacheKey);
-    
+
         if (is_array($data)) {
             if (isset($data['tracker'])) {
                 $tracker->addData($data['tracker']);
             }
-    
+
             if (isset($data['conditions'])) {
                 $goal = $tracker->getGoal();
                 if ($goal && is_array($data['conditions'])) {
@@ -620,11 +575,9 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
                 }
             }
         }
-    
+
         return $tracker;
     }
-    
-    
 
     /**
      * ACL check

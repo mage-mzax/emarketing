@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -17,32 +17,30 @@
  */
 
 
-
-
+/**
+ * Class Mzax_Emarketing_UnsubscribeController
+ */
 class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_Action
 {
-    
-    
     /**
      * Unsubscribe action, only works when user came from an email
-     * 
-     * @return mixed
+     *
+     * @return void
      */
     public function indexAction()
     {
         $session = $this->getSession();
-        
+
         $email = $session->getLastAddress();
         if (!Zend_Validate::is($email, 'EmailAddress') || $this->getSession()->getIsUnsubscribed()) {
             return $this->_redirectUrl('/');
         }
-        
+
         $this->getSession()->setFormKey(Mage::helper('core')->getRandomString(32));
-        
+
         $this->loadLayout();
         $this->renderLayout();
     }
-
 
     /**
      * Update preference for given subscriber
@@ -82,8 +80,7 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
                 foreach ($collection as $list) {
                     if (in_array($list->getId(), $lists)) {
                         $list->addSubscribers($subscriber->getId());
-                    }
-                    else {
+                    } else {
                         $list->removeSubscribers($subscriber->getId());
                     }
                 }
@@ -92,14 +89,10 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
 
                 $this->_redirect('*/*/index');
                 return;
-
-            } while(false);
+            } while (false);
         }
         $this->_redirectUrl('/');
     }
-
-
-
 
     /**
      * Unsubscribe user from newsletter
@@ -110,7 +103,7 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
     {
         $session = $this->getSession();
         $request = $this->getRequest();
-        
+
         if ($request->isPost()) {
             do {
                 if ($request->getPost('form_key') !== $session->getFormKey()) {
@@ -142,52 +135,49 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
                     return $this->_redirect('*/*/done');
                 }
 
-            } while(false);
+            } while (false);
         }
         $this->_redirectUrl('/');
     }
-    
-    
-    
+
+    /**
+     * @return void
+     */
     public function listAction()
     {
         $hash = $this->getRequest()->getParam('id');
         if (!$hash) {
             die('Invalid');
         }
-        
+
         /* @var $recipient Mzax_Emarketing_Model_Recipient */
         $recipient = Mage::getModel('mzax_emarketing/recipient')->loadByBeacon($hash);
         if (!$recipient->getId()) {
             die('Invalid');
         }
-        
+
         $recipient->prepare();
         $email = $recipient->getAddress();
         if ($email) {
             /* @see $subscriber Mzax_Emarketing_Helper_Newsletter */
             Mage::helper('mzax_emarketing/newsletter')->unsubscribe($email, $recipient->getStoreId(), false);
         }
-        
+
         die('OK');
     }
-    
-    
-    
-    
-    
-    
+
+    /**
+     * @return void
+     */
     public function doneAction()
     {
         if (!$this->getSession()->getIsUnsubscribed()) {
-            return $this->_redirectUrl('/');
+            $this->_redirectUrl('/');
+            return;
         }
         $this->loadLayout();
         $this->renderLayout();
     }
-    
-
-
 
     /**
      * Retrieve session model
@@ -198,6 +188,4 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
     {
         return Mage::getSingleton('mzax_emarketing/session');
     }
-    
-    
 }

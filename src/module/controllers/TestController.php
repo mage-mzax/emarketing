@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -16,88 +16,83 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
+/**
+ * Class Mzax_Emarketing_TestController
+ */
 class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
 {
-
-    
+    /**
+     * @return void
+     */
     public function preDispatch()
     {
         parent::preDispatch();
-        
+
         if (!Mage::getIsDeveloperMode()) {
             $this->setFlag('', self::FLAG_NO_DISPATCH, true);
             $this->_redirect('/');
             return;
         }
-        
+
         header("Content-Type: text/plain; charset=utf8");
         ini_set('html_errors', false);
         ob_implicit_flush(true);
     }
-    
-    
+
+    /**
+     * @return void
+     */
     public function indexAction()
     {
         header("Content-Type: text/html; charset=utf8");
-        
+
         echo '<ul>';
         echo sprintf('<li><a href="%s">%s</a></li>', Mage::getUrl('*/*/cron'), "Cron Test");
         echo sprintf('<li><a href="%s">%s</a></li>', Mage::getUrl('*/*/geoip'), "GeoIp Test");
         echo sprintf('<li><a href="%s">%s</a></li>', Mage::getUrl('*/*/aggregate'), "Aggregate Test");
         echo '</ul>';
-        
+
         exit;
     }
-    
-    
-    
+
     /**
      * Test cron jobs
-     * 
+     *
      * @return void
      */
     public function cronAction()
     {
         Mage::getSingleton('mzax_emarketing/observer_cron')->test();
     }
-    
-    
-    
+
     /**
      * Test Useragent parsing
-     * 
+     *
      * @return void
      */
     public function uaAction()
     {
         Mage::getResourceSingleton('mzax_emarketing/useragent')->parse(true);
     }
-    
-    
-    
-    
+
+    /**
+     * @return void
+     */
     public function presetsAction()
     {
-        /* @var $preset Mzax_Emarketing_Model_Resource_Campaign_Preset */
-        $preset = Mage::getResourceSingleton('mzax_emarketing/campaign_preset');
-        
         /* @var $collection Mzax_Emarketing_Model_Resource_Campaign_Preset_Collection */
         $collection = Mage::getResourceModel('mzax_emarketing/campaign_preset_collection');
-        
-        
+
         foreach ($collection as $preset) {
             var_dump($preset->debug());
         }
-        
-        
-        
     }
-    
-    
-    
+
+
     /**
      * Test GeoIp
-     * 
+     *
      * @return void
      */
     public function geoipAction()
@@ -105,71 +100,68 @@ class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
         // configure geo ip
         $geoIp = new Mzax_GeoIp(Mage::getBaseDir('tmp') . DS . 'geoip.sess');
         $geoIp->clearAdapters();
-        
+
         $adapters = Mage::getSingleton('mzax_emarketing/system_config_source_geoIp')->getSelectedAdapters();
-        
+
         /* @var $adapter Mzax_GeoIp_Adapter_Abstract */
         foreach ($adapters as $adapter) {
             $geoIp->addAdapter($adapter);
         }
-        
+
         if (!$geoIp->hasAdapters()) {
             throw new Exception("No GeoIP adapters defined");
         }
-        
-        
+
         $startTime = time();
         $maxRunTime = 30;
-        
-        while(true)
-        {
+
+        while (true) {
             if (!$geoIp->getRemainingRequests()) {
                 $this->log("MzaxEmarketing: No GeoIP requests left, you might want to consider different solution.");
                 break;
             }
-            
+
             if ($geoIp->getRestTime()) {
                 $this->log("MzaxEmarketing: GeoIP is resting, try again later.");
                 break;
             }
-            
+
             if ((time()-$startTime) >= $maxRunTime) {
                 $this->log("MzaxEmarketing: Maximum run time exceeded");
                 break;
             }
-        
+
             try {
                 $ip = $this->generateIP();
-                
+
                 $this->log("Fetch IP: {$ip}...");
-                
+
                 $result = $geoIp->fetch($ip);
                 if (!$result) {
                     continue;
                 }
                 $this->log(sprintf("\tCountry %s, Region %s, City %s", $result->countryId, $result->regionId, $result->city));
-                
+
                 if (!$result->regionId) {
                     $this->log($result);
                     $this->log("\n\n\n");
                 }
-                
+
                 //$this->log($result);
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 throw $e;
             }
         }
         $this->log("DONE");
         exit;
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Test data aggregation
-     * 
+     *
      * @return void
      */
     public function aggregateAction()
@@ -186,35 +178,33 @@ class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
             'verbose' => true
         ));
     }
-    
-    
-    
-    
-    
+
+    /**
+     * @return void
+     */
     public function sendAction()
     {
         header("Content-Type: text/plain; charset=utf8");
         ini_set('html_errors', false);
-        
+
         /* @var $outbox Mzax_Emarketing_Model_Outbox */
         $outbox = Mage::getModel('mzax_emarketing/outbox');
         $outbox->sendEmails();
-        
-    }
-    
-    
-    
-    
 
+    }
+
+    /**
+     * @return void
+     */
     public function queryAction()
     {
         header("Content-Type: text/plain");
-    
+
         /* @var $tracker Mzax_Emarketing_Model_Conversion_Tracker */
         $tracker = Mage::getModel('mzax_emarketing/conversion_tracker');
         $tracker->setId('4');
-        
-        
+
+
         /* @var $query Mzax_Emarketing_Model_Report_Query */
         //*
         $query = Mage::getModel('mzax_emarketing/report_query');
@@ -225,14 +215,11 @@ class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
         $query->setParam('variations', true);
         $query->setParam('order', null);
         $query->load();
-        
-        
-        
-        
-        
+
+
         //*/
-        
-        
+
+
         /* @var $query Mzax_Emarketing_Model_Report_Query */
         /*
         $query = Mage::getModel('mzax_emarketing/report_query');
@@ -241,7 +228,7 @@ class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
         $query->setParam('variation', true);
         $query->load();
         //*/
-        
+
 
 
         /* @var $query Mzax_Emarketing_Model_Report_Query */
@@ -255,86 +242,83 @@ class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
         $query->setParam('variation', true);
         $query->load();
         //*/
-        
+
         //die('dd');
-        
+
         echo "\n\n\n\n";
-        
+
         echo $query->getSelect();
-        
+
         echo "\n\n\n\n";
-        
+
         print_r($query->getData());
-    
+
         echo "\n\n\n\n";
-        
+
         echo $query->getDataTable()->asJson();
         //var_dump($result);
-    
+
         die("ok");
     }
-    
-    
-    
-    
-    
-    
-    
+
+    /**
+     * @return void
+     */
     public function seedAction()
     {
         header("Content-Type: text/plain");
-    
-    
+
+
         /* @var $seeder Mzax_Emarketing_Model_Report_Seeder */
         $seeder = Mage::getModel('mzax_emarketing/report_seeder');
         $seeder->run();
-    
-    
+
+
         die("ok");
     }
 
-    
-    
-    
-    
-    
-    
-    
+    /**
+     * @return void
+     */
     public function pullAction()
     {
         header("Content-Type: text/plain");
-        
-        
+
+
         /* @var $inbox Mzax_Emarketing_Model_Inbox */
         $inbox = Mage::getSingleton('mzax_emarketing/inbox');
         $inbox->downloadEmails();
-        
-        
+
+
         die("ok");
     }
-    
 
+    /**
+     * @return void
+     */
     public function parseAction()
     {
         header("Content-Type: text/plain");
-        
+
         /* @var $inbox Mzax_Emarketing_Model_Inbox */
         $inbox = Mage::getSingleton('mzax_emarketing/inbox');
         $inbox->parseEmails();
-        
-        
+
+
         die("ok");
     }
-    
-    
-    
+
+    /**
+     * @return void
+     */
     public function fetchAction()
     {
         die(''.count(Mage::helper('mzax_emarketing')->fetchNewRecipients()));
     }
-    
-    
-    
+
+    /**
+     * @param $message
+     */
     protected function log($message)
     {
         if (!is_string($message)) {
@@ -342,26 +326,23 @@ class Mzax_Emarketing_TestController extends Mage_Core_Controller_Front_Action
         }
         echo "\n" . $message;
     }
-    
-    
-    
+
     /**
      * Generate a random public ip for testing
-     * 
-     * @return string 
+     *
+     * @return string
      */
-    protected function generateIP() 
+    protected function generateIP()
     {
         $ip = array();
         do {
-            $ip[0] = rand(1,254);
-        }
-        while(in_array($ip[0], explode(',', '10,100,127,169,172,192,198,203,224,240')));
-        
-        $ip[] = rand(1,254);
-        $ip[] = rand(1,254);
-        $ip[] = rand(1,254);
-        
+            $ip[0] = rand(1, 254);
+        } while (in_array($ip[0], explode(',', '10,100,127,169,172,192,198,203,224,240')));
+
+        $ip[] = rand(1, 254);
+        $ip[] = rand(1, 254);
+        $ip[] = rand(1, 254);
+
         return implode('.', $ip);
     }
 }

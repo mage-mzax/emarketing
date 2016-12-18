@@ -17,48 +17,51 @@
  */
 
 
+use Mzax_Emarketing_Block_Chart_Abstract as Chart;
 
+/**
+ * Class Mzax_Emarketing_Block_Chart_Widget_Container
+ */
 class Mzax_Emarketing_Block_Chart_Widget_Container extends Mage_Adminhtml_Block_Abstract
 {
-
     /**
-     *
-     * @var Mzax_Emarketing_Block_Chart_Abstract
+     * @var Chart
      */
     protected $_chart;
 
-
     /**
+     * Set chart
      *
-     * @param Mzax_Emarketing_Block_Chart_Abstract $chart
-     * @return Mzax_Emarketing_Block_Chart_Widget_Container
+     * @param Chart $chart
+     *
+     * @return $this
      */
-    public function setChart(Mzax_Emarketing_Block_Chart_Abstract $chart)
+    public function setChart(Chart $chart)
     {
         $this->_chart = $chart;
+
         return $this;
     }
 
-
     /**
+     * Retrieve chart
      *
-     * @return Mzax_Emarketing_Block_Chart_Abstract
+     * @return Chart
      */
     public function getChart()
     {
         return $this->_chart;
     }
 
-
-
+    /**
+     * @return string
+     */
     protected function _toHtml()
     {
         if ($this->_chart) {
             return $this->_chart->toHtml();
         }
+
         return '';
     }
-
-
-
 }

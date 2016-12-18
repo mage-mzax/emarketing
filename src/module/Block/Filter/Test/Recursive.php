@@ -17,25 +17,24 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Filter_Test_Recursive
+ */
 class Mzax_Emarketing_Block_Filter_Test_Recursive extends Mzax_Emarketing_Block_Filter_Test_Single
 {
-
-
     /**
-     *
      * @var Mzax_Emarketing_Block_Filter_Test_Single
      */
     protected $_filterBlock;
 
-
-
+    /**
+     * @return void
+     */
     protected function _construct()
     {
         parent::_construct();
         $this->setTemplate('mzax/emarketing/filter/test/recursive.phtml');
     }
-
-
 
     /**
      * Retrieve filter
@@ -47,10 +46,11 @@ class Mzax_Emarketing_Block_Filter_Test_Recursive extends Mzax_Emarketing_Block_
         return Mage::registry('current_filter');
     }
 
-
-
-
-
+    /**
+     * Prepare html
+     *
+     * @return void
+     */
     protected function _beforeToHtml()
     {
         $time = microtime(true);
@@ -61,42 +61,41 @@ class Mzax_Emarketing_Block_Filter_Test_Recursive extends Mzax_Emarketing_Block_
         $this->setFilterHtml($html);
     }
 
-
-
-
+    /**
+     * Recursively render filters
+     *
+     * @param Mzax_Emarketing_Model_Object_Filter_Abstract $filter
+     *
+     * @return string
+     */
     protected function _toHtmlRecursive(Mzax_Emarketing_Model_Object_Filter_Abstract $filter)
     {
         $block = $this->getFilterBlock();
         $block->setFilter($filter);
 
-        $subfilters = '';
+        $subFilters = '';
         $filters = $filter->getFilters();
         if (count($filters)) {
             foreach ($filters as $f) {
-                $subfilters .= $this->_toHtmlRecursive($f);
+                $subFilters .= $this->_toHtmlRecursive($f);
             }
         }
-        $block->setSubfilters($subfilters);
+        $block->setSubfilters($subFilters);
 
         return $block->toHtml();
     }
 
-
-
     /**
+     * Retrieve filter block
      *
      * @return Mzax_Emarketing_Block_Filter_Test_Single
      */
     public function getFilterBlock()
     {
+        /** @var Mzax_Emarketing_Block_Filter_Test_Single $block */
         $block = $this->getLayout()->createBlock('mzax_emarketing/filter_test_single');
         $block->setTemplate('mzax/emarketing/filter/test/filter.phtml');
 
         return $block;
     }
-
-
-
-
-
 }

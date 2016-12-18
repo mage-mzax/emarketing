@@ -17,12 +17,18 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Inbox_Grid
+ */
 class Mzax_Emarketing_Block_Inbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
 {
-
+    /**
+     * Mzax_Emarketing_Block_Inbox_Grid constructor.
+     */
     public function __construct()
     {
         parent::__construct();
+
         $this->setId('inbox_grid');
         $this->setUseAjax(true);
         $this->setSaveParametersInSession(true);
@@ -30,7 +36,9 @@ class Mzax_Emarketing_Block_Inbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
         $this->setDefaultDir('desc');
     }
 
-
+    /**
+     * @return Mzax_Emarketing_Model_Resource_Inbox_Email_Collection
+     */
     public function getCollection()
     {
         if (!$this->_collection) {
@@ -39,12 +47,20 @@ class Mzax_Emarketing_Block_Inbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             $this->_collection->assignRecipients();
             $this->_collection->assignCampaigns();
         }
+
         return $this->_collection;
     }
 
-
+    /**
+     * Prepare columns
+     *
+     * @return $this
+     */
     protected function _prepareColumns()
     {
+        /* @var $campaigns Mzax_Emarketing_Model_Resource_Campaign_Collection */
+        $campaigns = Mage::getResourceModel('mzax_emarketing/campaign_collection');
+
         $this->addColumn('created_at', array(
             'header'    => $this->__('Created At'),
             'index'     => 'created_at',
@@ -85,10 +101,6 @@ class Mzax_Emarketing_Block_Inbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'width'     => '100px',
         ));
 
-
-        /* @var $campaigns Mzax_Emarketing_Model_Resource_Campaign_Collection */
-        $campaigns = Mage::getResourceModel('mzax_emarketing/campaign_collection');
-
         $this->addColumn('campaign', array(
             'header'    => $this->__('Campaign'),
             'index'     => 'campaign_id',
@@ -97,7 +109,6 @@ class Mzax_Emarketing_Block_Inbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'frame_callback' => array($this, 'addCampaignLink'),
             'width'     => '100px',
         ));
-
 
         if (!Mage::app()->isSingleStoreMode()) {
             $this->addColumn('store_id', array(
@@ -122,42 +133,39 @@ class Mzax_Emarketing_Block_Inbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'width'     => '50px',
         ));
 
-        return parent::_prepareColumns();
+        parent::_prepareColumns();
+
+        return $this;
     }
-
-
-
 
     /**
      * Frame Callback
      *
      * Add link to admin for subject if available
      *
-     *
      * @param string $value
-     * @param Varien_Object $row
+     * @param Mzax_Emarketing_Model_Inbox_Email $row
      * @param Mage_Adminhtml_Block_Widget_Grid_Column $column
      * @param boolean $export
+     *
      * @return string
      */
     public function addSubjectLink($value, $row, $column, $export)
     {
         $recipient = $row->getRecipient();
 
-        if ($recipient instanceof Mzax_Emarketing_Model_Recipient && !$export)
-        {
+        if ($recipient instanceof Mzax_Emarketing_Model_Recipient && !$export) {
             $campaign = $recipient->getCampaign();
-            $subject  = $campaign->getRecipientProvider()->getSubject();
+            $subject = $campaign->getRecipientProvider()->getSubject();
 
             if ($subject) {
                 $url = $subject->getAdminUrl($recipient->getObjectId());
                 return sprintf('<a href="%s">%s</a>', $url, $value);
             }
-
         }
+
+        return '';
     }
-
-
 
     /**
      * Frame Callback
@@ -165,9 +173,10 @@ class Mzax_Emarketing_Block_Inbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
      * Add link to campaign if available
      *
      * @param string $value
-     * @param Varien_Object $row
+     * @param Mzax_Emarketing_Model_Inbox_Email $row
      * @param Mage_Adminhtml_Block_Widget_Grid_Column $column
      * @param boolean $export
+     *
      * @return string
      */
     public function addCampaignLink($value, $row, $column, $export)
@@ -180,13 +189,9 @@ class Mzax_Emarketing_Block_Inbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
         return $value;
     }
 
-
-
-
-
-
-
-
+    /**
+     * @return $this
+     */
     protected function _prepareMassaction()
     {
         $this->setMassactionIdField('email_id');
@@ -210,55 +215,58 @@ class Mzax_Emarketing_Block_Inbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'url'     => $this->getUrl('*/*/massParse')
         ));
 
-        $this->getMassactionBlock()->addItem('flag_as', array(
-                'label'=> $this->__('Flag as...'),
+        $this->getMassactionBlock()->addItem(
+            'flag_as',
+            array(
+                'label' => $this->__('Flag as...'),
                 'url'  => $this->getUrl('*/*/massFlag', array('_current'=>true)),
                 'additional' => array(
-                'visibility' => array(
-                    'name' => 'type',
-                    'type' => 'select',
-                    'class' => 'required-entry',
-                    'label' => $this->__('Type'),
-                    'options'   => array(
-                        Mzax_Emarketing_Model_Inbox_Email::BOUNCE_SOFT => $this->__('Soft'),
-                        Mzax_Emarketing_Model_Inbox_Email::BOUNCE_HARD => $this->__('Hard'),
-                        Mzax_Emarketing_Model_Inbox_Email::AUTOREPLY   => $this->__('Autoreply'),
-                        Mzax_Emarketing_Model_Inbox_Email::NO_BOUNCE   => $this->__('No Bounce'),
-                    ),
+                    'visibility' => array(
+                        'name' => 'type',
+                        'type' => 'select',
+                        'class' => 'required-entry',
+                        'label' => $this->__('Type'),
+                        'options'   => array(
+                            Mzax_Emarketing_Model_Inbox_Email::BOUNCE_SOFT => $this->__('Soft'),
+                            Mzax_Emarketing_Model_Inbox_Email::BOUNCE_HARD => $this->__('Hard'),
+                            Mzax_Emarketing_Model_Inbox_Email::AUTOREPLY   => $this->__('Autoreply'),
+                            Mzax_Emarketing_Model_Inbox_Email::NO_BOUNCE   => $this->__('No Bounce'),
+                        )
+                    )
                 )
             )
-        ));
+        );
 
         $this->getMassactionBlock()->addItem('forward', array(
             'label'   => $this->__('Forward emails'),
             'url'     => $this->getUrl('*/*/massForward')
         ));
 
-
         // enable disable
         $this->getMassactionBlock()->addItem('report', array(
             'label'   => $this->__('Report as bounce'),
             'url'     => $this->getUrl('*/*/massReport'),
-            'confirm' => $this->__('Thank you for your help! This will forward the email to me (Jacob Siefer) and I will use it to test it against the bounce filter. I will not share or publish any of the orignal content.')
+            'confirm' => $this->__('Thank you for your help! This will forward the email to me (Jacob Siefer) and I will use it to test it against the bounce filter. I will not share or publish any of the original content.')
         ));
 
         return $this;
     }
 
-
-
-
-
-
-
-
+    /**
+     * @return string
+     */
     public function getGridUrl()
     {
         return $this->getUrl('*/*/grid', array('_current'=> true));
     }
 
+    /**
+     * @param Mzax_Emarketing_Model_Inbox_Email $row
+     *
+     * @return string
+     */
     public function getRowUrl($row)
     {
-        return $this->getUrl('*/*/email', array('id'=>$row->getId()));
+        return $this->getUrl('*/*/email', array('id' => $row->getId()));
     }
 }

@@ -18,41 +18,36 @@
 
 
 /**
- *
- * @author Jacob Siefer
- *
+ * Class Mzax_Emarketing_Block_System_Config_Form_Field_Mandrill
  */
 class Mzax_Emarketing_Block_System_Config_Form_Field_Mandrill
     extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
-
-
-
+    /**
+     * @return string
+     */
     protected function _getHtml()
     {
         $username = Mage::getStoreConfig('mzax_emarketing/email/mandrill_username');
         $password = Mage::getStoreConfig('mzax_emarketing/email/mandrill_password');
 
         if (empty($username)) {
-            $message = Mage::helper('mzax_emarketing')->__('Please provider a valid Mandrill username.');
+            $message = $this->__('Please provider a valid Mandrill username.');
             $class = 'inbox-failure';
-        }
-        else if (empty($password)) {
-            $message = Mage::helper('mzax_emarketing')->__('Please provider a valid Mandrill password.');
+        } elseif (empty($password)) {
+            $message = $this->__('Please provider a valid Mandrill password.');
             $class = 'inbox-failure';
-        }
-        else {
-            /* @var $transprot Mzax_Emarketing_Model_Outbox_Transporter_Mandrill */
-            $transprot = Mage::getModel('mzax_emarketing/outbox_transporter_mandrill');
+        } else {
+            /* @var $transport Mzax_Emarketing_Model_Outbox_Transporter_Mandrill */
+            $transport = Mage::getModel('mzax_emarketing/outbox_transporter_mandrill');
 
-            $result = $transprot->testAuth($username, $password);
+            $result = $transport->testAuth($username, $password);
 
             if ($result === true) {
-                $message = Mage::helper('mzax_emarketing')->__('Successfully conntected to Mandrill');
+                $message = $this->__('Successfully connected to Mandrill');
                 $class = 'inbox-success';
-            }
-            else {
-                $message = Mage::helper('mzax_emarketing')->__('Failed to connect to Mandrill: %s', $result);
+            } else {
+                $message = $this->__('Failed to connect to Mandrill: %s', $result);
                 $class = 'inbox-failure';
             }
         }
@@ -60,8 +55,11 @@ class Mzax_Emarketing_Block_System_Config_Form_Field_Mandrill
         return '<div class="inbox-status '.$class.'">' . $message . '</div>';
     }
 
-
-
+    /**
+     * @param Varien_Data_Form_Element_Abstract $element
+     *
+     * @return string
+     */
     public function render(Varien_Data_Form_Element_Abstract $element)
     {
         $id = $element->getHtmlId();
@@ -70,10 +68,10 @@ class Mzax_Emarketing_Block_System_Config_Form_Field_Mandrill
             return '';
         }
 
-        $useContainerId = $element->getData('use_container_id');
         $html = '<tr id="row_' . $id . '">'
               .   '<td class="mzax-mail-storage-test" colspan="3">' . $this->_getHtml(). '</td>'
               . '</tr>';
+
         return $html;
     }
 }

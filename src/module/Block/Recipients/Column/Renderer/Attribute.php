@@ -17,9 +17,11 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Recipients_Column_Renderer_Attribute
+ */
 class Mzax_Emarketing_Block_Recipients_Column_Renderer_Attribute extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Text
 {
-
     /**
      * Retrieve attribute
      *
@@ -30,18 +32,18 @@ class Mzax_Emarketing_Block_Recipients_Column_Renderer_Attribute extends Mage_Ad
         return $this->getColumn()->getAttribute();
     }
 
-
-
-
+    /**
+     * @param Varien_Object $row
+     *
+     * @return mixed|string
+     */
     public function render(Varien_Object $row)
     {
         $attribute = $this->getAttribute();
 
-
         $data = $row->getData($attribute->getAttributeCode());
 
         if ($attribute->getFrontendInput() === 'multiselect') {
-
             $searchValue = (array) $this->getColumn()->getSearchValue();
 
             $result = array();
@@ -56,13 +58,6 @@ class Mzax_Emarketing_Block_Recipients_Column_Renderer_Attribute extends Mage_Ad
             $data = implode(', ', $result);
         }
 
-
-
         return $data;
     }
-
-
-
-
-
 }

@@ -17,12 +17,17 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Inbox_View
+ */
 class Mzax_Emarketing_Block_Inbox_View extends Mage_Adminhtml_Block_Widget_Grid_Container
 {
-
+    /**
+     * Mzax_Emarketing_Block_Inbox_View constructor.
+     */
     public function __construct()
     {
-    	$this->_blockGroup = 'mzax_emarketing';
+        $this->_blockGroup = 'mzax_emarketing';
         $this->_controller = 'inbox';
         $this->_headerText = Mage::helper('mzax_emarketing')->__('Manage Inbox');
 
@@ -35,9 +40,5 @@ class Mzax_Emarketing_Block_Inbox_View extends Mage_Adminhtml_Block_Widget_Grid_
             'onclick'   => 'setLocation(\'' . $this->getUrl('*/*/fetch') .'\')',
             'class'     => '',
         ));
-
     }
-
-
-
 }

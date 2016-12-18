@@ -16,20 +16,21 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
+/**
+ * Class Mzax_Emarketing_Block_Newsletter_List_View
+ */
 class Mzax_Emarketing_Block_Newsletter_List_View extends Mage_Adminhtml_Block_Widget_Grid_Container
 {
-
+    /**
+     * Mzax_Emarketing_Block_Newsletter_List_View constructor.
+     */
     public function __construct()
     {
-    	$this->_blockGroup = 'mzax_emarketing';
+        $this->_blockGroup = 'mzax_emarketing';
         $this->_controller = 'newsletter_list';
         $this->_headerText = Mage::helper('mzax_emarketing')->__('Manage Newsletter Lists');
         $this->_addButtonLabel = Mage::helper('mzax_emarketing')->__('New List');
 
         parent::__construct();
     }
-
-
-
 }

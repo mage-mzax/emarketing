@@ -23,13 +23,15 @@
  *
  *
  * @method Mzax_Emarketing_Model_Object_Filter_Abstract getFilter()
+ * @method $this setFilter(Mzax_Emarketing_Model_Object_Filter_Abstract $filter)
+ *
  * @method boolean getError()
  * @method string getSelect()
  * @method Mzax_Emarketing_Block_Filter_Object_Grid getGrid()
  * @method string getGridHtml()
  *
- * @author Jacob Siefer
- * @license {{license}}
+ * @method setSubfilters(string $filters)
+ *
  */
 class Mzax_Emarketing_Block_Filter_Test_Single extends Mage_Adminhtml_Block_Template
 {

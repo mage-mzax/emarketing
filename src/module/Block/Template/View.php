@@ -17,12 +17,17 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Template_View
+ */
 class Mzax_Emarketing_Block_Template_View extends Mage_Adminhtml_Block_Widget_Grid_Container
 {
-
+    /**
+     * Mzax_Emarketing_Block_Template_View constructor.
+     */
     public function __construct()
     {
-    	$this->_blockGroup = 'mzax_emarketing';
+        $this->_blockGroup = 'mzax_emarketing';
         $this->_controller = 'template';
         $this->_headerText = Mage::helper('mzax_emarketing')->__('Manage Templates');
         $this->_addButtonLabel = Mage::helper('mzax_emarketing')->__('New Template');
@@ -35,7 +40,4 @@ class Mzax_Emarketing_Block_Template_View extends Mage_Adminhtml_Block_Widget_Gr
 
         parent::__construct();
     }
-
-
-
 }

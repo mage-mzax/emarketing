@@ -17,9 +17,11 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Recipients_Column_Renderer_Object
+ */
 class Mzax_Emarketing_Block_Recipients_Column_Renderer_Object extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Text
 {
-
     /**
      * Retrieve current object
      *
@@ -30,9 +32,11 @@ class Mzax_Emarketing_Block_Recipients_Column_Renderer_Object extends Mage_Admin
         return $this->getColumn()->getObject();
     }
 
-
-
-
+    /**
+     * @param Varien_Object $row
+     *
+     * @return string
+     */
     public function render(Varien_Object $row)
     {
         $idField = $this->getColumn()->getIdField();
@@ -43,16 +47,15 @@ class Mzax_Emarketing_Block_Recipients_Column_Renderer_Object extends Mage_Admin
         $labelField = $this->getColumn()->getLabelField();
         if ($labelField) {
             $label = $row->getData($labelField);
-        }
-        else {
+        } else {
             $label = $this->getObject()->getRowId($row);
         }
-
 
         $url = $this->getObject()->getAdminUrl($row->getData($idField));
         if ($url) {
             return "<a href=\"{$url}\" target=\"_blank\">$label</a>";
         }
+
         return $label;
     }
 }

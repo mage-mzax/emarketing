@@ -18,26 +18,21 @@
 
 
 /**
- *
- *
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Inbox_Email_Form
  */
 class Mzax_Emarketing_Block_Inbox_Email_Form extends Mage_Adminhtml_Block_Widget_Form
 {
-
+    /**
+     * @return Mage_Adminhtml_Block_Widget_Form
+     */
     protected function _prepareForm()
     {
         $form = new Varien_Data_Form(array('id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post'));
         $form->setHtmlIdPrefix("email");
         $form->setFieldNameSuffix("email");
 
-
         /* @var $email Mzax_Emarketing_Model_Inbox_Email */
         $email = Mage::registry('current_email');
-
-
 
         // Setting custom renderer for content field to remove label column
         $rendererWide = $this->getLayout()
@@ -60,8 +55,6 @@ class Mzax_Emarketing_Block_Inbox_Email_Form extends Mage_Adminhtml_Block_Widget
         ))->addType('ace', $aceType);
 
 
-
-
         $fieldset->addField('type', 'select', array(
             'name'      => 'type',
             'required'  => true,
@@ -75,7 +68,6 @@ class Mzax_Emarketing_Block_Inbox_Email_Form extends Mage_Adminhtml_Block_Widget
             ),
             'note'      => "Email Bounce Type",
         ));
-
 
         $fieldset->addField('email', 'text', array(
             'name'      => 'email',
@@ -95,7 +87,6 @@ class Mzax_Emarketing_Block_Inbox_Email_Form extends Mage_Adminhtml_Block_Widget
 
 
         if ($campaign = $email->getCampaign()) {
-
             $fieldset->addField('campaign_name', 'link', array(
                 'label' => $this->__('Campagin'),
                 'value' => $campaign->getName(),
@@ -117,7 +108,6 @@ class Mzax_Emarketing_Block_Inbox_Email_Form extends Mage_Adminhtml_Block_Widget
             }
         }
 
-
         $editor = $fieldset->addField('message', 'ace', array(
             'name'              => 'message',
             'label'             => $this->__('Message'),
@@ -127,10 +117,6 @@ class Mzax_Emarketing_Block_Inbox_Email_Form extends Mage_Adminhtml_Block_Widget
             'readonly'          => true,
             'autosize'          => true
         ));
-
-
-
-
 
 
         $fieldset = $form->addFieldset('headers_fieldset', array(
@@ -171,12 +157,10 @@ class Mzax_Emarketing_Block_Inbox_Email_Form extends Mage_Adminhtml_Block_Widget
             'value'     => $email->getContent()
         ))->setRenderer($rendererWide);
 
-
-
-
         $form->addValues($email->getData());
         $this->setForm($form);
         $form->setUseContainer(true);
+
         return parent::_prepareForm();
     }
 }

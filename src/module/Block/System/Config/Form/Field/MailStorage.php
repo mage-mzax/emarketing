@@ -18,16 +18,14 @@
 
 
 /**
- *
- * @author Jacob Siefer
- *
+ * Class Mzax_Emarketing_Block_System_Config_Form_Field_MailStorage
  */
 class Mzax_Emarketing_Block_System_Config_Form_Field_MailStorage
     extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
-
-
-
+    /**
+     * @return string
+     */
     protected function _getHtml()
     {
         /* @var $inbox Mzax_Emarketing_Model_Inbox_Email_Collector */
@@ -37,8 +35,7 @@ class Mzax_Emarketing_Block_System_Config_Form_Field_MailStorage
         if ($result) {
             $message = Mage::helper('mzax_emarketing')->__('Successfully conntected to inbox');
             $class = 'inbox-success';
-        }
-        else {
+        } else {
             $message = Mage::helper('mzax_emarketing')->__('Failed to conntected to inbox');
             $class = 'inbox-failure';
         }
@@ -46,8 +43,11 @@ class Mzax_Emarketing_Block_System_Config_Form_Field_MailStorage
         return '<div class="inbox-status '.$class.'">' . $message . '</div>';
     }
 
-
-
+    /**
+     * @param Varien_Data_Form_Element_Abstract $element
+     *
+     * @return string
+     */
     public function render(Varien_Data_Form_Element_Abstract $element)
     {
         $id = $element->getHtmlId();
@@ -60,6 +60,7 @@ class Mzax_Emarketing_Block_System_Config_Form_Field_MailStorage
         $html = '<tr id="row_' . $id . '">'
               .   '<td class="mzax-mail-storage-test" colspan="3">' . $this->_getHtml(). '</td>'
               . '</tr>';
+
         return $html;
     }
 }

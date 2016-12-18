@@ -17,22 +17,22 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Template_Edit_Form
+ */
 class Mzax_Emarketing_Block_Template_Edit_Form extends Mage_Adminhtml_Block_Widget_Form
 {
-
+    /**
+     * @return Mage_Adminhtml_Block_Widget_Form
+     */
     protected function _prepareForm()
     {
         $form = new Varien_Data_Form(array('id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post'));
         $form->setHtmlIdPrefix("template");
         $form->setFieldNameSuffix("template");
 
-
-
-
-
         /* @var $template Mzax_Emarketing_Model_Template */
         $template = Mage::registry('current_template');
-
 
         if ($template->getId()) {
             $form->addField('template_id', 'hidden', array(
@@ -48,8 +48,6 @@ class Mzax_Emarketing_Block_Template_Edit_Form extends Mage_Adminhtml_Block_Widg
             ))
             ->addType('editor', Mage::getConfig()->getModelClassName('mzax_emarketing/form_element_templateEditor'))
             ->addType('credits', Mage::getConfig()->getModelClassName('mzax_emarketing/form_element_credits'));
-
-
 
         $fieldset->addField('credits', 'credits', array(
                 'name'      => 'credits',
@@ -74,7 +72,6 @@ class Mzax_Emarketing_Block_Template_Edit_Form extends Mage_Adminhtml_Block_Widg
         ));
 
 
-
         $snippets = new Mzax_Emarketing_Model_Medium_Email_Snippets;
         Mage::getSingleton('mzax_emarketing/medium_email')->prepareSnippets($snippets);
 
@@ -83,8 +80,6 @@ class Mzax_Emarketing_Block_Template_Edit_Form extends Mage_Adminhtml_Block_Widg
         $editorConfig->setFilesBrowserWindowUrl($this->getUrl('adminhtml/cms_wysiwyg_images/index'));
         $editorConfig->setWidgetWindowUrl($this->getUrl('adminhtml/widget/index'));
         $editorConfig->setSnippets($snippets);
-
-
 
         $editor = $fieldset->addField('body', 'editor', array(
             'name'      => 'body',
@@ -103,12 +98,10 @@ class Mzax_Emarketing_Block_Template_Edit_Form extends Mage_Adminhtml_Block_Widg
                 ->setTemplate('cms/page/edit/form/renderer/content.phtml');
         $editor->setRenderer($renderer);
 
-
-
-
         $form->addValues($template->getData());
         $this->setForm($form);
         $form->setUseContainer(true);
+
         return parent::_prepareForm();
     }
 }

@@ -17,15 +17,20 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Template_Edit
+ */
 class Mzax_Emarketing_Block_Template_Edit extends Mage_Adminhtml_Block_Widget_Form_Container
 {
+    /**
+     * Mzax_Emarketing_Block_Template_Edit constructor.
+     */
     public function __construct()
     {
         $this->_objectId = 'id';
 
         $this->_blockGroup = 'mzax_emarketing';
         $this->_controller = 'template';
-
 
         parent::__construct();
 
@@ -39,39 +44,42 @@ class Mzax_Emarketing_Block_Template_Edit extends Mage_Adminhtml_Block_Widget_Fo
                 'onclick'   => "setLocation('{$this->getUrl('*/*/download', array('_current' => true))}')",
             ));
         }
-
     }
 
-
-
-
+    /**
+     * @return string
+     */
     public function getHeaderText()
     {
         $template = Mage::registry('current_template');
         if ($template->getId()) {
-            return $this->htmlEscape($template->getName());
-        }
-        else {
+            return $this->escapeHtml($template->getName());
+        } else {
             return $this->__('New Template');
         }
     }
 
+    /**
+     * @return string
+     */
     public function getValidationUrl()
     {
         return $this->getUrl('*/*/validate', array('_current'=>true));
     }
 
+    /**
+     * @return Mage_Core_Block_Abstract
+     */
     protected function _prepareLayout()
     {
-    	$this->_addButton('save_and_continue', array(
+        $this->_addButton('save_and_continue', array(
             'label'     => $this->__('Save And Continue Edit'),
             'onclick'   => 'editForm.submit(\''.$this->_getSaveAndContinueUrl().'\')',
             'class' => 'save'
         ), 10);
 
-    	return parent::_prepareLayout();
+        return parent::_prepareLayout();
     }
-
 
     /**
      * Get form action URL
@@ -86,10 +94,12 @@ class Mzax_Emarketing_Block_Template_Edit extends Mage_Adminhtml_Block_Widget_Fo
         return $this->getUrl('*/*/save');
     }
 
-
+    /**
+     * @return string
+     */
     protected function _getSaveAndContinueUrl()
     {
-    	return $this->getUrl('*/*/save', array(
+        return $this->getUrl('*/*/save', array(
             '_current'  => true,
             'back'      => 'edit'
         ));

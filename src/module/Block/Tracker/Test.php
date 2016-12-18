@@ -17,10 +17,11 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Tracker_Test
+ */
 class Mzax_Emarketing_Block_Tracker_Test extends Mzax_Emarketing_Block_Filter_Test_Recursive
 {
-
-
     /**
      * Retrieve filter
      *
@@ -30,11 +31,13 @@ class Mzax_Emarketing_Block_Tracker_Test extends Mzax_Emarketing_Block_Filter_Te
     {
         $filter  = $this->getTracker()->getGoal();
         $this->prepareEmulation($filter);
+
         return $filter;
     }
 
-
-
+    /**
+     * @param Mzax_Emarketing_Model_Object_Filter_Abstract $filter
+     */
     public function prepareEmulation(Mzax_Emarketing_Model_Object_Filter_Abstract $filter)
     {
         $child = $this->getChild('emulate');
@@ -43,25 +46,20 @@ class Mzax_Emarketing_Block_Tracker_Test extends Mzax_Emarketing_Block_Filter_Te
         }
     }
 
-
-
-
-
     /**
      * Generate url by route and parameters
      *
      * @param   string $route
      * @param   array $params
+     *
      * @return  string
      */
     public function getUrl($route = '', $params = array())
     {
         $params['id'] = $this->getTracker()->getId();
+
         return parent::getUrl($route, $params);
     }
-
-
-
 
     /**
      * Retrieve current tracker
@@ -72,8 +70,4 @@ class Mzax_Emarketing_Block_Tracker_Test extends Mzax_Emarketing_Block_Filter_Te
     {
         return Mage::registry('current_tracker');
     }
-
-
-
-
 }

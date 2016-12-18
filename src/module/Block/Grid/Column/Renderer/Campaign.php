@@ -18,16 +18,11 @@
 
 
 /**
- * Renderer for campaigns
- *
- * @author Jacob Siefer
- * @license {{license}}
+ * Class Mzax_Emarketing_Block_Grid_Column_Renderer_Campaign
  */
 class Mzax_Emarketing_Block_Grid_Column_Renderer_Campaign
     extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Options
 {
-
-
     /**
      * Render a grid cell as options
      *
@@ -43,10 +38,7 @@ class Mzax_Emarketing_Block_Grid_Column_Renderer_Campaign
             $url = $this->getUrl('*/campaign/edit', array('id' => $id));
             return sprintf('<a href="%s">%s</a>', $url, $html);
         }
+
         return $html;
     }
-
-
-
-
 }

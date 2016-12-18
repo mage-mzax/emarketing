@@ -17,19 +17,27 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Template_Grid
+ */
 class Mzax_Emarketing_Block_Template_Grid extends Mage_Adminhtml_Block_Widget_Grid
 {
-
+    /**
+     * Mzax_Emarketing_Block_Template_Grid constructor.
+     */
     public function __construct()
     {
         parent::__construct();
+
         $this->setId('template_grid');
         $this->setUseAjax(true);
         $this->setSaveParametersInSession(true);
         $this->setDefaultSort('template_id');
     }
 
-
+    /**
+     * @return Mage_Adminhtml_Block_Widget_Grid
+     */
     protected function _prepareCollection()
     {
         /* @var $collection Mzax_Emarketing_Model_Resource_Template_Collection */
@@ -39,7 +47,9 @@ class Mzax_Emarketing_Block_Template_Grid extends Mage_Adminhtml_Block_Widget_Gr
         return parent::_prepareCollection();
     }
 
-
+    /**
+     * @return $this
+     */
     protected function _prepareColumns()
     {
         $this->addColumn('created_at', array(
@@ -61,21 +71,32 @@ class Mzax_Emarketing_Block_Template_Grid extends Mage_Adminhtml_Block_Widget_Gr
             'index'     => 'name',
         ));
 
+        parent::_prepareColumns();
 
-        return parent::_prepareColumns();
+        return $this;
     }
 
-
+    /**
+     * @return $this
+     */
     protected function _prepareMassaction()
     {
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getGridUrl()
     {
         return $this->getUrl('*/*/grid', array('_current'=> true));
     }
 
+    /**
+     * @param $row
+     *
+     * @return string
+     */
     public function getRowUrl($row)
     {
         return $this->getUrl('*/*/edit', array('id'=>$row->getId()));

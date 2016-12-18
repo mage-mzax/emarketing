@@ -17,12 +17,19 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Newsletter_List_Edit_Form
+ */
 class Mzax_Emarketing_Block_Newsletter_List_Edit_Form extends Mage_Adminhtml_Block_Widget_Form
 {
-
+    /**
+     * @return Mage_Adminhtml_Block_Widget_Form
+     */
     protected function _prepareForm()
     {
-        $form = new Varien_Data_Form(array('id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post'));
+        $form = new Varien_Data_Form(
+            array('id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post')
+        );
 
         /* @var $list Mzax_Emarketing_Model_Newsletter_List */
         $list = Mage::registry('current_list');
@@ -34,9 +41,9 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit_Form extends Mage_Adminhtml_Blo
             ));
         }
 
-
         $this->setForm($form);
         $form->setUseContainer(true);
+
         return parent::_prepareForm();
     }
 }

@@ -17,10 +17,11 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Tracker_Edit_Tab_Test
+ */
 class Mzax_Emarketing_Block_Tracker_Edit_Tab_Test extends Mzax_Emarketing_Block_Filter_Test_Recursive
 {
-
-
     /**
      * Retrieve filter
      *
@@ -33,15 +34,12 @@ class Mzax_Emarketing_Block_Tracker_Edit_Tab_Test extends Mzax_Emarketing_Block_
         return $tracker->getGoal();
     }
 
-
-
-
-
     /**
      * Generate url by route and parameters
      *
      * @param   string $route
      * @param   array $params
+     *
      * @return  string
      */
     public function getUrl($route = '', $params = array())
@@ -49,9 +47,6 @@ class Mzax_Emarketing_Block_Tracker_Edit_Tab_Test extends Mzax_Emarketing_Block_
         $params['tracker'] = $this->getCampaign()->getId();
         return parent::getUrl($route, $params);
     }
-
-
-
 
     /**
      * Retrieve current campaign
@@ -62,8 +57,4 @@ class Mzax_Emarketing_Block_Tracker_Edit_Tab_Test extends Mzax_Emarketing_Block_
     {
         return Mage::registry('current_tracker');
     }
-
-
-
-
 }

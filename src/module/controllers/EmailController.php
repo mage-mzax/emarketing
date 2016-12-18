@@ -1,14 +1,14 @@
 <?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -17,33 +17,29 @@
  */
 
 
-
-
+/**
+ * Class Mzax_Emarketing_EmailController
+ */
 class Mzax_Emarketing_EmailController extends Mage_Core_Controller_Front_Action
 {
-    
-    
+    /**
+     * @return Mage_Core_Controller_Varien_Action
+     */
     public function indexAction()
     {
         $recipientId = $this->getSession()->getLastRecipientId();
-        
+
         if (!$recipientId) {
             return $this->_redirectUrl('/');
         }
-        
+
         $email = Mage::getSingleton('mzax_emarketing/outbox')->getEmailByRecipient($recipientId);
         if (!$email->getId() || $email->isPurged()) {
             return $this->_redirectUrl('/');
         }
-        
-        $this->getResponse()->setBody($email->getBodyHtml());
-        
-        
-    }
-    
-    
-    
 
+        $this->getResponse()->setBody($email->getBodyHtml());
+    }
 
     /**
      * Retrieve session model
@@ -54,6 +50,4 @@ class Mzax_Emarketing_EmailController extends Mage_Core_Controller_Front_Action
     {
         return Mage::getSingleton('mzax_emarketing/session');
     }
-    
-    
 }

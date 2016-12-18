@@ -16,9 +16,14 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
+/**
+ * Class Mzax_Emarketing_Block_Outbox_Email
+ */
 class Mzax_Emarketing_Block_Outbox_Email extends Mage_Adminhtml_Block_Widget_Form_Container
 {
+    /**
+     * Mzax_Emarketing_Block_Outbox_Email constructor.
+     */
     public function __construct()
     {
         $this->_objectId = 'id';
@@ -57,35 +62,36 @@ class Mzax_Emarketing_Block_Outbox_Email extends Mage_Adminhtml_Block_Widget_For
 
         $this->_removeButton('save');
         $this->_removeButton('reset');
-
     }
 
-
+    /**
+     * @return string
+     */
     public function getHeaderText()
     {
         $message = Mage::registry('current_email');
         if ($message->getId()) {
             return $this->htmlEscape($message->getSubject());
-        }
-        else {
+        } else {
             return $this->__('New Email');
         }
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getValidationUrl()
     {
         return $this->getUrl('*/*/validate', array('_current'=>true));
     }
 
-
-
+    /**
+     * @return Mage_Core_Block_Abstract
+     */
     protected function _prepareLayout()
     {
-    	return parent::_prepareLayout();
+        return parent::_prepareLayout();
     }
-
 
     /**
      * Get form action URL
@@ -99,6 +105,4 @@ class Mzax_Emarketing_Block_Outbox_Email extends Mage_Adminhtml_Block_Widget_For
         }
         return $this->getUrl('*/*/save');
     }
-
-
 }

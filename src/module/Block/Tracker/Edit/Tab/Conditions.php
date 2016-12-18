@@ -17,19 +17,21 @@
  */
 
 
+/**
+ * Class Mzax_Emarketing_Block_Tracker_Edit_Tab_Conditions
+ */
 class Mzax_Emarketing_Block_Tracker_Edit_Tab_Conditions extends Mage_Adminhtml_Block_Widget_Form
 {
-
-
+    /**
+     * @return $this
+     */
     public function initForm()
     {
         $form = new Varien_Data_Form();
         $form->setHtmlIdPrefix('_mzax_emarketing');
         $form->setFieldNameSuffix('mzax_emarketing');
 
-
         $tracker = Mage::registry('current_tracker');
-
 
         $form->setHtmlIdPrefix('conditions_');
 
@@ -42,20 +44,14 @@ class Mzax_Emarketing_Block_Tracker_Edit_Tab_Conditions extends Mage_Adminhtml_B
             'legend'=>Mage::helper('salesrule')->__('Only track conversion goals matching the conditions below')
         ))->setRenderer($renderer);
 
-
-
-    	$fieldset->addField('conditions', 'text', array(
+        $fieldset->addField('conditions', 'text', array(
             'name' => 'conditions',
             'label' => $this->__('Conditions'),
             'title' => $this->__('Conditions'),
-        ))->setTracker($tracker)
-    	  ->setRenderer(Mage::getBlockSingleton('mzax_emarketing/conditions'));
+        ))->setTracker($tracker)->setRenderer(Mage::getBlockSingleton('mzax_emarketing/conditions'));
 
         $this->setForm($form);
 
         return $this;
     }
-
-
-
 }

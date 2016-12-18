@@ -16,18 +16,21 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
+/**
+ * Class Mzax_Emarketing_Block_Outbox_View
+ */
 class Mzax_Emarketing_Block_Outbox_View extends Mage_Adminhtml_Block_Widget_Grid_Container
 {
-
+    /**
+     * Mzax_Emarketing_Block_Outbox_View constructor.
+     */
     public function __construct()
     {
-    	$this->_blockGroup = 'mzax_emarketing';
+        $this->_blockGroup = 'mzax_emarketing';
         $this->_controller = 'outbox';
         $this->_headerText = Mage::helper('mzax_emarketing')->__('Manage Outbox');
 
         parent::__construct();
-
 
         $this->_removeButton('add');
 
@@ -37,7 +40,4 @@ class Mzax_Emarketing_Block_Outbox_View extends Mage_Adminhtml_Block_Widget_Grid
             'class'     => '',
         ));
     }
-
-
-
 }

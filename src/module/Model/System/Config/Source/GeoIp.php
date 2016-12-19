@@ -30,7 +30,21 @@ class Mzax_Emarketing_Model_System_Config_Source_Geoip
     /**
      * @var Mage_Core_Model_Config_Element
      */
+    protected $_configNode;
+
+    /**
+     * @var Mzax_Emarketing_Model_Config
+     */
     protected $_config;
+
+    /**
+     * Mzax_Emarketing_Model_Outbox constructor.
+     */
+    public function __construct()
+    {
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
+        $this->_configNode = Mage::getConfig()->getNode('global/mzax_emarketing/geoip_adapters');
+    }
 
     /**
      * To option array
@@ -85,7 +99,7 @@ class Mzax_Emarketing_Model_System_Config_Source_Geoip
     {
         $adapters = $this->getAdapters();
 
-        $selectedAdapters = Mage::getStoreConfig('mzax_emarketing/tracking/geo_ip_adapters');
+        $selectedAdapters = $this->_config->get('mzax_emarketing/tracking/geo_ip_adapters');
         $selectedAdapters = explode(',', $selectedAdapters);
 
         $selected = array();
@@ -105,9 +119,6 @@ class Mzax_Emarketing_Model_System_Config_Source_Geoip
      */
     public function getConfig()
     {
-        if (!$this->_config) {
-            $this->_config = Mage::getConfig()->getNode('global/mzax_emarketing/geoip_adapters');
-        }
-        return $this->_config;
+        return $this->_configNode;
     }
 }

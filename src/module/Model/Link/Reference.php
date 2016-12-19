@@ -32,8 +32,10 @@
  * @method Mzax_Emarketing_Model_Resource_Link_Reference getResource()
  * @method Mzax_Emarketing_Model_Resource_Link_Reference _getResource()
  */
-class Mzax_Emarketing_Model_Link_Reference extends Mage_Core_Model_Abstract
+class Mzax_Emarketing_Model_Link_Reference extends Mzax_Emarketing_Model_AbstractModel
 {
+    const CONFIG_ENABLE_GA = 'mzax_emarketing/google_analytics/enable';
+
     /**
      * Prefix of model events names
      *
@@ -65,6 +67,13 @@ class Mzax_Emarketing_Model_Link_Reference extends Mage_Core_Model_Abstract
     protected $_recipient;
 
     /**
+     * Dependencies
+     *
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_config;
+
+    /**
      * Model Constructor
      *
      * @return void
@@ -72,6 +81,8 @@ class Mzax_Emarketing_Model_Link_Reference extends Mage_Core_Model_Abstract
     protected function _construct()
     {
         $this->_init('mzax_emarketing/link_reference');
+
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
     }
 
     /**
@@ -256,7 +267,9 @@ class Mzax_Emarketing_Model_Link_Reference extends Mage_Core_Model_Abstract
 
         $url = $this->getLink()->getUrl();
 
-        if (Mage::getStoreConfigFlag('mzax_emarketing/google_analytics/enable', $storeId)) {
+        $gaEnabled = $this->_config->flag(self::CONFIG_ENABLE_GA, $storeId);
+
+        if ($gaEnabled) {
             $utmParams = array();
             $utmParams['utm_source']   = $this->getUtmSource();
             $utmParams['utm_medium']   = $this->getUtmMedium();
@@ -282,7 +295,7 @@ class Mzax_Emarketing_Model_Link_Reference extends Mage_Core_Model_Abstract
      */
     public function getUtmSource()
     {
-        return Mage::getStoreConfig(
+        return $this->_config->flag(
             'mzax_emarketing/google_analytics/utm_source',
             $this->getCampaign()->getStoreId()
         );
@@ -296,7 +309,7 @@ class Mzax_Emarketing_Model_Link_Reference extends Mage_Core_Model_Abstract
      */
     public function getUtmMedium()
     {
-        return Mage::getStoreConfig(
+        return$this->_config->get(
             'mzax_emarketing/google_analytics/utm_medium',
             $this->getCampaign()->getStoreId()
         );

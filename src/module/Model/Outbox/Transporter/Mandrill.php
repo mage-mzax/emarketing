@@ -55,6 +55,23 @@ class Mzax_Emarketing_Model_Outbox_Transporter_Mandrill
     protected $_subaccount = '';
 
     /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_storeConfig;
+
+    /**
+     * Mzax_Emarketing_Model_Outbox_Transporter_Sendgrid constructor.
+     *
+     * Load dependencies
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->_storeConfig = Mage::getSingleton('mzax_emarketing/config');
+    }
+
+    /**
      * Check login data and return true on success
      * or string with error message
      *
@@ -83,22 +100,21 @@ class Mzax_Emarketing_Model_Outbox_Transporter_Mandrill
     }
 
     /**
+     * @param Mzax_Emarketing_Model_Outbox_Email $email
      *
-     *
-     * (non-PHPdoc)
-     * @see Mzax_Emarketing_Model_Outbox_Transporter_Smtp::setup()
+     * @return void
      */
     public function setup(Mzax_Emarketing_Model_Outbox_Email $email)
     {
         $store  = $email->getRecipient()->getStore();
 
-        $username    = Mage::getStoreConfig('mzax_emarketing/email/mandrill_username', $store);
-        $password    = Mage::getStoreConfig('mzax_emarketing/email/mandrill_password', $store);
-        $defaultTags = Mage::getStoreConfig('mzax_emarketing/email/mandrill_default_tags', $store);
+        $username    = $this->_storeConfig->get('mzax_emarketing/email/mandrill_username', $store);
+        $password    = $this->_storeConfig->get('mzax_emarketing/email/mandrill_password', $store);
+        $defaultTags = $this->_storeConfig->get('mzax_emarketing/email/mandrill_default_tags', $store);
 
-        $this->_subaccount   = Mage::getStoreConfig('mzax_emarketing/email/mandrill_subaccount', $store);
-        $this->_categoryTags = Mage::getStoreConfigFlag('mzax_emarketing/email/mandrill_category_tags', $store);
-        $this->_metaTags     = Mage::getStoreConfigFlag('mzax_emarketing/email/mandrill_metatags', $store);
+        $this->_subaccount   = $this->_storeConfig->get('mzax_emarketing/email/mandrill_subaccount', $store);
+        $this->_categoryTags = $this->_storeConfig->flag('mzax_emarketing/email/mandrill_category_tags', $store);
+        $this->_metaTags     = $this->_storeConfig->flag('mzax_emarketing/email/mandrill_metatags', $store);
 
         if (!empty($defaultTags)) {
             $this->_defaultTags = preg_split('/[\s,]+/', $defaultTags, -1, PREG_SPLIT_NO_EMPTY);

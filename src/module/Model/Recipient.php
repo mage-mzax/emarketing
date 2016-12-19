@@ -71,6 +71,11 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
     protected $_content;
 
     /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_config;
+
+    /**
      * Model Constructor
      *
      * @return void
@@ -78,6 +83,8 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
     protected function _construct()
     {
         $this->_init('mzax_emarketing/recipient');
+
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
     }
 
     /**
@@ -458,8 +465,8 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
      */
     public function autologin($customerId)
     {
-        $enabled = Mage::getStoreConfigFlag('mzax_emarketing/autologin/enable', $this->getStoreId());
-        $expire  = (float)Mage::getStoreConfig('mzax_emarketing/autologin/expire', $this->getStoreId());
+        $enabled = $this->_config->flag('mzax_emarketing/autologin/enable', $this->getStoreId());
+        $expire  = (float)$this->_config->get('mzax_emarketing/autologin/expire', $this->getStoreId());
 
         if (!$enabled) {
             return false;

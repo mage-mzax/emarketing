@@ -23,6 +23,21 @@
 abstract class Mzax_Emarketing_Model_Inbox_Email_Pull_Abstract extends Varien_Object
 {
     /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_config;
+
+    /**
+     * Mzax_Emarketing_Model_Outbox constructor.
+     */
+    public function _construct()
+    {
+        parent::_construct();
+
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
+    }
+
+    /**
      * Pull messages from storage
      *
      * @param Mzax_Emarketing_Model_Inbox_Email_Collector $collector

@@ -37,7 +37,7 @@ class Mzax_Emarketing_Model_Observer extends Mzax_Emarketing_Model_Observer_Abst
      */
     public function injectTimeOffsetJs(Varien_Event_Observer $observer)
     {
-        if (!Mage::getStoreConfigFlag('mzax_emarketing/tracking/inject_timeoffset_js')) {
+        if (!$this->_config->get('mzax_emarketing/tracking/inject_timeoffset_js')) {
             return;
         }
 

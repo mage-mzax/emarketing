@@ -22,6 +22,21 @@
 class Mzax_Emarketing_Model_Form_Element_Ace extends Varien_Data_Form_Element_Abstract
 {
     /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_config;
+
+    /**
+     * Mzax_Emarketing_Model_Outbox constructor.
+     */
+    public function _construct()
+    {
+        parent::_construct();
+
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
+    }
+
+    /**
      * @return string
      */
     public function getEditorClass()
@@ -341,7 +356,7 @@ JS;
      */
     public function aceEnabled()
     {
-        $enabled = Mage::getStoreConfigFlag('mzax_emarketing/content_management/enable_ace');
+        $enabled = $this->_config->flag('mzax_emarketing/content_management/enable_ace');
         if (!$enabled) {
             return 0;
         }
@@ -356,7 +371,7 @@ JS;
      */
     public function ckeEnabled()
     {
-        $enabled =  Mage::getStoreConfigFlag('mzax_emarketing/content_management/enable_ckeditor');
+        $enabled =  $this->_config->flag('mzax_emarketing/content_management/enable_ckeditor');
         if (!$enabled) {
             return 0;
         }

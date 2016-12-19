@@ -57,6 +57,21 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
     protected $_apiKey;
 
     /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_config;
+
+    /**
+     * Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi constructor.
+     *
+     * Load dependencies
+     */
+    public function __construct()
+    {
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
+    }
+
+    /**
      * Test API call
      * or string with error message
      *
@@ -96,13 +111,13 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillApi
     {
         $store  = $email->getRecipient()->getStore();
 
-        $this->_apiKey       = Mage::getStoreConfig('mzax_emarketing/email/mandrill_api_key', $store);
-        $this->_subaccount   = Mage::getStoreConfig('mzax_emarketing/email/mandrill_api_subaccount', $store);
+        $this->_apiKey       = $this->_config->get('mzax_emarketing/email/mandrill_api_key', $store);
+        $this->_subaccount   = $this->_config->get('mzax_emarketing/email/mandrill_api_subaccount', $store);
 
-        $this->_categoryTags = Mage::getStoreConfigFlag('mzax_emarketing/email/mandrill_api_category_tags', $store);
-        $this->_metaTags     = Mage::getStoreConfigFlag('mzax_emarketing/email/mandrill_api_metatags', $store);
+        $this->_categoryTags = $this->_config->flag('mzax_emarketing/email/mandrill_api_category_tags', $store);
+        $this->_metaTags     = $this->_config->flag('mzax_emarketing/email/mandrill_api_metatags', $store);
 
-        $defaultTags = Mage::getStoreConfig('mzax_emarketing/email/mandrill_api_default_tags', $store);
+        $defaultTags = $this->_config->get('mzax_emarketing/email/mandrill_api_default_tags', $store);
         if (!empty($defaultTags)) {
             $this->_defaultTags = preg_split('/[\s,]+/', $defaultTags, -1, PREG_SPLIT_NO_EMPTY);
         }

@@ -23,6 +23,19 @@
 abstract class Mzax_Emarketing_Model_Observer_Abstract
 {
     /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_config;
+
+    /**
+     * Mzax_Emarketing_Model_Outbox constructor.
+     */
+    public function __construct()
+    {
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
+    }
+
+    /**
      * Retrieve session object model
      *
      * @return Mzax_Emarketing_Model_Session

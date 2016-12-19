@@ -24,6 +24,21 @@
  */
 class Mzax_Emarketing_Model_Report
 {
+    const CONFIG_USE_GEO_IP = 'mzax_emarketing/tracking/use_geo_ip';
+
+    /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_config;
+
+    /**
+     * Mzax_Emarketing_Model_Report constructor.
+     */
+    public function __construct()
+    {
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
+    }
+
     /**
      * Run all report aggregator
      *
@@ -62,7 +77,7 @@ class Mzax_Emarketing_Model_Report
      */
     public function fetchGeoIp($verbose = false)
     {
-        if (!Mage::getStoreConfigFlag('mzax_emarketing/tracking/use_geo_ip')) {
+        if (!$this->_config->flag(self::CONFIG_USE_GEO_IP)) {
             return;
         }
 

@@ -41,15 +41,12 @@ class Mzax_Emarketing_Model_Inbox_Email_Pull_Storage
      */
     public function getConfig()
     {
-        /** @var Mzax_Emarketing_Model_Config $storeConfig */
-        $storeConfig = Mage::getSingleton('mzax_emarketing/config');
-
         $config = array();
-        $config['host']     = $storeConfig->get('mzax_emarketing/inbox/hostname');
-        $config['user']     = $storeConfig->get('mzax_emarketing/inbox/username');
-        $config['password'] = $storeConfig->get('mzax_emarketing/inbox/password');
-        $config['port']     = $storeConfig->get('mzax_emarketing/inbox/port');
-        $config['ssl']      = $storeConfig->flag('mzax_emarketing/inbox/ssl');
+        $config['host']     = $this->_config->get('mzax_emarketing/inbox/hostname');
+        $config['user']     = $this->_config->get('mzax_emarketing/inbox/username');
+        $config['password'] = $this->_config->get('mzax_emarketing/inbox/password');
+        $config['port']     = $this->_config->get('mzax_emarketing/inbox/port');
+        $config['ssl']      = $this->_config->flag('mzax_emarketing/inbox/ssl');
 
         return $config;
     }
@@ -96,7 +93,7 @@ class Mzax_Emarketing_Model_Inbox_Email_Pull_Storage
     public function getStorage()
     {
         if (!$this->_storage) {
-            $adapter = Mage::getStoreConfig('mzax_emarketing/inbox/storage_type');
+            $adapter = $this->_config->get('mzax_emarketing/inbox/storage_type');
             if (!$adapter) {
                 $adapter = $this->_storageAdapter;
             }
@@ -121,7 +118,7 @@ class Mzax_Emarketing_Model_Inbox_Email_Pull_Storage
      */
     public function getMaxMessageSize()
     {
-        $size = (float) Mage::getStoreConfig('mzax_emarketing/inbox/max_download_size');
+        $size = (float)$this->_config->get('mzax_emarketing/inbox/max_download_size');
         $size = max($size, 0.5);
 
         return min(1024*1024 * $size, 16777000 /* db limit */);

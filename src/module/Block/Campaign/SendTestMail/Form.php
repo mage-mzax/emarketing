@@ -20,22 +20,35 @@
 /**
  * Class Mzax_Emarketing_Block_Campaign_SendTestMail_Form
  */
-class Mzax_Emarketing_Block_Campaign_SendTestMail_Form extends Mage_Adminhtml_Block_Widget_Form
+class Mzax_Emarketing_Block_Campaign_SendTestMail_Form extends Mzax_Emarketing_Block_Widget_Form
 {
     /**
-     * @return Mage_Adminhtml_Block_Widget_Form
+     * @var Mzax_Emarketing_Model_Campaign
+     */
+    protected $_campaign;
+
+    /**
+     * @var Mzax_Emarketing_Model_Recipient
+     */
+    protected $_recipient;
+
+    /**
+     * Prepare form
+     *
+     * @return $this
      */
     protected function _prepareForm()
     {
         $form = new Varien_Data_Form(
-            array('id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post')
+            array(
+                'id' => 'edit_form',
+                'action' => $this->getData('action'),
+                'method' => 'post'
+            )
         );
 
-        /* @var $campaign Mzax_Emarketing_Model_Campaign */
-        $campaign  = Mage::registry('current_campaign');
-
-        /* @var $recipient Mzax_Emarketing_Model_Recipient */
-        $recipient = Mage::registry('current_recipient');
+        $campaign = $this->getCampaign();
+        $recipient = $this->getRecipient();
 
         $form->addField('id', 'hidden', array(
             'name'  => 'id',
@@ -53,8 +66,8 @@ class Mzax_Emarketing_Block_Campaign_SendTestMail_Form extends Mage_Adminhtml_Bl
             'value' => $recipient->getName()
         ));
 
-
-        $user = Mage::getSingleton('admin/session')->getUser();
+        /** @var Mage_Admin_Model_User $user */
+        $user = $this->_sessionManager->getAdminSession()->getData('user');
 
         $form->addField('recipient_email', 'text', array(
             'name'  => 'recipient_email',
@@ -78,6 +91,62 @@ class Mzax_Emarketing_Block_Campaign_SendTestMail_Form extends Mage_Adminhtml_Bl
         $form->setUseContainer(true);
         $this->setForm($form);
 
-        return parent::_prepareForm();
+        return $this;
+    }
+
+    /**
+     * Retrieve Campaign
+     *
+     * @return Mzax_Emarketing_Model_Campaign
+     */
+    public function getCampaign()
+    {
+        if (!$this->_campaign) {
+            $this->_campaign = Mage::registry('current_campaign');
+        }
+
+        return $this->_campaign;
+    }
+
+    /**
+     * Set Campaign
+     *
+     * @param Mzax_Emarketing_Model_Campaign $campaign
+     *
+     * @return $this
+     */
+    public function setCampaign(Mzax_Emarketing_Model_Campaign$campaign)
+    {
+        $this->_campaign = $campaign;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve Recipient
+     *
+     * @return Mzax_Emarketing_Model_Recipient
+     */
+    public function getRecipient()
+    {
+        if (!$this->_recipient) {
+            $this->_recipient = Mage::registry('current_recipient');
+        }
+
+        return $this->_recipient;
+    }
+
+    /**
+     * Set Recipient
+     *
+     * @param Mzax_Emarketing_Model_Recipient $recipient
+     *
+     * @return $this
+     */
+    public function setRecipient(Mzax_Emarketing_Model_Recipient $recipient)
+    {
+        $this->_recipient = $recipient;
+
+        return $this;
     }
 }

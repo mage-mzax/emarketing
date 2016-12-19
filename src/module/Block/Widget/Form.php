@@ -18,9 +18,9 @@
 
 
 /**
- * Class Mzax_Emarketing_Model_Observer_Abstract
+ * Class Mzax_Emarketing_Block_Widget_Form
  */
-abstract class Mzax_Emarketing_Model_Observer_Abstract
+class Mzax_Emarketing_Block_Widget_Form extends Mage_Adminhtml_Block_Widget_Form
 {
     /**
      * Session Manager
@@ -44,22 +44,17 @@ abstract class Mzax_Emarketing_Model_Observer_Abstract
     protected $_factory;
 
     /**
-     * Mzax_Emarketing_Model_Observer_Abstract constructor.
+     * FormWidget Constructor.
+     * Load dependencies.
+     *
+     * @return void
      */
-    public function __construct()
+    public function _construct()
     {
+        parent::_construct();
+
         $this->_sessionManager = Mage::getSingleton('mzax_emarketing/sessionManager');
         $this->_factory = Mage::getSingleton('mzax_emarketing/factory');
         $this->_config = Mage::getSingleton('mzax_emarketing/config');
-    }
-
-    /**
-     * Retrieve session object model
-     *
-     * @return Mzax_Emarketing_Model_Session
-     */
-    public function getSession()
-    {
-        return $this->_sessionManager->getSession();
     }
 }

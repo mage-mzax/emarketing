@@ -44,6 +44,14 @@ class Mzax_Emarketing_Model_Factory
     }
 
     /**
+     * @return Mzax_Emarketing_Model_Link_Reference
+     */
+    public function createLinkReference()
+    {
+        return Mage::getModel('mzax_emarketing/link_reference');
+    }
+
+    /**
      * Create new campaign model
      *
      * @return Mzax_Emarketing_Model_Campaign
@@ -86,6 +94,22 @@ class Mzax_Emarketing_Model_Factory
     }
 
     /**
+     * @return Mzax_Emarketing_Model_Newsletter_List
+     */
+    public function createNewsletterList()
+    {
+        return Mage::getModel('mzax_emarketing/newsletter_list');
+    }
+
+    /**
+     * @return Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
+     */
+    public function createNewsletterListCollection()
+    {
+        return Mage::getResourceModel('mzax_emarketing/newsletter_list_collection');
+    }
+
+    /**
      * Create url model
      *
      * @return Mage_Core_Model_Url
@@ -93,5 +117,13 @@ class Mzax_Emarketing_Model_Factory
     public function createUrl()
     {
         return Mage::getModel('core/url');
+    }
+
+    /**
+     * @return Mage_Newsletter_Model_Subscriber
+     */
+    public function createNewsletterSubscriber()
+    {
+        return Mage::getModel('newsletter/subscriber');
     }
 }

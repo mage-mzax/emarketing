@@ -23,6 +23,24 @@
 class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Controller_Action
 {
     /**
+     * @var Mzax_Emarketing_Model_SessionManager
+     */
+    protected $_sessionManager;
+
+    /**
+     * Controller Constructor.
+     * Load dependencies.
+     *
+     * @return void
+     */
+    public function _construct()
+    {
+        parent::_construct();
+
+        $this->_sessionManager = Mage::getSingleton('mzax_emarketing/sessionManager');
+    }
+
+    /**
      * Manage tracker action
      *
      * @return void
@@ -105,7 +123,8 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
 
         if ($tracker->getGoalType()) {
             $tracker->getGoal()->setDefaultFilters();
-            return $this->_forward('edit');
+            $this->_forward('edit');
+            return;
         }
 
         $this->_title($this->__('eMarketing'))
@@ -586,7 +605,8 @@ class Mzax_Emarketing_Emarketing_TrackerController extends Mage_Adminhtml_Contro
      */
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')
-            ->isAllowed('promo/emarketing/trackers');
+        $session = $this->_sessionManager->getAdminSession();
+
+        return $session->isAllowed('promo/emarketing/trackers');
     }
 }

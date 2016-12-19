@@ -27,6 +27,8 @@ use Mzax_Emarketing_Model_Campaign as Campaign;
  */
 class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstract
 {
+
+
     /**
      * @var Mzax_Emarketing_Block_Chart_Abstract
      */
@@ -48,6 +50,13 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
     protected static $_uid = 1;
 
     /**
+     * Session Manager
+     *
+     * @var Mzax_Emarketing_Model_SessionManager
+     */
+    protected $_sessionManager;
+
+    /**
      * @return mixed|string
      */
     public function getHtmlId()
@@ -66,7 +75,10 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
     protected function _construct()
     {
         parent::_construct();
+
         $this->setTemplate('mzax/emarketing/widget/chart-tab.phtml');
+
+        $this->_sessionManager = Mage::getSingleton('mzax_emarketing/sessionManager');
     }
 
     /**
@@ -191,17 +203,20 @@ class Mzax_Emarketing_Block_Chart_Widget_Tab extends Mage_Adminhtml_Block_Abstra
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function getQueryUrl()
     {
         $url = $this->getData('query_url');
         if (!$url) {
+            $formKey = $this->_sessionManager->getCoreSession()->getFormKey();
+
             $url = $this->getUrl('*/*/queryReport', array(
                 '_current' => true,
-                'form_key'  => Mage::getSingleton('core/session')->getFormKey()
+                'form_key'  => $formKey
             ));
         }
+
         return $url;
     }
 

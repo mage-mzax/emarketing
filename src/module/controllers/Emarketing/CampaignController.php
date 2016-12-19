@@ -20,7 +20,7 @@
 /**
  * Class Mzax_Emarketing_Emarketing_CampaignController
  */
-class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Controller_Action
+class Mzax_Emarketing_Emarketing_CampaignController extends Mzax_Emarketing_Controller_Admin_Action
 {
     /**
      * @var string[]
@@ -32,16 +32,18 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
      */
     public function indexAction()
     {
+        $session = $this->_getSession();
+
         $this->_title($this->__('eMarketing'))
              ->_title($this->__('Manage Campaigns'));
 
-        if (!Mage::getStoreConfigFlag('mzax_emarketing/general/enable')) {
+        if (!$this->_config->get('mzax_emarketing/general/enable')) {
             $msg = $this->__(
                 'The emarketing extension is disabled, no cron jobs are triggered. <a href="%s">Change Settings</a>',
                 $this->getUrl('*/system_config/edit', array('section' => 'mzax_emarketing'))
             );
 
-            $this->_getSession()->addWarning($msg);
+            $session->addWarning($msg);
         }
         $this->loadLayout();
         $this->_setActiveMenu('promo/emarketing');
@@ -458,18 +460,23 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
     }
 
     /**
+     * Duplicate campaign action
+     *
      * @return void
      */
     public function duplicateAction()
     {
         $campaign = $this->_initCampaign();
-        if ($campaign->getId()) {
-            $newCampaign = clone $campaign;
-            $newCampaign->setName($this->__('Copy of %s', $campaign->getName()));
-            $newCampaign->isArchived(false);
-            $newCampaign->save();
-            $this->_getSession()->addSuccess($this->__("Campaign sucessfully duplicated."));
+        if (!$campaign->getId()) {
+            $this->_redirect('*/*/index');
         }
+
+        $newCampaign = clone $campaign;
+        $newCampaign->setName($this->__('Copy of %s', $campaign->getName()));
+        $newCampaign->isArchived(false);
+        $newCampaign->save();
+        $this->_getSession()->addSuccess($this->__("Campaign successfully duplicated."));
+
         $this->_redirect('*/*/edit', array('_current' => true, 'tab' => 'tasks', 'id' => $newCampaign->getId()));
     }
 
@@ -515,14 +522,17 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
      */
     public function installAsPresetAction()
     {
+        $session = $this->_sessionManager->getAdminSession();
         $campaign = $this->_initCampaign();
+
         if ($campaign->getId()) {
             try {
                 $data = $campaign->export();
 
                 $filename = preg_replace('/[^a-z0-9]+/', '-', strtolower($campaign->getName()));
 
-                $user = Mage::getSingleton('admin/session')->getUser();
+                /** @var Mage_Admin_Model_User $user */
+                $user = $session->getData('user');
 
                 /* @var $resource Mzax_Emarketing_Model_Resource_Campaign_Preset */
                 $resource = Mage::getResourceSingleton('mzax_emarketing/campaign_preset');
@@ -1253,7 +1263,8 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mage_Adminhtml_Contr
      */
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')
-            ->isAllowed('promo/emarketing/campaigns');
+        $session = $this->_sessionManager->getAdminSession();
+
+        return $session->isAllowed('promo/emarketing/campaigns');
     }
 }

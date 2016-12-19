@@ -71,9 +71,18 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
     protected $_content;
 
     /**
+     * Store configuration
+     *
      * @var Mzax_Emarketing_Model_Config
      */
     protected $_config;
+
+    /**
+     * Session Manager
+     *
+     * @var Mzax_Emarketing_Model_SessionManager
+     */
+    protected $_sessionManager;
 
     /**
      * Model Constructor
@@ -85,6 +94,7 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
         $this->_init('mzax_emarketing/recipient');
 
         $this->_config = Mage::getSingleton('mzax_emarketing/config');
+        $this->_sessionManager = Mage::getSingleton('mzax_emarketing/sessionManager');
     }
 
     /**
@@ -479,8 +489,7 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
         $age = $this->getAge();
 
         if ($expire <= 0 || ($age && $age < 60*60 * $expire)) {
-            /* @var $session Mage_Customer_Model_Session */
-            $session = Mage::getSingleton('customer/session');
+            $session = $this->_sessionManager->getCustomerSession();
             if (!$session->isLoggedIn()) {
                 return $session->loginById($customerId);
             }
@@ -547,8 +556,7 @@ class Mzax_Emarketing_Model_Recipient extends Mage_Core_Model_Abstract
                 $request = Mage::app()->getRequest();
             }
 
-            /* @var $session Mzax_Emarketing_Model_Session */
-            $session = Mage::getSingleton('mzax_emarketing/session');
+            $session = $this->_sessionManager->getSession();
 
             $eventId = $this->getResource()->insertEvent(
                 array(

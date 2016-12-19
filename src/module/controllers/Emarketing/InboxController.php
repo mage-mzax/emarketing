@@ -20,7 +20,7 @@
 /**
  * Class Mzax_Emarketing_Emarketing_InboxController
  */
-class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controller_Action
+class Mzax_Emarketing_Emarketing_InboxController extends Mzax_Emarketing_Controller_Admin_Action
 {
     /**
      * @return void
@@ -294,7 +294,8 @@ class Mzax_Emarketing_Emarketing_InboxController extends Mage_Adminhtml_Controll
      */
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')
-            ->isAllowed('promo/emarketing/email');
+        $session = $this->_sessionManager->getAdminSession();
+
+        return $session->isAllowed('promo/emarketing/email');
     }
 }

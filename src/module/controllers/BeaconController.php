@@ -57,7 +57,6 @@ class Mzax_Emarketing_BeaconController extends Mage_Core_Controller_Front_Action
                'F98C4EABD7ECB6FB0D8FCBE7A602003B';
 
 
-
         $binary = '';
         foreach (str_split($gif, 2) as $byte) {
             $binary .= chr(hexdec($byte));
@@ -68,15 +67,5 @@ class Mzax_Emarketing_BeaconController extends Mage_Core_Controller_Front_Action
         $response->setHeader('Expires', 'Wed, 11 Nov 2200 11:11:11 GMT');
         $response->setHeader('Cache-Control', 'private, max-age=31536000');
         $response->setBody($binary);
-    }
-
-    /**
-     * Retrieve session model
-     *
-     * @return Mzax_Emarketing_Model_Session
-     */
-    public function getSession()
-    {
-        return Mage::getSingleton('mzax_emarketing/session');
     }
 }

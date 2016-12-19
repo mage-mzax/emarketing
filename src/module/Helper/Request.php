@@ -45,6 +45,9 @@ class Mzax_Emarketing_Helper_Request extends Mage_Core_Helper_Abstract
     /**
      * Check if we can "trust" the request
      *
+     * If to any bad request have been logged for a given IP
+     * then it will be flagged for not trustable.
+     *
      * @param string $request
      * @return boolean
      */

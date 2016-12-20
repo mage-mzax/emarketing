@@ -23,13 +23,26 @@
 class Mzax_Emarketing_Model_Inbox
 {
     /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_config;
+
+    /**
+     * Mzax_Emarketing_Model_Outbox constructor.
+     */
+    public function __construct()
+    {
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
+    }
+
+    /**
      * Retrieve new email messages
      *
      * @return $this
      */
     public function downloadEmails()
     {
-        if (!Mage::getStoreConfigFlag('mzax_emarketing/inbox/enable')) {
+        if (!$this->_config->flag('mzax_emarketing/inbox/enable')) {
             return $this;
         }
 

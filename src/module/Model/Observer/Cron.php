@@ -84,7 +84,7 @@ class Mzax_Emarketing_Model_Observer_Cron
             return true;
         }
 
-        return Mage::getStoreConfigFlag('mzax_emarketing/general/enable');
+        return $this->_config->flag('mzax_emarketing/general/enable');
     }
 
     /**
@@ -253,7 +253,7 @@ class Mzax_Emarketing_Model_Observer_Cron
      */
     public function purge()
     {
-        $ttl = (int) Mage::getStoreConfig('mzax_emarketing/ema/email_ttl');
+        $ttl = (int) $this->_config->get('mzax_emarketing/ema/email_ttl');
         $ttl = max($ttl, 14);
 
         /* @var $inbox Mzax_Emarketing_Model_Resource_Inbox_Email */

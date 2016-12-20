@@ -1374,7 +1374,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Abstract extends Mzax_Emarket
      */
     public function canCreateIndex()
     {
-        return Mage::getStoreConfigFlag('mzax_emarketing/general/can_create_indexes');
+        return $this->_config->flag('mzax_emarketing/general/can_create_indexes');
     }
 }
 

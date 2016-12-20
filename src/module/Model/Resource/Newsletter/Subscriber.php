@@ -18,12 +18,10 @@
 
 
 
-
 /**
  * Class Mzax_Emarketing_Model_Resource_Newsletter_Subscriber
  *
- * Overwrite magento subscriber to add mutli-store support
- *
+ * Overwrite magento subscriber to add multi-store support
  */
 class Mzax_Emarketing_Model_Resource_Newsletter_Subscriber
     extends Mage_Newsletter_Model_Resource_Subscriber
@@ -35,7 +33,10 @@ class Mzax_Emarketing_Model_Resource_Newsletter_Subscriber
      */
     public function allowMultiStoreSupport()
     {
-        return Mage::getStoreConfigFlag('mzax_emarketing/general/newsletter_multistore');
+        /** @var Mzax_Emarketing_Model_Config $config */
+        $config = Mage::getSingleton('mzax_emarketing/config');
+
+        return $config->flag('mzax_emarketing/general/newsletter_multistore');
     }
 
     /**
@@ -43,6 +44,7 @@ class Mzax_Emarketing_Model_Resource_Newsletter_Subscriber
      *
      * @param string $subscriberEmail
      * @param mixed $storeId
+     *
      * @return array
      */
     public function loadByEmail($subscriberEmail, $storeId = null)

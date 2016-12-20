@@ -16,6 +16,10 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
+
+use Mage_Core_Model_Store as Store;
+
+
 /**
  * Sendgrid transporter
  */
@@ -26,6 +30,12 @@ class Mzax_Emarketing_Model_Outbox_Transporter_Sendgrid
     const PORT  = 587;
     const SSL   = 'tls';
     const AUTH  = 'login';
+
+    const CONFIG_USERNAME = 'mzax_emarketing/email/sendgrid_username';
+    const CONFIG_PASSWORD = 'mzax_emarketing/email/sendgrid_password';
+    const CONFIG_CATEGORY = 'mzax_emarketing/email/sendgrid_category';
+    const CONFIG_INCLUDE_CAMPAIGN_TAG = 'mzax_emarketing/email/sendgrid_category_tags';
+    const CONFIG_INCLUDE_UNIQUE_ARGS = 'mzax_emarketing/email/sendgrid_unique_args';
 
     /**
      * @see https://sendgrid.com/docs/API_Reference/SMTP_API/categories.html
@@ -44,6 +54,23 @@ class Mzax_Emarketing_Model_Outbox_Transporter_Sendgrid
      * @var boolean
      */
     protected $_uniqueArgs = true;
+
+    /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_storeConfig;
+
+    /**
+     * Mzax_Emarketing_Model_Outbox_Transporter_Sendgrid constructor.
+     *
+     * Load dependencies
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->_storeConfig = Mage::getSingleton('mzax_emarketing/config');
+    }
 
     /**
      * Check login data and return true on success
@@ -82,12 +109,12 @@ class Mzax_Emarketing_Model_Outbox_Transporter_Sendgrid
     {
         $store  = $email->getCampaign()->getStore();
 
-        $username = Mage::getStoreConfig('mzax_emarketing/email/sendgrid_username', $store);
-        $password = Mage::getStoreConfig('mzax_emarketing/email/sendgrid_password', $store);
-        $category = Mage::getStoreConfig('mzax_emarketing/email/sendgrid_category', $store);
+        $username = $this->getUsername($store);
+        $password = $this->getPassword($store);
+        $category = $this->getCategory($store);
 
-        $this->_categoryTags = Mage::getStoreConfigFlag('mzax_emarketing/email/sendgrid_category_tags', $store);
-        $this->_uniqueArgs   = Mage::getStoreConfigFlag('mzax_emarketing/email/sendgrid_unique_args', $store);
+        $this->_categoryTags = $this->isCampaignTagEnabled($store);
+        $this->_uniqueArgs   = $this->isUniqueArgsIncluded($store);
 
         if (!empty($category)) {
             $this->_category = preg_split('/[\s,]+/', $category, -1, PREG_SPLIT_NO_EMPTY);
@@ -146,5 +173,59 @@ class Mzax_Emarketing_Model_Outbox_Transporter_Sendgrid
         $mail->addHeader('X-SMTPAPI', Zend_Json::encode($smtpApi));
 
         parent::send($mail);
+    }
+
+    /**
+     * @param Store $store
+     *
+     * @return string
+     */
+    public function getUsername(Store $store)
+    {
+        return $this->_storeConfig->get(self::CONFIG_USERNAME, $store);
+    }
+
+    /**
+     * @param Store $store
+     *
+     * @return string
+     */
+    public function getPassword(Store $store)
+    {
+        return $this->_storeConfig->get(self::CONFIG_PASSWORD, $store);
+    }
+
+    /**
+     * @param Mage_Core_Model_Store $store
+     *
+     * @return string
+     */
+    public function getCategory(Store $store)
+    {
+        return $this->_storeConfig->get(self::CONFIG_CATEGORY, $store);
+    }
+
+    /**
+     * Send campaign tags to SendGrid
+     *
+     * @param Mage_Core_Model_Store $store
+     *
+     * @return bool
+     */
+    public function isCampaignTagEnabled(Store $store)
+    {
+        return $this->_storeConfig->flag(self::CONFIG_INCLUDE_CAMPAIGN_TAG, $store);
+    }
+
+    /**
+     * Send unique arguments to identify the recipient
+     *
+     * @param Mage_Core_Model_Store $store
+     *
+     * @return bool
+     */
+    public function isUniqueArgsIncluded(Store $store)
+    {
+        return $this->_storeConfig->flag(self::CONFIG_INCLUDE_UNIQUE_ARGS, $store);
     }
 }

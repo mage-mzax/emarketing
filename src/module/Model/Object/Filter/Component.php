@@ -55,6 +55,27 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
     protected $_allowChildren = false;
 
     /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_config;
+
+    /**
+     * @var Mzax_Emarketing_Model_SessionManager
+     */
+    protected $_sessionManager;
+
+    /**
+     * Mzax_Emarketing_Model_Outbox constructor.
+     */
+    public function _construct()
+    {
+        parent::_construct();
+
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
+        $this->_sessionManager = Mage::getSingleton('mzax_emarketing/sessionManager');
+    }
+
+    /**
      * The subject provides generic information for the email provider/filter object.
      * So for instance, the email provider customer
      *
@@ -587,7 +608,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
     public function getTempTableName($suffix = 'default')
     {
         // can be globally disabled
-        if (!Mage::getStoreConfigFlag('mzax_emarketing/general/use_temp_tables')) {
+        if (!$this->_config->flag('mzax_emarketing/general/use_temp_tables')) {
             return false;
         }
 
@@ -624,7 +645,7 @@ abstract class Mzax_Emarketing_Model_Object_Filter_Component extends Varien_Obje
      */
     public function getSession()
     {
-        return Mage::getSingleton('mzax_emarketing/session');
+        return $this->_sessionManager->getSession();
     }
 
     /**

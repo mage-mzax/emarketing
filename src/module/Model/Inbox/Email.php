@@ -81,6 +81,11 @@ class Mzax_Emarketing_Model_Inbox_Email
     protected $_content;
 
     /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_config;
+
+    /**
      * Retrieve bounce decoder
      *
      * @return Mzax_Bounce_Detector
@@ -103,6 +108,8 @@ class Mzax_Emarketing_Model_Inbox_Email
     protected function _construct()
     {
         $this->_init('mzax_emarketing/inbox_email');
+
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
     }
 
     /**
@@ -212,7 +219,7 @@ class Mzax_Emarketing_Model_Inbox_Email
                 $this->forward($message);
             }
 
-            $unsubscribeHardBounce = Mage::getStoreConfigFlag(
+            $unsubscribeHardBounce = $this->_config->flag(
                 'mzax_emarketing/inbox/unsubscribe_hard_bounce',
                 $this->getStore()
             );
@@ -325,11 +332,11 @@ class Mzax_Emarketing_Model_Inbox_Email
         if ($campaign = $this->getCampaign()) {
             return $campaign->getSender();
         }
-        $sender = Mage::getStoreConfig('mzax_emarketing/inbox/forward_identity', $this->getStore());
+        $sender = $this->_config->get('mzax_emarketing/inbox/forward_identity', $this->getStore());
 
         return array(
-            'name'  => Mage::getStoreConfig('trans_email/ident_'.$sender.'/name', $this->getStore()),
-            'email' => Mage::getStoreConfig('trans_email/ident_'.$sender.'/email', $this->getStore()),
+            'name'  => $this->_config->get('trans_email/ident_'.$sender.'/name', $this->getStore()),
+            'email' => $this->_config->get('trans_email/ident_'.$sender.'/email', $this->getStore()),
         );
     }
 
@@ -340,7 +347,7 @@ class Mzax_Emarketing_Model_Inbox_Email
      */
     public function getForwardToEmails()
     {
-        $emails = Mage::getStoreConfig('mzax_emarketing/inbox/forward_emails', $this->getStore());
+        $emails = $this->_config->get('mzax_emarketing/inbox/forward_emails', $this->getStore());
         $emails = explode(',', $emails);
         $emails = array_map('trim', $emails);
 

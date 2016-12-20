@@ -23,6 +23,24 @@
 class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Controller_Action
 {
     /**
+     * @var Mzax_Emarketing_Model_SessionManager
+     */
+    protected $_sessionManager;
+
+    /**
+     * Controller Constructor.
+     * Load dependencies.
+     *
+     * @return void
+     */
+    public function _construct()
+    {
+        parent::_construct();
+
+        $this->_sessionManager = Mage::getSingleton('mzax_emarketing/sessionManager');
+    }
+
+    /**
      * @return void
      */
     public function indexAction()
@@ -45,9 +63,10 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
      */
     public function editAction()
     {
+        $session = $this->_sessionManager->getAdminhtmlSession();
         $template = $this->_initTemplate();
 
-        if ($values = $this->_getSession()->getTemplateData(true)) {
+        if ($values = $session->getData('template_data', true)) {
             if (isset($values['template'])) {
                 $template->addData($values['template']);
             }
@@ -77,6 +96,8 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
      */
     public function uploadPostAction()
     {
+        $session = $this->_sessionManager->getAdminhtmlSession();
+
         try {
             if (!isset($_FILES['template'])) {
                 throw new Mage_Exception($this->__("No template file selected"));
@@ -91,19 +112,19 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
             $template->save();
 
             if (version_compare($template->getVersion(), Mage::helper('mzax_emarketing')->getVersion()) < 0) {
-                $this->_getSession()->addWarning($this->__("The template you just uploaded was made with version %s, you only have version %s of Mzax Emarketing. This might cause an issue."));
+                $session->addWarning($this->__("The template you just uploaded was made with version %s, you only have version %s of Mzax Emarketing. This might cause an issue."));
             }
-            $this->_getSession()->addSuccess($this->__("Template successfully uploaded."));
+            $session->addSuccess($this->__("Template successfully uploaded."));
             $this->_redirect('*/*/edit', array('id' => $template->getId()));
             return;
         } catch (Mage_Exception $e) {
-            $this->_getSession()->addError($e->getMessage());
+            $session->addError($e->getMessage());
         } catch (Exception $e) {
             if (Mage::getIsDeveloperMode()) {
                 throw $e;
             }
             Mage::logException($e);
-            $this->_getSession()->addError($this->__("There was an error uploading the template."));
+            $session->addError($this->__("There was an error uploading the template."));
         }
 
         $this->_redirect('*/*/index');
@@ -131,13 +152,15 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
      */
     public function deleteAction()
     {
+        $session = $this->_sessionManager->getAdminhtmlSession();
+
         $template = $this->_initTemplate();
         if ($template->getId()) {
             try {
                 $template->delete();
-                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('mzax_emarketing')->__('Template was deleted'));
+                $session->addSuccess(Mage::helper('mzax_emarketing')->__('Template was deleted'));
             } catch (Exception $e) {
-                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+                $session->addError($e->getMessage());
             }
         }
         $this->_redirect('*/*');
@@ -148,6 +171,8 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
      */
     public function saveAction()
     {
+        $session = $this->_sessionManager->getAdminhtmlSession();
+
         if ($data = $this->getRequest()->getPost()) {
             $template = $this->_initTemplate('template_id');
 
@@ -161,7 +186,7 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
                 $template->save();
 
                 Mage::app()->cleanCache(array(Mzax_Emarketing_Model_Campaign::CACHE_TAG));
-                Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Template was successfully saved'));
+                $session->addSuccess($this->__('Template was successfully saved'));
 
                 if ($redirectBack) {
                     $this->_redirect('*/*/edit', array(
@@ -171,9 +196,12 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
                     return;
                 }
             } catch (Exception $e) {
-                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
-                Mage::getSingleton('adminhtml/session')->setTemplatenData($data);
-                $this->getResponse()->setRedirect($this->getUrl('*/*/edit', array('id'=>$template->getId())));
+                $session->addError($e->getMessage());
+                $session->setData('template_data', $data);
+
+                $this->getResponse()->setRedirect(
+                    $this->getUrl('*/*/edit', array('id' => $template->getId()))
+                );
                 return;
             }
         }
@@ -188,7 +216,9 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
      */
     public function downloadAction()
     {
+        $session = $this->_sessionManager->getAdminhtmlSession();
         $template = $this->_initTemplate();
+
         if ($template->getId()) {
             try {
                 $data = $template->export();
@@ -210,7 +240,7 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
 
                 return;
             } catch (Exception $e) {
-                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+                $session->addError($e->getMessage());
             }
         }
         $this->_redirect('*/*');
@@ -221,6 +251,8 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
      */
     public function validateAction()
     {
+        $session = $this->_sessionManager->getAdminhtmlSession();
+
         $response = new Varien_Object();
         $response->setError(0);
 
@@ -232,7 +264,6 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
                 }
                 $template->parse($template->getBody());
             } catch (Mzax_Emarketing_Model_Template_Exception $e) {
-                $session = $this->_getSession();
                 foreach ($e->getErrors() as $error) {
                     switch ($error->level) {
                         case LIBXML_ERR_WARNING:
@@ -289,7 +320,8 @@ class Mzax_Emarketing_Emarketing_TemplateController extends Mage_Adminhtml_Contr
      */
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')
-            ->isAllowed('promo/emarketing/templates');
+        $session = $this->_sessionManager->getAdminSession();
+
+        return $session->isAllowed('promo/emarketing/templates');
     }
 }

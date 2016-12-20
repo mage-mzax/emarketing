@@ -47,6 +47,26 @@ class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Mod
     const DEFAULT_UNIT = 'day';
 
     /**
+     * Session Manager
+     *
+     * @var Mzax_Emarketing_Model_SessionManager
+     */
+    protected $_sessionManager;
+
+    /**
+     * SalesRule Constructor.
+     * Load dependencies.
+     *
+     * @return void
+     */
+    public function _construct()
+    {
+        parent::_construct();
+
+        $this->_sessionManager = Mage::getSingleton('mzax_emarketing/sessionManager');
+    }
+
+    /**
      * Load attribute options
      *
      * @return $this
@@ -230,9 +250,10 @@ class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Mod
      */
     public function validate(Varien_Object $object)
     {
-        $recipient = $this->getSession()->getLastRecipient();
+        $session = $this->_sessionManager->getSession();
 
         // check if we have a recipient
+        $recipient = $session->getLastRecipient();
         if (!$recipient) {
             return false;
         }
@@ -243,15 +264,5 @@ class Mzax_Emarketing_Model_SalesRule_Condition_Emarketing extends Mage_Rule_Mod
         }
 
         return (strtotime($recipient->getSentAt()) > $this->getTimeLimit());
-    }
-
-    /**
-     * Retrieve session object model
-     *
-     * @return Mzax_Emarketing_Model_Session
-     */
-    public function getSession()
-    {
-        return Mage::getSingleton('mzax_emarketing/session');
     }
 }

@@ -23,13 +23,22 @@
 class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
 {
     /**
-     * Retrieve session model
+     * Session manager
      *
-     * @return Mzax_Emarketing_Model_Session
+     * @var Mzax_Emarketing_Model_SessionManager
      */
-    public function getSession()
+    protected $_sessionManager;
+
+    /**
+     * Load dependencies
+     *
+     * @return void
+     */
+    public function _construct()
     {
-        return Mage::getSingleton('mzax_emarketing/session');
+        parent::_construct();
+
+        $this->_sessionManager = Mage::getSingleton('mzax_emarketing/sessionManager');
     }
 
     /**
@@ -39,7 +48,9 @@ class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
      */
     public function getAddress()
     {
-        return $this->getSession()->getLastAddress();
+        $session = $this->_sessionManager->getSession();
+
+        return $session->getLastAddress();
     }
 
     /**
@@ -47,7 +58,9 @@ class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
      */
     public function getFormKey()
     {
-        return $this->getSession()->getFormKey();
+        $session = $this->_sessionManager->getCoreSession();
+
+        return $session->getFormKey();
     }
 
     /**
@@ -55,7 +68,8 @@ class Mzax_Emarketing_Block_Unsubscribe extends Mage_Core_Block_Template
      */
     public function getCustomerNewsletterLists()
     {
-        $customer = Mage::getSingleton('customer/session')->getCustomer();
+        $session = $this->_sessionManager->getCustomerSession();
+        $customer = $session->getCustomer();
 
         /* @var $subscriber Mage_Newsletter_Model_Subscriber */
         $subscriber = Mage::getModel('newsletter/subscriber');

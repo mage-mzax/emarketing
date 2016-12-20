@@ -43,6 +43,23 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Abstract
      */
     protected $_options;
 
+
+    /**
+     * @var Mzax_Emarketing_Model_SessionManager
+     */
+    protected $_sessionManager;
+
+    /**
+     * Mzax_Emarketing_Model_Report_Aggregator_Abstract constructor.
+     */
+    public function __construct()
+    {
+        $this->_sessionManager = Mage::getSingleton('mzax_emarketing/sessionManager');
+    }
+
+    /**
+     * @param Varien_Object $options
+     */
     public function aggregate(Varien_Object $options)
     {
         $this->_options = $options;
@@ -163,7 +180,7 @@ abstract class Mzax_Emarketing_Model_Report_Aggregator_Abstract
      */
     public function getSession()
     {
-        return Mage::getSingleton('mzax_emarketing/session');
+        return $this->_sessionManager->getSession();
     }
 
     /**

@@ -23,6 +23,8 @@ class Mzax_Emarketing_Model_Observer_Subscriber
     extends Mzax_Emarketing_Model_Observer_Abstract
 {
     /**
+     * When a subscriber gets saved add it to all newsletter lists
+     * that have auto-list enabled.
      *
      * @event newsletter_subscriber_save_after
      * @param $observer
@@ -32,7 +34,7 @@ class Mzax_Emarketing_Model_Observer_Subscriber
     public function afterSave(Varien_Event_Observer $observer)
     {
         /* @var $subscriber Mage_Newsletter_Model_Subscriber */
-        $subscriber = $observer->getEvent()->getSubscriber();
+        $subscriber = $observer->getEvent()->getData('subscriber');
 
         if ($subscriber->isObjectNew()) {
             $this->getResource()->subscribeToAutoLists($subscriber);
@@ -40,6 +42,8 @@ class Mzax_Emarketing_Model_Observer_Subscriber
     }
 
     /**
+     * Extend the default magento newsletter admin grid with
+     * two more mass actions for adding and removing subscribers from a list.
      *
      * @event adminhtml_block_html_before
      *
@@ -55,8 +59,7 @@ class Mzax_Emarketing_Model_Observer_Subscriber
             return;
         }
 
-        /* @see Mzax_Emarketing_Model_Resource_Newsletter_List_Collection */
-        $options = Mage::getResourceModel('mzax_emarketing/newsletter_list_collection')->toOptionHash();
+        $options = $this->_factory->createNewsletterListCollection()->toOptionHash();
         if (empty($options)) {
             return;
         }
@@ -102,26 +105,24 @@ class Mzax_Emarketing_Model_Observer_Subscriber
     public function beforeManageSave(Varien_Event_Observer $observer)
     {
         /* @var $controller Mage_Newsletter_ManageController */
-        $controller = $observer->getEvent()->getControllerAction();
+        $controller = $observer->getEvent()->getData('controller_action');
 
         $request = $controller->getRequest();
-        $lists   = (array) $request->getPost('lists', array());
+        $lists = (array) $request->getPost('lists', array());
 
         if (!$this->_validateFormKey($request)) {
             return;
         }
 
         try {
-            /* @var $subscriber Mage_Newsletter_Model_Subscriber */
-            $subscriber = Mage::getModel('newsletter/subscriber');
-            $subscriber->loadByCustomer(Mage::getSingleton('customer/session')->getCustomer());
+            $session = $this->_sessionManager->getCustomerSession();
 
-            /* @var $collection Mzax_Emarketing_Model_Resource_Newsletter_List_Collection */
-            $collection = Mage::getResourceModel('mzax_emarketing/newsletter_list_collection');
+            $subscriber = $this->_factory->createNewsletterSubscriber();
+            $subscriber->loadByCustomer($session->getCustomer());
+
+            $collection = $this->_factory->createNewsletterListCollection();
             $collection->addSubscriberToFilter($subscriber);
 
-
-            /* @var $list Mzax_Emarketing_Model_Newsletter_List */
             foreach ($collection as $list) {
                 if (in_array($list->getId(), $lists)) {
                     $list->addSubscribers($subscriber->getId());
@@ -141,15 +142,15 @@ class Mzax_Emarketing_Model_Observer_Subscriber
      * Validate Form Key
      *
      * @param Zend_Controller_Request_Http $request
+     *
      * @return bool
      */
     protected function _validateFormKey(Zend_Controller_Request_Http $request)
     {
-        if (!($formKey = $request->getParam('form_key', null))
-            || $formKey != Mage::getSingleton('core/session')->getFormKey()) {
-            return false;
-        }
-        return true;
+        $session = $this->_sessionManager->getCoreSession();
+        $formKey = $request->getParam('form_key', null);
+
+        return ($formKey && $formKey == $session->getFormKey());
     }
 
     /**

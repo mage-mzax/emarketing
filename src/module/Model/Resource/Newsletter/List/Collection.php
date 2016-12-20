@@ -19,6 +19,8 @@
 
 /**
  * Class Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
+ *
+ * @method Mzax_Emarketing_Model_Newsletter_List[] getIterator()
  */
 class Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
     extends Mage_Core_Model_Resource_Db_Collection_Abstract
@@ -40,13 +42,16 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
 
         $this->getSelect()
              ->group('main_table.list_id')
-             ->joinLeft(array('s' => $this->getTable('mzax_emarketing/newsletter_list_subscriber')),
-                        $this->getResource()->getReadConnection()->quoteInto(
-                                's.list_id = main_table.list_id AND s.list_status = ?',
-                                Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED),
-                        array(
-                            'subscriber_count' => $expr
-                        ));
+             ->joinLeft(
+                 array('s' => $this->getTable('mzax_emarketing/newsletter_list_subscriber')),
+                 $this->getResource()->getReadConnection()->quoteInto(
+                     's.list_id = main_table.list_id AND s.list_status = ?',
+                     Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED
+                 ),
+                 array(
+                     'subscriber_count' => $expr
+                 )
+             );
 
         $this->addFilterToMap('subscriber_count', $expr);
 
@@ -96,17 +101,18 @@ class Mzax_Emarketing_Model_Resource_Newsletter_List_Collection
         return $this;
     }
 
-
     /**
      * Filter only list that are allowed for specified store
      *
      * @param mixed $store
+     *
      * @return $this
      */
     public function addStoreFilter($store)
     {
         $store = Mage::app()->getStore($store)->getId();
         $this->getSelect()->where('FIND_IN_SET(0, `store_ids`) OR FIND_IN_SET(?, `store_ids`)', $store);
+
         return $this;
     }
 

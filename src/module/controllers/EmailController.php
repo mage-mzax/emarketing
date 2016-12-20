@@ -23,31 +23,50 @@
 class Mzax_Emarketing_EmailController extends Mage_Core_Controller_Front_Action
 {
     /**
-     * @return Mage_Core_Controller_Varien_Action
+     * @var Mzax_Emarketing_Model_SessionManager
      */
-    public function indexAction()
+    protected $_sessionManager;
+
+    /**
+     * @var Mzax_Emarketing_Model_Outbox
+     */
+    protected $_outbox;
+
+    /**
+     * Controller Constructor.
+     * Load dependencies.
+     *
+     * @return void
+     */
+    public function _construct()
     {
-        $recipientId = $this->getSession()->getLastRecipientId();
+        parent::_construct();
 
-        if (!$recipientId) {
-            return $this->_redirectUrl('/');
-        }
-
-        $email = Mage::getSingleton('mzax_emarketing/outbox')->getEmailByRecipient($recipientId);
-        if (!$email->getId() || $email->isPurged()) {
-            return $this->_redirectUrl('/');
-        }
-
-        $this->getResponse()->setBody($email->getBodyHtml());
+        $this->_sessionManager = Mage::getSingleton('mzax_emarketing/sessionManager');
+        $this->_outbox = Mage::getSingleton('mzax_emarketing/outbox');
     }
 
     /**
-     * Retrieve session model
+     * View email in browser action
      *
-     * @return Mzax_Emarketing_Model_Session
+     * @return void
      */
-    public function getSession()
+    public function indexAction()
     {
-        return Mage::getSingleton('mzax_emarketing/session');
+        $session = $this->_sessionManager->getSession();
+
+        $recipientId = $session->getLastRecipientId();
+        if (!$recipientId) {
+            $this->_redirectUrl('/');
+            return;
+        }
+
+        $email = $this->_outbox->getEmailByRecipient($recipientId);
+        if (!$email->getId() || $email->isPurged()) {
+            $this->_redirectUrl('/');
+            return;
+        }
+
+        $this->getResponse()->setBody($email->getBodyHtml());
     }
 }

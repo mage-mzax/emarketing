@@ -84,7 +84,7 @@ class Mzax_Emarketing_Model_Object_Filter_Newsletter
             $query->where("{subscriber_status} != ? OR {subscriber_status} IS NULL", $status);
         }
 
-        if (Mage::getStoreConfigFlag('mzax_emarketing/general/newsletter_multistore')) {
+        if ($this->_config->flag('mzax_emarketing/general/newsletter_multistore')) {
             $storeId = (int)$this->getStore();
             if ($storeId && $query->hasBinding('subscriber_store')) {
                 $query->where("{subscriber_store} = ?", $storeId);

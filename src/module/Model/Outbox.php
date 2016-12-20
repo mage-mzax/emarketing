@@ -23,6 +23,19 @@
 class Mzax_Emarketing_Model_Outbox
 {
     /**
+     * @var Mzax_Emarketing_Model_Config
+     */
+    protected $_config;
+
+    /**
+     * Mzax_Emarketing_Model_Outbox constructor.
+     */
+    public function __construct()
+    {
+        $this->_config = Mage::getSingleton('mzax_emarketing/config');
+    }
+
+    /**
      * Retrieve emails
      *
      * @param string[] $ids
@@ -222,7 +235,7 @@ class Mzax_Emarketing_Model_Outbox
      */
     public function enableDomainThrottling()
     {
-        return Mage::getStoreConfigFlag('mzax_emarketing/domain_throttling/enable');
+        return $this->_config->flag('mzax_emarketing/domain_throttling/enable');
     }
 
     /**
@@ -233,7 +246,7 @@ class Mzax_Emarketing_Model_Outbox
      */
     protected function getConfig($path)
     {
-        return Mage::getStoreConfig('mzax_emarketing/domain_throttling/' . $path);
+        return $this->_config->get('mzax_emarketing/domain_throttling/' . $path);
     }
 
     /**

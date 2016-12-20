@@ -23,6 +23,24 @@
 class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_Action
 {
     /**
+     * @var Mzax_Emarketing_Model_SessionManager
+     */
+    protected $_sessionManager;
+
+    /**
+     * Controller Constructor.
+     * Load dependencies.
+     *
+     * @return void
+     */
+    public function _construct()
+    {
+        parent::_construct();
+
+        $this->_sessionManager = Mage::getSingleton('mzax_emarketing/sessionManager');
+    }
+
+    /**
      * Unsubscribe action, only works when user came from an email
      *
      * @return void
@@ -85,7 +103,8 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
                     }
                 }
 
-                Mage::getSingleton('core/session')->addSuccess($this->__("Your email preference have been updated."));
+                $coreSession = $this->_sessionManager->getCoreSession();
+                $coreSession->addSuccess($this->__("Your email preference have been updated."));
 
                 $this->_redirect('*/*/index');
                 return;
@@ -186,6 +205,6 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
      */
     public function getSession()
     {
-        return Mage::getSingleton('mzax_emarketing/session');
+        return $this->_sessionManager->getSession();
     }
 }

@@ -85,6 +85,11 @@ class Mzax_Emarketing_Model_Campaign
     const CACHE_TAG = 'MZAX_EMARKETING_CAMPAIGN';
 
     /**
+     * @var Mage_Core_Model_Store
+     */
+    protected $_store;
+
+    /**
      * Recipient provider
      *
      * @var RecipientProvider
@@ -253,7 +258,26 @@ class Mzax_Emarketing_Model_Campaign
      */
     public function getStore()
     {
-        return Mage::app()->getStore($this->getStoreId());
+        if (!$this->_store) {
+            $this->_store = Mage::app()->getStore($this->getStoreId());
+        }
+
+        return $this->_store;
+    }
+
+    /**
+     * Set store
+     *
+     * @param Mage_Core_Model_Store $store
+     *
+     * @return $this
+     */
+    public function setStore(Mage_Core_Model_Store $store)
+    {
+        $this->_store = $store;
+        $this->setStoreId($store->getId());
+
+        return $this;
     }
 
     /**

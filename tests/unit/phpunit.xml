@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<phpunit cacheTokens="true"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         stopOnError="false"
+         stopOnFailure="false"
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+         verbose="false"
+         bootstrap="./bootstrap.php">
+  <listeners>
+    <listener class="JSiefer\ClassMocker\TestListener" />
+    <listener class="JSiefer\MageMock\PHPUnit\TestListener" />
+  </listeners>
+  <testsuites>
+    <testsuite name="Unit Tests">
+      <directory suffix="Test.php">./</directory>
+      <exclude>_data</exclude>
+    </testsuite>
+  </testsuites>
+  <filter>
+    <whitelist>
+      <directory suffix=".php">../src</directory>
+    </whitelist>
+  </filter>
+  <logging>
+    <log type="junit" target="var/phpunit/junit.xml" logIncompleteSkipped="false"/>
+  </logging>
+</phpunit>

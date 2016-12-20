@@ -106,7 +106,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_Mandrill
      */
     public function setup(Mzax_Emarketing_Model_Outbox_Email $email)
     {
-        $store  = $email->getRecipient()->getStore();
+        $store  = $email->getStore();
 
         $username    = $this->_storeConfig->get('mzax_emarketing/email/mandrill_username', $store);
         $password    = $this->_storeConfig->get('mzax_emarketing/email/mandrill_password', $store);
@@ -173,7 +173,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_Mandrill
             $mail->addHeader('X-MC-Tags', implode(',', $tags));
         }
         if (!empty($metadata)) {
-            $mail->addHeader('X-MC-Metadata', Zend_Json::encode($metadata));
+            $mail->addHeader('X-MC-Metadata', json_encode($metadata));
         }
         if (!empty($this->_subaccount)) {
             $mail->addHeader('X-MC-Subaccount', $this->_subaccount);

@@ -74,4 +74,14 @@ class Mzax_Emarketing_Model_Outbox_Transporter_Smtp
             'ssl'      => $ssl ? 'tls' : false,
         );
     }
+
+    /**
+     * @param Zend_Mail $mail
+     *
+     * @return void
+     */
+    public function send(Zend_Mail $mail)
+    {
+        parent::send($mail);
+    }
 }

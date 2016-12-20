@@ -1,14 +1,14 @@
-<?php 
+<?php
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
+ *
  * @version     {{version}}
  * @category    Mzax
  * @package     Mzax_Emarketing
@@ -41,14 +41,14 @@ $filter = $this->getFilter();
         <img id="filter-btn-sql-hide" src="<?php echo$this->getSkinUrl('images/button-close.png') ?>" style="position:absolute; right:0; top:0;" />
         <h6><?php echo $this->__('Filter sql select') ?></h6>
         <?php echo $this->getSqlFormatter()->format($this->getSelect()) ?>
-        
+
         <?php if($girdSelect = $this->getGridSelect()): ?>
             <hr class="mzax-sql-seperator" />
             <h6><?php echo $this->__('Grid sql select') ?></h6>
             <?php echo $this->getSqlFormatter()->format($girdSelect) ?>
         <?php endif ?>
     </div>
-    
+
     <script type="text/javascript">
         $('filter-test-sql').hide();
         $('filter-btn-sql').observe('click', function(event) {
@@ -56,9 +56,9 @@ $filter = $this->getFilter();
         });
         $('filter-btn-sql-hide').observe('click', function(event) {
             $('filter-test-sql').hide();
-        });   
-    </script>     
-</div>  
+        });
+    </script>
+</div>
 <?php endif ?>
 
  <p><small><?php echo $this->__("Test page load time: <b>%.4f sec</b>", $this->getTime()) ?></small></p>

@@ -36,8 +36,7 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillTest
             ]
         );
 
-
-        $this->getMage()->register('_singleton/mzax_emarketing/config', $config);
+        $this->registerSingleton('mzax_emarketing/config', $config);
 
         $emailHeaders = [];
 
@@ -59,7 +58,6 @@ class Mzax_Emarketing_Model_Outbox_Transporter_MandrillTest
         $mail->addHeader = function ($name, $value) use (&$emailHeaders) {
             $emailHeaders[$name] = $value;
         };
-
 
         /** @var MockObject $email */
         $email = new Mzax_Emarketing_Model_Outbox_Email();

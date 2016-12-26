@@ -23,18 +23,47 @@
 class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Block_Widget_Form
 {
     /**
+     * @var Mzax_Emarketing_Model_Campaign
+     */
+    protected $_campaign;
+
+    /**
+     * Dependency
+     *
+     * @var Mage_Core_Model_Locale
+     */
+    protected $_locale;
+
+    /**
+     * @var Mzax_Emarketing_Model_System_Config_Source_Trackers
+     */
+    protected $_trackers;
+
+    /**
+     * Load dependencies
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+        parent::_construct();
+
+        $this->_locale = Mage::app()->getLocale();
+        $this->_trackers = Mage::getSingleton('mzax_emarketing/system_config_source_trackers');
+    }
+
+    /**
      * @return $this
      */
     public function initForm()
     {
-        $form = new Varien_Data_Form();
+        $form = $this->getForm();
         $form->setHtmlIdPrefix('campaign_');
         $form->setFieldNameSuffix('campaign');
 
-        /* @var $campaign Mzax_Emarketing_Model_Campaign */
-        $campaign = Mage::registry('current_campaign');
+        $campaign = $this->getCampaign();
 
-        $outputFormat = Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM);
+        $outputFormat = $this->_locale->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM);
 
         /**
          * Campaign
@@ -46,8 +75,10 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
         ));
 
         if (!$campaign->getId()) {
-            $renderer = $this->getLayout()->createBlock('adminhtml/widget_form_renderer_fieldset')
-                ->setTemplate('mzax/emarketing/campaign/fieldset-offer.phtml');
+            /** @var Mage_Adminhtml_Block_Widget_Form_Renderer_Fieldset $renderer */
+            $renderer = $this->getLayout()->createBlock('adminhtml/widget_form_renderer_fieldset');
+            $renderer->setTemplate('mzax/emarketing/campaign/fieldset-offer.phtml');
+
             $fieldset->setRenderer($renderer);
         }
 
@@ -277,16 +308,11 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
             ));
 
 
-            $trackers = Mage::getResourceSingleton('mzax_emarketing/conversion_tracker_collection')->toOptionArray();
-
-            array_unshift($trackers, array('value' => '0', 'label' => $this->__("Use Config Default Tracker")));
-
-
             $advanced->addField('default_tracker_id', 'select', array(
                 'name'     => 'default_tracker_id',
                 'label'    => $this->__('Default Conversion Tracker'),
                 'title'    => $this->__('Default Conversion Tracker'),
-                'values'   => $trackers,
+                'values'   => $this->getTrackerOptions(),
                 'required' => true,
             ));
 
@@ -299,7 +325,76 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings extends Mage_Adminhtml_Bl
         } // has id
 
         $form->addValues($campaign->getData());
-        $this->setForm($form);
+
+        return $this;
+    }
+
+    /**
+     * Retrieve tracker options
+     *
+     * @return array
+     */
+    public function getTrackerOptions()
+    {
+        $options = $this->_trackers->toOptionArray();
+        array_unshift(
+            $options,
+            array(
+                'value' => '0',
+                'label' => $this->__("Use Config Default Tracker")
+            )
+        );
+
+        return $options;
+    }
+
+    /**
+     * Retrieve form
+     *
+     * @return Varien_Data_Form
+     */
+    public function getForm()
+    {
+        if (!$this->_form) {
+            $this->_form = new Varien_Data_Form();
+        }
+
+        return $this->_form;
+    }
+
+    /**
+     * @param Varien_Data_Form $form
+     *
+     * @return $this
+     */
+    public function setForm(Varien_Data_Form $form)
+    {
+        $this->_form = $form;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve current campaign
+     *
+     * @return Mzax_Emarketing_Model_Campaign
+     */
+    public function getCampaign()
+    {
+        if (!$this->_campaign) {
+            $this->_campaign = Mage::registry('current_campaign');
+        }
+        return $this->_campaign;
+    }
+
+    /**
+     * @param Mzax_Emarketing_Model_Campaign $campaign
+     *
+     * @return $this
+     */
+    public function setCampaign(Mzax_Emarketing_Model_Campaign $campaign)
+    {
+        $this->_campaign = $campaign;
 
         return $this;
     }

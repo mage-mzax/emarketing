@@ -1,0 +1,37 @@
+
+Fieldset: base_fieldset
+  Field: medium (hidden)
+  Field: name* (text)
+  Field: provider* (select)
+  Field: store_id* (select)
+  Field: check_frequency* (select)
+    value: 720
+    options: array (
+      1440 => 'Once a day',
+      720 => 'Twice a day',
+      360 => 'Every 6 hours',
+      180 => 'Every 3 hours',
+      60 => 'Every hour',
+      30 => 'Every 30 minutes',
+      1 => 'Every time',
+      0 => 'Never automatically',
+    )
+  Field: min_resend_interval* (select)
+    value: 0
+    options: array (
+      0 => '[Only send once]',
+      1 => 'One day',
+      2 => 'Two days',
+      7 => 'One week',
+      14 => 'Two weeks',
+      31 => '1 month',
+      62 => '2 months',
+      91 => '3 months',
+      122 => '4 months',
+      152 => '5 months',
+      183 => '6 months',
+      274 => '9 months',
+      364 => '12 months',
+    )
+  Field: max_per_recipient* (text)
+    value: 0

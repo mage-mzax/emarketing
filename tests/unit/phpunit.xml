@@ -17,7 +17,8 @@
   <testsuites>
     <testsuite name="Unit Tests">
       <directory suffix="Test.php">./</directory>
-      <exclude>_data</exclude>
+      <exclude>generation</exclude>
+      <exclude>phpunit</exclude>
     </testsuite>
   </testsuites>
   <filter>

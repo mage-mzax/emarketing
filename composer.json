@@ -12,6 +12,9 @@
     ],
     "repositories": [
         {
+            "type": "path",
+            "url": "../mage-mock"
+        }, {
             "type": "composer",
             "url": "http://packages.firegento.com"
         }
@@ -23,7 +26,7 @@
         "ua-parser/uap-php": "~3.4",
         "tijsverkoyen/css-to-inline-styles": "~1.5",
         "squizlabs/php_codesniffer": "^2.7",
-        "jsiefer/mage-mock": "^0.3.0"
+        "jsiefer/mage-mock": "@dev"
     },
     "autoload": {
         "psr-0": {

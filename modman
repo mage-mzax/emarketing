@@ -5,12 +5,12 @@ src/design/adminhtml/layout/mzax/*                 app/design/adminhtml/default/
 tests/integration/                                 app/code/community/Mzax/Emarketing/Test
 
 src/lib/*                                          lib/
-src/lib_composer/*                                 lib/
 
-build/skin/adminhtml/*                              skin/adminhtml/default/default/mzax/
+build/lib/*                                        lib/
+build/skin/adminhtml/*                             skin/adminhtml/default/default/mzax/
+build/js/mzax/*                                    js/mzax/
 
-build/js/mzax/*                                     js/mzax/
-src/js_3rdparty/ckeditor                            js/mzax/ckeditor
-src/js_3rdparty/ace                                 js/ace
+src/js_3rdparty/ckeditor                           js/mzax/ckeditor
+src/js_3rdparty/ace                                 s/ace
 
-Mzax_Emarketing.xml                                 app/etc/modules/Mzax_Emarketing.xml
+Mzax_Emarketing.xml                                app/etc/modules/Mzax_Emarketing.xml

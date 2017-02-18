@@ -4,6 +4,7 @@ module.exports = function(grunt) {
     var fs = require('fs');
     var libxmljs = require("libxmljs");
     var crypto = require('crypto');
+    var dateFormat = require('dateformat');
 
 
     /**
@@ -20,14 +21,21 @@ module.exports = function(grunt) {
 
     function walkDir(dir, node, xmlDocument)
     {
+        var dirNode;
         fs.readdirSync(dir).forEach(function(filename) {
 
-           // console.log(filename);
+            if (filename === 'package.xml') {
+                return;
+            }
 
             var file = path.resolve(dir, filename);
             if(grunt.file.isDir(file)) {
-                var dirNode = libxmljs.Element(xmlDocument, 'dir');
-                dirNode.attr('name', filename);
+
+                dirNode = node.get('./dir[@name="'+filename+'"]');
+                if (!dirNode) {
+                    dirNode = libxmljs.Element(xmlDocument, 'dir');
+                    dirNode.attr('name', filename);
+                }
 
                 walkDir(file, dirNode, xmlDocument);
                 node.addChild(dirNode);
@@ -47,13 +55,14 @@ module.exports = function(grunt) {
 
         var options = this.options({
             template: 'package.xml',
-            version: '1.0.0'
+            version: '1.0.0',
+            time: new Date()
         });
 
         var packageFile = grunt.file.read(options.template);
             packageFile = packageFile.replace('{{version}}', options.version);
-            packageFile = packageFile.replace('{{time}}', 'time111');
-            packageFile = packageFile.replace('{{date}}', 'date222');
+            packageFile = packageFile.replace('{{time}}', dateFormat(options.time, 'HH:MM:ss'));
+            packageFile = packageFile.replace('{{date}}', dateFormat(options.time, 'yyyy-mm-dd'));
 
         var xmlDocument = libxmljs.parseXml(packageFile);
 
@@ -62,7 +71,7 @@ module.exports = function(grunt) {
 
 
         this.filesSrc.forEach(function(dir) {
-            walkDir(dir, targetNode, xmlDocument);
+            walkDir(dir, targetNode, xmlDocument, 0);
         });
 
         xmlDocument.get('//contents').addChild(targetNode);

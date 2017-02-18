@@ -1,16 +1,16 @@
+var mage = require("./grunt/mage-extension.js");
+
 module.exports = function(grunt) {
-
-    var path = require('path');
-
-    var srcPath = './src';
-    var buildPath = './build';
-
 
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        config: {
+            version: mage.getModuleVersion()
+        },
 
-        sass: {
+        /* Compile sass files */
+        'sass': {
             adminhtml: {
                 options: {
                     outputStyle: 'expanded'
@@ -19,13 +19,14 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: 'src/skin/adminhtml',
                     src: ['**/*.scss'],
-                    dest: 'build/skin/adminhtml',
+                    dest: 'build/skin/adminhtml/default/default/mzax/',
                     ext: '.css'
                 }]
             }
         },
 
-        imagemin: {
+        /* Minify images */
+        'imagemin': {
             options: {
                 optimizationLevel: 3
             },
@@ -35,12 +36,13 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: 'src/skin/adminhtml/images',
                     src: ['**/*.{png,jpg,gif}'],
-                    dest: 'build/skin/adminhtml/images'
+                    dest: 'build/skin/adminhtml/default/default/mzax/images'
                 }]
             }
         },
 
-        uglify: {
+        /* Minify JS classes */
+        'uglify': {
             options: {
                 banner: "/*TODO*/ \n\n",
                 maxLineLen: 1000,
@@ -51,7 +53,7 @@ module.exports = function(grunt) {
                     }
                 }
             },
-            adminhtml: {
+            js: {
                 files: [{
                     expand: true,
                     cwd: 'src/js',
@@ -63,11 +65,11 @@ module.exports = function(grunt) {
             }
         },
 
-        /* Convert new PHP namespaces (a/b/c) to old ones (a_b_c)*/
-        phpns: {
+        /* Convert  PSR-4 namespaces to PSR-0 */
+        'phpns': {
             options:{
                 banner: "/*\n * NOTICE:\n * This code has been slightly altered by the Mzax_Emarketing module to use old php namespaces.\n */",
-                dest: path.resolve(buildPath, 'lib')
+                dest: './build/lib'
             },
             Symfony_CssSelector:{
                 source: './vendor/symfony/css-selector',
@@ -91,6 +93,7 @@ module.exports = function(grunt) {
             }
         },
 
+        /* Create extension package.xml file for marketplace */
         'mage-package-xml': {
             extension: {
                 options: {
@@ -99,22 +102,29 @@ module.exports = function(grunt) {
                 dest: './build/package.xml',
                 src: ['src/module/', 'build/']
             }
+        },
 
+        /* Create extension package file for marketplace */
+        'compress': {
+            extension: {
+                options: {
+                    archive: './Mzax_Emarketing-<%= config.version %>.tgz'
+                },
+                files: [
+                    {expand: true, dest: '', src: './**', cwd: './src/module'},
+                    {expand: true, dest: '', src: './**', cwd: './build'}
+                ]
+            }
         }
     });
 
 
-    // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-compress');
 
     grunt.loadTasks('./grunt');
-
-
     grunt.registerTask('default', ['phpns']);
-
-
-
 };

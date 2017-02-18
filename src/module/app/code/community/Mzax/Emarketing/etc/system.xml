@@ -2,15 +2,14 @@
 <!--
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -80,7 +79,7 @@
                         </can_create_indexes>
                     </fields>
                 </general>
-                
+
                 <content_management translate="label">
                     <label>Content Management</label>
                     <frontend_type>text</frontend_type>
@@ -112,11 +111,11 @@
                         </enable_ace>
                     </fields>
                 </content_management>
-                
-                
-                
-                
-                
+
+
+
+
+
 				<google_analytics translate="label">
                     <label>Google Analytics</label>
                     <frontend_type>text</frontend_type>
@@ -154,8 +153,8 @@
                         </utm_medium>
                     </fields>
                 </google_analytics>
-                
-                
+
+
                 <domain_throttling translate="label">
                     <label>Domain Throttling</label>
                     <frontend_type>text</frontend_type>
@@ -213,7 +212,7 @@
                         </domain_specific>
                     </fields>
                 </domain_throttling>
-                
+
                 <tracking translate="label">
                     <label>Tracking</label>
                     <frontend_type>text</frontend_type>
@@ -255,7 +254,7 @@
                         </geo_ip_adapters>
                     </fields>
                 </tracking>
-                
+
                 <autologin translate="label">
                     <label>Autologin</label>
                     <frontend_type>text</frontend_type>
@@ -286,7 +285,7 @@
                         </expire>
                     </fields>
                 </autologin>
-                
+
 				<inbox translate="label">
                     <label>Inbox / Bounce Messages</label>
                     <frontend_type>text</frontend_type>
@@ -419,7 +418,7 @@
                         </max_download_size>
                     </fields>
                 </inbox>
-                
+
                 <email translate="label">
                     <label>Email</label>
                     <frontend_type>text</frontend_type>
@@ -508,8 +507,8 @@
                             <show_in_store>1</show_in_store>
                             <comment>How would you like to sendout your emails</comment>
                         </transporter>
-                        
-                        
+
+
                         <!-- SMTP SETTINGS -->
                         <smtp_auth translate="label comment">
                             <label>Authentication</label>
@@ -565,7 +564,7 @@
                             <show_in_store>1</show_in_store>
                             <depends><transporter>smtp</transporter></depends>
                         </smtp_ssl>
-                        
+
                         <!-- SENDGRID SETTINGS -->
                         <sendgrid_test translate="label">
                             <label>Connection Test</label>
@@ -625,8 +624,8 @@
                             <comment><![CDATA[Use <a href="https://sendgrid.com/docs/API_Reference/SMTP_API/unique_arguments.html">unique arguments</a> tag to id emails]]></comment>
                             <tooltip><![CDATA[campaign id, recipient id, variation id, campaign name will be added to the email]]></tooltip>
                         </sendgrid_unique_args>
-                        
-                        
+
+
                         <!-- MANDRILL SETTINGS -->
                         <mandrill_test translate="label">
                             <label>Connection Test</label>
@@ -761,11 +760,11 @@
                             <comment><![CDATA[Add <a href="https://mandrill.zendesk.com/hc/en-us/articles/205582117-Using-SMTP-Headers-to-customize-your-messages#use-custom-metadata">metatags</a> to id emails]]></comment>
                             <tooltip><![CDATA[campaign id, recipient id, variation id, campaign name will be added as metatag to the email]]></tooltip>
                         </mandrill_api_metatags>
-                        
+
                     </fields>
                 </email>
-                
-                
+
+
             </groups>
         </mzax_emarketing>
 		<trans_email>

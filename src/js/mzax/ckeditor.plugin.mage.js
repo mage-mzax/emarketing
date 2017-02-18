@@ -1,14 +1,13 @@
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -25,39 +24,39 @@
         throw new Error("CKEDITOR.mzax is not defined");
         return;
     }
-    
-    
-    
+
+
+
     /*****************************************************************
-     * 
+     *
      * PRIVATE VARIABLES
-     * 
+     *
      *****************************************************************/
 
     // CONSTANTS
     var SKIN_PATH = '/skin/adminhtml/default/default/mzax/',
         IMAGE_DATE_ATTR = 'data-mage-src',
-        
+
     // Classes
         Placeholder = CKEDITOR.mzax.ui.Placeholder;
-    
-    
 
-    
-    
-    
-    
+
+
+
+
+
+
     /*****************************************************************
-     * 
+     *
      * PRIVATE FUNCTIONS
-     * 
+     *
      *****************************************************************/
-    
+
     /**
      * Uppercase Words
-     * 
+     *
      * HELLO world => Hello World
-     * 
+     *
      * @param string str
      * @return string
      */
@@ -68,13 +67,13 @@
                 return $1.toUpperCase();
             });
     }
-    
-    
+
+
     /**
      * Retrieve Snippets
-     * 
+     *
      * Retrieve a list of all available snippets
-     * 
+     *
      * @return Array
      */
     function getSnippets()
@@ -89,11 +88,11 @@
         }
         return result;
     }
-    
-    
+
+
     /**
      * Retrieve Snippet by value
-     * 
+     *
      * @param string snippetValue
      * @return Object|null
      */
@@ -110,40 +109,40 @@
         }
         return null;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
     /*****************************************************************
-     * 
+     *
      * INIT
-     * 
+     *
      *****************************************************************/
-    
+
     // DEFINE ICONS USED
     CKEDITOR.skin.addIcon( 'mage-code', SKIN_PATH+'/images/mage_code.png',   0, '34px 16px');
     CKEDITOR.skin.addIcon( 'image',     SKIN_PATH+'/images/icon_image.png',  0, '16px 16px');
     CKEDITOR.skin.addIcon( 'source',    SKIN_PATH+'/images/icon_source.png', 0, '16px 16px');
-    
-    
-    
-    
-    
+
+
+
+
+
     /*****************************************************************
-     * 
+     *
      * SHOW SOURCE EDITOR PLUGIN
-     * 
+     *
      * Simple plugin to show the source code but let our owner
      * decide how to do so.
      * This way the owner can use ACE or other code editor
-     * 
+     *
      *****************************************************************/
-    
+
     CKEDITOR.plugins.add( 'mzax_editor', {
         init: function( editor ) {
             editor.addCommand( 'show_source', {
@@ -162,31 +161,31 @@
             });
         }
     });
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*****************************************************************
-     * 
+     *
      * MAGENTO IMAGE PLUGIN
-     * 
+     *
      * This is a simple image plugin that uses a provided
      * api by the owner. So we can use the magento image medium browser
-     * 
+     *
      *****************************************************************/
-    
+
     CKEDITOR.plugins.add( 'mzax_image', {
         requires: 'dialog',
-        init: function( editor ) 
+        init: function( editor )
         {
             editor.addCommand( 'mzax_image', new CKEDITOR.command( editor, {
                 allowedContent: 'img[alt]{float,width,height}(*)',
@@ -208,7 +207,7 @@
                     });
                 }
             }));
-            
+
             editor.ui.addButton( 'mzax_image', {
                 icon: 'image',
                 label: 'Image',
@@ -216,8 +215,8 @@
                 command: 'mzax_image',
                 toolbar: 'insert'
             });
-            
-            
+
+
             // Open image dialog on image double click
             editor.on( 'doubleclick', function( event ) {
                 var element = event.data.element;
@@ -234,12 +233,12 @@
                 }
             });
         },
-        
-        afterInit: function( editor ) 
+
+        afterInit: function( editor )
         {
             // save real image src so we can change it for preview
             editor.dataProcessor.dataFilter.addRules( {
-                elements: { 
+                elements: {
                     img: function( element ) {
                         var src = element.attributes['src'];
                         element.attributes[IMAGE_DATE_ATTR] = src;
@@ -251,10 +250,10 @@
                     }
                 }
             });
-            
+
             // use orginal img src and delete the element
             editor.dataProcessor.htmlFilter.addRules( {
-                elements: { 
+                elements: {
                     img: function( element ) {
                         element.attributes['src'] = element.attributes[IMAGE_DATE_ATTR];
                         if(element.attributes['data-cke-saved-src']) {
@@ -267,40 +266,40 @@
             });
         }
     } );
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*****************************************************************
-     * 
+     *
      * MAGENTO EXPRESSION PLACEHOLDER
-     * 
+     *
      * The magento expression placeholder widget.
-     * 
+     *
      *****************************************************************/
-    
+
     CKEDITOR.plugins.add( 'mage_code', {
         requires: 'widget,dialog',
-        
+
         init: function( editor ) {
-            
+
             editor.addCommand( 'insert_mage_expr', new CKEDITOR.dialogCommand( 'mageCodeDialog' ) );
-            
-            
+
+
             editor.addCommand( 'insert_mage_expr', new CKEDITOR.command( editor, {
                 exec: function( editor ) {
                     editor.openDialog('mageCodeDialog', function(dialog) {
@@ -309,18 +308,18 @@
                         });
                         dialog.on('ok', function() {
                             var snippet = getSnippet(dialog.getContentElement('info', 'snippet').getValue());
-                            
+
                             dialog.commitContent(snippet);
                             console.log(snippet);
                             editor.insertText( snippet.snippet.replace(/="?\$\{[0-9]+(:(.*?))?\}"?/g, '=$2'));
-                            
+
                         });
                     });
                 }
             }));
-            
-            
-            
+
+
+
             editor.ui.addButton( 'Mage', {
                 icon: 'mage-code',
                 label: 'Insert Magento Code',
@@ -328,8 +327,8 @@
                 command: 'insert_mage_expr',
                 toolbar: 'insert'
             });
-            
-            
+
+
             // Put ur init code here.
             editor.widgets.add( 'mage_code', {
                 // Widget code.
@@ -340,7 +339,7 @@
                 template: '<span class="mzax-paceholder">[[]]</span>',
 
                 edit: function(e) {
-                    
+
                     var placeholder = this.placeholder,
                         elements = [],
                         definition = {
@@ -354,12 +353,12 @@
                                 elements: elements
                             }]
                         };
-                    
+
                     if(placeholder.directive === 'else' || placeholder.closing) {
                         e.cancel();
                         return;
                     }
-                    
+
                     if(placeholder.input) {
                         elements.push({
                             id: 'input',
@@ -394,31 +393,31 @@
                             }
                         }
                     }
-                    
+
                     e.data.dialog = 'mageExprEdit';
                     if(editor._.storedDialogs) {
                         editor._.storedDialogs[e.data.dialog] = null;
                     }
                     CKEDITOR.dialog.add(e.data.dialog, function() {return definition;});
                 },
-                
-                
+
+
                 downcast: function() {
                     return new CKEDITOR.htmlParser.text( this.placeholder.render() );
                 },
-                
+
                 init: function() {
                     this.setData(JSON.parse(this.element.getAttribute('expr')));
                     this.placeholder = new Placeholder(this.data.expr);
                 },
-                
+
                 data: function() {
                     this.element.setHtml(this.placeholder.toHtml(true));
                 }
             } );
-            
+
         },
-        afterInit: function( editor ) 
+        afterInit: function( editor )
         {
             editor.dataProcessor.dataFilter.addRules( {
                 text: function( text, node ) {
@@ -428,16 +427,16 @@
                     // but upcast placeholder in custom elements (no DTD).
                     if ( dtd && !dtd.span )
                         return;
-                    
+
                     return Placeholder.replace(text, function(placeholder) {
-                        
+
                         // Creating widget code.
                         var widgetWrapper = null,
                             innerElement = new CKEDITOR.htmlParser.element(placeholder.isBlock ? 'div' : 'span');
-                        
+
                         innerElement.add( new CKEDITOR.htmlParser.text( placeholder.toHtml() ) );
                         innerElement.attributes['expr'] = JSON.stringify({expr: placeholder.expr});
-                        
+
                         widgetWrapper = editor.widgets.wrapElement( innerElement, 'mage_code' );
                         return widgetWrapper.getOuterHtml();
                     } );
@@ -445,31 +444,31 @@
             } );
         }
     } );
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
     /*****************************************************************
-     * 
+     *
      * IMAGE DIALOG
-     * 
+     *
      *****************************************************************/
-    
+
     CKEDITOR.dialog.add( 'mzaxImageDialog', function ( editor ) {
-        
+
         var lang = editor.lang.placeholder,
             generalLabel = editor.lang.common.generalTab,
             previewSrc;
-        
+
         function getSize(value) {
             var m = value.match(/[\d.]+%?/);
             return m ? m[0] : '';
         }
-        
+
         return {
             title: 'Image',
             minWidth: 400,
@@ -608,30 +607,30 @@
            ]
         };
     });
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
     /*****************************************************************
-     * 
+     *
      * MAGENTO EXPRESSION DIALOG
-     * 
+     *
      *****************************************************************/
-    
+
     CKEDITOR.dialog.add( 'mageCodeDialog', function ( editor ) {
-        
+
         var lang = editor.lang.placeholder,
             generalLabel = editor.lang.common.generalTab,
             validNameRegex = /^[^\[\]<>]+$/;
-        
-        
+
+
         var tpl = new CKEDITOR.template( '<h5 class="title">{title}</h5><p class="description">{description}</p><code>{snippet}</code>' );
-        
+
         return {
             title: 'Magento Code',
             minWidth: 400,
@@ -670,11 +669,11 @@
            ]
         };
     });
-    
-    
-    
-    
-    
+
+
+
+
+
 
 } )(CKEDITOR);
 

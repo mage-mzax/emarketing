@@ -1,16 +1,19 @@
-src/module/app/code/community/Mzax/Emarketing/*    app/code/community/Mzax/Emarketing/
-src/design/adminhtml/template/mzax/*               app/design/adminhtml/default/default/template/mzax/
-src/design/adminhtml/layout/mzax/*                 app/design/adminhtml/default/default/layout/mzax/
+# Magento module files
+Mzax_Emarketing.xml                                             app/etc/modules/Mzax_Emarketing.xml
 
-tests/integration/                                 app/code/community/Mzax/Emarketing/Test
+src/module/lib/*                                                lib/
+src/module/app/code/community/Mzax/Emarketing/*                 app/code/community/Mzax/Emarketing/
+src/module/app/design/adminhtml/default/default/template/*      app/design/adminhtml/default/default/template/
+src/module/app/design/adminhtml/default/default/layout/*        app/design/adminhtml/default/default/layout/
 
-src/lib/*                                          lib/
+# Generated Source Files
+build/skin/adminhtml/default/default/*                          skin/adminhtml/default/default/
+build/lib/*                                                     lib/
+build/js/mzax/*                                                 js/mzax/
 
-build/lib/*                                        lib/
-build/skin/adminhtml/*                             skin/adminhtml/default/default/mzax/
-build/js/mzax/*                                    js/mzax/
+# 3rd Party files
+src/js_3rdparty/ckeditor                                        js/mzax/ckeditor
+src/js_3rdparty/ace                                             js/ace
 
-src/js_3rdparty/ckeditor                           js/mzax/ckeditor
-src/js_3rdparty/ace                                 s/ace
-
-Mzax_Emarketing.xml                                app/etc/modules/Mzax_Emarketing.xml
+# EcomDev Integration Tests
+tests/integration/                                              app/code/community/Mzax/Emarketing/Test

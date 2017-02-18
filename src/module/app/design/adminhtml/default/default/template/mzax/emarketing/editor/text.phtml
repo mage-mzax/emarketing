@@ -1,0 +1,66 @@
+<?php
+/**
+ * Mzax Emarketing (www.mzax.de)
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this Extension in the file LICENSE.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category    Mzax
+ * @package     Mzax_Emarketing
+ * @author      Jacob Siefer (jacob@mzax.de)
+ * @copyright   Copyright (c) 2015 Jacob Siefer
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/* @var $this Mzax_Emarketing_Model_Form_Element_Ace */
+$jsObject = "editor{$this->getHtmlId()}";
+?>
+
+
+<div id="<?php echo $this->getHtmlId() ?>" title="<?php echo $this->getTitle() ?>" class="mzax-editor mage-ace-editor <?php $this->getClass() ?>" <?php echo $this->serialize($this->getHtmlAttributes()) ?>>
+
+    <textarea id="<?php echo $this->getHtmlId() ?>_txt" name="<?php echo $this->getName() ?>" style="display:none;"><?php echo $this->getEscapedValue() ?></textarea>
+
+    <div id="control-buttons-$id" class="mzax-editor-toolbar">
+        <?php if($logo = $this->getLogo()): ?>
+            <img src="<?php echo $logo ?>" class="logo" />
+        <?php endif ?>
+        <div class="ftitle"><?php echo $this->getFullscreenTitle() ?></div>
+        <div class="buttons-set">
+            <?php echo $this->_getPluginButtonsHtml() ?>
+        </div>
+    </div>
+
+    <div class="editor-container"></div>
+</div>
+
+<script type="text/javascript">
+
+window.<?php echo $jsObject ?> = (function() {
+
+    var div = $("<?php echo $this->getHtmlId() ?>"),
+        txt = div.down('textarea'),
+        editor = new mzax.ui.TextEditor(div.down('.editor-container'), <?php echo $this->getEditorOptions() ?>);
+
+    editor.setValue(txt.value);
+    editor.htmlId = '$id';
+
+    editor.fullscreen = function() {
+        div.toggleClassName('fullscreen');
+        document.body.toggleClassName('mzax-fullscreen');
+        editor.refreshUi();
+    };
+
+    // save data to form before submitting
+    varienGlobalEvents.attachEventHandler('formSubmit', function(event) {
+        txt.value = editor.getValue();
+    });
+
+    return editor;
+})();
+
+</script>

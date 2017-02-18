@@ -1,0 +1,63 @@
+<?php
+/**
+ * Mzax Emarketing (www.mzax.de)
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this Extension in the file LICENSE.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category    Mzax
+ * @package     Mzax_Emarketing
+ * @author      Jacob Siefer (jacob@mzax.de)
+ * @copyright   Copyright (c) 2015 Jacob Siefer
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/* @var $this Mzax_Emarketing_Block_Filter_Test_Single */
+
+$filter = $this->getFilter();
+?>
+
+<h3><?php echo $this->escapeHtml($filter->asString('text')) ?></h3>
+
+<?php echo $this->getChildHtml('emulate') ?>
+
+
+<div>
+    <?php echo $this->getGridHtml() ?>
+</div>
+
+<?php if($this->isDebugMode()): ?>
+<div>
+    <p><small>
+        <?php echo $this->__("SQL Query took <b>%.4f sec</b>", $this->getQueryTime()) ?>
+        <a href="#" id="filter-btn-sql"><?php echo $this->__('show query') ?></a>
+    </small></p>
+    <div id="filter-test-sql" style="position:relative; padding:10px; border:1px #CBD3D4 solid; background:#F6F6F6;">
+        <img id="filter-btn-sql-hide" src="<?php echo$this->getSkinUrl('images/button-close.png') ?>" style="position:absolute; right:0; top:0;" />
+        <h6><?php echo $this->__('Filter sql select') ?></h6>
+        <?php echo $this->getSqlFormatter()->format($this->getSelect()) ?>
+
+        <?php if($girdSelect = $this->getGridSelect()): ?>
+            <hr class="mzax-sql-seperator" />
+            <h6><?php echo $this->__('Grid sql select') ?></h6>
+            <?php echo $this->getSqlFormatter()->format($girdSelect) ?>
+        <?php endif ?>
+    </div>
+
+    <script type="text/javascript">
+        $('filter-test-sql').hide();
+        $('filter-btn-sql').observe('click', function(event) {
+            $('filter-test-sql').show();
+        });
+        $('filter-btn-sql-hide').observe('click', function(event) {
+            $('filter-test-sql').hide();
+        });
+    </script>
+</div>
+<?php endif ?>
+
+ <p><small><?php echo $this->__("Test page load time: <b>%.4f sec</b>", $this->getTime()) ?></small></p>

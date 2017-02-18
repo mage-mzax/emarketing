@@ -1,14 +1,13 @@
 /**
  * Mzax Emarketing (www.mzax.de)
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this Extension in the file LICENSE.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
- * 
- * @version     {{version}}
+ *
  * @category    Mzax
  * @package     Mzax_Emarketing
  * @author      Jacob Siefer (jacob@mzax.de)
@@ -17,9 +16,9 @@
  */
 
 ace.define("ace/ext/mage_autocomplete",
-        ["require","exports","module", "ace/ext/language_tools"], 
+        ["require","exports","module", "ace/ext/language_tools"],
         function(require, exports, module) {
-    
+
 "use strict";
 
 
@@ -36,11 +35,11 @@ var IDENTIFIER_REGEX = /[a-zA-Z_0-9\$\.\u00A2-\uFFFF-]/;
 
 /**
  * Set mage snippets
- * 
+ *
  * Add method to editor prototype.
  * Should be used the add the snippets that are avaialable for the
  * current editor.
- * 
+ *
  * @param Array snippets
  */
 Editor.prototype.setMageSnippets = function(snippets)
@@ -51,8 +50,8 @@ Editor.prototype.setMageSnippets = function(snippets)
     this._mageSnippets = snippets;
     snippets.forEach(function(snippet) {
         snippetManager.register([{
-            name: '$' + snippet.shortcut, 
-            score: 100, 
+            name: '$' + snippet.shortcut,
+            score: 100,
             snippet: snippet.snippet,
             content: snippet.snippet,
             type:'snippet',
@@ -62,12 +61,12 @@ Editor.prototype.setMageSnippets = function(snippets)
             endTrigger: '',
             endGuard: '.*'
         }]);
-        
+
         snippet.type = 'snippet';
         snippet.score = 1000;
         snippet.meta = 'Mage';
-        snippet.identifierRegex = IDENTIFIER_REGEX;    
-        
+        snippet.identifierRegex = IDENTIFIER_REGEX;
+
         var docHtml = [];
         if(snippet.title) {
             docHtml.push("<strong>" , snippet.title , "</strong><hr></hr>")
@@ -89,20 +88,20 @@ Editor.prototype.setMageSnippets = function(snippets)
 /**
  * Helper function to auto show autocomplete when user
  * types "mage."
- * 
+ *
  * @param Object e
  * @return void
  */
 var doLiveAutocomplete = function(e) {
-    
+
     var editor = e.editor;
     var hasCompleter = editor.completer && editor.completer.activated;
-    
+
     if (e.command.name === "insertstring" || e.command.name === "mage" || e.command.name.substr(0,2) == 'go') {
         var pos = editor.getCursorPosition();
         var line = editor.session.getLine(pos.row);
         var prefix = util.retrievePrecedingIdentifier(line, pos.column, IDENTIFIER_REGEX);
-        
+
         if(prefix == 'mage.' && !hasCompleter) {
             if (!editor.completer) {
                 editor.completer = new Autocomplete();
@@ -148,14 +147,14 @@ commands.push({
     exec: function(editor) {
         editor.insert("mage.");
     },
-    readOnly: false 
+    readOnly: false
 });
 
 
 
 /**
  * Extend insert snippet to allow calling javascript functions
- * 
+ *
  */
 function extendInsertSnippet(orignalFunc)
 {

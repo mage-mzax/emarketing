@@ -19,6 +19,8 @@
 
 /**
  * Class Mzax_Emarketing_Block_Campaign_Edit_Tabs
+ *
+ * @method setTitle(string $title)
  */
 class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widget_Tabs
 {
@@ -43,36 +45,54 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widg
         $campaign = Mage::registry('current_campaign');
 
         if (!$campaign->getMedium()) {
+            /** @var Mzax_Emarketing_Block_Campaign_Edit_Tab_Medium $mediumTab */
+            $mediumTab = $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_medium');
+            $mediumTabContent = $mediumTab->initForm()->toHtml();
+
             $this->addTab('medium', array(
                 'label'     => $this->__('Choose Medium'),
-                'content'   => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_medium')->initForm()->toHtml(),
+                'content'   => $mediumTabContent,
                 'active'    => true
             ));
         } else {
-            $mediumTitle = Mage::getSingleton('mzax_emarketing/medium')->getOptionText($campaign->getData('medium'));
+            /** @var Mzax_Emarketing_Model_Medium $mediumFactory */
+            $mediumFactory = Mage::getSingleton('mzax_emarketing/medium');
+            $mediumTitle = $mediumFactory->getOptionText($campaign->getData('medium'));
             if ($campaign->getId()) {
                 $this->setTitle($this->__('%s Campaign', $mediumTitle));
             } else {
                 $this->setTitle($this->__('New %s Campaign', $mediumTitle));
             }
 
+            /** @var Mzax_Emarketing_Block_Campaign_Edit_Tab_Settings $settingsTab */
+            $settingsTab = $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_settings');
+
+            /** @var Mzax_Emarketing_Block_Campaign_Edit_Tab_Content $contentTab */
+            $contentTab = $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_content');
+
             $this->addTab('settings', array(
                 'label'     => $this->__('Settings'),
-                'content'   => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_settings')->initForm()->toHtml(),
+                'content'   => $settingsTab->initForm()->toHtml(),
                 'active'    => true
             ));
 
             $this->addTab('content', array(
                 'label'     => $this->__('Content'),
-                'content'   => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_content')->toHtml(),
+                'content'   => $contentTab->toHtml(),
                 'active'    => false
             ));
 
             // only available if saved
             if ($campaign->getId()) {
+                /** @var Mzax_Emarketing_Block_Campaign_Edit_Tab_Filters $filtersTab */
+                $filtersTab = $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_filters');
+
+                /** @var Mzax_Emarketing_Block_Campaign_Edit_Tab_Tasks $taskTab */
+                $taskTab = $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_tasks');
+
                 $this->addTab('filters', array(
                     'label'   => $this->__('Filters / Segmentation'),
-                    'content' => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_filters')->initForm()->toHtml(),
+                    'content' => $filtersTab->initForm()->toHtml(),
                     'active'  => false
                 ));
                 $this->addTab('recipients', array(
@@ -92,7 +112,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widg
 
                 $this->addTab('tasks', array(
                     'label'   => $this->__('Tasks'),
-                    'content' => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_tasks')->toHtml(),
+                    'content' => $taskTab->toHtml(),
                     'active'  => false
                 ));
 
@@ -106,9 +126,12 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tabs extends Mage_Adminhtml_Block_Widg
                     ));
                 }
             } elseif ($campaign->getData('preset')) {
+                /** @var Mzax_Emarketing_Block_Campaign_Edit_Tab_Filters $filtersTab */
+                $filtersTab = $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_filters');
+
                 $this->addTab('filters', array(
                     'label'   => $this->__('Filters / Segmentation'),
-                    'content' => $this->getLayout()->createBlock('mzax_emarketing/campaign_edit_tab_filters')->initForm()->toHtml(),
+                    'content' => $filtersTab->initForm()->toHtml(),
                     'active'  => false
                 ));
             }

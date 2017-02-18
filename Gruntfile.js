@@ -9,6 +9,10 @@ module.exports = function(grunt) {
             version: mage.getModuleVersion()
         },
 
+        'clean': {
+            build: ['./build/*']
+        },
+
         /* Compile sass files */
         'sass': {
             adminhtml: {
@@ -84,12 +88,12 @@ module.exports = function(grunt) {
             html2text:{
                 source: './vendor/soundasleep/html2text',
                 base:   'Html2Text',
-                ignore: ['tests', 'html2text.php', 'convert.php']
+                ignore: ['tests', 'html2text.php', 'convert.php', '.editorconfig', '.travis.yml']
             },
             uapphp:{
                 source: './vendor/ua-parser/uap-php',
                 base:   'UAParser',
-                ignore: ['tests', 'bin', 'uap-core']
+                ignore: ['tests', 'bin', 'uap-core', '.travis.yml', '.gitmodules']
             }
         },
 
@@ -97,7 +101,8 @@ module.exports = function(grunt) {
         'mage-package-xml': {
             extension: {
                 options: {
-                    template: 'package.xml'
+                    template: 'package.xml',
+                    version: '<%= config.version %>'
                 },
                 dest: './build/package.xml',
                 src: ['src/module/', 'build/']
@@ -112,7 +117,8 @@ module.exports = function(grunt) {
                 },
                 files: [
                     {expand: true, dest: '', src: './**', cwd: './src/module'},
-                    {expand: true, dest: '', src: './**', cwd: './build'}
+                    {expand: true, dest: '', src: './**', cwd: './build'},
+                    {expand: true, dest: './js/ckeditor', src: './**', cwd: './js_3rdparty/ckeditor'}
                 ]
             }
         }
@@ -122,9 +128,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-sass');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.loadTasks('./grunt');
     grunt.registerTask('default', ['phpns']);
+    grunt.registerTask('build', ['clean:build', 'sass', 'imagemin', 'uglify', 'phpns']);
+    grunt.registerTask('pack', ['mage-package-xml', 'compress']);
 };

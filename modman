@@ -1,7 +1,6 @@
 # Magento module files
-Mzax_Emarketing.xml                                             app/etc/modules/Mzax_Emarketing.xml
-
 src/module/lib/*                                                lib/
+src/module/app/etc/modules/Mzax_Emarketing.xml                  app/etc/modules/Mzax_Emarketing.xml
 src/module/app/code/community/Mzax/Emarketing/*                 app/code/community/Mzax/Emarketing/
 src/module/app/design/adminhtml/default/default/template/*      app/design/adminhtml/default/default/template/
 src/module/app/design/adminhtml/default/default/layout/*        app/design/adminhtml/default/default/layout/
@@ -12,8 +11,7 @@ build/lib/*                                                     lib/
 build/js/mzax/*                                                 js/mzax/
 
 # 3rd Party files
-src/js_3rdparty/ckeditor                                        js/mzax/ckeditor
-src/js_3rdparty/ace                                             js/ace
+js_3rdparty/ckeditor                                            js/mzax/ckeditor
 
 # EcomDev Integration Tests
 tests/integration/                                              app/code/community/Mzax/Emarketing/Test

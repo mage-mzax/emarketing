@@ -5,6 +5,6 @@ package
 node_modules
 vendor
 Mzax_Emarketing*.tgz
-src/lib_composer/*
-grunt/local.js
+build/package.xml
 .idea
+.DS_Store

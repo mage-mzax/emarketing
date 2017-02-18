@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Mzax_Emarketing>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Mzax_Emarketing>
+    </modules>
+</config>

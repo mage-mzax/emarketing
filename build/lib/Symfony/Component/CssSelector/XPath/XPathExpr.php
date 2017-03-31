@@ -70,7 +70,7 @@ class Symfony_Component_CssSelector_XPath_XPathExpr
     /**
      * @param $condition
      *
-     * @return Symfony_Component_CssSelector_XPath_XPathExpr
+     * @return $this
      */
     public function addCondition($condition)
     {
@@ -88,7 +88,7 @@ class Symfony_Component_CssSelector_XPath_XPathExpr
     }
 
     /**
-     * @return Symfony_Component_CssSelector_XPath_XPathExpr
+     * @return $this
      */
     public function addNameTest()
     {
@@ -101,7 +101,7 @@ class Symfony_Component_CssSelector_XPath_XPathExpr
     }
 
     /**
-     * @return Symfony_Component_CssSelector_XPath_XPathExpr
+     * @return $this
      */
     public function addStarPrefix()
     {
@@ -116,7 +116,7 @@ class Symfony_Component_CssSelector_XPath_XPathExpr
      * @param string    $combiner
      * @param Symfony_Component_CssSelector_XPath_XPathExpr $expr
      *
-     * @return Symfony_Component_CssSelector_XPath_XPathExpr
+     * @return $this
      */
     public function join($combiner, Symfony_Component_CssSelector_XPath_XPathExpr $expr)
     {

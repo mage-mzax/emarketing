@@ -65,7 +65,7 @@ class Symfony_Component_CssSelector_Node_Specificity
     /**
      * @param Symfony_Component_CssSelector_Node_Specificity $specificity
      *
-     * @return Symfony_Component_CssSelector_Node_Specificity
+     * @return self
      */
     public function plus(Symfony_Component_CssSelector_Node_Specificity $specificity)
     {

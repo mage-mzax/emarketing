@@ -150,7 +150,7 @@ class Symfony_Component_CssSelector_XPath_Translator implements Symfony_Componen
      *
      * @param Symfony_Component_CssSelector_XPath_Extension_ExtensionInterface $extension
      *
-     * @return Symfony_Component_CssSelector_XPath_Translator
+     * @return $this
      */
     public function registerExtension(Symfony_Component_CssSelector_XPath_Extension_ExtensionInterface $extension)
     {
@@ -186,7 +186,7 @@ class Symfony_Component_CssSelector_XPath_Translator implements Symfony_Componen
      *
      * @param Symfony_Component_CssSelector_Parser_ParserInterface $shortcut
      *
-     * @return Symfony_Component_CssSelector_XPath_Translator
+     * @return $this
      */
     public function registerParserShortcut(Symfony_Component_CssSelector_Parser_ParserInterface $shortcut)
     {

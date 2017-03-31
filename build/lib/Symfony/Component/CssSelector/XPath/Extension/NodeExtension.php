@@ -54,7 +54,7 @@ class Symfony_Component_CssSelector_XPath_Extension_NodeExtension extends Symfon
      * @param int  $flag
      * @param bool $on
      *
-     * @return Symfony_Component_CssSelector_XPath_Extension_NodeExtension
+     * @return $this
      */
     public function setFlag($flag, $on)
     {

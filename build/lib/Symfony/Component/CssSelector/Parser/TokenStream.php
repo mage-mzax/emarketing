@@ -65,7 +65,7 @@ class Symfony_Component_CssSelector_Parser_TokenStream
      *
      * @param Symfony_Component_CssSelector_Parser_Token $token
      *
-     * @return Symfony_Component_CssSelector_Parser_TokenStream
+     * @return $this
      */
     public function push(Symfony_Component_CssSelector_Parser_Token $token)
     {
@@ -77,7 +77,7 @@ class Symfony_Component_CssSelector_Parser_TokenStream
     /**
      * Freezes stream.
      *
-     * @return Symfony_Component_CssSelector_Parser_TokenStream
+     * @return $this
      */
     public function freeze()
     {

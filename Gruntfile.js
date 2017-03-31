@@ -69,6 +69,15 @@ module.exports = function(grunt) {
             }
         },
 
+        /* Add 3rd party js libs */
+        "copy" : {
+            js: {
+                files: [
+                    {expand: true, src: '**', dest: './build/js/mzax/ckeditor/', cwd: './js_3rdparty/ckeditor'}
+                ]
+            }
+        },
+
         /* Convert  PSR-4 namespaces to PSR-0 */
         'phpns': {
             options:{
@@ -117,14 +126,14 @@ module.exports = function(grunt) {
                 },
                 files: [
                     {expand: true, dest: '', src: './**', cwd: './src/module'},
-                    {expand: true, dest: '', src: './**', cwd: './build'},
-                    {expand: true, dest: './js/ckeditor', src: './**', cwd: './js_3rdparty/ckeditor'}
+                    {expand: true, dest: '', src: './**', cwd: './build'}
                 ]
             }
         }
     });
 
 
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-sass');
@@ -133,6 +142,6 @@ module.exports = function(grunt) {
 
     grunt.loadTasks('./grunt');
     grunt.registerTask('default', ['phpns']);
-    grunt.registerTask('build', ['clean:build', 'sass', 'imagemin', 'uglify', 'phpns']);
+    grunt.registerTask('build', ['clean:build', 'sass', 'imagemin', 'uglify', 'copy', 'phpns']);
     grunt.registerTask('pack', ['mage-package-xml', 'compress']);
 };

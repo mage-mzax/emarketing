@@ -10,8 +10,5 @@ build/skin/adminhtml/default/default/*                          skin/adminhtml/d
 build/lib/*                                                     lib/
 build/js/mzax/*                                                 js/mzax/
 
-# 3rd Party files
-js_3rdparty/ckeditor                                            js/mzax/ckeditor
-
 # EcomDev Integration Tests
 tests/integration/                                              app/code/community/Mzax/Emarketing/Test

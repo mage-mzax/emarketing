@@ -31,7 +31,7 @@ class Symfony_Component_CssSelector_Exception_SyntaxErrorException extends Symfo
      * @param string $expectedValue
      * @param Symfony_Component_CssSelector_Parser_Token  $foundToken
      *
-     * @return Symfony_Component_CssSelector_Exception_SyntaxErrorException
+     * @return self
      */
     public static function unexpectedToken($expectedValue, Symfony_Component_CssSelector_Parser_Token $foundToken)
     {
@@ -42,7 +42,7 @@ class Symfony_Component_CssSelector_Exception_SyntaxErrorException extends Symfo
      * @param string $pseudoElement
      * @param string $unexpectedLocation
      *
-     * @return Symfony_Component_CssSelector_Exception_SyntaxErrorException
+     * @return self
      */
     public static function pseudoElementFound($pseudoElement, $unexpectedLocation)
     {
@@ -52,7 +52,7 @@ class Symfony_Component_CssSelector_Exception_SyntaxErrorException extends Symfo
     /**
      * @param int $position
      *
-     * @return Symfony_Component_CssSelector_Exception_SyntaxErrorException
+     * @return self
      */
     public static function unclosedString($position)
     {
@@ -60,7 +60,7 @@ class Symfony_Component_CssSelector_Exception_SyntaxErrorException extends Symfo
     }
 
     /**
-     * @return Symfony_Component_CssSelector_Exception_SyntaxErrorException
+     * @return self
      */
     public static function nestedNot()
     {
@@ -68,7 +68,7 @@ class Symfony_Component_CssSelector_Exception_SyntaxErrorException extends Symfo
     }
 
     /**
-     * @return Symfony_Component_CssSelector_Exception_SyntaxErrorException
+     * @return self
      */
     public static function stringAsFunctionArgument()
     {

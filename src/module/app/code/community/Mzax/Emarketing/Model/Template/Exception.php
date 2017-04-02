@@ -32,9 +32,20 @@ class Mzax_Emarketing_Model_Template_Exception extends Exception
      *
      * @param LibXMLError[] $errors
      */
-    public function __construct($errors)
+    public function __construct(array $errors)
     {
-        parent::__construct("Failed to parse template HTML");
+        $message = "Failed to parse template HTML";
+        foreach($errors as $error) {
+            $message .= sprintf(
+                "\n  [Line %s:%s] #%s %s",
+                $error->line,
+                $error->column,
+                $error->code,
+                $error->message
+            );
+        }
+
+        parent::__construct($message);
         $this->_errors = $errors;
     }
 
@@ -48,27 +59,5 @@ class Mzax_Emarketing_Model_Template_Exception extends Exception
     public function getErrors()
     {
         return $this->_errors;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        $message = parent::__toString();
-
-        if (!empty($this->_errors)) {
-            foreach($this->_errors as $error) {
-                $message .= sprintf(
-                    "\n  [Line %s:%s] #%s %s",
-                    $error->line,
-                    $error->column,
-                    $error->code,
-                    $error->message
-                );
-            }
-        }
-
-        return $message;
     }
 }

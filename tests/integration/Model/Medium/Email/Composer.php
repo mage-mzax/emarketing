@@ -169,7 +169,7 @@ class Mzax_Emarketing_Test_Model_Medium_Email_Composer
     {
         /** @var DataHelper|MockObject $helper */
         $helper = $this->getMockBuilder(DataHelper::class)->setMethods(['randomHash'])->getMock();
-        $helper->expects($this->any())->method('randomHash')->willReturnArgument(0);
+        $helper->expects($this->any())->method('randomHash')->willReturn('foobar');
 
         $this->replaceByMock('helper', 'mzax_emarketing', $helper);
 

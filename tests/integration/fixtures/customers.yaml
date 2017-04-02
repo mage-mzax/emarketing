@@ -4,15 +4,15 @@ eav:
   customer:
     - entity_id: 1
       website_id: 1
-      created_at: 2016-04-02 23:44:22
-      updated_at: 2016-08-11 14:02:36
-      email: john.snow@example.com
-      firstname: John
-      lastname: Snow
+      created_at: '2016-04-02 23:44:22'
+      updated_at: '2016-08-11 14:02:36'
+      email: 'john.snow@example.com'
+      firstname: 'John'
+      lastname: 'Snow'
       group_id: 1
       store_id: 1
       is_active: 1
       attribute_set_id: 0
-      dob: 1980-06-01 00:00:00
+      dob: '1980-06-01 00:00:00'
       gender: 1
 

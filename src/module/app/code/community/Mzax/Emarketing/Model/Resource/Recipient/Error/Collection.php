@@ -17,6 +17,8 @@
  */
 
 
+use Mzax_Emarketing_Model_Recipient as Recipient;
+
 /**
  * Class Mzax_Emarketing_Model_Resource_Recipient_Error_Collection
  */
@@ -29,5 +31,23 @@ class Mzax_Emarketing_Model_Resource_Recipient_Error_Collection
     protected function _construct()
     {
         $this->_init('mzax_emarketing/recipient_error');
+    }
+
+    /**
+     * Add recipient filter
+     *
+     * @param Recipient|int|string $recipient
+     *
+     * @return $this
+     */
+    public function addRecipientFilter($recipient)
+    {
+        if ($recipient instanceof Recipient) {
+            $recipient = $recipient->getId();
+        }
+
+        $this->addFilter('recipient_id', $recipient);
+
+        return $this;
     }
 }

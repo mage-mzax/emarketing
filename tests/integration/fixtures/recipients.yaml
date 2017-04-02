@@ -1,0 +1,24 @@
+
+
+tables:
+  mzax_emarketing_email_address:
+    - address_id: 1
+      address: 'john.snow@example.com'
+      exists: 1
+      view_id: null
+
+  mzax_emarketing_recipient:
+    - recipient_id: 1
+      address_id: 1
+      is_mock: 0
+      created_at: '2016-04-02 23:44:22'
+      prepared_at: null
+      send_at: null
+      viewed_at: null
+      object_id: 1
+      campaign_id: 1
+      variation_id: null
+      beacon_hash: 'foobar'
+
+
+

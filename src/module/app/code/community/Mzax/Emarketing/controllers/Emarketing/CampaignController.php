@@ -694,7 +694,9 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mzax_Emarketing_Cont
 
         $this->loadLayout('mzax_popup');
         if ($filter) {
-            $block = $this->getLayout()->getBlock('filter_test')->setFilter($filter);
+            /** @var Mzax_Emarketing_Block_Filter_Test_Single $block */
+            $block = $this->getLayout()->getBlock('filter_test');
+            $block->setFilter($filter);
             $block->setDefaultLimit(20);
         }
         $this->renderLayout();

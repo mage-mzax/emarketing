@@ -17,14 +17,13 @@
  */
 
 
+use Mzax_Emarketing_Model_Object_Filter_Abstract as Filter;
 
 /**
+ * Class Mzax_Emarketing_Block_Filter_Test_Single
  *
- *
- *
- * @method Mzax_Emarketing_Model_Object_Filter_Abstract getFilter()
- * @method $this setFilter(Mzax_Emarketing_Model_Object_Filter_Abstract $filter)
- *
+ * @method Filter getFilter()
+ * @method $this setFilter(Filter $filter)
  * @method boolean getError()
  * @method string getSelect()
  * @method Mzax_Emarketing_Block_Filter_Object_Grid getGrid()
@@ -35,28 +34,38 @@
  */
 class Mzax_Emarketing_Block_Filter_Test_Single extends Mage_Adminhtml_Block_Template
 {
-
+    /**
+     * @return void
+     */
     protected function _construct()
     {
         parent::_construct();
         $this->setTemplate('mzax/emarketing/filter/test/single.phtml');
     }
 
-
+    /**
+     * @return string
+     */
     protected function _toHtml()
     {
         $filter = $this->getFilter();
-        if (!$filter instanceof Mzax_Emarketing_Model_Object_Filter_Abstract) {
+        if (!$filter instanceof Filter) {
             return 'NO FILTER :(';
         }
+
         return parent::_toHtml();
     }
 
-
+    /**
+     *
+     * @todo logic should be in service class and a FilterResult object class
+     *
+     * @return void
+     */
     protected function _beforeToHtml()
     {
         $filter = $this->getFilter();
-        if (!$filter instanceof Mzax_Emarketing_Model_Object_Filter_Abstract) {
+        if (!$filter instanceof Filter) {
             return;
         }
 
@@ -99,11 +108,6 @@ class Mzax_Emarketing_Block_Filter_Test_Single extends Mage_Adminhtml_Block_Temp
         $this->setTime($time);
     }
 
-
-
-
-
-
     /**
      * Is debug mode?
      *
@@ -117,14 +121,17 @@ class Mzax_Emarketing_Block_Filter_Test_Single extends Mage_Adminhtml_Block_Temp
         return true;
     }
 
-
+    /**
+     * @return string
+     */
     public function getObjectName()
     {
         return $this->getFilter()->getParentObject()->getName();
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getStatusMessage()
     {
         $name  = $this->getObjectName();
@@ -140,8 +147,9 @@ class Mzax_Emarketing_Block_Filter_Test_Single extends Mage_Adminhtml_Block_Temp
         return $this->__("%s {$name}s found", $total);
     }
 
-
-
+    /**
+     * @return string
+     */
     public function getStatusIcon()
     {
         $total  = $this->getTotal();
@@ -156,23 +164,24 @@ class Mzax_Emarketing_Block_Filter_Test_Single extends Mage_Adminhtml_Block_Temp
         return $this->getSkinUrl('images/success_msg_icon.gif');
     }
 
-
-
+    /**
+     * Retrieve preview url
+     *
+     * @return string
+     */
     public function getPreviewUrl()
     {
         return $this->getUrl('*/*/filterPreview', array('_current' => true, '_filter' => $this->getFilter()));
     }
 
-
-
-
     /**
+     * Retrieve filter grid
      *
+     * @param Filter $filter
      *
-     * @param Mzax_Emarketing_Model_Object_Filter_Abstract $filter
      * @return Mzax_Emarketing_Block_Filter_Object_Grid
      */
-    public function getFilterGrid(Mzax_Emarketing_Model_Object_Filter_Abstract $filter)
+    public function getFilterGrid(Filter $filter)
     {
         /* @var $grid Mzax_Emarketing_Block_Filter_Object_Grid */
         $grid = $this->getLayout()->createBlock('mzax_emarketing/filter_object_grid', '', array(
@@ -187,11 +196,8 @@ class Mzax_Emarketing_Block_Filter_Test_Single extends Mage_Adminhtml_Block_Temp
         return $grid;
     }
 
-
-
-
-
     /**
+     * Retrieve sql formatter
      *
      * @return Mzax_Emarketing_Helper_SqlFormatter
      */
@@ -200,15 +206,12 @@ class Mzax_Emarketing_Block_Filter_Test_Single extends Mage_Adminhtml_Block_Temp
         return $this->helper('mzax_emarketing/sqlFormatter');
     }
 
-
-
-
-
     /**
      * Generate url by route and parameters
      *
      * @param   string $route
      * @param   array $params
+     *
      * @return  string
      */
     public function getUrl($route = '', $params = array())
@@ -219,8 +222,4 @@ class Mzax_Emarketing_Block_Filter_Test_Single extends Mage_Adminhtml_Block_Temp
         }
         return parent::getUrl($route, $params);
     }
-
-
-
-
 }

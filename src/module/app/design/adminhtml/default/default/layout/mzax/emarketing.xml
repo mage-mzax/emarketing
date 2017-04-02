@@ -17,83 +17,76 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 -->
-
 <layout>
-
-	<default>
-	    <reference name="head">
-    		<action method="addCss"><name>mzax/emarketing.css</name></action>
-    		<action method="addJs"><name>mzax/report.js</name></action>
+    <default>
+        <reference name="head">
+            <action method="addCss"><name>mzax/emarketing.css</name></action>
+            <action method="addJs"><name>mzax/report.js</name></action>
         </reference>
-	</default>
+    </default>
 
-
-	<mzax_popup>
-		<update handle="popup"/>
-		<reference name="root">
-    		<action method="addBodyClass"><name>mzax-popup</name></action>
+    <mzax_popup>
+        <update handle="popup"/>
+        <reference name="root">
+            <action method="addBodyClass"><name>mzax-popup</name></action>
         </reference>
         <reference name="head">
             <action method="addJs"><name>mzax/popup.js</name></action>
         </reference>
-	</mzax_popup>
+    </mzax_popup>
 
-
-	<mzax_ace_editor>
-		<update handle="editor"/>
+    <mzax_ace_editor>
+        <update handle="editor"/>
         <reference name="notifications">
-        	<block type="core/text_list" name="mzax_ace_editor" before="-">
-	        	<block type="core/text_tag_js" name="js.ace">
-	        		<action method="setTagParam"><param>src</param><src>//cdn.jsdelivr.net/ace/1.1.9/noconflict/ace.js</src></action>
-	        	</block>
-	        	<block type="core/text_tag_js" name="js.ace.ext-language_tools">
-	        		<action method="setTagParam"><param>src</param><src>//cdn.jsdelivr.net/ace/1.1.9/noconflict/ext-language_tools.js</src></action>
-	        	</block>
-	        	<block type="core/text_tag_js" name="js.ace.ext-mage_autocomplete">
-	        		<action method="setSrc"><src>mzax/ace/ext-mage_autocomplete.js</src></action>
-	        	</block>
-	        	<block type="core/text_tag_js" name="js.ace.mode-mage">
-	        		<action method="setSrc"><src>mzax/ace/mode-mage.js</src></action>
-	        	</block>
-	        	<block type="core/text_tag_js" name="js.ace.theme-mage">
-	        		<action method="setSrc"><src>mzax/ace/theme-mage.js</src></action>
-	        	</block>
-	        	<block type="core/text_tag_js" name="js.mzax.editor">
-	        		<action method="setSrc"><src>mzax/editor.js</src></action>
-	        	</block>
-        	</block>
-    	</reference>
-	</mzax_ace_editor>
-
-
+            <block type="core/text_list" name="mzax_ace_editor" before="-">
+                <block type="core/text_tag_js" name="js.ace">
+                    <action method="setTagParam"><param>src</param><src>//cdn.jsdelivr.net/ace/1.1.9/noconflict/ace.js</src></action>
+                </block>
+                <block type="core/text_tag_js" name="js.ace.ext-language_tools">
+                    <action method="setTagParam"><param>src</param><src>//cdn.jsdelivr.net/ace/1.1.9/noconflict/ext-language_tools.js</src></action>
+                </block>
+                <block type="core/text_tag_js" name="js.ace.ext-mage_autocomplete">
+                    <action method="setSrc"><src>mzax/ace/ext-mage_autocomplete.js</src></action>
+                </block>
+                <block type="core/text_tag_js" name="js.ace.mode-mage">
+                    <action method="setSrc"><src>mzax/ace/mode-mage.js</src></action>
+                </block>
+                <block type="core/text_tag_js" name="js.ace.theme-mage">
+                    <action method="setSrc"><src>mzax/ace/theme-mage.js</src></action>
+                </block>
+                <block type="core/text_tag_js" name="js.mzax.editor">
+                    <action method="setSrc"><src>mzax/editor.js</src></action>
+                </block>
+            </block>
+        </reference>
+    </mzax_ace_editor>
 
     <adminhtml_emarketing_campaign_edit>
-    	<update handle="mzax_ace_editor"/>
+        <update handle="mzax_ace_editor"/>
         <reference name="head">
             <action method="setCanLoadExtJs"><flag>1</flag></action>
             <action method="setCanLoadRulesJs"><flag>1</flag></action>
         </reference>
         <reference name="content">
-            <block type="mzax_emarketing/campaign_edit" name="mzax_emarketing_edit"></block>
+            <block type="mzax_emarketing/campaign_edit" name="mzax_emarketing_edit" />
         </reference>
         <reference name="left">
-            <block type="mzax_emarketing/campaign_edit_tabs" name="mzax_emarketing_edit_tabs"></block>
-            <block type="adminhtml/template" name="mzax_emarketing.emergency_stop" template="mzax/emarketing/campaign/running-warning.phtml"></block>
-            <block type="adminhtml/template" name="mzax_emarketing.credits" template="mzax/emarketing/campaign/credits-left.phtml"></block>
+            <block type="mzax_emarketing/campaign_edit_tabs" name="mzax_emarketing_edit_tabs" />
+            <block type="adminhtml/template" name="mzax_emarketing.emergency_stop" template="mzax/emarketing/campaign/running-warning.phtml" />
+            <block type="adminhtml/template" name="mzax_emarketing.credits" template="mzax/emarketing/campaign/credits-left.phtml" />
         </reference>
         <reference name="js">
-            <block type="adminhtml/template" template="mzax/emarketing/edit/js.phtml" name="mzax_emarketing.edit.js" as="mzax_emarketing_edit_js"></block>
+            <block type="adminhtml/template" template="mzax/emarketing/edit/js.phtml" name="mzax_emarketing.edit.js" as="mzax_emarketing_edit_js" />
         </reference>
     </adminhtml_emarketing_campaign_edit>
 
-
     <adminhtml_emarketing_campaign_new>
         <reference name="content">
-            <block type="mzax_emarketing/campaign_new" name="mzax_emarketing_new"></block>
+            <block type="mzax_emarketing/campaign_new" name="mzax_emarketing_new" />
         </reference>
         <reference name="left">
-            <block type="mzax_emarketing/campaign_edit_tabs" name="mzax_emarketing_edit_tabs"></block>
-            <block type="adminhtml/template" name="mzax_emarketing.credits" template="mzax/emarketing/campaign/credits-left.phtml"></block>
+            <block type="mzax_emarketing/campaign_edit_tabs" name="mzax_emarketing_edit_tabs" />
+            <block type="adminhtml/template" name="mzax_emarketing.credits" template="mzax/emarketing/campaign/credits-left.phtml" />
         </reference>
     </adminhtml_emarketing_campaign_new>
 
@@ -104,51 +97,48 @@
         </reference>
         <reference name="content">
             <block type="mzax_emarketing/campaign_test" name="filter.test">
-            	<block type="mzax_emarketing/campaign_test_emulate" template="mzax/emarketing/campaign/filters/emulate.phtml" as="emulate" name="filter.test.emulate" />
+                <block type="mzax_emarketing/campaign_test_emulate" template="mzax/emarketing/campaign/filters/emulate.phtml" as="emulate" name="filter.test.emulate" />
             </block>
         </reference>
         <reference name="root">
-        	<action method="addBodyClass"><class>mzax-emarketing-padding</class></action>
+            <action method="addBodyClass"><class>mzax-emarketing-padding</class></action>
         </reference>
     </adminhtml_emarketing_campaign_testfilters>
 
     <adminhtml_emarketing_campaign_preview>
-    	<update handle="mzax_ace_editor"/>
-	</adminhtml_emarketing_campaign_preview>
-
+        <update handle="mzax_ace_editor"/>
+    </adminhtml_emarketing_campaign_preview>
 
     <adminhtml_emarketing_tracker_edit>
-
         <reference name="head">
             <action method="setCanLoadExtJs"><flag>1</flag></action>
             <action method="setCanLoadRulesJs"><flag>1</flag></action>
         </reference>
-
         <reference name="content">
-            <block type="mzax_emarketing/tracker_edit" name="mzax_emarketing_edit"></block>
+            <block type="mzax_emarketing/tracker_edit" name="mzax_emarketing_edit" />
         </reference>
         <reference name="left">
-            <block type="mzax_emarketing/tracker_edit_tabs" name="mzax_emarketing_edit_tabs"></block>
-            <block type="adminhtml/template" name="mzax_emarketing.credits" template="mzax/emarketing/campaign/credits-left.phtml"></block>
+            <block type="mzax_emarketing/tracker_edit_tabs" name="mzax_emarketing_edit_tabs" />
+            <block type="adminhtml/template" name="mzax_emarketing.credits" template="mzax/emarketing/campaign/credits-left.phtml" />
         </reference>
         <reference name="js">
-            <block type="adminhtml/template" template="mzax/emarketing/edit/js.phtml" name="mzax_emarketing.edit.js" as="mzax_emarketing_edit_js"></block>
+            <block type="adminhtml/template" template="mzax/emarketing/edit/js.phtml" name="mzax_emarketing.edit.js" as="mzax_emarketing_edit_js" />
         </reference>
     </adminhtml_emarketing_tracker_edit>
 
     <adminhtml_emarketing_tracker_new>
         <reference name="content">
-            <block type="mzax_emarketing/tracker_new" name="mzax_emarketing_tracker_new"></block>
+            <block type="mzax_emarketing/tracker_new" name="mzax_emarketing_tracker_new" />
         </reference>
         <reference name="left">
-            <block type="mzax_emarketing/tracker_edit_tabs" name="mzax_emarketing_edit_tabs"></block>
-            <block type="adminhtml/template" name="mzax_emarketing.credits" template="mzax/emarketing/campaign/credits-left.phtml"></block>
+            <block type="mzax_emarketing/tracker_edit_tabs" name="mzax_emarketing_edit_tabs" />
+            <block type="adminhtml/template" name="mzax_emarketing.credits" template="mzax/emarketing/campaign/credits-left.phtml" />
         </reference>
     </adminhtml_emarketing_tracker_new>
 
     <adminhtml_emarketing_tracker_upload>
         <reference name="content">
-            <block type="mzax_emarketing/tracker_upload" name="mzax_emarketing_tracker_upload"></block>
+            <block type="mzax_emarketing/tracker_upload" name="mzax_emarketing_tracker_upload" />
         </reference>
     </adminhtml_emarketing_tracker_upload>
 
@@ -159,11 +149,11 @@
         </reference>
         <reference name="content">
             <block type="mzax_emarketing/tracker_test" name="condition.test">
-            	<block type="mzax_emarketing/tracker_test_emulate" template="mzax/emarketing/tracker/conditions/emulate.phtml" as="emulate" name="condition.test.emulate" />
+                <block type="mzax_emarketing/tracker_test_emulate" template="mzax/emarketing/tracker/conditions/emulate.phtml" as="emulate" name="condition.test.emulate" />
             </block>
         </reference>
         <reference name="root">
-        	<action method="addBodyClass"><class>mzax-emarketing-padding</class></action>
+            <action method="addBodyClass"><class>mzax-emarketing-padding</class></action>
         </reference>
     </adminhtml_emarketing_tracker_testconditions>
 
@@ -178,12 +168,9 @@
             </block>
         </reference>
         <reference name="root">
-        	<action method="addBodyClass"><class>mzax-emarketing-padding</class></action>
+            <action method="addBodyClass"><class>mzax-emarketing-padding</class></action>
         </reference>
     </adminhtml_emarketing_tracker_filterpreview>
-
-
-
 
     <adminhtml_emarketing_campaign_sendtestmail>
         <reference name="content">
@@ -191,21 +178,19 @@
             <block type="adminhtml/template" name="mzax_emarketing.mail-tester" template="mzax/emarketing/campaign/mail-tester.phtml" />
         </reference>
         <reference name="root">
-        	<action method="addBodyClass"><class>mzax-emarketing-padding</class></action>
+            <action method="addBodyClass"><class>mzax-emarketing-padding</class></action>
         </reference>
     </adminhtml_emarketing_campaign_sendtestmail>
 
-
-	<mzax_emarketing_campaign_tab>
+    <mzax_emarketing_campaign_tab>
         <reference name="head">
             <action method="setCanLoadExtJs"><flag>1</flag></action>
             <action method="setCanLoadRulesJs"><flag>1</flag></action>
         </reference>
         <reference name="root">
-        	<action method="addBodyClass"><class>mzax-emarketing-padding</class></action>
+            <action method="addBodyClass"><class>mzax-emarketing-padding</class></action>
         </reference>
-	</mzax_emarketing_campaign_tab>
-
+    </mzax_emarketing_campaign_tab>
 
     <adminhtml_emarketing_campaign_filterpreview>
         <reference name="head">
@@ -213,64 +198,49 @@
             <action method="setCanLoadRulesJs"><flag>1</flag></action>
         </reference>
         <reference name="content">
-            <block type="mzax_emarketing/filter_test_single" name="filter_test"></block>
+            <block type="mzax_emarketing/filter_test_single" name="filter_test" />
         </reference>
         <reference name="root">
-        	<action method="addBodyClass"><class>mzax-emarketing-padding</class></action>
+            <action method="addBodyClass"><class>mzax-emarketing-padding</class></action>
         </reference>
     </adminhtml_emarketing_campaign_filterpreview>
 
-
     <adminhtml_emarketing_template_edit>
-
-    	<update handle="mzax_ace_editor"/>
-
+        <update handle="mzax_ace_editor"/>
         <reference name="content">
-            <block type="mzax_emarketing/template_edit" name="mzax_emarketing_template_edit"></block>
+            <block type="mzax_emarketing/template_edit" name="mzax_emarketing_template_edit" />
         </reference>
     </adminhtml_emarketing_template_edit>
 
     <adminhtml_emarketing_template_upload>
         <reference name="content">
-            <block type="mzax_emarketing/template_upload" name="mzax_emarketing_template_upload"></block>
+            <block type="mzax_emarketing/template_upload" name="mzax_emarketing_template_upload" />
         </reference>
     </adminhtml_emarketing_template_upload>
 
-
     <adminhtml_emarketing_newsletter_list_edit>
         <reference name="content">
-            <block type="mzax_emarketing/newsletter_list_edit" name="mzax_emarketing_newsletter_list_edit"></block>
+            <block type="mzax_emarketing/newsletter_list_edit" name="mzax_emarketing_newsletter_list_edit" />
         </reference>
         <reference name="left">
-            <block type="mzax_emarketing/newsletter_list_edit_tabs" name="mzax_emarketing_newsletter_list_tabs"></block>
+            <block type="mzax_emarketing/newsletter_list_edit_tabs" name="mzax_emarketing_newsletter_list_tabs" />
         </reference>
         <reference name="js">
-            <block type="adminhtml/template" template="mzax/emarketing/edit/js.phtml" name="mzax_emarketing.edit.js" as="mzax_emarketing_edit_js"></block>
+            <block type="adminhtml/template" template="mzax/emarketing/edit/js.phtml" name="mzax_emarketing.edit.js" as="mzax_emarketing_edit_js" />
         </reference>
     </adminhtml_emarketing_newsletter_list_edit>
 
-
-
     <adminhtml_emarketing_inbox_email>
-
-    	<update handle="mzax_ace_editor"/>
-
+        <update handle="mzax_ace_editor"/>
         <reference name="content">
-            <block type="mzax_emarketing/inbox_email" name="mzax_emarketing_inbox_email"></block>
+            <block type="mzax_emarketing/inbox_email" name="mzax_emarketing_inbox_email" />
         </reference>
     </adminhtml_emarketing_inbox_email>
 
-
-
     <adminhtml_emarketing_outbox_email>
-
-    	<update handle="mzax_ace_editor"/>
-
+        <update handle="mzax_ace_editor"/>
         <reference name="content">
-            <block type="mzax_emarketing/outbox_email" name="mzax_emarketing_outbox_email"></block>
+            <block type="mzax_emarketing/outbox_email" name="mzax_emarketing_outbox_email" />
         </reference>
     </adminhtml_emarketing_outbox_email>
-
-
-
 </layout>

@@ -25,7 +25,7 @@ $lists = $this->getNewsletterLists();
 
 <div class="unsubscribe-confirm-from">
 
-    <?php if(!empty($lists)): ?>
+    <?php if (!empty($lists)) : ?>
         <form id="update_lists" action="<?php echo $this->getUpdateUrl() ?>" method="post">
             <div class="fieldset">
                 <input type="hidden" name="email" value="<?php echo $this->getAddress() ?>" />
@@ -35,7 +35,7 @@ $lists = $this->getNewsletterLists();
                 <p><?php echo $this->__('Here you can update the newsletter preferences for <strong>%s</strong>.', $this->escapeHtml($this->getAddress())) ?></p>
                 <p><?php echo $this->__('Choose the lists that you are interested in and click update to change your preferences.') ?></p>
                 <ul class="form-list">
-                    <?php foreach($lists as $list): ?>
+                    <?php foreach ($lists as $list) : ?>
                         <li class="control">
                             <input id="newsletter-list-<?php echo $list->getId() ?>" class="checkbox" name="lists[]" value="<?php echo $list->getId() ?>" type="checkbox" <?php if($list->getIsSubscribedTo()) : ?>checked="checked"<?php endif ?> />
                             <label for="newsletter-list-<?php echo $list->getId() ?>"><?php echo $this->escapeHtml($list->getName()) ?></label>

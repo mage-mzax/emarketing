@@ -1,4 +1,4 @@
-<?php 
+<?php
 /* @var $product Mage_Catalog_Model_Product */
 /* @var $this Mzax_Emarketing_Block_Template */
 
@@ -11,16 +11,16 @@ $products->addAttributeToSelect(array('name', 'small_image', 'short_description'
 
 // add price data for customer and website (optional) - $products->addPriceData()
 $products->addPriceData(
-    $order->getCustomerGroupId(), 
-    $order->getStore()->getWebsiteId());
-
+    $order->getCustomerGroupId(),
+    $order->getStore()->getWebsiteId()
+);
 ?>
 
 
-<?php if(count($products)): ?>
+<?php if (count($products)) : ?>
     <h3>You may also like:</h3>
     <table class="product-table crosssell-table" cellspacing="0" cellpadding="0" border="0" width="100%">
-    <?php foreach ($products as $i => $product): ?>
+    <?php foreach ($products as $i => $product) : ?>
         <tr class="<?php echo $i%2 ? 'even' : 'odd' ?>">
             <td class="product-image" width="120" valign="top">
                 <img alt="<?php echo $product->getName() ?>" src="<?php echo $this->getProductImage($product) ?>" />

@@ -20,19 +20,19 @@
 /* @var $this Mzax_Emarketing_Block_Unsubscribe */
 $lists = $this->getCustomerNewsletterLists();
 ?>
-<?php if ($lists->count()): ?>
+<?php if ($lists->count()) : ?>
     <li class="list-control">
         <h2 class="legend"><?php echo $this->__('Newsletter Lists') ?></h2>
         <p><?php echo $this->__('Fine tune your subscription and choose the lists that you are interested in.') ?></p>
         <ul class="form-list">
-            <?php foreach ($lists as $list): ?>
+            <?php foreach ($lists as $list) : ?>
                 <li class="control">
                     <input id="newsletter-list-<?php echo $list->getId() ?>"
                            class="checkbox"
                            name="lists[]"
                            value="<?php echo $list->getId() ?>"
                            type="checkbox"
-                           <?php if($list->getIsSubscribedTo()) : ?>checked="checked"<?php endif ?> />
+                           <?php if ($list->getIsSubscribedTo()) : ?>checked="checked"<?php endif ?> />
                     <label for="newsletter-list-<?php echo $list->getId() ?>" >
                         <?php echo $this->escapeHtml($list->getName()) ?>
                     </label>

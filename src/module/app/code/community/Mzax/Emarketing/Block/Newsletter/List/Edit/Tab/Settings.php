@@ -89,19 +89,13 @@ class Mzax_Emarketing_Block_Newsletter_List_Edit_Tab_Settings extends Mage_Admin
             'value' => '1'
         ));
 
-        if (!Mage::app()->isSingleStoreMode()) {
-            $fieldset->addField('store_ids', 'multiselect', array(
-                'name'      => 'store_ids[]',
-                'label'     => $this->__('Store View'),
-                'title'     => $this->__('Store View'),
-                'required'  => true,
-                'values'    => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(false, true),
-            ));
-        } else {
-            $fieldset->addField('store_ids', 'hidden', array(
-                'name'      => 'store_ids[]'
-            ));
-        }
+        $fieldset->addField('store_ids', 'multiselect', array(
+            'name'      => 'store_ids[]',
+            'label'     => $this->__('Store View'),
+            'title'     => $this->__('Store View'),
+            'required'  => true,
+            'values'    => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(false, true),
+        ));
 
         $form->addValues($list->getData());
         $this->setForm($form);

@@ -4,6 +4,9 @@ src/module/app/etc/modules/Mzax_Emarketing.xml                  app/etc/modules/
 src/module/app/code/community/Mzax/Emarketing/*                 app/code/community/Mzax/Emarketing/
 src/module/app/design/adminhtml/default/default/template/*      app/design/adminhtml/default/default/template/
 src/module/app/design/adminhtml/default/default/layout/*        app/design/adminhtml/default/default/layout/
+src/module/app/design/frontend/base/default/template/*          app/design/frontend/base/default/template/
+src/module/app/design/frontend/base/default/layout/*            app/design/frontend/base/default/layout/
+
 
 # Generated Source Files
 build/skin/adminhtml/default/default/*                          skin/adminhtml/default/default/

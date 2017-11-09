@@ -10,7 +10,10 @@ src/module/app/design/frontend/base/default/layout/*            app/design/front
 
 # Generated Source Files
 build/skin/adminhtml/default/default/*                          skin/adminhtml/default/default/
-build/lib/*                                                     lib/
+build/lib/Html2Text                                             lib/Html2Text
+build/lib/TijsVerkoyen						lib/TijsVerkoyen
+build/lib/UAParser						lib/UAParser
+build/lib/Symfony/Component/CssSelector				lib/Symfony/Component/CssSelector
 build/js/mzax/*                                                 js/mzax/
 
 # EcomDev Integration Tests
